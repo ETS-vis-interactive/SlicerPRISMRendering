@@ -1,0 +1,17 @@
+from Resources.CustomShader import CustomShader
+
+#------------------------------------------------------------------------------------
+# TemplateName shader
+#------------------------------------------------------------------------------------
+class Template(CustomShader):
+
+  def __init__(self, shaderPropertyNode):
+    CustomShader.__init__(self,shaderPropertyNode)
+
+  @classmethod
+  def GetDisplayName(cls):
+    return 'TemplateName'
+
+  def setupShader(self):
+    super(Template,self).setupShader()
+    self.shaderProperty.ClearAllFragmentShaderReplacements()

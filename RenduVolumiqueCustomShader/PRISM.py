@@ -1,10 +1,12 @@
-git remote add originimport os
+import os
 import unittest
 import vtk, qt, ctk, slicer
 from slicer.ScriptedLoadableModule import *
 import logging
 import numpy,math, time
 import json
+import imp
+import shutil
 
 from Resources.CustomShader import CustomShader
 
@@ -64,7 +66,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.imageSelector.setMRMLScene( slicer.mrmlScene )
     self.imageSelector.setToolTip( "Select the reference head image volume" )
     self.imageSelector.connect("nodeAdded(vtkMRMLNode*)", self.onImageSelectorNodeAdded)
-    dataFormLayout.addRow("Image Volume: ", self.imageSelector)
+    dataFormLayout.addRow("Image Volume : ", self.imageSelector)
 
     # For aesthetics
     self.layout.addSpacing(20)
@@ -93,6 +95,8 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.customShaderCollapsibleButton.text = "Custom Shader"
     self.layout.addWidget(self.customShaderCollapsibleButton)
 
+
+
     # Create a layout that will be populated with the parameters of the
     # active custom shader
     self.customShaderParametersLayout = qt.QFormLayout(self.customShaderCollapsibleButton)
@@ -107,6 +111,48 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.customShaderCombo.currentIndexChanged.connect(self.onCustomShaderComboIndexChanged)
     self.customShaderParametersLayout.addRow("Choose Custom Shader: ", self.customShaderCombo)
     self.customShaderCollapsibleButton.hide()
+
+
+    #
+    # Creation of new Custom Shader Area
+    #
+    self.newCustomShaderCollapsibleButton = ctk.ctkCollapsibleButton()
+    self.newCustomShaderCollapsibleButton.text = "Create new Custom Shader"
+    self.layout.addWidget(self.newCustomShaderCollapsibleButton)
+
+    self.newCustomShaderNameInput = qt.QLineEdit()
+    self.newCustomShaderNameInput.setPlaceholderText("Class name")
+    self.newCustomShaderNameInput.textChanged.connect(self.onSelect)
+    self.newCustomShaderNameInput.setToolTip("Name of the class that will be created." )
+    
+    self.error_msg = qt.QLabel()
+    self.error_msg.hide()
+    self.error_msg.setStyleSheet("color: red")
+
+    self.newCustomShaderDisplayInput = qt.QLineEdit()
+    self.newCustomShaderDisplayInput.setPlaceholderText("Display name")
+    self.newCustomShaderDisplayInput.textChanged.connect(self.onSelect)
+    self.newCustomShaderDisplayInput.setToolTip("Name of the shader that will be displayed in the combo box." )
+
+    self.createCustomShaderButton = qt.QPushButton("Create")
+    self.createCustomShaderButton.setToolTip("Creates a new custom shader class." )
+    self.createCustomShaderButton.clicked.connect(self.onNewCustomShaderButtonClick)
+    self.createCustomShaderButton.enabled = False
+
+    self.editSourceButton = qt.QPushButton("Edit")
+    self.editSourceButton.toolTip = "Edit the new custom shader source code."
+    self.editSourceButton.connect('clicked()', self.onEditSource)
+    self.editSourceButton.hide()
+    
+    newCustomShaderlayout = qt.QVBoxLayout(self.newCustomShaderCollapsibleButton)
+    newCustomShaderlayout.addWidget(self.newCustomShaderNameInput)
+    newCustomShaderlayout.addWidget(self.error_msg)
+    newCustomShaderlayout.addWidget(self.newCustomShaderDisplayInput)
+    newCustomShaderlayout.addWidget(self.createCustomShaderButton)
+    newCustomShaderlayout.addWidget(self.editSourceButton)
+    newCustomShaderlayout.addSpacing(50)
+
+
 
 
     """
@@ -135,7 +181,79 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.layout.addStretch(1)
 
     # Initialize state
+    self.onSelect()
     self.initState()
+
+  def onEditSource(self):
+    qt.QDesktopServices.openUrl(qt.QUrl("file:///"+self.newCustomShaderFile, qt.QUrl.TolerantMode))
+
+  def onSelect(self):
+    self.createCustomShaderButton.enabled = len(self.newCustomShaderNameInput.text) > 0 and len(self.newCustomShaderDisplayInput.text) > 0
+    self.error_msg.hide()
+
+  def duplicate_file(self, old_file_name, new_file_name):
+    """create a new class from the template
+    """
+
+    file_path = os.path.realpath(__file__)
+    file_dir, filename = os.path.split(file_path)
+    file_dir = file_dir + "\\Resources\\Shaders\\"
+    
+    src_file = os.path.join(file_dir, old_file_name)
+    dst_file = os.path.join(file_dir, new_file_name + ".py")
+    
+    #check if file already exists
+    if (os.path.exists(dst_file)):
+      self.error_msg.text = "The class \""+new_file_name+"\" exists already. Please check the name and try again."
+      self.error_msg.show()
+      self.createCustomShaderButton.enabled = False
+      return False
+    else:
+      self.createCustomShaderButton.enabled = True
+
+    if (shutil.copy(src_file, dst_file)) :
+      return dst_file
+    else :
+      self.error_msg.text = "There is an error with the class name \""+new_file_name+"\". Please check the name and try again."
+      self.error_msg.show()
+
+  def setup_file(self, file_, className, displayName):
+    """modifies the new class with regex to match the given infos
+    """
+    import os, sys
+    import re
+
+    classFile = open(file_, 'rt')
+    data = classFile.read()
+    dataClassName = re.sub(r'\bTemplate\b', className, data)
+    classFile.close()
+
+    classFile = open(file_, 'wt')
+    classFile.write(dataClassName)
+    classFile.close()
+
+    classFile = open(file_, 'rt')
+    data = classFile.read()
+    dataDisplayName = re.sub(r'\bTemplateName\b', displayName, data)
+    classFile.close()
+
+    classFile = open(file_, 'wt')
+    classFile.write(dataDisplayName)
+    classFile.close()
+
+  def onNewCustomShaderButtonClick(self):
+    """creates a new file with the associated class
+    """
+    self.error_msg.hide()
+    className = self.newCustomShaderNameInput.text
+    displayName = self.newCustomShaderDisplayInput.text
+    self.newCustomShaderFile = self.duplicate_file("Template", className)
+    if(self.newCustomShaderFile):
+      self.setup_file(self.newCustomShaderFile, className, displayName)
+      self.editSourceButton.show()
+      CustomShader.GetAllShaderClassNames()
+      self.customShaderCombo.addItem(displayName)
+
 
   def initState(self):
     """ Function call to initialize the all user interface based on current scene.
@@ -248,29 +366,27 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.logic.customShader.setShaderParameter(paramName,value)
   
   def onReload(self):
+
     logging.debug("Reloading CustomShader")
     packageName='Resources'
-    submoduleNames=['CustomShader']
-    import imp
+    submoduleName = 'CustomShader'
     f, filename, description = imp.find_module(packageName)
     package = imp.load_module(packageName, f, filename, description)
-    for submoduleName in submoduleNames:
-      f, filename, description = imp.find_module(submoduleName, package.__path__)
-      try:
-        imp.load_module(packageName+'.'+submoduleName, f, filename, description)
-      finally:
-        f.close()
+    f, filename, description = imp.find_module(submoduleName, package.__path__)
+    try:
+      imp.load_module(packageName+'.'+submoduleName, f, filename, description)
+    finally:
+      f.close()
     
     logging.debug("Reloading PRISM")
     packageName='PRISM'
-    import imp
     f, filename, description = imp.find_module(packageName)
     try:
       imp.load_module(packageName, f, filename, description)
     finally:
       f.close()
 
-      ScriptedLoadableModuleWidget.onReload(self)
+    ScriptedLoadableModuleWidget.onReload(self)
 
 #
 # PRISMLogic
@@ -554,7 +670,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
 
     # Set value as class parameter to be accesed in other functions
     self.volumeRenderingDisplayNode = displayNode
-
+ 
   def setCustomShaderType(self, shaderTypeName):
     """ Set given shader type as current active shader
 
@@ -578,7 +694,6 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     else:
       self.shaderPropertyNode = allShaderProperty.GetItemAsObject(0)
     allShaderProperty = None
-
     self.customShader = CustomShader.InstanciateCustomShader(self.customShaderType,self.shaderPropertyNode)
     self.customShader.setupShader()
 
