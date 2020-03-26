@@ -27,6 +27,9 @@ class CylinderIntersectionShader(CustomShader):
       g_skip =  dot(texCoordRAS.xyz - target, dirVect) < 0. || dot(texCoordRAS.xyz - entry, dirVect) > 0. || length(cross(texCoordRAS.xyz - target, dirVect)) < constVal - 10 || length(cross(texCoordRAS.xyz - target, dirVect)) > constVal + 10;
     """
     self.shaderProperty.AddFragmentShaderReplacement("//VTK::Cropping::Impl", True, replacement, False)
+    
+ 		#shaderreplacement
+
 
   def setPathEnds(self,entry,target):
     self.shaderUniforms.SetUniform3f("entry", entry)

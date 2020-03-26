@@ -76,6 +76,16 @@ class CustomShader():
   @classmethod
   def GetDisplayName(cls):
     return 'None'
+  
+  @classmethod
+  def GetClassName(cls, shaderDisplayName):
+    if shaderDisplayName == cls.GetDisplayName():
+      return CustomShader
+
+    for c in cls.allClasses:
+      if c.GetDisplayName() == shaderDisplayName:
+        return c
+    return None
 
   @classmethod
   def hasShaderParameter(cls,name):

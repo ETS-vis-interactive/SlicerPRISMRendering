@@ -3,10 +3,11 @@ import unittest
 import vtk, qt, ctk, slicer
 from slicer.ScriptedLoadableModule import *
 import logging
-import numpy,math, time
+import numpy as np,math, time
 import json
 import imp
 import shutil
+import textwrap
 
 from Resources.CustomShader import CustomShader
 
@@ -152,9 +153,137 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     newCustomShaderlayout.addWidget(self.editSourceButton)
     newCustomShaderlayout.addSpacing(50)
 
+    #
+    # Modification of Custom Shader Area
+    #
 
+    allShaderDecTags = {
+    "Binary Mask" : "//VTK::BinaryMask::Dec",
+    "Compute Lighting" : "//VTK::ComputeLighting::Dec",
+    "Compute Opacity"  : "//VTK::ComputeOpacity::Dec",
+    "Picking" : "//VTK::Picking::Dec",
+    "Termination" : "//VTK::Termination::Dec",
+    "Base" : "//VTK::Base::Dec",
+    "Clipping" : "//VTK::Clipping::Dec",
+    "Composite Mask" : "//VTK::CompositeMask::Dec",
+    "Compute Color" : "//VTK::ComputeColor::Dec",
+    "Compute Gradient" : "//VTK::ComputeGradient::Dec",
+    "Compute Gradient Opacity 1D" : "//VTK::ComputeGradientOpacity1D::Dec",
+    "Compute Ray Direction" : "//VTK::ComputeRayDirection::Dec",
+    "Cropping" : "//VTK::Cropping::Dec",
+    "Depth Peeling" : "//VTK::DepthPeeling::Dec",
+    "Gradient Cache" : "//VTK::GradientCache::Dec",
+    "Output" : "//VTK::Output::Dec",
+    "Render To Image" : "//VTK::RenderToImage::Dec",
+    "Shading" : "//VTK::Shading::Dec",
+    "Transfer 2D" : "//VTK::Transfer2D::Dec",
+    "Custom Uniforms" : "//VTK::CustomUniforms::Dec",
+    "None":"None"
+    }
+    
+    allShaderInitTags = {
+    "Clipping": "//VTK::Clipping::Init",
+    "Depth Peeling": "//VTK::DepthPeeling::Ray::Init",
+    "Cropping": "//VTK::Cropping::Init",
+    "Depth Pass": "//VTK::DepthPass::Init",
+    "Render To Image": "//VTK::RenderToImage::Init",
+    "Shading": "//VTK::Shading::Init",
+    "Terminate": "//VTK::Terminate::Init",
+    "Base" : "//VTK::Base::Init",
+    "None":"None"
+    }
+    
+    allShaderImplTags = {
+    "Composite Mask": "//VTK::CompositeMask::Impl",
+    "Render To Image": "//VTK::RenderToImage::Impl",
+    "Terminate": "//VTK::Terminate::Impl",
+    "Binary Mask": "//VTK::BinaryMask::Impl",
+    "Call Worker": "//VTK::CallWorker::Impl",
+    "Cropping": "//VTK::Cropping::Impl",
+    "Depth Pass": "//VTK::DepthPass::Impl",
+    "Pre Compute Gradients": "//VTK::PreComputeGradients::Impl",
+    "Shading": "//VTK::Shading::Impl",
+    "Base": "//VTK::Base::Impl",
+    "None":"None"
+    }
 
+    allShaderExitTags = {
+    "Cropping" : "//VTK::Cropping::Exit",
+    "Depth Pass": "//VTK::DepthPass::Exit",
+    "Base": "//VTK::Base::Exit",
+    "Clipping": "//VTK::Clipping::Exit",
+    "Picking": "//VTK::Picking::Exit",
+    "Render To Image": "//VTK::RenderToImage::Exit",
+    "Terminate": "//VTK::Terminate::Exit",
+    "Shading": "//VTK::Shading::Exit",
+    "None":"None"
+    }
 
+    allShaderPathCheckTags = {"DepthPeeling" : "//VTK::DepthPeeling::Ray::PathCheck"}
+
+    self.allShaderTagTypes = {
+      "Dec": allShaderDecTags,
+      "Init": allShaderInitTags,
+      "Exit": allShaderExitTags,
+      "Impl": allShaderImplTags,
+      "Path Check": allShaderPathCheckTags,
+      "None":"None"
+    }
+    
+    self.modifyCustomShaderCollapsibleButton = ctk.ctkCollapsibleButton()
+    self.modifyCustomShaderCollapsibleButton.text = "Modify Custom Shader"
+    self.layout.addWidget(self.modifyCustomShaderCollapsibleButton)
+    
+    # Custom shader combobox to select a type of custom shader
+    self.modifyCustomShaderComboLabel = qt.QLabel()
+    self.modifyCustomShaderCombo = qt.QComboBox()
+    self.updateComboBox(allShaderTypes, self.modifyCustomShaderCombo, self.modifyCustomShaderComboLabel, "Choose the custom shader to modify : ", self.onModifyCustomShaderComboIndexChanged)
+
+    # Custom shader combobox to select a type of custom shader
+    self.shaderTagsTypeComboLabel = qt.QLabel()
+    self.shaderTagsTypeCombo = qt.QComboBox()
+    self.updateComboBox(list(self.allShaderTagTypes.keys()), self.shaderTagsTypeCombo, self.shaderTagsTypeComboLabel, "Choose the shader tag type : ", self.onShaderTagsTypeComboIndexChanged)
+    self.shaderTagsTypeComboLabel.hide()
+    self.shaderTagsTypeCombo.hide()
+
+    self.shaderTagsComboLabel = qt.QLabel()
+    self.shaderTagsCombo = qt.QComboBox()
+    self.shaderTagsComboLabel.hide()
+    self.shaderTagsCombo.hide()
+
+    self.shaderModificationsLabel = qt.QLabel("Write shader code : ")
+    self.shaderModificationsLabel.hide()
+
+    self.shaderModifications = qt.QPlainTextEdit()
+    self.shaderModifications.textChanged.connect(self.onModify)
+    self.shaderModifications.hide()
+
+    self.shaderOpenFileLabelButton = qt.QLabel("Or open file : ")
+    self.shaderOpenFileLabelButton.hide()
+
+    self.shaderOpenFileButton = qt.QPushButton("Open")
+    self.shaderOpenFileButton.toolTip = "Open the selected custom shader source code."
+    self.shaderOpenFileButton.connect('clicked()', self.onOpenFile)
+    self.shaderOpenFileButton.hide()
+
+    self.modifyCustomShaderButton = qt.QPushButton("Modify")
+    self.modifyCustomShaderButton.toolTip = "Modifies selected custom shader source code."
+    self.modifyCustomShaderButton.connect('clicked()', self.onModifyCustomShader)
+
+    modifyCustomShaderlayout = qt.QGridLayout(self.modifyCustomShaderCollapsibleButton)
+    modifyCustomShaderlayout.addWidget(self.modifyCustomShaderComboLabel, 0, 0, 1, 1)
+    modifyCustomShaderlayout.addWidget(self.modifyCustomShaderCombo, 0, 1, 1, 3)
+    modifyCustomShaderlayout.addWidget(self.shaderTagsTypeComboLabel, 1, 0, 1, 1)
+    modifyCustomShaderlayout.addWidget(self.shaderTagsTypeCombo, 1, 1, 1, 3)
+    modifyCustomShaderlayout.addWidget(self.shaderTagsComboLabel, 2, 0, 1, 1)
+    modifyCustomShaderlayout.addWidget(self.shaderTagsCombo, 2, 1, 1, 3)
+    modifyCustomShaderlayout.addWidget(self.shaderModificationsLabel, 3, 0, 1, 1)
+    modifyCustomShaderlayout.addWidget(self.shaderModifications, 3, 1, 3, 1)
+    modifyCustomShaderlayout.addWidget(self.shaderOpenFileLabelButton, 4, 0, 1, 1)
+    modifyCustomShaderlayout.addWidget(self.shaderOpenFileButton, 5, 0, 1, 1)
+    modifyCustomShaderlayout.addWidget(self.modifyCustomShaderButton, 6, 0, 1, 4)
+
+    #modifyCustomShaderlayout.addSpacing(50)
     """
     # 
     # VR Actions Area
@@ -182,10 +311,116 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     # Initialize state
     self.onSelect()
+    self.onModify()
     self.initState()
 
+  def onModifyCustomShader(self):
+    shaderTagType = self.allShaderTagTypes.get(self.modifiedShaderTagType, "")
+    shaderTag = shaderTagType.get(self.modifiedShaderTag)
+    
+    #get selected shader path
+    modifiedShaderClass = CustomShader.GetClassName(self.modifiedShader)
+    modifiedShaderModule = modifiedShaderClass.__module__
+    packageName = "Resources"
+    f, filename, description = imp.find_module(packageName)
+    packagePath = imp.load_module(packageName, f, filename, description).__path__[0]
+    modifiedShaderPath = packagePath+'\\Shaders\\'+ modifiedShaderModule
+    
+    #get shader code
+    shaderCode = self.shaderModifications.document().toPlainText()
+    
+    #indent shader code
+    shaderCode =  textwrap.indent(shaderCode, 3 * '\t')
+    tab = "\t\t"
+    shaderReplacement = (
+    "replacement =  \"\"\"/*your new shader code here*/\n" +
+    shaderCode + "\n" +
+    tab + "\"\"\"\n"+
+    tab + "self.shaderProperty.AddFragmentShaderReplacement(\""+shaderTag+"\", True, replacement, False)\n" +
+    tab + "#shaderreplacement")
+
+    #modify file
+    fin = open(modifiedShaderPath, "rt")
+    data = fin.read()
+    data = data.replace('#shaderreplacement', shaderReplacement)
+    fin.close()
+
+    fin = open(modifiedShaderPath, "wt")
+    fin.write(data)
+    fin.close()
+    
+    #open file window
+    qt.QDesktopServices.openUrl(qt.QUrl("file:///"+modifiedShaderPath, qt.QUrl.TolerantMode))
+
+
+  def onOpenFile(self):
+    shaderTagType = self.allShaderTagTypes.get(self.modifiedShaderTagType, "")
+    shaderTag = shaderTagType.get(self.modifiedShaderTag)
+
+    #get selected shader path
+    modifiedShaderClass = CustomShader.GetClassName(self.modifiedShader)
+    modifiedShaderModule = modifiedShaderClass.__module__
+    packageName = "Resources"
+    f, filename, description = imp.find_module(packageName)
+    packagePath = imp.load_module(packageName, f, filename, description).__path__[0]
+    modifiedShaderPath = packagePath+'\\Shaders\\'+ modifiedShaderModule
+
+    #modify file 
+    tab = "\t\t"
+    shaderReplacement = (
+    "replacement = \"\"\"/*write your shader code here*/ \"\"\" \n " +
+    tab + "self.shaderProperty.AddFragmentShaderReplacement(\""+shaderTag+"\", True, replacement, False) \n "+
+    tab + "#shaderreplacement" )
+
+    fin = open(modifiedShaderPath, "rt")
+    data = fin.read()
+    data = data.replace('#shaderreplacement', shaderReplacement)
+    fin.close()
+
+    fin = open(modifiedShaderPath, "wt")
+    fin.write(data)
+    fin.close()
+    
+    #open file window
+    qt.QDesktopServices.openUrl(qt.QUrl("file:///"+modifiedShaderPath, qt.QUrl.TolerantMode))
+
+  def updateComboBox(self, tab, comboBox, comboBoxLabel, comboBoxLabelText, func):
+    comboBox.clear()  
+    for e in tab:
+      comboBox.addItem(e)
+    comboBox.setCurrentIndex(len(tab)-1)
+    comboBox.activated.connect(func)
+    comboBoxLabel.setText(comboBoxLabelText)
+  
+  def onModifyCustomShaderComboIndexChanged(self, value):
+    self.modifiedShader = self.modifyCustomShaderCombo.currentText
+    self.shaderTagsTypeComboLabel.show()
+    self.shaderTagsTypeCombo.show()
+
+  def onShaderTagsTypeComboIndexChanged(self, value):
+    self.modifiedShaderTagType = self.shaderTagsTypeCombo.currentText
+    self.shaderTagsComboLabel.show()
+    self.shaderTagsCombo.show()
+    tab = self.allShaderTagTypes.get(self.modifiedShaderTagType, "")
+    self.updateComboBox(tab, self.shaderTagsCombo, self.shaderTagsComboLabel, "Choose the "+self.modifiedShaderTagType+" shader tag to modify : ", self.onShaderTagsComboIndexChanged)
+ 
+  def onShaderTagsComboIndexChanged(self, value):
+    self.modifiedShaderTag = self.shaderTagsCombo.currentText
+    self.shaderModificationsLabel.show()
+    self.shaderModifications.show()
+    self.shaderOpenFileLabelButton.show()
+    self.shaderOpenFileButton.show()
+
   def onEditSource(self):
+    file_path = os.path.realpath(__file__)
+    file_dir, filename = os.path.split(file_path)
+    file_dir = file_dir + "\\Resources\\Shaders\\"
+    dst_file = os.path.join(file_dir, new_file_name + ".py")
+
     qt.QDesktopServices.openUrl(qt.QUrl("file:///"+self.newCustomShaderFile, qt.QUrl.TolerantMode))
+
+  def onModify(self):
+     self.modifyCustomShaderButton.enabled = len(self.shaderModifications.document().toPlainText()) > 0
 
   def onSelect(self):
     self.createCustomShaderButton.enabled = len(self.newCustomShaderNameInput.text) > 0 and len(self.newCustomShaderDisplayInput.text) > 0
@@ -330,7 +565,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
   # Volume rendering callbacks
   #
 
-  def onCustomShaderComboIndexChanged(self,i):
+  def onCustomShaderComboIndexChanged(self, i):
     self.logic.setCustomShaderType(self.customShaderCombo.currentText)
     self.logic.customShader.setPathEnds( self.logic.getEntry(), self.logic.getTarget() )
     self.UpdateShaderParametersUI()
@@ -533,8 +768,8 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
       return
     controllerPos = self.vrhelper.getRightControllerPosition()
     entryPos = self.getEntry()
-    diff = numpy.subtract(entryPos,controllerPos)
-    dist = numpy.linalg.norm(diff)
+    diff = np.subtract(entryPos,controllerPos)
+    dist = np.linalg.norm(diff)
     # Check distance from controller to entry point
     if dist < 30.0:
       # When created in Slicer, markups are selected. To change the color of the point selected by the VR controller,
@@ -566,10 +801,10 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     if not self.getNumberOfPoints(self.endPoints) == 2:
       return
     controllerPos = self.vrhelper.getRightControllerPosition()
-    diff = numpy.subtract(controllerPos,self.vrhelper.lastControllerPos)
+    diff = np.subtract(controllerPos,self.vrhelper.lastControllerPos)
     entryPos = self.getEntry()
-    newEntryPos = numpy.add(entryPos,diff)
-    dist = numpy.linalg.norm(numpy.subtract(entryPos,controllerPos))
+    newEntryPos = np.add(entryPos,diff)
+    dist = np.linalg.norm(np.subtract(entryPos,controllerPos))
     # If controller is near, unselected the markup the change color
     if dist < 30.0:
       self.endPoints.SetNthControlPointSelected(1, False)
@@ -609,15 +844,15 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
       # Compute distance between entry and target, then normalize
       entry = self.getEntry()
       target = self.getTarget()
-      diff = numpy.subtract(target, entry)
-      range = numpy.linalg.norm(diff)
+      diff = np.subtract(target, entry)
+      range = np.linalg.norm(diff)
       dir = diff / range
       # Compute current position compared to the position when the trigger has been pressed
       curPos = self.getLeftControllerPosition()
-      motion = numpy.subtract(curPos,self.leftInitPos)
-      offsetRatio = numpy.dot( motion, dir )/range
+      motion = np.subtract(curPos,self.leftInitPos)
+      offsetRatio = np.dot( motion, dir )/range
       # Change relative position based on the position
-      newRatio = numpy.clip(self.leftInitRatio + offsetRatio,0.0,1.0)
+      newRatio = np.clip(self.leftInitRatio + offsetRatio,0.0,1.0)
       self.customShader.setShaderParameter("relativePosition",newRatio)
     self.vrhelper.updateLaserPosition()
     if self.vrhelper.rightControlsDisplayMarkups.GetDisplayNode().GetVisibility():
@@ -695,6 +930,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
       self.shaderPropertyNode = allShaderProperty.GetItemAsObject(0)
     allShaderProperty = None
     self.customShader = CustomShader.InstanciateCustomShader(self.customShaderType,self.shaderPropertyNode)
+    print(self.customShader)
     self.customShader.setupShader()
 
   def updateVolumeColorMapping(self, volumeNode, displayNode, volumePropertyNode = None):
