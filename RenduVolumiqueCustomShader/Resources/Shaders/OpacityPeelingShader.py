@@ -5,7 +5,7 @@ from Resources.CustomShader import CustomShader
 #------------------------------------------------------------------------------------
 class OpacityPeelingShader(CustomShader):
 
-  shaderParams = { 'T_low' : { 'displayName' : 'Low Threshold', 'min' : 0.0, 'max' : 1.0, 'defaultValue' : 0.01 }, \
+  shaderfParams = { 'T_low' : { 'displayName' : 'Low Threshold', 'min' : 0.0, 'max' : 1.0, 'defaultValue' : 0.01 }, \
                    'T_high' : { 'displayName' : 'High Threshold', 'min' : 0.0, 'max' : 1.0, 'defaultValue' : 0.5 } }
 
   def __init__(self, shaderPropertyNode):

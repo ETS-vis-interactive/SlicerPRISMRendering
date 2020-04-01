@@ -5,7 +5,7 @@ from Resources.CustomShader import CustomShader
 #------------------------------------------------------------------------------------
 class CubeCarvingShader(CustomShader):
 
-  shaderParams = { 'boxLength' : { 'displayName' : 'Box Length',  'min' : 10.0, 'max' : 100.0, 'defaultValue' : 50. }}
+  shaderfParams = { 'boxLength' : { 'displayName' : 'Box Length',  'min' : 10.0, 'max' : 100.0, 'defaultValue' : 50. }}
 
   def __init__(self, shaderPropertyNode):
     CustomShader.__init__(self,shaderPropertyNode)

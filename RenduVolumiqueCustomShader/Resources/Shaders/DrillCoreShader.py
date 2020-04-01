@@ -5,7 +5,7 @@ from Resources.CustomShader import CustomShader
 #------------------------------------------------------------------------------------
 class DrillCoreShader(CustomShader):
 
-  shaderParams = { 'radius' : { 'displayName' : 'Radius', 'min' : 0.0, 'max' : 100.0, 'defaultValue' : 20. }}
+  shaderfParams = { 'radius' : { 'displayName' : 'Radius', 'min' : 0.0, 'max' : 100.0, 'defaultValue' : 20. }}
 
   def __init__(self, shaderPropertyNode):
     CustomShader.__init__(self,shaderPropertyNode)

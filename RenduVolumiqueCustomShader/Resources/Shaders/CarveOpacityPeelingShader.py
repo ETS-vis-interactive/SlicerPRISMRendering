@@ -5,7 +5,7 @@ from Resources.CustomShader import CustomShader
 #------------------------------------------------------------------------------------
 class CarveOpacityPeelingShader(CustomShader):
 
-  shaderParams = { 'radius' : { 'displayName' : 'Radius', 'min' : 0.0, 'max' : 100.0, 'defaultValue' : 50.0 }, \
+  shaderfParams = { 'radius' : { 'displayName' : 'Radius', 'min' : 0.0, 'max' : 100.0, 'defaultValue' : 50.0 }, \
                    'T_low' : { 'displayName' : 'Low Threshold', 'min' : 0.0, 'max' : 1.0, 'defaultValue' : 0.3 }, \
                    'T_high' : { 'displayName' : 'High Threshold', 'min' : 0.01, 'max' : 1.0, 'defaultValue' : 0.8 }}
 

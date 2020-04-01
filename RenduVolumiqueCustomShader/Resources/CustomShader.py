@@ -9,16 +9,24 @@ import importlib.util
 #------------------------------------------------------------------------------------
 class CustomShader():
 
-  shaderParams = {}
+  shaderfParams = {}
+  shaderiParams = {}
+  shader4fParams = {}
 
   def __init__(self, shaderPropertyNode):
     assert shaderPropertyNode != None, 'CustomShader: a valid shader property node must provided to the constructor'
     self.shaderPropertyNode = shaderPropertyNode
     self.shaderProperty = shaderPropertyNode.GetShaderProperty()
     self.shaderUniforms = self.shaderPropertyNode.GetFragmentUniforms()
-    self.paramValues = {}
-    for p in self.shaderParams.keys():
-      self.paramValues[p] = self.shaderParams[p]['defaultValue']
+    self.paramfValues = {}
+    for p in self.shaderfParams.keys():
+      self.paramfValues[p] = self.shaderfParams[p]['defaultValue']
+    self.paramiValues = {}
+    for p in self.shaderiParams.keys():
+      self.paramiValues[p] = self.shaderiParams[p]['defaultValue']
+    self.param4fValues = {}
+    for p in self.shader4fParams.keys():
+      self.param4fValues[p] = self.shader4fParams[p]['defaultValue']      
 
   @classmethod
   def InstanciateCustomShader(cls, shaderDisplayName,shaderPropertyNode):
@@ -88,8 +96,11 @@ class CustomShader():
     return None
 
   @classmethod
-  def hasShaderParameter(cls,name):
-    return name in cls.shaderParams
+  def hasShaderParameter(cls, name, type_):
+    if type_ == float :
+      return name in cls.shaderfParams
+    elif type_ == int :
+      return name in cls.shaderiParams
 
   def getParameterNames(self):
     return []
@@ -105,17 +116,36 @@ class CustomShader():
     pass
 
   def setAllUniforms(self):
-    for p in self.paramValues.keys():
-      self.shaderUniforms.SetUniformf(p,self.paramValues[p])
+    for p in self.paramfValues.keys():
+      self.shaderUniforms.SetUniformf(p,self.paramfValues[p])
 
-  def setShaderParameter(self, paramName, paramValue):
-    p = self.paramValues.get(paramName)
-    if p != None:
-      self.paramValues[paramName] = paramValue
-      self.shaderUniforms.SetUniformf(paramName, paramValue)
+    for p in self.paramiValues.keys():
+      self.shaderUniforms.SetUniformi(p,self.paramiValues[p])
 
-  def getShaderParameter(self,paramName):
-    return self.paramValues.get(paramName)
+  def setShaderParameter(self, paramName, paramValue, type_):
+    if type_ == float :
+      p = self.paramfValues.get(paramName)
+      if p != None:
+        self.paramfValues[paramName] = paramValue
+        self.shaderUniforms.SetUniformf(paramName, paramValue)
+
+    elif type_ == int :
+      p = self.paramiValues.get(paramName)
+      if p != None:
+        self.paramiValues[paramName] = paramValue
+        self.shaderUniforms.SetUniformi(paramName, int(paramValue))
+    
+    elif type_ == "markup":
+      p = self.param4fValues.get(paramName)
+      if p != None:
+        self.param4fValues[paramName] = paramValue
+        self.shaderUniforms.SetUniform4f(paramName, paramValue)
+
+  def getShaderParameter(self, paramName, type_):
+    if type_ == float :
+      return self.paramfValues.get(paramName)
+    if type_ == int :
+      return self.paramiValues.get(paramName)
 
   def clear(self):
     self.shaderUniforms.RemoveAllUniforms()

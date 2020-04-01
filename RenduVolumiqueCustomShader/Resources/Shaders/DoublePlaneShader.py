@@ -5,7 +5,7 @@ from Resources.CustomShader import CustomShader
 #------------------------------------------------------------------------------------
 class DoublePlaneShader(CustomShader):
 
-  shaderParams = { 'relativePosition' : { 'displayName' : 'Relative Position', 'min' : 0.0, 'max' : 1.0, 'defaultValue' : 0.5 }}
+  shaderfParams = { 'relativePosition' : { 'displayName' : 'Relative Position', 'min' : 0.0, 'max' : 1.0, 'defaultValue' : 0.5 }}
 
   def __init__(self, shaderPropertyNode):
     CustomShader.__init__(self,shaderPropertyNode)

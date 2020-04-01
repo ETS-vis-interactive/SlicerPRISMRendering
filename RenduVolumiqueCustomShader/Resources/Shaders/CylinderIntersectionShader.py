@@ -5,7 +5,7 @@ from Resources.CustomShader import CustomShader
 #------------------------------------------------------------------------------------
 class CylinderIntersectionShader(CustomShader):
 
-  shaderParams = { 'radius' : { 'displayName' : 'Radius', 'min' : 0.0, 'max' : 100.0, 'defaultValue' : 10. }}
+  shaderfParams = { 'radius' : { 'displayName' : 'Radius', 'min' : 0.0, 'max' : 100.0, 'defaultValue' : 10. }}
 
   def __init__(self, shaderPropertyNode):
     CustomShader.__init__(self,shaderPropertyNode)
@@ -27,8 +27,7 @@ class CylinderIntersectionShader(CustomShader):
       g_skip =  dot(texCoordRAS.xyz - target, dirVect) < 0. || dot(texCoordRAS.xyz - entry, dirVect) > 0. || length(cross(texCoordRAS.xyz - target, dirVect)) < constVal - 10 || length(cross(texCoordRAS.xyz - target, dirVect)) > constVal + 10;
     """
     self.shaderProperty.AddFragmentShaderReplacement("//VTK::Cropping::Impl", True, replacement, False)
-    
- 		#shaderreplacement
+
 
 
   def setPathEnds(self,entry,target):

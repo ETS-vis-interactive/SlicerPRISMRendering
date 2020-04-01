@@ -5,7 +5,7 @@ from Resources.CustomShader import CustomShader
 #------------------------------------------------------------------------------------
 class OutlineShader(CustomShader):
 
-  shaderParams = {  'step_min' : { 'displayName' : 'Step min', 'min' : 0.0, 'max' : 0.01, 'defaultValue' : 0.001 }, \
+  shaderfParams = {  'step_min' : { 'displayName' : 'Step min', 'min' : 0.0, 'max' : 0.01, 'defaultValue' : 0.001 }, \
                     'step_max' : { 'displayName' : 'Step max', 'min' : 0.0, 'max' : 0.01, 'defaultValue' : 0.01 }, \
                    'radius' : { 'displayName' : 'Radius', 'min' : 0.0, 'max' : 100.0, 'defaultValue' : 50.0 }, \
                    'x' :  {'displayName' : 'X', 'min' : -100.0, 'max' : 100.0, 'defaultValue' : 0.0 }, \
@@ -23,8 +23,8 @@ class OutlineShader(CustomShader):
 
   def setupShader(self):
     super(OutlineShader, self).setupShader()
-    self.shaderUniforms.SetUniformf("step_min", self.paramValues['step_min'])
-    self.shaderUniforms.SetUniformf("step_max", self.paramValues['step_max'])
+    self.shaderUniforms.SetUniformf("step_min", self.paramfValues['step_min'])
+    self.shaderUniforms.SetUniformf("step_max", self.paramfValues['step_max'])
 
     
     self.shaderProperty.ClearAllFragmentShaderReplacements()

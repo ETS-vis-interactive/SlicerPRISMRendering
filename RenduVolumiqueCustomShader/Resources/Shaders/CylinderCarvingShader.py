@@ -4,12 +4,12 @@ from Resources.CustomShader import CustomShader
 # Cylinder carving shader
 #------------------------------------------------------------------------------------
 class CylinderCarvingShader(CustomShader):
-  shaderParams = { 'radius' : { 'displayName' : 'Radius', 'min' : 0.0, 'max' : 100.0, 'defaultValue' : 50.0 }}
+  shaderfParams = { 'radius' : { 'displayName' : 'Radius', 'min' : 0.0, 'max' : 100.0, 'defaultValue' : 50.0 }}
+  shaderiParams = {}
+  shader4fParams = { 'endPoint' : { 'displayName' : 'endPoint', 'defaultValue' : {'x' : 0.0, 'y' : 0.0, 'z' : 0.0, "w" : 0.0 }}}
+
   def __init__(self, shaderPropertyNode):
     CustomShader.__init__(self,shaderPropertyNode)
-
-  def getParameterNames(self):
-    return ['radius']
 
   @classmethod
   def GetDisplayName(cls):
@@ -19,7 +19,8 @@ class CylinderCarvingShader(CustomShader):
     super(CylinderCarvingShader,self).setupShader()
     self.shaderUniforms.SetUniform3f("cylinderPoint1", [0.0,0.0,0.0])
     self.shaderUniforms.SetUniform3f("cylinderPoint2", [0.0,0.0,100.0])
-    self.shaderUniforms.SetUniformf("radius", self.paramValues['radius'])
+    self.shaderUniforms.SetUniformf("radius", self.paramfValues['radius'])
+
     cropDecReplacement = """
       //-----------------------------------------------------
       // Compute intersection between a ray and a cylinder
@@ -51,7 +52,7 @@ class CylinderCarvingShader(CustomShader):
         outPoint = start + max(t0,t1) * dir;
         return true;
       }
-
+      
       // Distances (texture space) at which the
       // ray intersects with a cutout cylinder.
       float cylinderStepIn = -1.0;
@@ -92,7 +93,3 @@ class CylinderCarvingShader(CustomShader):
   def setPathEnds(self,entry,target):
     self.shaderUniforms.SetUniform3f("cylinderPoint1", target)
     self.shaderUniforms.SetUniform3f("cylinderPoint2", entry)
-
-  def setShaderParameter(self, name, value):
-    if name == 'radius':
-      self.shaderUniforms.SetUniformf("radius", value)
