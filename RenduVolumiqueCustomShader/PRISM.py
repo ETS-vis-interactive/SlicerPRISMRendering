@@ -1,13 +1,15 @@
-import os
+import os, sys
 import unittest
 import vtk, qt, ctk, slicer
 from slicer.ScriptedLoadableModule import *
 import logging
-import numpy as np,math, time
+import numpy as np, math, time
 import json
 import imp
 import shutil
 import textwrap
+import importlib.util
+
 
 from Resources.CustomShader import CustomShader
 
@@ -86,6 +88,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     viewSetupLayout.addWidget(self.volumeRenderingCheckBox)
 
+
     #
     # Custom Shader Area
     #
@@ -109,7 +112,6 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.customShaderCombo.currentIndexChanged.connect(self.onCustomShaderComboIndexChanged)
     self.customShaderParametersLayout.addRow("Choose Custom Shader: ", self.customShaderCombo)
     self.customShaderCollapsibleButton.hide()
-
 
     #
     # Creation of new Custom Shader Area
@@ -312,8 +314,33 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.onModify()
     self.initState()
 
+  def onReloadCurrentCustomShader(self):
+    """ Function to reload the new current custom shader.
+
+    """
+    #get path of package
+    packageName = 'Resources'
+    f, filename, description = imp.find_module(packageName)
+    package = imp.load_module(packageName, f, filename, description)
+    csPath = os.path.dirname(package.__file__)
+
+    currentShader = self.customShaderCombo.currentText
+    modifiedShaderModule = CustomShader.GetClassName(currentShader).__module__
+
+    #find python the file in directory
+    for dirpath, _, filenames in os.walk(csPath):
+      for f in filenames:
+        filename, file_extension = os.path.splitext(dirpath+"/"+f)
+        if file_extension == ".py" and f == modifiedShaderModule:
+          #load the module
+          dirpath, filename = os.path.split(filename + file_extension)
+          loader = importlib.machinery.SourceFileLoader(filename, dirpath+"/"+filename)
+          spec = importlib.util.spec_from_loader(loader.name, loader)
+          mod = importlib.util.module_from_spec(spec)
+          loader.exec_module(mod)
+
   def onModifyCustomShader(self):
-    """ Function add the new shader replacement to a file.
+    """ Function to add the new shader replacement to a file.
 
     """
     shaderTagType = self.allShaderTagTypes.get(self.modifiedShaderTagType, "")
@@ -678,6 +705,11 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       targetPointButton.setCheckable(True)
       targetPointButton.clicked.connect(lambda _, b = targetPointButton : self.btnstate(btn = b))
       self.customShaderParametersLayout.addRow(qt.QLabel(params[p]['displayName']), targetPointButton)
+    
+    reloadCurrentCustomShaderButton = qt.QPushButton("Reload Custom Shader")
+    reloadCurrentCustomShaderButton.clicked.connect(self.onReloadCurrentCustomShader)
+    self.customShaderParametersLayout.addRow(reloadCurrentCustomShaderButton)
+
 
   def btnstate(self, btn):
     """ Check if the button is down.
