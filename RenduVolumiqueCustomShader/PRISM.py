@@ -117,6 +117,83 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.customShaderCollapsibleButton.hide()
 
     #
+    # Modification of Custom Shader Area
+    #
+
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    with open(dir_path+'\shaderTags.json', 'r') as f:
+      data = json.load(f)
+
+    allShaderDecTags = data['allShaderDecTags']    
+    allShaderInitTags = data['allShaderInitTags']
+    allShaderImplTags = data['allShaderImplTags']
+    allShaderExitTags = data['allShaderExitTags']
+    allShaderPathCheckTags = data['allShaderPathCheckTags']
+
+    self.allShaderTagTypes = {
+    "Declaration": allShaderDecTags,
+    "Initialization": allShaderInitTags,
+    "Exit": allShaderExitTags,
+    "Implementation": allShaderImplTags,
+    "Path Check": allShaderPathCheckTags,
+    "None":"None"
+    }
+          
+    self.modifyCustomShaderCollapsibleButton = ctk.ctkCollapsibleButton()
+    self.modifyCustomShaderCollapsibleButton.text = "Modify Custom Shader"
+    self.modifyCustomShaderCollapsibleButton.collapsed = True
+    self.layout.addWidget(self.modifyCustomShaderCollapsibleButton)
+    
+    # Custom shader combobox to select a type of custom shader
+    self.modifyCustomShaderComboLabel = qt.QLabel()
+    self.modifyCustomShaderCombo = qt.QComboBox()
+    self.updateComboBox(allShaderTypes, self.modifyCustomShaderCombo, self.modifyCustomShaderComboLabel, "Choose the custom shader to modify : ", self.onModifyCustomShaderComboIndexChanged)
+
+    # Custom shader combobox to select a type of custom shader
+    self.shaderTagsTypeComboLabel = qt.QLabel()
+    self.shaderTagsTypeCombo = qt.QComboBox()
+    self.updateComboBox(list(self.allShaderTagTypes.keys()), self.shaderTagsTypeCombo, self.shaderTagsTypeComboLabel, "Choose the shader tag type : ", self.onShaderTagsTypeComboIndexChanged)
+    self.shaderTagsTypeComboLabel.hide()
+    self.shaderTagsTypeCombo.hide()
+
+    self.shaderTagsComboLabel = qt.QLabel()
+    self.shaderTagsCombo = qt.QComboBox()
+    self.shaderTagsComboLabel.hide()
+    self.shaderTagsCombo.hide()
+
+    self.shaderModificationsLabel = qt.QLabel("Write shader code : ")
+    self.shaderModificationsLabel.hide()
+
+    self.shaderModifications = qt.QPlainTextEdit()
+    self.shaderModifications.textChanged.connect(self.onModify)
+    self.shaderModifications.hide()
+
+    self.shaderOpenFileLabelButton = qt.QLabel("Or open file : ")
+    self.shaderOpenFileLabelButton.hide()
+
+    self.shaderOpenFileButton = qt.QPushButton("Open")
+    self.shaderOpenFileButton.toolTip = "Open the selected custom shader source code."
+    self.shaderOpenFileButton.connect('clicked()', self.onOpenFile)
+    self.shaderOpenFileButton.hide()
+
+    self.modifyCustomShaderButton = qt.QPushButton("Modify")
+    self.modifyCustomShaderButton.toolTip = "Modifies selected custom shader source code."
+    self.modifyCustomShaderButton.connect('clicked()', self.onModifyCustomShader)
+
+    modifyCustomShaderlayout = qt.QGridLayout(self.modifyCustomShaderCollapsibleButton)
+    modifyCustomShaderlayout.addWidget(self.modifyCustomShaderComboLabel, 0, 0, 1, 1)
+    modifyCustomShaderlayout.addWidget(self.modifyCustomShaderCombo, 0, 1, 1, 3)
+    modifyCustomShaderlayout.addWidget(self.shaderTagsTypeComboLabel, 1, 0, 1, 1)
+    modifyCustomShaderlayout.addWidget(self.shaderTagsTypeCombo, 1, 1, 1, 3)
+    modifyCustomShaderlayout.addWidget(self.shaderTagsComboLabel, 2, 0, 1, 1)
+    modifyCustomShaderlayout.addWidget(self.shaderTagsCombo, 2, 1, 1, 3)
+    modifyCustomShaderlayout.addWidget(self.shaderModificationsLabel, 3, 0, 1, 1)
+    modifyCustomShaderlayout.addWidget(self.shaderModifications, 3, 1, 3, 1)
+    modifyCustomShaderlayout.addWidget(self.shaderOpenFileLabelButton, 4, 0, 1, 1)
+    modifyCustomShaderlayout.addWidget(self.shaderOpenFileButton, 5, 0, 1, 1)
+    modifyCustomShaderlayout.addWidget(self.modifyCustomShaderButton, 6, 0, 1, 4)
+ 
+    #
     # Creation of new Custom Shader Area
     #
     self.newCustomShaderCollapsibleButton = ctk.ctkCollapsibleButton()
@@ -221,137 +298,6 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.newCustomShaderlayout.addLayout(generalLayout, 0, 0, 1, 4)
     self.newCustomShaderlayout.addLayout(self.addParamLayout, 1, 0, 1, 4)
     self.newCustomShaderlayout.addLayout(self.paramLayout, 2, 1, 1, 3)
- 
-    #
-    # Modification of Custom Shader Area
-    #
-
-    allShaderDecTags = {
-    "Binary Mask" : "//VTK::BinaryMask::Dec",
-    "Compute Lighting" : "//VTK::ComputeLighting::Dec",
-    "Compute Opacity"  : "//VTK::ComputeOpacity::Dec",
-    "Picking" : "//VTK::Picking::Dec",
-    "Termination" : "//VTK::Termination::Dec",
-    "Base" : "//VTK::Base::Dec",
-    "Clipping" : "//VTK::Clipping::Dec",
-    "Composite Mask" : "//VTK::CompositeMask::Dec",
-    "Compute Color" : "//VTK::ComputeColor::Dec",
-    "Compute Gradient" : "//VTK::ComputeGradient::Dec",
-    "Compute Gradient Opacity 1D" : "//VTK::ComputeGradientOpacity1D::Dec",
-    "Compute Ray Direction" : "//VTK::ComputeRayDirection::Dec",
-    "Cropping" : "//VTK::Cropping::Dec",
-    "Depth Peeling" : "//VTK::DepthPeeling::Dec",
-    "Gradient Cache" : "//VTK::GradientCache::Dec",
-    "Output" : "//VTK::Output::Dec",
-    "Render To Image" : "//VTK::RenderToImage::Dec",
-    "Shading" : "//VTK::Shading::Dec",
-    "Transfer 2D" : "//VTK::Transfer2D::Dec",
-    "Custom Uniforms" : "//VTK::CustomUniforms::Dec",
-    "None":"None"
-    }
-    
-    allShaderInitTags = {
-    "Clipping": "//VTK::Clipping::Init",
-    "Depth Peeling": "//VTK::DepthPeeling::Ray::Init",
-    "Cropping": "//VTK::Cropping::Init",
-    "Depth Pass": "//VTK::DepthPass::Init",
-    "Render To Image": "//VTK::RenderToImage::Init",
-    "Shading": "//VTK::Shading::Init",
-    "Terminate": "//VTK::Terminate::Init",
-    "Base" : "//VTK::Base::Init",
-    "None":"None"
-    }
-    
-    allShaderImplTags = {
-    "Composite Mask": "//VTK::CompositeMask::Impl",
-    "Render To Image": "//VTK::RenderToImage::Impl",
-    "Terminate": "//VTK::Terminate::Impl",
-    "Binary Mask": "//VTK::BinaryMask::Impl",
-    "Call Worker": "//VTK::CallWorker::Impl",
-    "Cropping": "//VTK::Cropping::Impl",
-    "Depth Pass": "//VTK::DepthPass::Impl",
-    "Pre Compute Gradients": "//VTK::PreComputeGradients::Impl",
-    "Shading": "//VTK::Shading::Impl",
-    "Base": "//VTK::Base::Impl",
-    "None":"None"
-    }
-
-    allShaderExitTags = {
-    "Cropping" : "//VTK::Cropping::Exit",
-    "Depth Pass": "//VTK::DepthPass::Exit",
-    "Base": "//VTK::Base::Exit",
-    "Clipping": "//VTK::Clipping::Exit",
-    "Picking": "//VTK::Picking::Exit",
-    "Render To Image": "//VTK::RenderToImage::Exit",
-    "Terminate": "//VTK::Terminate::Exit",
-    "Shading": "//VTK::Shading::Exit",
-    "None":"None"
-    }
-
-    allShaderPathCheckTags = {"DepthPeeling" : "//VTK::DepthPeeling::Ray::PathCheck"}
-
-    self.allShaderTagTypes = {
-      "Declaration": allShaderDecTags,
-      "Initialization": allShaderInitTags,
-      "Exit": allShaderExitTags,
-      "Implementation": allShaderImplTags,
-      "Path Check": allShaderPathCheckTags,
-      "None":"None"
-    }
-    
-    self.modifyCustomShaderCollapsibleButton = ctk.ctkCollapsibleButton()
-    self.modifyCustomShaderCollapsibleButton.text = "Modify Custom Shader"
-    self.modifyCustomShaderCollapsibleButton.collapsed = True
-    self.layout.addWidget(self.modifyCustomShaderCollapsibleButton)
-    
-    # Custom shader combobox to select a type of custom shader
-    self.modifyCustomShaderComboLabel = qt.QLabel()
-    self.modifyCustomShaderCombo = qt.QComboBox()
-    self.updateComboBox(allShaderTypes, self.modifyCustomShaderCombo, self.modifyCustomShaderComboLabel, "Choose the custom shader to modify : ", self.onModifyCustomShaderComboIndexChanged)
-
-    # Custom shader combobox to select a type of custom shader
-    self.shaderTagsTypeComboLabel = qt.QLabel()
-    self.shaderTagsTypeCombo = qt.QComboBox()
-    self.updateComboBox(list(self.allShaderTagTypes.keys()), self.shaderTagsTypeCombo, self.shaderTagsTypeComboLabel, "Choose the shader tag type : ", self.onShaderTagsTypeComboIndexChanged)
-    self.shaderTagsTypeComboLabel.hide()
-    self.shaderTagsTypeCombo.hide()
-
-    self.shaderTagsComboLabel = qt.QLabel()
-    self.shaderTagsCombo = qt.QComboBox()
-    self.shaderTagsComboLabel.hide()
-    self.shaderTagsCombo.hide()
-
-    self.shaderModificationsLabel = qt.QLabel("Write shader code : ")
-    self.shaderModificationsLabel.hide()
-
-    self.shaderModifications = qt.QPlainTextEdit()
-    self.shaderModifications.textChanged.connect(self.onModify)
-    self.shaderModifications.hide()
-
-    self.shaderOpenFileLabelButton = qt.QLabel("Or open file : ")
-    self.shaderOpenFileLabelButton.hide()
-
-    self.shaderOpenFileButton = qt.QPushButton("Open")
-    self.shaderOpenFileButton.toolTip = "Open the selected custom shader source code."
-    self.shaderOpenFileButton.connect('clicked()', self.onOpenFile)
-    self.shaderOpenFileButton.hide()
-
-    self.modifyCustomShaderButton = qt.QPushButton("Modify")
-    self.modifyCustomShaderButton.toolTip = "Modifies selected custom shader source code."
-    self.modifyCustomShaderButton.connect('clicked()', self.onModifyCustomShader)
-
-    modifyCustomShaderlayout = qt.QGridLayout(self.modifyCustomShaderCollapsibleButton)
-    modifyCustomShaderlayout.addWidget(self.modifyCustomShaderComboLabel, 0, 0, 1, 1)
-    modifyCustomShaderlayout.addWidget(self.modifyCustomShaderCombo, 0, 1, 1, 3)
-    modifyCustomShaderlayout.addWidget(self.shaderTagsTypeComboLabel, 1, 0, 1, 1)
-    modifyCustomShaderlayout.addWidget(self.shaderTagsTypeCombo, 1, 1, 1, 3)
-    modifyCustomShaderlayout.addWidget(self.shaderTagsComboLabel, 2, 0, 1, 1)
-    modifyCustomShaderlayout.addWidget(self.shaderTagsCombo, 2, 1, 1, 3)
-    modifyCustomShaderlayout.addWidget(self.shaderModificationsLabel, 3, 0, 1, 1)
-    modifyCustomShaderlayout.addWidget(self.shaderModifications, 3, 1, 3, 1)
-    modifyCustomShaderlayout.addWidget(self.shaderOpenFileLabelButton, 4, 0, 1, 1)
-    modifyCustomShaderlayout.addWidget(self.shaderOpenFileButton, 5, 0, 1, 1)
-    modifyCustomShaderlayout.addWidget(self.modifyCustomShaderButton, 6, 0, 1, 4)
 
     """
     # 
@@ -547,7 +493,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     """
     shaderTagType = self.allShaderTagTypes.get(self.modifiedShaderTagType, "")
-    shaderTag = shaderTagType.get(self.modifiedShaderTag)
+    shaderTag = shaderTagType[self.modifiedShaderTag]
     
     #get selected shader path
     modifiedShaderClass = CustomShader.GetClassName(self.modifiedShader)
@@ -589,7 +535,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     """
     shaderTagType = self.allShaderTagTypes.get(self.modifiedShaderTagType, "")
-    shaderTag = shaderTagType.get(self.modifiedShaderTag)
+    shaderTag = shaderTagType[self.modifiedShaderTag]
 
     #get selected shader path
     modifiedShaderClass = CustomShader.GetClassName(self.modifiedShader)
@@ -909,10 +855,10 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     if paramNames != None :
       fidNode = slicer.util.getNode("vtkMRMLMarkupsFiducialNode1")
     for p in paramNames:
-      x = params.get(p).get('defaultValue').get('x')
-      y = params.get(p).get('defaultValue').get('y')
-      z = params.get(p).get('defaultValue').get('z')
-      w = params.get(p).get('defaultValue').get('w')
+      x = params[p]['defaultValue']['x']
+      y = params[p]['defaultValue']['y']
+      z = params[p]['defaultValue']['z']
+      w = params[p]['defaultValue']['w']
       
       n = fidNode.AddFiducial(0, 0, 0)
       fidNode.SetNthFiducialLabel(n, p)
@@ -1028,7 +974,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     if (call_data) in self.MarkupIndexes and caller.GetNthControlPointPositionStatus(call_data) == 2 :
       world = [0, 0, 0, 0]
       caller.GetNthFiducialWorldCoordinates(call_data, world)
-      self.onCustomShaderParamChanged(world, self.MarkupIndexes.get(call_data), "markup")
+      self.onCustomShaderParamChanged(world, self.MarkupIndexes[call_data], "markup")
     else:
       name = caller.GetNthFiducialLabel(call_data)
       world = [0, 0, 0, 0]

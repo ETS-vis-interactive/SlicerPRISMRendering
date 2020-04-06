@@ -1,0 +1,69 @@
+{
+    "allShaderDecTags" :
+    {
+        "Binary Mask" : "//VTK::BinaryMask::Dec",
+        "Compute Lighting" : "//VTK::ComputeLighting::Dec",
+        "Compuate Opacity"  : "//VTK::ComputeOpacity::Dec",
+        "Picking" : "//VTK::Picking::Dec",
+        "Termination" : "//VTK::Termination::Dec",
+        "Base" : "//VTK::Base::Dec",
+        "Clipping" : "//VTK::Clipping::Dec",
+        "Composite Mask" : "//VTK::CompositeMask::Dec",
+        "Compute Color" : "//VTK::ComputeColor::Dec",
+        "Compute Gradient" : "//VTK::ComputeGradient::Dec",
+        "Compute Gradient Opacity 1D" : "//VTK::ComputeGradientOpacity1D::Dec",
+        "Compute Ray Direction" : "//VTK::ComputeRayDirection::Dec",
+        "Cropping" : "//VTK::Cropping::Dec",
+        "Depth Peeling" : "//VTK::DepthPeeling::Dec",
+        "Gradient Cache" : "//VTK::GradientCache::Dec",
+        "Output" : "//VTK::Output::Dec",
+        "Render To Image" : "//VTK::RenderToImage::Dec",
+        "Shading" : "//VTK::Shading::Dec",
+        "Transfer 2D" : "//VTK::Transfer2D::Dec",
+        "Custom Uniforms" : "//VTK::CustomUniforms::Dec",
+        "None":"None"
+    },
+    
+    "allShaderInitTags" : 
+    {
+    "Clipping": "//VTK::Clipping::Init",
+    "Depth Peeling": "//VTK::DepthPeeling::Ray::Init",
+    "Cropping": "//VTK::Cropping::Init",
+    "Depth Pass": "//VTK::DepthPass::Init",
+    "Render To Image": "//VTK::RenderToImage::Init",
+    "Shading": "//VTK::Shading::Init",
+    "Terminate": "//VTK::Terminate::Init",
+    "Base" : "//VTK::Base::Init",
+    "None":"None"
+    },
+    
+    "allShaderImplTags" : 
+    {
+        "Composite Mask": "//VTK::CompositeMask::Impl",
+        "Render To Image": "//VTK::RenderToImage::Impl",
+        "Terminate": "//VTK::Terminate::Impl",
+        "Binary Mask": "//VTK::BinaryMask::Impl",
+        "Call Worker": "//VTK::CallWorker::Impl",
+        "Cropping": "//VTK::Cropping::Impl",
+        "Depth Pass": "//VTK::DepthPass::Impl",
+        "Pre Compute Gradients": "//VTK::PreComputeGradients::Impl",
+        "Shading": "//VTK::Shading::Impl",
+        "Base": "//VTK::Base::Impl",
+        "None":"None"
+    },
+
+    "allShaderExitTags" : 
+    {
+        "Cropping" : "//VTK::Cropping::Exit",
+        "Depth Pass": "//VTK::DepthPass::Exit",
+        "Base": "//VTK::Base::Exit",
+        "Clipping": "//VTK::Clipping::Exit",
+        "Picking": "//VTK::Picking::Exit",
+        "Render To Image": "//VTK::RenderToImage::Exit",
+        "Terminate": "//VTK::Terminate::Exit",
+        "Shading": "//VTK::Shading::Exit",
+        "None":"None"
+    },
+
+    "allShaderPathCheckTags" : {"DepthPeeling" : "//VTK::DepthPeeling::Ray::PathCheck"}
+}
