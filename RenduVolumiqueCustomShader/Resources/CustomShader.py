@@ -117,10 +117,17 @@ class CustomShader():
 
   def setAllUniforms(self):
     for p in self.paramfValues.keys():
-      self.shaderUniforms.SetUniformf(p,self.paramfValues[p])
+      self.shaderUniforms.SetUniformf(p, self.paramfValues[p])
 
     for p in self.paramiValues.keys():
-      self.shaderUniforms.SetUniformi(p,self.paramiValues[p])
+      self.shaderUniforms.SetUniformi(p, int(self.paramiValues[p]))
+
+    for p in self.param4fValues.keys():
+      x = self.param4fValues.get(p).get('x')
+      y = self.param4fValues.get(p).get('y')
+      z = self.param4fValues.get(p).get('z')
+      w = self.param4fValues.get(p).get('w')
+      self.shaderUniforms.SetUniform4f(p, [x, y, z , w])
 
   def setShaderParameter(self, paramName, paramValue, type_):
     if type_ == float :

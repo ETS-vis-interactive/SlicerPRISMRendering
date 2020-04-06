@@ -906,14 +906,27 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     # Instanciate a markup
     params = self.logic.customShader.shader4fParams
     paramNames = params.keys()
+    if paramNames != None :
+      fidNode = slicer.util.getNode("vtkMRMLMarkupsFiducialNode1")
     for p in paramNames:
+      x = params.get(p).get('defaultValue').get('x')
+      y = params.get(p).get('defaultValue').get('y')
+      z = params.get(p).get('defaultValue').get('z')
+      w = params.get(p).get('defaultValue').get('w')
+      
+      n = fidNode.AddFiducial(0, 0, 0)
+      fidNode.SetNthFiducialLabel(n, p)
+      fidNode.SetNthFiducialWorldCoordinates(n, [x, y, z , w])
+      fidNode.SetNthFiducialLabel(n, p)
+      fidNode.SetNthFiducialSelected(n, 1)
+      """
       targetPointButton = qt.QPushButton("Initialize " + params[p]['displayName'])
       targetPointButton.setToolTip( "Place a markup" )
       targetPointButton.clicked.connect(lambda _, name = p, btn = targetPointButton : self.logic.setPlacingMarkups(paramName = name, btn = btn,  interaction = 1))
       targetPointButton.setCheckable(True)
       targetPointButton.clicked.connect(lambda _, b = targetPointButton : self.btnstate(btn = b))
       self.customShaderParametersLayout.addRow(qt.QLabel(params[p]['displayName']), targetPointButton)
-    
+      """
     reloadCurrentCustomShaderButton = qt.QPushButton("Reload Custom Shader")
     reloadCurrentCustomShaderButton.clicked.connect(self.onReloadCurrentCustomShader)
     self.customShaderParametersLayout.addRow(reloadCurrentCustomShaderButton)
@@ -1016,6 +1029,11 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
       world = [0, 0, 0, 0]
       caller.GetNthFiducialWorldCoordinates(call_data, world)
       self.onCustomShaderParamChanged(world, self.MarkupIndexes.get(call_data), "markup")
+    else:
+      name = caller.GetNthFiducialLabel(call_data)
+      world = [0, 0, 0, 0]
+      caller.GetNthFiducialWorldCoordinates(call_data, world)
+      self.onCustomShaderParamChanged(world, name, "markup")
     
   def onEndPointAdded(self, caller, event):
     """ Callback function to get the position of the new point.

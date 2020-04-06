@@ -5,13 +5,8 @@ from Resources.CustomShader import CustomShader
 #------------------------------------------------------------------------------------
 class SphereCarvingShader(CustomShader):
 
-  shaderfParams = { 'radius' : { 'displayName' : 'Radius', 'min' : 0.0, 'max' : 100.0, 'defaultValue' : 50.0 }, \
-                   'x' :  {'displayName' : 'X', 'min' : -100.0, 'max' : 100.0, 'defaultValue' : 0.0 }, \
-                   'y' :  {'displayName' : 'Y', 'min' : -100.0, 'max' : 100.0, 'defaultValue' : 0.0 }, \
-                   'z' :  {'displayName' : 'Z', 'min' : -100.0, 'max' : 100.0, 'defaultValue' : 0.0 } 
-  }
-  
-
+  shaderfParams = { 'radius' : { 'displayName' : 'Radius', 'min' : 0.0, 'max' : 100.0, 'defaultValue' : 50.0 }}  
+  shader4fParams = {'centerPoint': {'displayName': 'centerPoint', 'defaultValue': {'x': 0.0, 'y': 0.0, 'z': 0.0, 'w': 0.0}}}
   def __init__(self, shaderPropertyNode):
     CustomShader.__init__(self,shaderPropertyNode)
 
@@ -21,13 +16,15 @@ class SphereCarvingShader(CustomShader):
 
   def setupShader(self):
     super(SphereCarvingShader,self).setupShader()
-    self.shaderUniforms.SetUniformf("x",  self.paramfValues['x'])
-    self.shaderUniforms.SetUniformf("y",  self.paramfValues['y'])
-    self.shaderUniforms.SetUniformf("z",  self.paramfValues['z'])
+    x = self.param4fValues['centerPoint']['x']
+    y = self.param4fValues['centerPoint']['y']
+    z = self.param4fValues['centerPoint']['z']
+    w = self.param4fValues['centerPoint']['w']
+    self.shaderUniforms.SetUniform4f('centerPoint', [x, y, z , w])
 
     self.shaderUniforms.SetUniformf("radius", self.paramfValues['radius'])
     replacement = """
-      vec3 center = vec3(x, y, z);
+      vec3 center = centerPoint.xyz;
       vec4 texCoordRAS = in_volumeMatrix[0] * in_textureDatasetMatrix[0]  * vec4(g_dataPos, 1.);
       g_skip = length(texCoordRAS.xyz - center) < radius;
     """
