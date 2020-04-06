@@ -5,6 +5,9 @@ from Resources.CustomShader import CustomShader
 #------------------------------------------------------------------------------------
 class Template(CustomShader):
 
+  shaderfParams = {}
+  shaderiParams = {}
+  shader4fParams = {}
   def __init__(self, shaderPropertyNode):
     CustomShader.__init__(self,shaderPropertyNode)
 
