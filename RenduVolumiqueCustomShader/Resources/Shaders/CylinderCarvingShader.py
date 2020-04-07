@@ -4,10 +4,10 @@ from Resources.CustomShader import CustomShader
 # Cylinder carving shader
 #------------------------------------------------------------------------------------
 class CylinderCarvingShader(CustomShader):
-  shaderfParams = { 'radius' : { 'displayName' : 'Radius', 'min' : 0.0, 'max' : 100.0, 'defaultValue' : 50.0 }}
-  shaderiParams = {}
-  shader4fParams = { 'endPoint' : { 'displayName' : 'endPoint', 'defaultValue' : {'x' : 0.0, 'y' : 0.0, 'z' : 0.0, "w" : 0.0 }}}
-
+  
+  shaderfParams = {'radius': {'displayName': 'Radius', 'min': 0.0, 'max': 100.0, 'defaultValue': 50.0}}
+  shaderiParams = {'test': {'displayName': 'testname', 'min': 1, 'max': 1, 'defaultValue': 0}}
+  shader4fParams = {'point': {'displayName': 'endPoint', 'defaultValue': {'x': 0.0, 'y': 0.0, 'z': 0.0, 'w': 0.0}}}
   def __init__(self, shaderPropertyNode):
     CustomShader.__init__(self,shaderPropertyNode)
 
@@ -90,6 +90,8 @@ class CylinderCarvingShader(CustomShader):
     """
     self.shaderProperty.AddFragmentShaderReplacement("//VTK::Cropping::Impl", True, cropImplReplacement, False)
 
+		#shaderreplacement
+    
   def setPathEnds(self,entry,target):
     self.shaderUniforms.SetUniform3f("cylinderPoint1", target)
     self.shaderUniforms.SetUniform3f("cylinderPoint2", entry)
