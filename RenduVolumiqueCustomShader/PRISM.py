@@ -80,13 +80,59 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.layout.addWidget(viewSetupCollapsibleButton)
 
     # Layout within the view setup collapsible button
-    viewSetupLayout = qt.QVBoxLayout(viewSetupCollapsibleButton)
+    viewSetupLayout = qt.QGridLayout(viewSetupCollapsibleButton)
 
     # Checkbox to activate volume rendering
     self.volumeRenderingCheckBox = qt.QCheckBox()
     self.volumeRenderingCheckBox.toggled.connect(self.onVolumeRenderingCheckBoxToggled)
     self.volumeRenderingCheckBox.text = "Volume Rendering"    
-    viewSetupLayout.addWidget(self.volumeRenderingCheckBox)
+    viewSetupLayout.addWidget(self.volumeRenderingCheckBox, 0, 0)
+
+    self.enableROICheckBox = qt.QCheckBox()
+    self.enableROICheckBox.toggled.connect(self.onEnableROICheckBoxCheckBoxToggled)
+    self.enableROICheckBox.text = "Enable Cropping"    
+    viewSetupLayout.addWidget(self.enableROICheckBox, 0, 1)
+
+    self.displayROICheckBox = qt.QCheckBox()
+    self.displayROICheckBox.toggled.connect(self.onDisplayROICheckBoxCheckBoxToggled)
+    self.displayROICheckBox.text = "Risplay ROI"    
+    viewSetupLayout.addWidget(self.displayROICheckBox, 0, 2)
+
+    self.ROIXSlider = ctk.ctkSliderWidget()
+    self.ROIXSlider.minimum = -180.0
+    self.ROIXSlider.maximum = 180.0
+    self.ROIXSlider.singleStep =  1
+    self.ROIXSlider.setObjectName('X')
+    self.ROIXSlider.setValue(0.0)
+    self.ROIXSlider.valueChanged.connect(self.onRotateXValueChanged)
+    
+    self.ROIYSlider = ctk.ctkSliderWidget()
+    self.ROIYSlider.minimum = -180.0
+    self.ROIYSlider.maximum = 180.0
+    self.ROIYSlider.singleStep =  1
+    self.ROIYSlider.setObjectName('Y')
+    self.ROIYSlider.setValue(0.0)
+    self.ROIYSlider.valueChanged.connect(self.onRotateYValueChanged)
+
+    self.ROIZSlider = ctk.ctkSliderWidget()
+    self.ROIZSlider.minimum = -180.0
+    self.ROIZSlider.maximum = 180.0
+    self.ROIZSlider.singleStep =  1
+    self.ROIZSlider.setObjectName('Z')
+    self.ROIZSlider.setValue(0.0)
+    self.ROIZSlider.valueChanged.connect(self.onRotateZValueChanged)
+
+    ROIRotateLayout = qt.QFormLayout()
+    ROIRotateLayout.addRow('X', self.ROIXSlider)
+    ROIRotateLayout.addRow('Y', self.ROIYSlider)
+    ROIRotateLayout.addRow('Z', self.ROIZSlider)
+
+    RotateBox = ctk.ctkCollapsibleGroupBox()
+    RotateBox.setLayout(ROIRotateLayout)
+    RotateBox.setTitle("Rotate ROI")
+    RotateBox.collapsed = True
+    viewSetupLayout.addWidget(RotateBox, 1, 0, 1, 3)
+
 
     #
     # Custom Shader Area
@@ -107,7 +153,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       self.customShaderCombo.addItem(shaderType)
     self.customShaderCombo.setCurrentIndex(len(allShaderTypes)-1)
     self.customShaderCombo.currentIndexChanged.connect(self.onCustomShaderComboIndexChanged)
-    self.customShaderParametersLayout.addRow("Choose Custom Shader: ", self.customShaderCombo)
+    self.customShaderParametersLayout.addRow("Custom Shader: ", self.customShaderCombo)
     self.customShaderCollapsibleButton.hide()
 
     #
@@ -142,39 +188,23 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.modifyCustomShaderCombo = qt.QComboBox()
     self.updateComboBox(allShaderTypes, self.modifyCustomShaderCombo, self.onModifyCustomShaderComboIndexChanged)
 
-    self.modifyCustomShaderCodeButton = qt.QPushButton("Add code")
-    self.modifyCustomShaderCodeButton.toolTip = "Open the selected custom shader source code."
-    self.modifyCustomShaderCodeButton.connect('clicked()', self.onModifyCustomShaderCodeButtonClicked)
-    self.modifyCustomShaderCodeButton.hide()
-
-    self.modifyCustomShaderParamButton = qt.QPushButton("Add parameter")
-    self.modifyCustomShaderParamButton.toolTip = "Open the selected custom shader source code."
-    self.modifyCustomShaderParamButton.connect('clicked()', self.onModifyCustomShaderParamButtonClicked)
-    self.modifyCustomShaderParamButton.hide()
-
     # Custom shader combobox to select a type of custom shader
-    self.shaderTagsTypeComboLabel = qt.QLabel("Choose the tag type :")
     self.shaderTagsTypeCombo = qt.QComboBox()
     self.updateComboBox(list(self.allShaderTagTypes.keys()), self.shaderTagsTypeCombo, self.onShaderTagsTypeComboIndexChanged)
-    self.shaderTagsTypeComboLabel.hide()
-    self.shaderTagsTypeCombo.hide()
 
-    self.shaderTagsComboLabel = qt.QLabel()
+    self.shaderTagsComboLabel = qt.QLabel("Shader Tag : ")
     self.shaderTagsCombo = qt.QComboBox()
     self.shaderTagsComboLabel.hide()
     self.shaderTagsCombo.hide()
 
-    self.shaderModificationsLabel = qt.QLabel("Write shader code : ")
+    self.shaderModificationsLabel = qt.QLabel("Shader code : ")
     self.shaderModificationsLabel.hide()
 
     self.shaderModifications = qt.QPlainTextEdit()
     self.shaderModifications.textChanged.connect(self.onModify)
     self.shaderModifications.hide()
 
-    self.shaderOpenFileLabelButton = qt.QLabel("Or open file : ")
-    self.shaderOpenFileLabelButton.hide()
-
-    self.shaderOpenFileButton = qt.QPushButton("Open")
+    self.shaderOpenFileButton = qt.QPushButton("Open File")
     self.shaderOpenFileButton.toolTip = "Open the selected custom shader source code."
     self.shaderOpenFileButton.connect('clicked()', self.onOpenFile)
     self.shaderOpenFileButton.hide()
@@ -187,33 +217,40 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.addedMsg = qt.QLabel()
     self.addedMsg.hide()
 
-    self.modifyCustomShaderCodelayout = qt.QGridLayout()
-    self.modifyCustomShaderCodelayout.addWidget(self.shaderTagsTypeComboLabel, 1, 0, 1, 1)
-    self.modifyCustomShaderCodelayout.addWidget(self.shaderTagsTypeCombo, 1, 1, 1, 2)
-    self.modifyCustomShaderCodelayout.addWidget(self.shaderTagsComboLabel, 2, 0, 1, 1)
-    self.modifyCustomShaderCodelayout.addWidget(self.shaderTagsCombo, 2, 1, 1, 2)
-    self.modifyCustomShaderCodelayout.addWidget(self.shaderModificationsLabel, 3, 0, 1, 1)
-    self.modifyCustomShaderCodelayout.addWidget(self.shaderModifications, 3, 1, 1, 2)
-    self.modifyCustomShaderCodelayout.addWidget(self.shaderOpenFileLabelButton, 4, 0, 1, 1)
-    self.modifyCustomShaderCodelayout.addWidget(self.shaderOpenFileButton, 4, 1, 1, 2)
-    self.modifyCustomShaderCodelayout.addWidget(self.modifyCustomShaderButton, 5, 0, 1, 3)
-    self.modifyCustomShaderCodelayout.addWidget(self.addedMsg, 6, 0, 1, 3)
-    modifyCustomShaderlayout = qt.QFormLayout()
-    modifyCustomShaderlayout.addRow("Choose the shader to modify : ", self.modifyCustomShaderCombo)
-    
-    modifyCustomShaderButtonslayout = qt.QHBoxLayout()
-    modifyCustomShaderButtonslayout.addWidget(self.modifyCustomShaderParamButton)
-    modifyCustomShaderButtonslayout.addWidget(self.modifyCustomShaderCodeButton)
 
+    self.modifyCustomShaderCodeLayout = qt.QFormLayout()
+    self.modifyCustomShaderCodeLayout.addRow("Tag type : ", self.shaderTagsTypeCombo)
+    self.modifyCustomShaderCodeLayout.addRow(self.shaderTagsComboLabel, self.shaderTagsCombo)
+    self.modifyCustomShaderCodeLayout.addRow(self.shaderModificationsLabel, self.shaderModifications)
+    self.modifyCustomShaderCodeLayout.addRow("", self.shaderOpenFileButton)
+    self.modifyCustomShaderCodeLayout.addRow("", self.modifyCustomShaderButton)
+    self.modifyCustomShaderCodeLayout.addRow("", self.addedMsg)
+
+    modifyCustomShaderlayout = qt.QFormLayout()
+    modifyCustomShaderlayout.addRow("Shader : ", self.modifyCustomShaderCombo)
+    
     modifyCustomShaderGenerallayout = qt.QGridLayout(self.modifyCustomShaderCollapsibleButton)
     modifyCustomShaderGenerallayout.addLayout(modifyCustomShaderlayout, 0, 0, 1, 4)
-    modifyCustomShaderGenerallayout.addLayout(modifyCustomShaderButtonslayout, 1, 1, 1, 3)
-    modifyCustomShaderGenerallayout.addLayout(self.modifyCustomShaderCodelayout, 2, 1, 1, 3)
-    
-    self.addParamModifyShader = ModifyParamWidget()
-    modifyCustomShaderGenerallayout.addLayout(self.addParamModifyShader.addParamLayout, 2, 1, 1, 3)
-    modifyCustomShaderGenerallayout.addLayout(self.addParamModifyShader.paramLayout, 3, 1, 1, 3)
 
+    self.addParamModifyShader = ModifyParamWidget()
+    self.modifyCustomShaderParamLayout = qt.QGridLayout()
+    self.modifyCustomShaderParamLayout.addLayout(self.addParamModifyShader.addParamLayout, 0, 1, 1, 3)
+    self.modifyCustomShaderParamLayout.addLayout(self.addParamModifyShader.paramLayout, 1, 1, 1, 3)
+
+    codeTab = qt.QWidget()   
+    codeTab.setLayout(self.modifyCustomShaderCodeLayout)   
+    paramTab = qt.QWidget()
+    paramTab.setLayout(self.modifyCustomShaderParamLayout)
+    
+    self.ModifyCSTabs = qt.QTabWidget()
+    self.ModifyCSTabs.visible = False
+    self.ModifyCSTabs.addTab(codeTab, "Add Code")
+    self.ModifyCSTabs.addTab(paramTab, "Add Parameter")
+    
+    modifyCustomShaderGenerallayout.addWidget(self.ModifyCSTabs, 2, 1)
+    self.addParamModifyShader.addParamCombo.show()
+    self.addParamModifyShader.addParamLayout.itemAt(0,0).widget().show()
+    
     #
     # Creation of new Custom Shader Area
     #
@@ -241,8 +278,6 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.createCustomShaderButton.clicked.connect(self.onNewCustomShaderButtonClick)
     self.createCustomShaderButton.enabled = False
 
-
-    
     self.editSourceButton = qt.QPushButton("Edit")
     self.editSourceButton.toolTip = "Edit the new custom shader source code."
     self.editSourceButton.connect('clicked()', self.onEditSource)
@@ -257,9 +292,9 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.addParamCreateShader = ModifyParamWidget()
 
     self.newCustomShaderlayout = qt.QGridLayout(self.newCustomShaderCollapsibleButton)
-    self.newCustomShaderlayout.addLayout(generalLayout, 0, 0, 1, 4)
-    self.newCustomShaderlayout.addLayout(self.addParamCreateShader.addParamLayout, 1, 0, 1, 4)
-    self.newCustomShaderlayout.addLayout(self.addParamCreateShader.paramLayout, 2, 1, 1, 3)
+    self.newCustomShaderlayout.addLayout(generalLayout, 0, 0, 1, 10)
+    self.newCustomShaderlayout.addLayout(self.addParamCreateShader.addParamLayout, 1, 1, 1, 8)
+    self.newCustomShaderlayout.addLayout(self.addParamCreateShader.paramLayout, 2, 1, 1, 8)
 
     """
     # 
@@ -291,9 +326,47 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.onModify()
     self.initState()
     self.addParamCreateShader.addParamButtonState()
-  
+    self.currXAngle = 0.0
+    self.currYAngle = 0.0
+    self.currZAngle = 0.0
 
-  
+  def onRotateXValueChanged (self):
+    newXAngle = self.ROIXSlider.value
+    XRotation = newXAngle - self.currXAngle
+    self.currXAngle = newXAngle
+    rotation = vtk.vtkTransform()
+    rotation.RotateX(XRotation)
+    self.transformNode.ApplyTransformMatrix(rotation.GetMatrix())
+
+  def onRotateYValueChanged (self):
+    newYAngle = self.ROIYSlider.value
+    YRotation = newYAngle - self.currYAngle
+    self.currYAngle = newYAngle
+    rotation = vtk.vtkTransform()
+    rotation.RotateY(YRotation)
+    self.transformNode.ApplyTransformMatrix(rotation.GetMatrix())
+
+  def onRotateZValueChanged (self):
+    newZAngle = self.ROIZSlider.value
+    ZRotation = newZAngle - self.currZAngle
+    self.currZAngle = newZAngle
+    rotation = vtk.vtkTransform()
+    rotation.RotateZ(ZRotation)
+    self.transformNode.ApplyTransformMatrix(rotation.GetMatrix())
+
+  def onEnableROICheckBoxCheckBoxToggled(self):
+    if self.enableROICheckBox.isChecked():
+      self.renderingDisplayNode.SetCroppingEnabled(1)
+    else:
+      self.renderingDisplayNode.SetCroppingEnabled(0)
+
+  def onDisplayROICheckBoxCheckBoxToggled(self):
+    ROINode = self.renderingDisplayNode.GetROINode()
+    if self.displayROICheckBox.isChecked():
+      ROINode.SetDisplayVisibility(1)
+    else :
+      ROINode.SetDisplayVisibility(0)
+    
 
   def onReloadCurrentCustomShader(self):
     """ Function to reload the new current custom shader.
@@ -397,14 +470,12 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     #open file window
     qt.QDesktopServices.openUrl(qt.QUrl("file:///"+modifiedShaderPath, qt.QUrl.TolerantMode))
 
-  def updateComboBox(self, tab, comboBox, func, comboBoxLabel = None, comboBoxLabelText = ""):
+  def updateComboBox(self, tab, comboBox, func):
     """ Function to populate a combobox from an array.
 
     Args:
         tab (list): List to populate the combobox.
         comboBox (qt.QComboBox): ComboBox to be modified.
-        comboBoxLabel (qt.QLabel): Label to be modified.
-        comboBoxLabelText (str): Text to add into the label.
         func (func): Connect function when the ComboBox index is changed.
     """
     comboBox.clear()  
@@ -412,30 +483,16 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       comboBox.addItem(e)
     comboBox.setCurrentIndex(len(tab)-1)
     comboBox.activated.connect(func)
-    if (comboBoxLabel!=None) :
-      comboBoxLabel.setText(comboBoxLabelText)
   
-  def onModifyCustomShaderCodeButtonClicked(self):
-    self.modifiedShader = self.modifyCustomShaderCombo.currentText
-    self.shaderTagsTypeComboLabel.show()
-    self.shaderTagsTypeCombo.show()
-    self.addParamModifyShader.clearLayout(self.addParamModifyShader.paramLayout)
-    self.addParamModifyShader.clearLayout(self.addParamModifyShader.addParamLayout)
-
-  def onModifyCustomShaderParamButtonClicked(self):
-    self.addParamModifyShader.addParamCombo.show()
-    self.addParamModifyShader.addParamLayout.itemAt(0,0).widget().show()
-    self.addParamModifyShader.clearLayout(self.modifyCustomShaderCodelayout)
-
   def onModifyCustomShaderComboIndexChanged(self, value):
     """ Function to set which shader will be modified.
 
     Args:
         value (list): current value of the comboBox.
     """
-    self.modifyCustomShaderCodeButton.show()
-    self.modifyCustomShaderParamButton.show()
+    self.modifiedShader = self.modifyCustomShaderCombo.currentText
     self.addParamModifyShader.shaderDisplayName = self.modifyCustomShaderCombo.currentText
+    self.ModifyCSTabs.visible = True
 
   def onShaderTagsTypeComboIndexChanged(self, value):
     """ Function to set which shader tag type will be added to the shader.
@@ -447,7 +504,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.shaderTagsComboLabel.show()
     self.shaderTagsCombo.show()
     tab = self.allShaderTagTypes.get(self.modifiedShaderTagType, "")
-    self.updateComboBox(tab, self.shaderTagsCombo, self.onShaderTagsComboIndexChanged, self.shaderTagsComboLabel, "Choose the "+self.modifiedShaderTagType+" tag to modify : ")
+    self.updateComboBox(tab, self.shaderTagsCombo, self.onShaderTagsComboIndexChanged)
  
   def onShaderTagsComboIndexChanged(self, value):
     """ Function to set which shader tag will be added to the shader.
@@ -458,7 +515,6 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.modifiedShaderTag = self.shaderTagsCombo.currentText
     self.shaderModificationsLabel.show()
     self.shaderModifications.show()
-    self.shaderOpenFileLabelButton.show()
     self.shaderOpenFileButton.show()
     self.modifyCustomShaderButton.show()
 
@@ -469,7 +525,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """
     self.className = self.newCustomShaderNameInput.text
     self.displayName = self.newCustomShaderDisplayInput.text
-    addParamCreateShader.shaderDisplayName = self.newCustomShaderDisplayInput.text
+    self.addParamCreateShader.shaderDisplayName = self.newCustomShaderDisplayInput.text
     self.newCustomShaderFile = self.duplicate_file("Template", self.className)
     if(self.newCustomShaderFile != False):
       self.errorMsg.hide()
@@ -573,13 +629,6 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       self.imageSelector.nodeAdded.disconnect()
       self.UpdateShaderParametersUI()    
 
-      #TODO remove
-      parent = slicer.util.findChildren(text='Data Probe')[0]
-      i = 0
-      for child in parent.children():
-        if (i==1):
-          child.hide()
-        i+=1
   #
   # Data callbacks
   #
@@ -625,10 +674,31 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         self.logic.renderVolume(self.imageSelector.currentNode())
         self.UpdateShaderParametersUI()
         self.customShaderCollapsibleButton.show()
+
+        #init ROI
+        self.renderingDisplayNode = slicer.util.getNodesByClass("vtkMRMLVolumeRenderingDisplayNode")[0]
+        self.ROI = slicer.mrmlScene.GetNodeByID("vtkMRMLAnnotationROINode1")
+        self.transformNode = slicer.mrmlScene.AddNode(slicer.vtkMRMLTransformNode())
+        self.ROI.SetAndObserveTransformNodeID(self.transformNode.GetID())
+        self.removeROI()
+
     else:
       if self.logic.volumeRenderingDisplayNode:
         self.logic.volumeRenderingDisplayNode.SetVisibility(False)
+        self.enableROICheckBox.setChecked(False)
+        self.displayROICheckBox.setChecked(False)
+        slicer.mrmlScene.RemoveNode(self.transformNode)
       self.customShaderCollapsibleButton.hide()
+      
+
+
+  def removeROI(self):
+    ROINode = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLAnnotationROINode','AnnotationROI')
+    if ROINode.GetNumberOfItems() > 0:
+      # set node used before reload in the current instance
+      ROINodes = ROINode.GetItemAsObject(0)
+      ROINodes.ResetAnnotations()
+      ROINodes.SetName("ROI")
 
   def onDisplayControlsCheckBoxToggled(self):
     """ Callback function triggered when the display controls check box is toggled.
@@ -751,7 +821,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         imp.load_module(packageName+'.'+submoduleName, f, filename, description)
       finally:
         f.close()
-    
+
     logging.debug("Reloading PRISM")
     packageName='PRISM'
     f, filename, description = imp.find_module(packageName)
@@ -759,6 +829,14 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       imp.load_module(packageName, f, filename, description)
     finally:
       f.close()   
+
+    self.removeROI()
+    self.enableROICheckBox.setChecked(False)
+    self.displayROICheckBox.setChecked(False)
+    try :
+      slicer.mrmlScene.RemoveNode(self.transformNode)
+    except: 
+      pass
 
     ScriptedLoadableModuleWidget.onReload(self)
 
