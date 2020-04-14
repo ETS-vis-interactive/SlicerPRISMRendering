@@ -189,7 +189,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     #
 
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    with open(dir_path+'\shaderTags.json', 'r') as f:
+    with open(dir_path+'/shaderTags.json', 'r') as f:
       data = json.load(f)
 
     allShaderDecTags = data['allShaderDecTags']    
