@@ -135,24 +135,16 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
 
     InteractionLayout = qt.QGridLayout()
+
+    self.enableScalingCheckBox = qt.QCheckBox()
+    self.enableScalingCheckBox.setEnabled(False)
+    self.enableScalingCheckBox.toggled.connect(self.onEnableScalingCheckBoxToggled)
+    self.enableScalingCheckBox.text = "Enable Scaling"  
+    InteractionLayout.addWidget(self.enableScalingCheckBox, 0, 0)
     
-    # Checkbox to activate volume rendering
-    self.VisibilityCheckBox = qt.QCheckBox()
-    self.VisibilityCheckBox.toggled.connect(self.onVisibilityCheckBoxToggled)
-    self.VisibilityCheckBox.text = "Visible in 3D view"    
-    self.VisibilityCheckBox.setEnabled(False)
-    InteractionLayout.addWidget(self.VisibilityCheckBox, 0, 0)
-
-    self.updateBoundsButton = qt.QPushButton("Update Bounds")
-    self.updateBoundsButton.toolTip = "Updates the bounds of the interactive box."
-    self.updateBoundsButton.connect('clicked()', self.onUpdateBoundsButton)
-    self.updateBoundsButton.setStyleSheet("max-width: 100px")
-    self.updateBoundsButton.setEnabled(False)
-    InteractionLayout.addWidget(self.updateBoundsButton, 0, 1)
-
     self.enableRotationCheckBox = qt.QCheckBox()
     self.enableRotationCheckBox.setEnabled(False)
-    self.enableRotationCheckBox.toggled.connect(self.onEnableRotationCheckBoxCheckBoxCheckBoxToggled)
+    self.enableRotationCheckBox.toggled.connect(self.onEnableRotationCheckBoxToggled)
     self.enableRotationCheckBox.text = "Enable Rotation"  
     InteractionLayout.addWidget(self.enableRotationCheckBox, 1, 0)
 
@@ -358,22 +350,17 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.currYAngle = 0.0
     self.currZAngle = 0.0
 
-  def onUpdateBoundsButton(self) :
-    self.transformDisplayNode.UpdateEditorBounds()
-
-  def onEnableRotationCheckBoxCheckBoxCheckBoxToggled(self) :
+  def onEnableRotationCheckBoxToggled(self) :
     if self.enableRotationCheckBox.isChecked():
       self.transformDisplayNode.SetEditorRotationEnabled(True)
     else :
       self.transformDisplayNode.SetEditorRotationEnabled(False)
 
-  def onVisibilityCheckBoxToggled(self) :
-    if self.VisibilityCheckBox.isChecked():
-      self.transformDisplayNode.EditorVisibilityOn()
-      self.transformDisplayNode.UpdateEditorBounds()
+  def onEnableScalingCheckBoxToggled(self) :
+    if self.enableScalingCheckBox.isChecked():
+      self.transformDisplayNode.SetEditorScalingEnabled(True)
     else :
-      ROINode.SetDisplayVisibility(0)
-      self.transformDisplayNode.EditorVisibilityOff()
+      self.transformDisplayNode.SetEditorScalingEnabled(False)
 
   def onRotateXValueChanged (self):
     newXAngle = self.ROIXSlider.value
@@ -406,11 +393,12 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       self.renderingDisplayNode.SetCroppingEnabled(0)
 
   def onDisplayROICheckBoxCheckBoxToggled(self):
-    ROINode = self.renderingDisplayNode.GetROINode()
     if self.displayROICheckBox.isChecked():
-      ROINode.SetDisplayVisibility(1)
+      self.transformDisplayNode.EditorVisibilityOn()
+
     else :
-      ROINode.SetDisplayVisibility(0)
+      self.transformDisplayNode.EditorVisibilityOff()
+
     
 
   def onReloadCurrentCustomShader(self):
@@ -728,9 +716,10 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         self.transformNode.SetAndObserveDisplayNodeID(self.transformDisplayNode.GetID())
         self.ROI = slicer.mrmlScene.GetNodeByID("vtkMRMLAnnotationROINode1")
         self.ROI.SetAndObserveTransformNodeID(self.transformNode.GetID())
+        self.ROI.SetDisplayVisibility(0)
         self.removeROI()
-        self.VisibilityCheckBox.setEnabled(True)
-        self.updateBoundsButton.setEnabled(True)
+        self.enableScalingCheckBox.setEnabled(True)
+        self.enableScalingCheckBox.setEnabled(True)
         self.enableRotationCheckBox.setEnabled(True)
         self.enableRotationCheckBox.setChecked(True)
 
@@ -742,8 +731,10 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         self.displayROICheckBox.setChecked(False)
         slicer.mrmlScene.RemoveNode(self.transformNode)
         self.VisibilityCheckBox.setEnabled(False)
-        self.updateBoundsButton.setEnabled(False)
+        self.enableScalingCheckBox.setEnabled(False)
+        self.enableScalingCheckBox.setEnabled(False)
         self.enableRotationCheckBox.setEnabled(False)
+        self.enableRotationCheckBox.setChecked(False)
       self.customShaderCollapsibleButton.hide()
       
 
