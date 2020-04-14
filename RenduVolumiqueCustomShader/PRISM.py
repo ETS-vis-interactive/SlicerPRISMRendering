@@ -91,12 +91,12 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.enableROICheckBox = qt.QCheckBox()
     self.enableROICheckBox.toggled.connect(self.onEnableROICheckBoxCheckBoxToggled)
     self.enableROICheckBox.text = "Enable Cropping"    
-    viewSetupLayout.addWidget(self.enableROICheckBox, 0, 1)
+    self.enableROICheckBox.setEnabled(False)
 
     self.displayROICheckBox = qt.QCheckBox()
     self.displayROICheckBox.toggled.connect(self.onDisplayROICheckBoxCheckBoxToggled)
     self.displayROICheckBox.text = "Display ROI"    
-    viewSetupLayout.addWidget(self.displayROICheckBox, 0, 2)
+    self.displayROICheckBox.setEnabled(False)
 
     self.ROIXSlider = ctk.ctkSliderWidget()
     self.ROIXSlider.minimum = -180.0
@@ -105,7 +105,8 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.ROIXSlider.setObjectName('X')
     self.ROIXSlider.setValue(0.0)
     self.ROIXSlider.valueChanged.connect(self.onRotateXValueChanged)
-    
+    self.ROIXSlider.setEnabled(False)
+
     self.ROIYSlider = ctk.ctkSliderWidget()
     self.ROIYSlider.minimum = -180.0
     self.ROIYSlider.maximum = 180.0
@@ -113,6 +114,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.ROIYSlider.setObjectName('Y')
     self.ROIYSlider.setValue(0.0)
     self.ROIYSlider.valueChanged.connect(self.onRotateYValueChanged)
+    self.ROIYSlider.setEnabled(False)
 
     self.ROIZSlider = ctk.ctkSliderWidget()
     self.ROIZSlider.minimum = -180.0
@@ -121,6 +123,9 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.ROIZSlider.setObjectName('Z')
     self.ROIZSlider.setValue(0.0)
     self.ROIZSlider.valueChanged.connect(self.onRotateZValueChanged)
+    self.ROIZSlider.setEnabled(False)
+
+
 
     ROIRotateLayout = qt.QFormLayout()
     ROIRotateLayout.addRow('X', self.ROIXSlider)
@@ -131,8 +136,6 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     RotateBox.setLayout(ROIRotateLayout)
     RotateBox.setTitle("Rotate ROI")
     RotateBox.collapsed = True
-    viewSetupLayout.addWidget(RotateBox, 1, 0, 1, 3)
-
 
     InteractionLayout = qt.QGridLayout()
 
@@ -153,7 +156,18 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     InteractionBox.setTitle("Interaction")
     InteractionBox.collapsed = True
 
-    viewSetupLayout.addWidget(InteractionBox, 2, 0, 1, 3)
+    ROILayout = qt.QGridLayout()
+    ROILayout .addWidget(self.enableROICheckBox, 0, 0)
+    ROILayout.addWidget(self.displayROICheckBox, 0, 1)
+    ROILayout.addWidget(RotateBox, 1, 0, 1, 3)
+    ROILayout.addWidget(InteractionBox)
+
+    ROIBox = ctk.ctkCollapsibleGroupBox()
+    ROIBox.setLayout(ROILayout)
+    ROIBox.setTitle("ROI")
+    ROIBox.collapsed = True
+
+    viewSetupLayout.addWidget(ROIBox, 2, 0, 1, 3)
     #
     # Custom Shader Area
     #
@@ -722,6 +736,11 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         self.enableScalingCheckBox.setEnabled(True)
         self.enableRotationCheckBox.setEnabled(True)
         self.enableRotationCheckBox.setChecked(True)
+        self.enableROICheckBox.setEnabled(True)
+        self.displayROICheckBox.setEnabled(True)
+        self.ROIXSlider.setEnabled(True)
+        self.ROIYSlider.setEnabled(True)
+        self.ROIZSlider.setEnabled(True)
 
 
     else:
@@ -735,6 +754,11 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         self.enableScalingCheckBox.setEnabled(False)
         self.enableRotationCheckBox.setEnabled(False)
         self.enableRotationCheckBox.setChecked(False)
+        self.enableROICheckBox.setEnabled(False)
+        self.displayROICheckBox.setEnabled(False)
+        self.ROIXSlider.setEnabled(False)
+        self.ROIYSlider.setEnabled(False)
+        self.ROIZSlider.setEnabled(False)
       self.customShaderCollapsibleButton.hide()
       
 
