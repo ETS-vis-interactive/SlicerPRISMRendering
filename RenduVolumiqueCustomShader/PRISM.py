@@ -95,7 +95,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     self.displayROICheckBox = qt.QCheckBox()
     self.displayROICheckBox.toggled.connect(self.onDisplayROICheckBoxCheckBoxToggled)
-    self.displayROICheckBox.text = "Risplay ROI"    
+    self.displayROICheckBox.text = "Display ROI"    
     viewSetupLayout.addWidget(self.displayROICheckBox, 0, 2)
 
     self.ROIXSlider = ctk.ctkSliderWidget()
@@ -134,6 +134,34 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     viewSetupLayout.addWidget(RotateBox, 1, 0, 1, 3)
 
 
+    InteractionLayout = qt.QGridLayout()
+    
+    # Checkbox to activate volume rendering
+    self.VisibilityCheckBox = qt.QCheckBox()
+    self.VisibilityCheckBox.toggled.connect(self.onVisibilityCheckBoxToggled)
+    self.VisibilityCheckBox.text = "Visible in 3D view"    
+    self.VisibilityCheckBox.setEnabled(False)
+    InteractionLayout.addWidget(self.VisibilityCheckBox, 0, 0)
+
+    self.updateBoundsButton = qt.QPushButton("Update Bounds")
+    self.updateBoundsButton.toolTip = "Updates the bounds of the interactive box."
+    self.updateBoundsButton.connect('clicked()', self.onUpdateBoundsButton)
+    self.updateBoundsButton.setStyleSheet("max-width: 100px")
+    self.updateBoundsButton.setEnabled(False)
+    InteractionLayout.addWidget(self.updateBoundsButton, 0, 1)
+
+    self.enableRotationCheckBox = qt.QCheckBox()
+    self.enableRotationCheckBox.setEnabled(False)
+    self.enableRotationCheckBox.toggled.connect(self.onEnableRotationCheckBoxCheckBoxCheckBoxToggled)
+    self.enableRotationCheckBox.text = "Enable Rotation"  
+    InteractionLayout.addWidget(self.enableRotationCheckBox, 1, 0)
+
+    InteractionBox = ctk.ctkCollapsibleGroupBox()
+    InteractionBox.setLayout(InteractionLayout)
+    InteractionBox.setTitle("Interaction")
+    InteractionBox.collapsed = True
+
+    viewSetupLayout.addWidget(InteractionBox, 2, 0, 1, 3)
     #
     # Custom Shader Area
     #
@@ -329,6 +357,23 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.currXAngle = 0.0
     self.currYAngle = 0.0
     self.currZAngle = 0.0
+
+  def onUpdateBoundsButton(self) :
+    self.transformDisplayNode.UpdateEditorBounds()
+
+  def onEnableRotationCheckBoxCheckBoxCheckBoxToggled(self) :
+    if self.enableRotationCheckBox.isChecked():
+      self.transformDisplayNode.SetEditorRotationEnabled(True)
+    else :
+      self.transformDisplayNode.SetEditorRotationEnabled(False)
+
+  def onVisibilityCheckBoxToggled(self) :
+    if self.VisibilityCheckBox.isChecked():
+      self.transformDisplayNode.EditorVisibilityOn()
+      self.transformDisplayNode.UpdateEditorBounds()
+    else :
+      ROINode.SetDisplayVisibility(0)
+      self.transformDisplayNode.EditorVisibilityOff()
 
   def onRotateXValueChanged (self):
     newXAngle = self.ROIXSlider.value
@@ -677,10 +722,18 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
         #init ROI
         self.renderingDisplayNode = slicer.util.getNodesByClass("vtkMRMLVolumeRenderingDisplayNode")[0]
-        self.ROI = slicer.mrmlScene.GetNodeByID("vtkMRMLAnnotationROINode1")
+        self.transformDisplayNode = slicer.mrmlScene.AddNode(slicer.vtkMRMLTransformDisplayNode())
+        self.transformDisplayNode.SetEditorRotationEnabled(True)
         self.transformNode = slicer.mrmlScene.AddNode(slicer.vtkMRMLTransformNode())
+        self.transformNode.SetAndObserveDisplayNodeID(self.transformDisplayNode.GetID())
+        self.ROI = slicer.mrmlScene.GetNodeByID("vtkMRMLAnnotationROINode1")
         self.ROI.SetAndObserveTransformNodeID(self.transformNode.GetID())
         self.removeROI()
+        self.VisibilityCheckBox.setEnabled(True)
+        self.updateBoundsButton.setEnabled(True)
+        self.enableRotationCheckBox.setEnabled(True)
+        self.enableRotationCheckBox.setChecked(True)
+
 
     else:
       if self.logic.volumeRenderingDisplayNode:
@@ -688,6 +741,9 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         self.enableROICheckBox.setChecked(False)
         self.displayROICheckBox.setChecked(False)
         slicer.mrmlScene.RemoveNode(self.transformNode)
+        self.VisibilityCheckBox.setEnabled(False)
+        self.updateBoundsButton.setEnabled(False)
+        self.enableRotationCheckBox.setEnabled(False)
       self.customShaderCollapsibleButton.hide()
       
 
@@ -788,7 +844,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       targetPointButton = qt.QPushButton("Initialize " + params[p]['displayName'])
       targetPointButton.setToolTip( "Place a markup" )
       targetPointButton.clicked.connect(lambda _, name = p, btn = targetPointButton : self.logic.setPlacingMarkups(paramName = name, btn = btn,  interaction = 1))
-      targetPointButton.setCheckable(True)
+      targetPointButton.setEnabled(True)
       targetPointButton.clicked.connect(lambda _, b = targetPointButton : self.btnstate(btn = b))
       self.customShaderParametersLayout.addRow(qt.QLabel(params[p]['displayName']), targetPointButton)
       """
@@ -835,6 +891,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.displayROICheckBox.setChecked(False)
     try :
       slicer.mrmlScene.RemoveNode(self.transformNode)
+      slicer.mrmlScene.RemoveNode(self.transformDisplayNode)
     except: 
       pass
 
