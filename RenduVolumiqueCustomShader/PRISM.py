@@ -118,6 +118,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     # Custom Shader Area
     #
     self.customShaderCollapsibleButton = ctk.ctkCollapsibleButton()
+    self.customShaderCollapsibleButton.hide()
     self.customShaderCollapsibleButton.text = "Custom Shader"
     self.layout.addWidget(self.customShaderCollapsibleButton)
 
@@ -133,9 +134,21 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       self.customShaderCombo.addItem(shaderType)
     self.customShaderCombo.setCurrentIndex(len(allShaderTypes)-1)
     self.customShaderCombo.currentIndexChanged.connect(self.onCustomShaderComboIndexChanged)
-    self.customShaderParametersLayout.addRow("Custom Shader: ", self.customShaderCombo)
-    self.customShaderCollapsibleButton.hide()
 
+    self.customShaderLayout = qt.QGridLayout()
+
+    reloadCurrentCustomShaderButton = qt.QPushButton("Reload")
+    reloadCurrentCustomShaderButton.clicked.connect(self.onReloadCurrentCustomShaderButtonClicked)
+
+    openCustomShaderButton = qt.QPushButton("Open")
+    openCustomShaderButton.clicked.connect(self.onOpenCustomShaderButtonClicked)
+
+    self.customShaderLayout.addWidget(qt.QLabel("Custom Shader : "), 0, 0)
+    self.customShaderLayout.addWidget(self.customShaderCombo, 0, 1)
+    self.customShaderLayout.addWidget(reloadCurrentCustomShaderButton, 0, 2)
+    self.customShaderLayout.addWidget(openCustomShaderButton, 0, 3)
+
+    self.customShaderParametersLayout.addRow(self.customShaderLayout)
     #
     # Modification of Custom Shader Area
     #
@@ -166,7 +179,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     
     # Custom shader combobox to select a type of custom shader
     self.modifyCustomShaderCombo = qt.QComboBox()
-    self.updateComboBox(allShaderTypes, self.modifyCustomShaderCombo, self.onModifyCustomShaderComboIndexChanged)
+    self.updateComboBox(allShaderTypes, self.modifyCustomShaderCombo, self.onModifyCustomShaderButtonClickedComboIndexChanged)
 
     # Custom shader combobox to select a type of custom shader
     self.shaderTagsTypeCombo = qt.QComboBox()
@@ -186,12 +199,12 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     self.shaderOpenFileButton = qt.QPushButton("Open File")
     self.shaderOpenFileButton.toolTip = "Open the selected custom shader source code."
-    self.shaderOpenFileButton.connect('clicked()', self.onOpenFile)
+    self.shaderOpenFileButton.connect('clicked()', self.onShaderOpenFileButtonClicked)
     self.shaderOpenFileButton.hide()
 
     self.modifyCustomShaderButton = qt.QPushButton("Modify")
     self.modifyCustomShaderButton.toolTip = "Modifies selected custom shader source code."
-    self.modifyCustomShaderButton.connect('clicked()', self.onModifyCustomShader)
+    self.modifyCustomShaderButton.connect('clicked()', self.onModifyCustomShaderButtonClicked)
     self.modifyCustomShaderButton.hide()
 
     self.addedMsg = qt.QLabel()
@@ -255,12 +268,12 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     self.createCustomShaderButton = qt.QPushButton("Create")
     self.createCustomShaderButton.setToolTip("Creates a new custom shader class." )
-    self.createCustomShaderButton.clicked.connect(self.onNewCustomShaderButtonClick)
+    self.createCustomShaderButton.clicked.connect(self.onNewCustomShaderButtonClicked)
     self.createCustomShaderButton.enabled = False
 
     self.editSourceButton = qt.QPushButton("Edit")
     self.editSourceButton.toolTip = "Edit the new custom shader source code."
-    self.editSourceButton.connect('clicked()', self.onEditSource)
+    self.editSourceButton.connect('clicked()', self.onEditSourceButtonClicked)
     self.editSourceButton.hide()
 
     generalLayout = qt.QFormLayout()
@@ -310,6 +323,10 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.currYAngle = 0.0
     self.currZAngle = 0.0
 
+  def onOpenCustomShaderButtonClicked(self) :
+    shaderPath = self.getShaderPath(self.customShaderCombo.currentText)
+    qt.QDesktopServices.openUrl(qt.QUrl("file:///"+shaderPath, qt.QUrl.TolerantMode))
+
   def onEnableRotationCheckBoxToggled(self) :
     """ Function to enable rotating ROI box.
 
@@ -355,7 +372,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       self.enableRotationCheckBox.hide()
       self.enableRotationCheckBox.setChecked(False)
 
-  def onReloadCurrentCustomShader(self):
+  def onReloadCurrentCustomShaderButtonClicked(self):
     """ Function to reload the new current custom shader.
 
     """
@@ -380,7 +397,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
           mod = importlib.util.module_from_spec(spec)
           loader.exec_module(mod)
 
-  def onModifyCustomShader(self):
+  def onModifyCustomShaderButtonClicked(self):
     """ Function to add the new shader replacement to a file.
 
     """
@@ -388,13 +405,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     shaderTag = shaderTagType[self.modifiedShaderTag]
     
     #get selected shader path
-    modifiedShaderClass = CustomShader.GetClassName(self.modifiedShader)
-    modifiedShaderModule = modifiedShaderClass.__module__
-    packageName = "Resources"
-    f, filename, description = imp.find_module(packageName)
-    packagePath = imp.load_module(packageName, f, filename, description).__path__[0]
-    modifiedShaderPath = packagePath+'\\Shaders\\'+ modifiedShaderModule
-    
+    modifiedShaderPath = self.getShaderPath(self.modifiedShader)    
     #get shader code
     shaderCode = self.shaderModifications.document().toPlainText()
     #indent shader code
@@ -423,7 +434,20 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.addedMsg.setText("Code added to shader \""+self.modifiedShader+"\".")
     self.addedMsg.show()
 
-  def onOpenFile(self):
+  def getShaderPath(self, shaderName) :
+    """ Function to get a selected shader file path.
+
+    """
+    shaderClass = CustomShader.GetClassName(shaderName)
+    shaderModule = shaderClass.__module__
+    packageName = "Resources"
+    f, filename, description = imp.find_module(packageName)
+    packagePath = imp.load_module(packageName, f, filename, description).__path__[0]
+    shaderPath = packagePath+'\\Shaders\\'+ shaderModule
+
+    return shaderPath
+
+  def onShaderOpenFileButtonClicked(self):
     """ Function to open a file containing the new shader replacement.
 
     """
@@ -431,12 +455,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     shaderTag = shaderTagType[self.modifiedShaderTag]
 
     #get selected shader path
-    modifiedShaderClass = CustomShader.GetClassName(self.modifiedShader)
-    modifiedShaderModule = modifiedShaderClass.__module__
-    packageName = "Resources"
-    f, filename, description = imp.find_module(packageName)
-    packagePath = imp.load_module(packageName, f, filename, description).__path__[0]
-    modifiedShaderPath = packagePath+'\\Shaders\\'+ modifiedShaderModule
+    modifiedShaderPath = self.getShaderPath(self.modifiedShader)
 
     #modify file 
     tab = "\t\t"
@@ -471,7 +490,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     comboBox.setCurrentIndex(len(tab)-1)
     comboBox.activated.connect(func)
   
-  def onModifyCustomShaderComboIndexChanged(self, value):
+  def onModifyCustomShaderButtonClickedComboIndexChanged(self, value):
     """ Function to set which shader will be modified.
 
     Args:
@@ -506,7 +525,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.modifyCustomShaderButton.show()
 
 
-  def onNewCustomShaderButtonClick(self):
+  def onNewCustomShaderButtonClicked(self):
     """ Function to create a new file with the associated class.
 
     """
@@ -526,7 +545,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       self.newCustomShaderNameInput.setEnabled(False)
       self.newCustomShaderDisplayInput.setEnabled(False)
 
-  def onEditSource(self):
+  def onEditSourceButtonClicked(self):
     """ Function to create a new file with the custom shader and open the file in editor
 
     """
@@ -725,7 +744,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       return
     
     # Clear all the widgets except the combobox selector
-    while self.customShaderParametersLayout.count() != 2:
+    while self.customShaderParametersLayout.count() != 1:
       item = self.customShaderParametersLayout.takeAt(self.customShaderParametersLayout.count() - 1)
       if item != None:
         widget = item.widget()
@@ -787,9 +806,6 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       targetPointButton.clicked.connect(lambda _, b = targetPointButton : self.btnstate(btn = b))
       self.customShaderParametersLayout.addRow(qt.QLabel(params[p]['displayName']), targetPointButton)
       """
-    reloadCurrentCustomShaderButton = qt.QPushButton("Reload Custom Shader")
-    reloadCurrentCustomShaderButton.clicked.connect(self.onReloadCurrentCustomShader)
-    self.customShaderParametersLayout.addRow(reloadCurrentCustomShaderButton)
 
   def btnstate(self, btn):
     """ Check if the button is down.
