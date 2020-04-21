@@ -790,7 +790,6 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     params = self.logic.customShader.shader4fParams
     paramNames = params.keys()
     if params:
-      
       for p in paramNames:
         x = params[p]['defaultValue']['x']
         y = params[p]['defaultValue']['y']
@@ -873,7 +872,8 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     self.customShaderType = 'None'
     self.customShader = None
     
-    self.MarkupIndexes = {}
+    self.isCenterPoint = False
+    self.centerPointIndex = -1
     self.CurrentMarkupBtn = None
     self.CurrentMarkupName = "None"
 
@@ -902,11 +902,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     """
 
     #check if the point was added from the module and was set
-    if (call_data) in self.MarkupIndexes and caller.GetNthControlPointPositionStatus(call_data) == 2 :
-      world = [0, 0, 0, 0]
-      caller.GetNthFiducialWorldCoordinates(call_data, world)
-      self.onCustomShaderParamChanged(world, self.MarkupIndexes[call_data], "markup")
-    else:
+    if (call_data == self.centerPointIndex):
       name = caller.GetNthFiducialLabel(call_data)
       world = [0, 0, 0, 0]
       caller.GetNthFiducialWorldCoordinates(call_data, world)
@@ -918,13 +914,16 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
         caller (slicer.mrmlScene): Slicer active scene.
         event (string): Flag corresponding to the triggered event.
     """
-    movingMarkupIndex = caller.GetDisplayNode().GetActiveControlPoint()
-    world = [0, 0, 0, 0]
-    caller.GetNthFiducialWorldCoordinates(movingMarkupIndex, world)
-    caller.SetNthFiducialLabel(movingMarkupIndex, self.CurrentMarkupName)
-    self.onCustomShaderParamChanged(world, self.CurrentMarkupName, "markup")
-    self.CurrentMarkupBtn.enabled = False
-    self.MarkupIndexes.update({movingMarkupIndex : self.CurrentMarkupName})
+
+    if (self.isCenterPoint):
+      self.centerPointIndex = caller.GetDisplayNode().GetActiveControlPoint()
+      world = [0, 0, 0, 0]
+      caller.GetNthFiducialWorldCoordinates(self.centerPointIndex, world)
+      caller.SetNthFiducialLabel(self.centerPointIndex, self.CurrentMarkupName)
+      self.onCustomShaderParamChanged(world, self.CurrentMarkupName, "markup")
+      self.CurrentMarkupBtn.enabled = False
+      self.isCenterPoint = False
+
 
   def setPlacingMarkups(self, paramName, btn, interaction = 1, persistence = 0):
     """ Activate Slicer markups module to set one or multiple markups in the given markups fiducial list.
@@ -939,6 +938,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     interactionNode = slicer.mrmlScene.GetNodeByID("vtkMRMLInteractionNodeSingleton")
     interactionNode.SetCurrentInteractionMode(interaction)
     interactionNode.SetPlaceModePersistence(persistence)
+    self.isCenterPoint = True
     
   def onCustomShaderParamChanged(self, value, paramName, type_ ):
     """ Change the custom parameters in the shader.
