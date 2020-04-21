@@ -751,6 +751,10 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         if widget != None:
           widget.setParent(None)
 
+    try :
+      self.logic.endPoints.RemoveAllMarkups()
+    except :
+      pass
     # Instanciate a slider for each floating parameter of the active shader
     params = self.logic.customShader.shaderfParams
     paramNames = params.keys()
@@ -785,38 +789,28 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     # Instanciate a markup
     params = self.logic.customShader.shader4fParams
     paramNames = params.keys()
-    if paramNames != None :
-      fidNode = slicer.util.getNode("vtkMRMLMarkupsFiducialNode1")
-    for p in paramNames:
-      x = params[p]['defaultValue']['x']
-      y = params[p]['defaultValue']['y']
-      z = params[p]['defaultValue']['z']
-      w = params[p]['defaultValue']['w']
+    if params:
       
-      n = fidNode.AddFiducial(0, 0, 0)
-      fidNode.SetNthFiducialLabel(n, p)
-      fidNode.SetNthFiducialWorldCoordinates(n, [x, y, z , w])
-      fidNode.SetNthFiducialLabel(n, p)
-      fidNode.SetNthFiducialSelected(n, 1)
-      """
-      targetPointButton = qt.QPushButton("Initialize " + params[p]['displayName'])
-      targetPointButton.setToolTip( "Place a markup" )
-      targetPointButton.clicked.connect(lambda _, name = p, btn = targetPointButton : self.logic.setPlacingMarkups(paramName = name, btn = btn,  interaction = 1))
-      targetPointButton.setEnabled(True)
-      targetPointButton.clicked.connect(lambda _, b = targetPointButton : self.btnstate(btn = b))
-      self.customShaderParametersLayout.addRow(qt.QLabel(params[p]['displayName']), targetPointButton)
-      """
+      for p in paramNames:
+        x = params[p]['defaultValue']['x']
+        y = params[p]['defaultValue']['y']
+        z = params[p]['defaultValue']['z']
+        w = params[p]['defaultValue']['w']
+        
+        """
+        n = self.logic.endPoints.AddFiducial(0, 0, 0)
+        self.logic.endPoints.SetNthFiducialLabel(n, p)
+        self.logic.endPoints.SetNthFiducialWorldCoordinates(n, [x, y, z , w])
+        self.logic.endPoints.SetNthFiducialLabel(n, p)
+        self.logic.endPoints.SetNthFiducialSelected(n, 1)
+        """
 
-  def btnstate(self, btn):
-    """ Check if the button is down.
-    Args:
-        btn (qt.QPushButton): Button that is activated
-    """
-    if btn.isChecked():
-      self.logic.markupButtonisChecked = True
-      btn.setChecked(False)
-    else:
-      self.logic.markupButtonisChecked = False
+        targetPointButton = qt.QPushButton("Initialize " + p)
+        targetPointButton.setToolTip( "Place a markup" )
+        targetPointButton.clicked.connect(lambda _, name = p, btn = targetPointButton : self.logic.setPlacingMarkups(paramName = name, btn = btn,  interaction = 1))
+        targetPointButton.setEnabled(True)
+        self.customShaderParametersLayout.addRow(qt.QLabel(p), targetPointButton)
+      
 
   def onReload(self):
     """ Reload the modules
@@ -882,11 +876,8 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     self.MarkupIndexes = {}
     self.CurrentMarkupBtn = None
     self.CurrentMarkupName = "None"
-    self.markupButtonisChecked = False
 
     self.addObservers()
-    # Observer scene if view node has been added
-    #self.endPoint.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointAddedEvent, self.onEndPointAdded)
   
   def addObservers(self):
     """ Create all observers needed in the UI to ensure a correct behaviour
@@ -927,15 +918,13 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
         caller (slicer.mrmlScene): Slicer active scene.
         event (string): Flag corresponding to the triggered event.
     """
-    if(self.markupButtonisChecked):
-      movingMarkupIndex = caller.GetDisplayNode().GetActiveControlPoint()
-      world = [0, 0, 0, 0]
-      caller.GetNthFiducialWorldCoordinates(movingMarkupIndex, world)
-      caller.SetNthFiducialLabel(movingMarkupIndex, self.CurrentMarkupName)
-      self.onCustomShaderParamChanged(world, self.CurrentMarkupName, "markup")
-      self.markupButtonisChecked = False
-      self.CurrentMarkupBtn.enabled = False
-      self.MarkupIndexes.update({movingMarkupIndex : self.CurrentMarkupName})
+    movingMarkupIndex = caller.GetDisplayNode().GetActiveControlPoint()
+    world = [0, 0, 0, 0]
+    caller.GetNthFiducialWorldCoordinates(movingMarkupIndex, world)
+    caller.SetNthFiducialLabel(movingMarkupIndex, self.CurrentMarkupName)
+    self.onCustomShaderParamChanged(world, self.CurrentMarkupName, "markup")
+    self.CurrentMarkupBtn.enabled = False
+    self.MarkupIndexes.update({movingMarkupIndex : self.CurrentMarkupName})
 
   def setPlacingMarkups(self, paramName, btn, interaction = 1, persistence = 0):
     """ Activate Slicer markups module to set one or multiple markups in the given markups fiducial list.

@@ -16,11 +16,6 @@ class SphereCarvingShader(CustomShader):
 
   def setupShader(self):
     super(SphereCarvingShader,self).setupShader()
-    x = self.param4fValues['centerPoint']['x']
-    y = self.param4fValues['centerPoint']['y']
-    z = self.param4fValues['centerPoint']['z']
-    w = self.param4fValues['centerPoint']['w']
-    self.shaderUniforms.SetUniform4f('centerPoint', [x, y, z , w])
 
     self.shaderUniforms.SetUniformf("radius", self.paramfValues['radius'])
     replacement = """
