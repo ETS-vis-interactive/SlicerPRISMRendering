@@ -89,85 +89,31 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     viewSetupLayout.addWidget(self.volumeRenderingCheckBox, 0, 0)
 
     self.enableROICheckBox = qt.QCheckBox()
-    self.enableROICheckBox.toggled.connect(self.onEnableROICheckBoxCheckBoxToggled)
+    self.enableROICheckBox.toggled.connect(self.onEnableROICheckBoxToggled)
     self.enableROICheckBox.text = "Enable Cropping"    
-    self.enableROICheckBox.setEnabled(False)
+    self.enableROICheckBox.hide()
+    viewSetupLayout.addWidget(self.enableROICheckBox, 0, 1)
 
     self.displayROICheckBox = qt.QCheckBox()
-    self.displayROICheckBox.toggled.connect(self.onDisplayROICheckBoxCheckBoxToggled)
+    self.displayROICheckBox.toggled.connect(self.onDisplayROICheckBoxToggled)
     self.displayROICheckBox.text = "Display ROI"    
-    self.displayROICheckBox.setEnabled(False)
+    self.displayROICheckBox.hide()
+    viewSetupLayout.addWidget(self.displayROICheckBox, 0, 2)
 
-    self.ROIXSlider = ctk.ctkSliderWidget()
-    self.ROIXSlider.minimum = -180.0
-    self.ROIXSlider.maximum = 180.0
-    self.ROIXSlider.singleStep =  1
-    self.ROIXSlider.setObjectName('X')
-    self.ROIXSlider.setValue(0.0)
-    self.ROIXSlider.valueChanged.connect(self.onRotateXValueChanged)
-    self.ROIXSlider.setEnabled(False)
-
-    self.ROIYSlider = ctk.ctkSliderWidget()
-    self.ROIYSlider.minimum = -180.0
-    self.ROIYSlider.maximum = 180.0
-    self.ROIYSlider.singleStep =  1
-    self.ROIYSlider.setObjectName('Y')
-    self.ROIYSlider.setValue(0.0)
-    self.ROIYSlider.valueChanged.connect(self.onRotateYValueChanged)
-    self.ROIYSlider.setEnabled(False)
-
-    self.ROIZSlider = ctk.ctkSliderWidget()
-    self.ROIZSlider.minimum = -180.0
-    self.ROIZSlider.maximum = 180.0
-    self.ROIZSlider.singleStep =  1
-    self.ROIZSlider.setObjectName('Z')
-    self.ROIZSlider.setValue(0.0)
-    self.ROIZSlider.valueChanged.connect(self.onRotateZValueChanged)
-    self.ROIZSlider.setEnabled(False)
-
-
-
-    ROIRotateLayout = qt.QFormLayout()
-    ROIRotateLayout.addRow('X', self.ROIXSlider)
-    ROIRotateLayout.addRow('Y', self.ROIYSlider)
-    ROIRotateLayout.addRow('Z', self.ROIZSlider)
-
-    RotateBox = ctk.ctkCollapsibleGroupBox()
-    RotateBox.setLayout(ROIRotateLayout)
-    RotateBox.setTitle("Rotate ROI")
-    RotateBox.collapsed = True
-
-    InteractionLayout = qt.QGridLayout()
 
     self.enableScalingCheckBox = qt.QCheckBox()
-    self.enableScalingCheckBox.setEnabled(False)
+    self.enableScalingCheckBox.hide()
     self.enableScalingCheckBox.toggled.connect(self.onEnableScalingCheckBoxToggled)
     self.enableScalingCheckBox.text = "Enable Scaling"  
-    InteractionLayout.addWidget(self.enableScalingCheckBox, 0, 0)
+    viewSetupLayout.addWidget(self.enableScalingCheckBox, 1, 1)
     
     self.enableRotationCheckBox = qt.QCheckBox()
-    self.enableRotationCheckBox.setEnabled(False)
+    self.enableRotationCheckBox.hide()
     self.enableRotationCheckBox.toggled.connect(self.onEnableRotationCheckBoxToggled)
     self.enableRotationCheckBox.text = "Enable Rotation"  
-    InteractionLayout.addWidget(self.enableRotationCheckBox, 1, 0)
+    viewSetupLayout.addWidget(self.enableRotationCheckBox, 1, 2)
 
-    InteractionBox = ctk.ctkCollapsibleGroupBox()
-    InteractionBox.setLayout(InteractionLayout)
-    InteractionBox.setTitle("Interaction")
-    InteractionBox.collapsed = True
-
-    ROILayout = qt.QGridLayout()
-    ROILayout .addWidget(self.enableROICheckBox, 0, 0)
-    ROILayout.addWidget(self.displayROICheckBox, 0, 1)
-    ROILayout.addWidget(RotateBox, 1, 0, 1, 3)
-    ROILayout.addWidget(InteractionBox)
-
-    ROIBox = ctk.ctkCollapsibleGroupBox()
-    ROIBox.setLayout(ROILayout)
-    ROIBox.setTitle("ROI")
-    ROIBox.collapsed = True
-
-    viewSetupLayout.addWidget(ROIBox, 2, 0, 1, 3)
+    
     #
     # Custom Shader Area
     #
@@ -365,55 +311,49 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.currZAngle = 0.0
 
   def onEnableRotationCheckBoxToggled(self) :
+    """ Function to enable rotating ROI box.
+
+    """
     if self.enableRotationCheckBox.isChecked():
       self.transformDisplayNode.SetEditorRotationEnabled(True)
     else :
       self.transformDisplayNode.SetEditorRotationEnabled(False)
 
   def onEnableScalingCheckBoxToggled(self) :
+    """ Function to enable scaling ROI box.
+
+    """
     if self.enableScalingCheckBox.isChecked():
       self.transformDisplayNode.SetEditorScalingEnabled(True)
     else :
       self.transformDisplayNode.SetEditorScalingEnabled(False)
 
-  def onRotateXValueChanged (self):
-    newXAngle = self.ROIXSlider.value
-    XRotation = newXAngle - self.currXAngle
-    self.currXAngle = newXAngle
-    rotation = vtk.vtkTransform()
-    rotation.RotateX(XRotation)
-    self.transformNode.ApplyTransformMatrix(rotation.GetMatrix())
 
-  def onRotateYValueChanged (self):
-    newYAngle = self.ROIYSlider.value
-    YRotation = newYAngle - self.currYAngle
-    self.currYAngle = newYAngle
-    rotation = vtk.vtkTransform()
-    rotation.RotateY(YRotation)
-    self.transformNode.ApplyTransformMatrix(rotation.GetMatrix())
+  def onEnableROICheckBoxToggled(self):
+    """ Function to enable ROI cropping and show/hide ROI Display properties.
 
-  def onRotateZValueChanged (self):
-    newZAngle = self.ROIZSlider.value
-    ZRotation = newZAngle - self.currZAngle
-    self.currZAngle = newZAngle
-    rotation = vtk.vtkTransform()
-    rotation.RotateZ(ZRotation)
-    self.transformNode.ApplyTransformMatrix(rotation.GetMatrix())
-
-  def onEnableROICheckBoxCheckBoxToggled(self):
+    """
     if self.enableROICheckBox.isChecked():
       self.renderingDisplayNode.SetCroppingEnabled(1)
+      self.displayROICheckBox.show()
     else:
       self.renderingDisplayNode.SetCroppingEnabled(0)
+      self.displayROICheckBox.hide()
 
-  def onDisplayROICheckBoxCheckBoxToggled(self):
+  def onDisplayROICheckBoxToggled(self):
+    """ Function to display ROI box and show/hide scaling and rotation parameters.
+
+    """
     if self.displayROICheckBox.isChecked():
       self.transformDisplayNode.EditorVisibilityOn()
-
+      self.enableScalingCheckBox.show()
+      self.enableRotationCheckBox.show()
     else :
       self.transformDisplayNode.EditorVisibilityOff()
-
-    
+      self.enableScalingCheckBox.hide()
+      self.enableScalingCheckBox.setChecked(False)
+      self.enableRotationCheckBox.hide()
+      self.enableRotationCheckBox.setChecked(False)
 
   def onReloadCurrentCustomShader(self):
     """ Function to reload the new current custom shader.
@@ -732,16 +672,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         self.ROI.SetAndObserveTransformNodeID(self.transformNode.GetID())
         self.ROI.SetDisplayVisibility(0)
         self.removeROI()
-        self.enableScalingCheckBox.setEnabled(True)
-        self.enableScalingCheckBox.setEnabled(True)
-        self.enableRotationCheckBox.setEnabled(True)
-        self.enableRotationCheckBox.setChecked(True)
-        self.enableROICheckBox.setEnabled(True)
-        self.displayROICheckBox.setEnabled(True)
-        self.ROIXSlider.setEnabled(True)
-        self.ROIYSlider.setEnabled(True)
-        self.ROIZSlider.setEnabled(True)
-
+        self.enableROICheckBox.show()
 
     else:
       if self.logic.volumeRenderingDisplayNode:
@@ -749,16 +680,9 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         self.enableROICheckBox.setChecked(False)
         self.displayROICheckBox.setChecked(False)
         slicer.mrmlScene.RemoveNode(self.transformNode)
-        self.VisibilityCheckBox.setEnabled(False)
-        self.enableScalingCheckBox.setEnabled(False)
-        self.enableScalingCheckBox.setEnabled(False)
-        self.enableRotationCheckBox.setEnabled(False)
-        self.enableRotationCheckBox.setChecked(False)
-        self.enableROICheckBox.setEnabled(False)
-        self.displayROICheckBox.setEnabled(False)
-        self.ROIXSlider.setEnabled(False)
-        self.ROIYSlider.setEnabled(False)
-        self.ROIZSlider.setEnabled(False)
+
+        self.enableROICheckBox.hide()
+        self.displayROICheckBox.hide()
       self.customShaderCollapsibleButton.hide()
       
 
