@@ -8,6 +8,8 @@ class OpacityPeelingShader(CustomShader):
   shaderfParams = {'T_low' : { 'displayName' : 'Low Threshold', 'min' : 0.0, 'max' : 1.0, 'defaultValue' : 0.3 }, \
                    'T_high' : { 'displayName' : 'High Threshold', 'min' : 0.01, 'max' : 1.0, 'defaultValue' : 0.8 }, \
                    'radius' : { 'displayName' : 'Sphere Radius', 'min' : 0.0, 'max' : 150.0, 'defaultValue' : 75.0 }}
+                   
+  shaderiParams = {'wantedLayer' : { 'displayName' : 'Wanted Layer', 'min' : 1.0, 'max' : 20.0, 'defaultValue' : 1.0 }}
 
   shaderbParams = { 'sphere' : { 'displayName' : 'Sphere Carving', 'defaultValue' : 0}}
   
@@ -23,7 +25,6 @@ class OpacityPeelingShader(CustomShader):
   def setupShader(self):
     super(OpacityPeelingShader,self).setupShader()
     self.setAllUniforms()
-    self.shaderUniforms.SetUniformi("wantedLayer",2)
     self.shaderProperty.ClearAllFragmentShaderReplacements()
 
 

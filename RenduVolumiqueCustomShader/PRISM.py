@@ -797,14 +797,6 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         y = params[p]['defaultValue']['y']
         z = params[p]['defaultValue']['z']
         w = params[p]['defaultValue']['w']
-        
-        """
-        n = self.logic.endPoints.AddFiducial(0, 0, 0)
-        self.logic.endPoints.SetNthFiducialLabel(n, p)
-        self.logic.endPoints.SetNthFiducialWorldCoordinates(n, [x, y, z , w])
-        self.logic.endPoints.SetNthFiducialLabel(n, p)
-        self.logic.endPoints.SetNthFiducialSelected(n, 1)
-        """
 
         targetPointButton = qt.QPushButton("Initialize " + params[p]['displayName'])
         targetPointButton.setToolTip( "Place a markup" )
@@ -896,10 +888,11 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     self.customShaderType = 'None'
     self.customShader = None
     
-    self.isCenterPoint = False
+    self.pointType = ''
     self.centerPointIndex = -1
-    self.CurrentMarkupBtn = None
-    self.CurrentMarkupName = "None"
+    self.targetPointIndex = -1
+    self.entryPointIndex = -1
+    self.currentMarkupBtn = None
 
     self.addObservers()
   def enableCarving(self, paramName, type_, checkBox) :
@@ -943,7 +936,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     """
 
     #check if the point was added from the module and was set
-    if (call_data == self.centerPointIndex):
+    if (call_data == self.centerPointIndex or call_data == self.entryPointIndex or call_data == self.targetPointIndex ):
       name = caller.GetNthFiducialLabel(call_data)
       world = [0, 0, 0, 0]
       caller.GetNthFiducialWorldCoordinates(call_data, world)
@@ -955,15 +948,29 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
         caller (slicer.mrmlScene): Slicer active scene.
         event (string): Flag corresponding to the triggered event.
     """
+    world = [0, 0, 0, 0]
 
-    if (self.isCenterPoint):
+    if (self.pointType == 'centerPoint'):
       self.centerPointIndex = caller.GetDisplayNode().GetActiveControlPoint()
-      world = [0, 0, 0, 0]
       caller.GetNthFiducialWorldCoordinates(self.centerPointIndex, world)
-      caller.SetNthFiducialLabel(self.centerPointIndex, self.CurrentMarkupName)
-      self.onCustomShaderParamChanged(world, self.CurrentMarkupName, "markup")
-      self.CurrentMarkupBtn.enabled = False
-      self.isCenterPoint = False
+      caller.SetNthFiducialLabel(self.centerPointIndex, self.pointType)
+      self.onCustomShaderParamChanged(world, self.pointType, "markup")
+      self.currentMarkupBtn.enabled = False
+      self.pointType  = ''
+    elif (self.pointType == 'entry'):
+      self.entryPointIndex = caller.GetDisplayNode().GetActiveControlPoint()
+      caller.GetNthFiducialWorldCoordinates(self.entryPointIndex, world)
+      caller.SetNthFiducialLabel(self.entryPointIndex, self.pointType)
+      self.onCustomShaderParamChanged(world, self.pointType, "markup")
+      self.currentMarkupBtn.enabled = False
+      self.pointType  = ''
+    elif (self.pointType == 'target'):
+      self.targetPointIndex = caller.GetDisplayNode().GetActiveControlPoint()
+      caller.GetNthFiducialWorldCoordinates(self.targetPointIndex, world)
+      caller.SetNthFiducialLabel(self.targetPointIndex, self.pointType)
+      self.onCustomShaderParamChanged(world, self.pointType, "markup")
+      self.currentMarkupBtn.enabled = False
+      self.pointType  = ''
 
 
   def setPlacingMarkups(self, paramName, btn, interaction = 1, persistence = 0):
@@ -974,12 +981,13 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
         interaction (int): 0: /, 1: place, 2: view transform, 3: / ,4: Select
         persistence (int): 0: unique, 1: peristent
     """
-    self.CurrentMarkupBtn = btn
-    self.CurrentMarkupName = paramName
+    self.currentMarkupBtn = btn
+    self.pointType = paramName
     interactionNode = slicer.mrmlScene.GetNodeByID("vtkMRMLInteractionNodeSingleton")
     interactionNode.SetCurrentInteractionMode(interaction)
     interactionNode.SetPlaceModePersistence(persistence)
-    self.isCenterPoint = True
+    
+    self.pointType = paramName
     
   def onCustomShaderParamChanged(self, value, paramName, type_ ):
     """ Change the custom parameters in the shader.
