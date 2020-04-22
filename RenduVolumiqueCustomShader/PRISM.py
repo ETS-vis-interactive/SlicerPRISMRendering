@@ -755,6 +755,8 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       self.logic.endPoints.RemoveAllMarkups()
     except :
       pass
+
+
     # Instanciate a slider for each floating parameter of the active shader
     params = self.logic.customShader.shaderfParams
     paramNames = params.keys()
@@ -804,12 +806,34 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         self.logic.endPoints.SetNthFiducialSelected(n, 1)
         """
 
-        targetPointButton = qt.QPushButton("Initialize " + p)
+        targetPointButton = qt.QPushButton("Initialize " + params[p]['displayName'])
         targetPointButton.setToolTip( "Place a markup" )
+        targetPointButton.setObjectName(p)
         targetPointButton.clicked.connect(lambda _, name = p, btn = targetPointButton : self.logic.setPlacingMarkups(paramName = name, btn = btn,  interaction = 1))
         targetPointButton.setEnabled(True)
-        self.customShaderParametersLayout.addRow(qt.QLabel(p), targetPointButton)
+        self.customShaderParametersLayout.addRow(qt.QLabel(params[p]['displayName']), targetPointButton)
       
+    params = self.logic.customShader.shaderbParams
+    paramNames = params.keys()
+    if params:
+      for p in paramNames:
+        self.addCarvingCheckBox = qt.QCheckBox(params[p]['displayName'])
+        self.addCarvingCheckBox.toggled.connect(lambda _, name = p, cbx = self.addCarvingCheckBox : self.logic.enableCarving(paramName = name, type_ = "bool", checkBox = cbx))
+        self.customShaderParametersLayout.addRow(self.addCarvingCheckBox)
+        self.logic.carvingEnabled = params[p]['defaultValue']
+      
+      #hide widgets related to carving
+      for i in range(self.customShaderParametersLayout.count()):
+        widget = self.customShaderParametersLayout.itemAt(i).widget()
+        if widget :
+          if widget.objectName == 'radius' :
+            self.logic.radiusSlider = [self.customShaderParametersLayout.itemAt(i-1).widget(), self.customShaderParametersLayout.itemAt(i).widget()]
+            self.logic.radiusSlider[0].hide()
+            self.logic.radiusSlider[1].hide()
+          elif widget.objectName == 'centerPoint' :
+            self.logic.centerButton = [self.customShaderParametersLayout.itemAt(i-1).widget(), self.customShaderParametersLayout.itemAt(i).widget()]
+            self.logic.centerButton[0].hide()
+            self.logic.centerButton[1].hide()
 
   def onReload(self):
     """ Reload the modules
@@ -878,7 +902,24 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     self.CurrentMarkupName = "None"
 
     self.addObservers()
-  
+  def enableCarving(self, paramName, type_, checkBox) :
+    if checkBox.isChecked() :  
+      if paramName == 'sphere' :
+        self.radiusSlider[0].show()
+        self.radiusSlider[1].show()
+        self.centerButton[0].show()
+        self.centerButton[1].show()
+      self.carvingEnabled = 1
+    else: 
+      self.carvingEnabled = 0
+      if paramName == 'sphere' :
+        self.radiusSlider[0].hide()
+        self.radiusSlider[1].hide()
+        self.centerButton[0].hide()
+        self.centerButton[1].hide()
+        self.endPoints.RemoveAllMarkups()
+
+    self.customShader.setShaderParameter(paramName, self.carvingEnabled, type_)
   def addObservers(self):
     """ Create all observers needed in the UI to ensure a correct behaviour
     """

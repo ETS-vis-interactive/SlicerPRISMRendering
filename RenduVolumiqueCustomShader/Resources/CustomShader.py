@@ -12,6 +12,7 @@ class CustomShader():
   shaderfParams = {}
   shaderiParams = {}
   shader4fParams = {}
+  shaderbParams = {}
 
   def __init__(self, shaderPropertyNode):
     assert shaderPropertyNode != None, 'CustomShader: a valid shader property node must provided to the constructor'
@@ -26,7 +27,10 @@ class CustomShader():
       self.paramiValues[p] = self.shaderiParams[p]['defaultValue']
     self.param4fValues = {}
     for p in self.shader4fParams.keys():
-      self.param4fValues[p] = self.shader4fParams[p]['defaultValue']      
+      self.param4fValues[p] = self.shader4fParams[p]['defaultValue']   
+    self.parambValues = {}   
+    for p in self.shaderbParams.keys():
+      self.parambValues[p] = self.shaderbParams[p]['defaultValue']   
 
   @classmethod
   def InstanciateCustomShader(cls, shaderDisplayName,shaderPropertyNode):
@@ -122,6 +126,9 @@ class CustomShader():
     for p in self.paramiValues.keys():
       self.shaderUniforms.SetUniformi(p, int(self.paramiValues[p]))
 
+    for p in self.parambValues.keys():
+      self.shaderUniforms.SetUniformi(p, int(self.parambValues[p]))
+
     for p in self.param4fValues.keys():
       x = self.param4fValues.get(p).get('x')
       y = self.param4fValues.get(p).get('y')
@@ -147,6 +154,12 @@ class CustomShader():
       if p != None:
         self.param4fValues[paramName] = paramValue
         self.shaderUniforms.SetUniform4f(paramName, paramValue)
+
+    elif type_ == "bool":
+      p = self.parambValues.get(paramName)
+      if p != None:
+        self.param4fValues[paramName] = paramValue
+        self.shaderUniforms.SetUniformi(paramName, int(paramValue))
 
   def getShaderParameter(self, paramName, type_):
     if type_ == float :
