@@ -1072,9 +1072,11 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
       # set node used before reload in the current instance
       self.endPoints = allEndPoints.GetItemAsObject(0)
       self.endPoints.RemoveAllMarkups()
+      self.endPoints.GetDisplayNode().SetGlyphScale(6.0)
     else:
       self.endPoints = slicer.mrmlScene.AddNewNodeByClass('vtkMRMLMarkupsFiducialNode')
       self.endPoints.SetName("EndPoints")
+      self.endPoints.GetDisplayNode().SetGlyphScale(6.0)
       self.endPoints.RemoveAllMarkups()
     allEndPoints = None 
   
