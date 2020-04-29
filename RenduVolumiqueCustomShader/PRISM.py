@@ -830,7 +830,6 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         targetPointButton.setToolTip( "Place a markup" )
         targetPointButton.setObjectName(p)
         targetPointButton.clicked.connect(lambda _, name = p, btn = targetPointButton : self.logic.setPlacingMarkups(paramName = name, btn = btn,  interaction = 1))
-        targetPointButton.setEnabled(True)
         self.customShaderParametersLayout.addRow(qt.QLabel(params[p]['displayName']), targetPointButton)
       
     params = self.logic.customShader.shaderbParams
@@ -995,25 +994,49 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     world = [0, 0, 0, 0]
 
     if (self.pointType == 'center'):
-      self.centerPointIndex = caller.GetDisplayNode().GetActiveControlPoint()
-      caller.GetNthFiducialWorldCoordinates(self.centerPointIndex, world)
-      caller.SetNthFiducialLabel(self.centerPointIndex, self.pointType)
+      
+      pointIndex = caller.GetDisplayNode().GetActiveControlPoint()
+      caller.GetNthFiducialWorldCoordinates(pointIndex, world)
+      
+      if self.centerPointIndex != -1 :
+        caller.SetNthFiducialWorldCoordinates(self.centerPointIndex, world)
+        caller.RemoveNthControlPoint(pointIndex)
+      else :
+        caller.SetNthFiducialLabel(pointIndex, self.pointType)
+        self.centerPointIndex = pointIndex
+      
       self.onCustomShaderParamChanged(world, self.pointType, "markup")
-      self.currentMarkupBtn.enabled = False
+      self.currentMarkupBtn.setText('Reset ' + self.pointType)
       self.pointType  = ''
+
     elif (self.pointType == 'entry'):
-      self.entryPointIndex = caller.GetDisplayNode().GetActiveControlPoint()
-      caller.GetNthFiducialWorldCoordinates(self.entryPointIndex, world)
-      caller.SetNthFiducialLabel(self.entryPointIndex, self.pointType)
+      pointIndex = caller.GetDisplayNode().GetActiveControlPoint()
+      caller.GetNthFiducialWorldCoordinates(pointIndex, world)
+      
+      if self.entryPointIndex != -1 :
+        caller.SetNthFiducialWorldCoordinates(self.entryPointIndex, world)
+        caller.RemoveNthControlPoint(pointIndex)
+      else :
+        caller.SetNthFiducialLabel(pointIndex, self.pointType)
+        self.entryPointIndex = pointIndex
+      
       self.onCustomShaderParamChanged(world, self.pointType, "markup")
-      self.currentMarkupBtn.enabled = False
+      self.currentMarkupBtn.setText('Reset ' + self.pointType)
       self.pointType  = ''
+
     elif (self.pointType == 'target'):
-      self.targetPointIndex = caller.GetDisplayNode().GetActiveControlPoint()
-      caller.GetNthFiducialWorldCoordinates(self.targetPointIndex, world)
-      caller.SetNthFiducialLabel(self.targetPointIndex, self.pointType)
+      pointIndex = caller.GetDisplayNode().GetActiveControlPoint()
+      caller.GetNthFiducialWorldCoordinates(pointIndex, world)
+      
+      if self.targetPointIndex != -1 :
+        caller.SetNthFiducialWorldCoordinates(self.targetPointIndex, world)
+        caller.RemoveNthControlPoint(pointIndex)
+      else :
+        caller.SetNthFiducialLabel(pointIndex, self.pointType)
+        self.targetPointIndex = pointIndex
+      
       self.onCustomShaderParamChanged(world, self.pointType, "markup")
-      self.currentMarkupBtn.enabled = False
+      self.currentMarkupBtn.setText('Reset ' + self.pointType)
       self.pointType  = ''
 
 
