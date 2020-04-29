@@ -9,8 +9,10 @@ import imp
 import shutil
 import textwrap
 import importlib.util
-from Resources.ModifyParamWidget import ModifyParamWidget
+import inspect
+from pathlib import Path
 
+from Resources.ModifyParamWidget import ModifyParamWidget
 from Resources.CustomShader import CustomShader
 #from Resources.ColorMapping import ColorMappingEventFilter
 #from Resources.ColorMapping import ColorMapping
@@ -100,7 +102,6 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.displayROICheckBox.hide()
     viewSetupLayout.addWidget(self.displayROICheckBox, 0, 2)
 
-
     self.enableScalingCheckBox = qt.QCheckBox()
     self.enableScalingCheckBox.hide()
     self.enableScalingCheckBox.toggled.connect(self.onEnableScalingCheckBoxToggled)
@@ -137,16 +138,18 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     self.customShaderLayout = qt.QGridLayout()
 
-    reloadCurrentCustomShaderButton = qt.QPushButton("Reload")
-    reloadCurrentCustomShaderButton.clicked.connect(self.onReloadCurrentCustomShaderButtonClicked)
+    self.reloadCurrentCustomShaderButton = qt.QPushButton("Reload")
+    self.reloadCurrentCustomShaderButton.clicked.connect(self.reloadCurrentCustomShaderButtonClicked)
+    self.reloadCurrentCustomShaderButton.setEnabled(False)
 
-    openCustomShaderButton = qt.QPushButton("Open")
-    openCustomShaderButton.clicked.connect(self.onOpenCustomShaderButtonClicked)
+    self.openCustomShaderButton = qt.QPushButton("Open")
+    self.openCustomShaderButton.clicked.connect(self.openCustomShaderButtonClicked)
+    self.openCustomShaderButton.setEnabled(False)
 
     self.customShaderLayout.addWidget(qt.QLabel("Custom Shader : "), 0, 0)
     self.customShaderLayout.addWidget(self.customShaderCombo, 0, 1)
-    self.customShaderLayout.addWidget(reloadCurrentCustomShaderButton, 0, 2)
-    self.customShaderLayout.addWidget(openCustomShaderButton, 0, 3)
+    self.customShaderLayout.addWidget(self.reloadCurrentCustomShaderButton, 0, 2)
+    self.customShaderLayout.addWidget(self.openCustomShaderButton, 0, 3)
 
     self.customShaderParametersLayout.addRow(self.customShaderLayout)
     #
@@ -323,8 +326,11 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.currYAngle = 0.0
     self.currZAngle = 0.0
 
-  def onOpenCustomShaderButtonClicked(self) :
-    shaderPath = self.getShaderPath(self.customShaderCombo.currentText)
+  def openCustomShaderButtonClicked(self) :
+    """ Function open custom shader file.
+
+    """
+    shaderPath = self.getPath(self.logic.CustomShader.GetClassName(self.customShaderCombo.currentText))
     qt.QDesktopServices.openUrl(qt.QUrl("file:///"+shaderPath, qt.QUrl.TolerantMode))
 
   def onEnableRotationCheckBoxToggled(self) :
@@ -372,30 +378,41 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       self.enableRotationCheckBox.hide()
       self.enableRotationCheckBox.setChecked(False)
 
-  def onReloadCurrentCustomShaderButtonClicked(self):
-    """ Function to reload the new current custom shader.
+  def reloadCurrentCustomShaderButtonClicked(self):
+    """ Function to reload the current custom shader.
 
     """
-    #get path of package
-    packageName = 'Resources'
-    f, filename, description = imp.find_module(packageName)
-    package = imp.load_module(packageName, f, filename, description)
-    csPath = os.path.dirname(package.__file__)
-
     currentShader = self.customShaderCombo.currentText
-    modifiedShaderModule = CustomShader.GetClassName(currentShader).__module__
+    
+    shaderName = CustomShader.GetClassName(currentShader).__name__
+    shaderPackageName = 'Resources.Shaders'
 
-    #find python the file in directory
-    for dirpath, _, filenames in os.walk(csPath):
-      for f in filenames:
-        filename, file_extension = os.path.splitext(dirpath+"/"+f)
-        if file_extension == ".py" and f == modifiedShaderModule:
-          #load the module
-          dirpath, filename = os.path.split(filename + file_extension)
-          loader = importlib.machinery.SourceFileLoader(filename, dirpath+"/"+filename)
-          spec = importlib.util.spec_from_loader(loader.name, loader)
-          mod = importlib.util.module_from_spec(spec)
-          loader.exec_module(mod)
+    submoduleName = 'CustomShader'
+    submodulePackageName = 'Resources'
+
+    shaderPath = self.getPath(shaderName)
+    modulePath = self.getPath(submoduleName, submodulePackageName)
+
+    #reload modules
+    with open(shaderPath, "rt") as fp:
+      shaderModule = imp.load_module(shaderPackageName+'.'+shaderName, fp, shaderPath, ('.py', 'rt', imp.PY_SOURCE))
+    
+    with open(modulePath, "rt") as fp:
+      customShaderModule = imp.load_module(submodulePackageName+'.'+submoduleName, fp, modulePath, ('.py', 'rt', imp.PY_SOURCE))
+
+    #update globals
+    clsmembers = inspect.getmembers(shaderModule, inspect.isclass)
+    globals()[shaderName] = clsmembers[1][1]
+    clsmembers = inspect.getmembers(customShaderModule, inspect.isclass)
+    globals()[submoduleName] = clsmembers[0][1]
+    
+    #reset customShader
+    #reset UI
+    self.logic.setupCustomShader()
+    self.UpdateShaderParametersUI()    
+    
+    self.cleanup()
+
 
   def onModifyCustomShaderButtonClicked(self):
     """ Function to add the new shader replacement to a file.
@@ -405,7 +422,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     shaderTag = shaderTagType[self.modifiedShaderTag]
     
     #get selected shader path
-    modifiedShaderPath = self.getShaderPath(self.modifiedShader)    
+    modifiedShaderPath = self.getPath(self.logic.CustomShader.GetClassName(self.modifiedShader)) 
     #get shader code
     shaderCode = self.shaderModifications.document().toPlainText()
     #indent shader code
@@ -434,18 +451,16 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.addedMsg.setText("Code added to shader \""+self.modifiedShader+"\".")
     self.addedMsg.show()
 
-  def getShaderPath(self, shaderName) :
+  def getPath(self, name, packageName = 'Resources/Shaders') :
     """ Function to get a selected shader file path.
 
     """
-    shaderClass = CustomShader.GetClassName(shaderName)
-    shaderModule = shaderClass.__module__
-    packageName = "Resources"
-    f, filename, description = imp.find_module(packageName)
-    packagePath = imp.load_module(packageName, f, filename, description).__path__[0]
-    shaderPath = packagePath+'\\Shaders\\'+ shaderModule
-
-    return shaderPath
+    class_ = CustomShader.GetClass(name)
+    if class_ :
+      path_ = os.path.join(self.prismPath(), packageName, str(class_.__name__) + '.py').replace("\\", "/")
+      return path_
+    
+    return None
 
   def onShaderOpenFileButtonClicked(self):
     """ Function to open a file containing the new shader replacement.
@@ -455,7 +470,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     shaderTag = shaderTagType[self.modifiedShaderTag]
 
     #get selected shader path
-    modifiedShaderPath = self.getShaderPath(self.modifiedShader)
+    modifiedShaderPath = self.getPath(self.logic.CustomShader.GetClassName(self.modifiedShader))
 
     #modify file 
     tab = "\t\t"
@@ -552,7 +567,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     new_file_name = self.className
     file_path = os.path.realpath(__file__)
     file_dir, filename = os.path.split(file_path)
-    file_dir = file_dir + "\\Resources\\Shaders\\"
+    file_dir = os.path.join(file_dir, 'Resources', 'Shaders')
     dst_file = os.path.join(file_dir, new_file_name + ".py")
 
     qt.QDesktopServices.openUrl(qt.QUrl("file:///"+self.newCustomShaderFile, qt.QUrl.TolerantMode))
@@ -577,7 +592,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     file_path = os.path.realpath(__file__)
     file_dir, filename = os.path.split(file_path)
-    file_dir = file_dir + "\\Resources\\Shaders\\"
+    file_dir = os.path.join(file_dir, 'Resources', 'Shaders')
     
     src_file = os.path.join(file_dir, old_file_name)
     dst_file = os.path.join(file_dir, new_file_name + ".py")
@@ -626,8 +641,11 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
   def initState(self):
     """ Function call to initialize the all user interface based on current scene.
-    """
-  
+    """ 
+    #import shaders
+    for c in CustomShader.allClasses:
+      __import__('Resources.Shaders.' + str(c.__name__))
+
     # init shader
     if self.volumeRenderingCheckBox.isChecked() and self.imageSelector.currentNode():
       self.logic.renderVolume(self.imageSelector.currentNode())
@@ -684,13 +702,13 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         #init ROI
         self.renderingDisplayNode = slicer.util.getNodesByClass("vtkMRMLVolumeRenderingDisplayNode")[0]
         self.transformDisplayNode = slicer.mrmlScene.AddNode(slicer.vtkMRMLTransformDisplayNode())
-        self.transformDisplayNode.SetEditorRotationEnabled(True)
+        self.transformDisplayNode.SetEditorRotationEnabled(False)
         self.transformNode = slicer.mrmlScene.AddNode(slicer.vtkMRMLTransformNode())
         self.transformNode.SetAndObserveDisplayNodeID(self.transformDisplayNode.GetID())
         self.ROI = slicer.mrmlScene.GetNodeByID("vtkMRMLAnnotationROINode1")
         self.ROI.SetAndObserveTransformNodeID(self.transformNode.GetID())
         self.ROI.SetDisplayVisibility(0)
-        self.removeROI()
+        self.resetROI()
         self.enableROICheckBox.show()
 
     else:
@@ -706,7 +724,10 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       
 
 
-  def removeROI(self):
+  def resetROI(self):
+    """ Function to reset the ROI in the scene.
+    
+    """
     ROINode = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLAnnotationROINode','AnnotationROI')
     if ROINode.GetNumberOfItems() > 0:
       # set node used before reload in the current instance
@@ -733,6 +754,13 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     Args:
     i (int) : index of the element
     """
+    if i == (self.customShaderCombo.count - 1):
+      self.openCustomShaderButton.setEnabled(False)
+      self.reloadCurrentCustomShaderButton.setEnabled(False)
+    else :
+      self.openCustomShaderButton.setEnabled(True)
+      self.reloadCurrentCustomShaderButton.setEnabled(True)
+    
     self.logic.setCustomShaderType(self.customShaderCombo.currentText)
     self.UpdateShaderParametersUI()
 
@@ -822,35 +850,52 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
             self.logic.radiusSlider = [self.customShaderParametersLayout.itemAt(i-1).widget(), self.customShaderParametersLayout.itemAt(i).widget()]
             self.logic.radiusSlider[0].hide()
             self.logic.radiusSlider[1].hide()
-          elif widget.objectName == 'centerPoint' :
+          elif widget.objectName == 'center' :
             self.logic.centerButton = [self.customShaderParametersLayout.itemAt(i-1).widget(), self.customShaderParametersLayout.itemAt(i).widget()]
             self.logic.centerButton[0].hide()
             self.logic.centerButton[1].hide()
+  
+  def prismPath(self) :
+    return os.path.dirname(eval('slicer.modules.prism.path'))
 
   def onReload(self):
-    """ Reload the modules
+    """ Reload the modules.
+
     """
-    logging.debug("Reloading CustomShader")
+    logging.debug("Reloading Packages")
     packageName='Resources'
-    submoduleNames = ['CustomShader', 'ModifyParamWidget']
-    f, filename, description = imp.find_module(packageName)
-    package = imp.load_module(packageName, f, filename, description)
+    submoduleNames = ['CustomShader']
+    
     for submoduleName in submoduleNames :
-      f, filename, description = imp.find_module(submoduleName, package.__path__)
-      try:
-        imp.load_module(packageName+'.'+submoduleName, f, filename, description)
-      finally:
-        f.close()
+      modulePath = self.getPath(submoduleName, packageName)
+
+      with open(modulePath, "rt") as fp:
+        imp.load_module(packageName+'.'+submoduleName, fp, modulePath, ('.py', 'rt', imp.PY_SOURCE))
+
+    logging.debug("Reloading Shaders")
+    shaderNames = []
+    for c in CustomShader.allClasses:
+      shaderNames.append(c.__name__)
+    
+    shaderPackageName = "Resources.Shaders"
+    
+    for shaderName in shaderNames :
+      shaderPath = self.getPath(shaderName)
+      with open(shaderPath, "rt") as fp:
+        imp.load_module(shaderPackageName+'.'+shaderName, fp, shaderPath, ('.py', 'rt', imp.PY_SOURCE))
 
     logging.debug("Reloading PRISM")
     packageName='PRISM'
-    f, filename, description = imp.find_module(packageName)
-    try:
-      imp.load_module(packageName, f, filename, description)
-    finally:
-      f.close()   
+    
+    with open(shaderPath, "rt") as fp:
+        imp.load_module(packageName, fp, self.prismPath(), ('.py', 'rt', imp.PY_SOURCE))
 
-    self.removeROI()
+    self.cleanup()
+
+    globals()['PRISM'] = slicer.util.reloadScriptedModule('PRISM')
+
+  def cleanup(self):
+    self.resetROI()
     self.enableROICheckBox.setChecked(False)
     self.displayROICheckBox.setChecked(False)
     try :
@@ -858,9 +903,6 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       slicer.mrmlScene.RemoveNode(self.transformDisplayNode)
     except: 
       pass
-
-    ScriptedLoadableModuleWidget.onReload(self)
-
 ##################################################################################
 # PRISMLogic
 ##################################################################################
@@ -895,6 +937,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     self.currentMarkupBtn = None
 
     self.addObservers()
+
   def enableCarving(self, paramName, type_, checkBox) :
     if checkBox.isChecked() :  
       if paramName == 'sphere' :
@@ -913,6 +956,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
         self.endPoints.RemoveAllMarkups()
 
     self.customShader.setShaderParameter(paramName, self.carvingEnabled, type_)
+
   def addObservers(self):
     """ Create all observers needed in the UI to ensure a correct behaviour
     """
@@ -950,7 +994,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     """
     world = [0, 0, 0, 0]
 
-    if (self.pointType == 'centerPoint'):
+    if (self.pointType == 'center'):
       self.centerPointIndex = caller.GetDisplayNode().GetActiveControlPoint()
       caller.GetNthFiducialWorldCoordinates(self.centerPointIndex, world)
       caller.SetNthFiducialLabel(self.centerPointIndex, self.pointType)
@@ -982,7 +1026,6 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
         persistence (int): 0: unique, 1: peristent
     """
     self.currentMarkupBtn = btn
-    self.pointType = paramName
     interactionNode = slicer.mrmlScene.GetNodeByID("vtkMRMLInteractionNodeSingleton")
     interactionNode.SetCurrentInteractionMode(interaction)
     interactionNode.SetPlaceModePersistence(persistence)
@@ -1218,6 +1261,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     shaderPropertyName = "ShaderProperty"
     # TODO: not sure we want to get any node from the scene here. It might be better to find out if one is already associated with the volume
     
+    CustomShader.GetAllShaderClassNames()
     allShaderProperty = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLShaderPropertyNode',shaderPropertyName)
     if allShaderProperty.GetNumberOfItems() == 0:
       self.shaderPropertyNode = slicer.vtkMRMLShaderPropertyNode()

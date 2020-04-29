@@ -80,7 +80,6 @@ class CustomShader():
             elif issubclass(m2, csClass) and (m2 != csClass ):
               cls.allClasses.append(m2)
               allNames.append( m2.GetDisplayName() )
-
     allNames.append( cls.GetDisplayName() )
     
     return allNames
@@ -96,6 +95,16 @@ class CustomShader():
 
     for c in cls.allClasses:
       if c.GetDisplayName() == shaderDisplayName:
+        return c
+    return None
+  
+  @classmethod
+  def GetClass(cls, shaderName):
+    if shaderName == cls.__name__:
+      return CustomShader
+
+    for c in cls.allClasses:
+      if c.__name__ == shaderName:
         return c
     return None
 

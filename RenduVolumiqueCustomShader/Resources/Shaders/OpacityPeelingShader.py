@@ -13,7 +13,7 @@ class OpacityPeelingShader(CustomShader):
 
   shaderbParams = { 'sphere' : { 'displayName' : 'Sphere Carving', 'defaultValue' : 0}}
   
-  shader4fParams = {'centerPoint': {'displayName': 'Center', 'defaultValue': {'x': 0.0, 'y': 0.0, 'z': 0.0, 'w': 0.0}}}
+  shader4fParams = {'center': {'displayName': 'Center', 'defaultValue': {'x': 0.0, 'y': 0.0, 'z': 0.0, 'w': 0.0}}}
 
   def __init__(self, shaderPropertyNode):
     CustomShader.__init__(self,shaderPropertyNode)
@@ -23,10 +23,9 @@ class OpacityPeelingShader(CustomShader):
     return 'Opacity Peeling'
 
   def setupShader(self):
-    super(OpacityPeelingShader,self).setupShader()
+    super(OpacityPeelingShader, self).setupShader()
     self.setAllUniforms()
     self.shaderProperty.ClearAllFragmentShaderReplacements()
-
 
     croppingDecCode = """
     int currentLayer = 0;
@@ -35,7 +34,6 @@ class OpacityPeelingShader(CustomShader):
     shadingImplCode = """
     if (!g_skip)
     {
-      vec3 center = centerPoint.xyz;
       // Get alpha for current pos according to transfer function
       vec4 scalar = texture3D(in_volume[0], g_dataPos);
       scalar.r = scalar.r * in_volume_scale[0].r + in_volume_bias[0].r;
@@ -45,7 +43,7 @@ class OpacityPeelingShader(CustomShader):
       
       // Determine if the current position is within the spherical ROI
       vec4 texCoordRAS = in_volumeMatrix[0] * in_textureDatasetMatrix[0]  * vec4(g_dataPos, 1.);
-      bool isInROI = length(texCoordRAS.xyz - center) < radius;
+      bool isInROI = length(texCoordRAS.xyz - center.xyz) < radius;
       
       if((sphere == 1 && isInROI || sphere == 0) && currentLayer < wantedLayer)
       {
