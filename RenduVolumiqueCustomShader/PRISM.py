@@ -74,6 +74,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.imageSelector.connect("nodeAdded(vtkMRMLNode*)", self.onImageSelectorNodeAdded)
     dataFormLayout.addRow("Image Volume : ", self.imageSelector)
 
+    
     #
     # View Setup Area
     #
@@ -330,7 +331,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """ Function open custom shader file.
 
     """
-    shaderPath = self.getPath(self.logic.CustomShader.GetClassName(self.customShaderCombo.currentText))
+    shaderPath = self.getPath(CustomShader.GetClassName(self.customShaderCombo.currentText).__name__)
     qt.QDesktopServices.openUrl(qt.QUrl("file:///"+shaderPath, qt.QUrl.TolerantMode))
 
   def onEnableRotationCheckBoxToggled(self) :
@@ -422,7 +423,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     shaderTag = shaderTagType[self.modifiedShaderTag]
     
     #get selected shader path
-    modifiedShaderPath = self.getPath(self.logic.CustomShader.GetClassName(self.modifiedShader)) 
+    modifiedShaderPath = self.getPath(CustomShader.GetClassName(self.modifiedShader).__name__) 
     #get shader code
     shaderCode = self.shaderModifications.document().toPlainText()
     #indent shader code
@@ -470,7 +471,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     shaderTag = shaderTagType[self.modifiedShaderTag]
 
     #get selected shader path
-    modifiedShaderPath = self.getPath(self.logic.CustomShader.GetClassName(self.modifiedShader))
+    modifiedShaderPath = self.getPath(CustomShader.GetClassName(self.modifiedShader).__name__)
 
     #modify file 
     tab = "\t\t"
@@ -713,7 +714,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     else:
       if self.logic.volumeRenderingDisplayNode:
-        self.logic.volumeRenderingDisplayNode.SetVisibility(False)
+        #self.logic.volumeRenderingDisplayNode.SetVisibility(False)
         self.enableROICheckBox.setChecked(False)
         self.displayROICheckBox.setChecked(False)
         slicer.mrmlScene.RemoveNode(self.transformNode)
@@ -794,6 +795,8 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       slider = ctk.ctkSliderWidget()
       slider.minimum = params[p]['min']
       slider.maximum = params[p]['max']
+      f = str(params[p]['defaultValue'])
+      slider.setDecimals(f[::-1].find('.'))
       slider.singleStep = ( (slider.maximum - slider.minimum) * 0.01 )
       slider.setObjectName(p)
       slider.setValue(self.logic.customShader.getShaderParameter(p, float))
@@ -1039,7 +1042,9 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
       self.currentMarkupBtn.setText('Reset ' + self.pointType)
       self.pointType  = ''
 
-
+  def deleteNode(self):
+    node = slicer.util.getNodesByClass("vtkMRMLScalarVolumeNode")
+    slicer.mrmlScene.RemoveNode(node[0])
   def setPlacingMarkups(self, paramName, btn, interaction = 1, persistence = 0):
     """ Activate Slicer markups module to set one or multiple markups in the given markups fiducial list.
 
@@ -1238,8 +1243,8 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     self.setupCustomShader()
 
     # Turn off previous rendering
-    if self.volumeRenderingDisplayNode:
-      self.volumeRenderingDisplayNode.SetVisibility(False)
+    #if self.volumeRenderingDisplayNode:
+    #  self.volumeRenderingDisplayNode.SetVisibility(False)
 
     # Check if node selected has a renderer
     displayNode = logic.GetFirstVolumeRenderingDisplayNode(volumeNode)
