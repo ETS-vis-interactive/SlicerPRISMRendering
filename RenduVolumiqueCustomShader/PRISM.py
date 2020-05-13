@@ -140,17 +140,26 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.customShaderLayout = qt.QGridLayout()
 
     self.reloadCurrentCustomShaderButton = qt.QPushButton("Reload")
-    self.reloadCurrentCustomShaderButton.clicked.connect(self.reloadCurrentCustomShaderButtonClicked)
+    self.reloadCurrentCustomShaderButton.clicked.connect(self.onReloadCurrentCustomShaderButtonClicked)
     self.reloadCurrentCustomShaderButton.setEnabled(False)
 
     self.openCustomShaderButton = qt.QPushButton("Open")
-    self.openCustomShaderButton.clicked.connect(self.openCustomShaderButtonClicked)
+    self.openCustomShaderButton.clicked.connect(self.onOpenCustomShaderButtonClicked)
     self.openCustomShaderButton.setEnabled(False)
+
+    self.duplicateCustomShaderButton = qt.QPushButton("Duplicate")
+    self.duplicateCustomShaderButton.clicked.connect(self.onDuplicateCustomShaderButtonClicked)
+    self.duplicateCustomShaderButton.setEnabled(False)
+
+    self.duplicateErrorMsg = qt.QLabel()
+    self.duplicateErrorMsg.hide()
+    self.duplicateErrorMsg.setStyleSheet("color: red")
 
     self.customShaderLayout.addWidget(qt.QLabel("Custom Shader : "), 0, 0)
     self.customShaderLayout.addWidget(self.customShaderCombo, 0, 1)
     self.customShaderLayout.addWidget(self.reloadCurrentCustomShaderButton, 0, 2)
     self.customShaderLayout.addWidget(self.openCustomShaderButton, 0, 3)
+    self.customShaderLayout.addWidget(self.duplicateCustomShaderButton, 0, 4)
 
     self.customShaderParametersLayout.addRow(self.customShaderLayout)
     #
@@ -327,8 +336,33 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.currYAngle = 0.0
     self.currZAngle = 0.0
 
-  def openCustomShaderButtonClicked(self) :
-    """ Function open custom shader file.
+  def getText(self):
+    """ Function to create a window with input to get the file name.
+
+    """ 
+    text = qt.QInputDialog.getText(qt.QMainWindow(), "Duplicate file name","Enter file name:", qt.QLineEdit.Normal, "")
+    if text != '':
+      return text
+
+  def onDuplicateCustomShaderButtonClicked(self) :
+    """ Function to duplicate custom shader file.
+
+    """ 
+    duplicateShaderFileName = self.getText()
+    copiedShaderFileName = str(CustomShader.GetClassName(self.customShaderCombo.currentText).__name__ + ".py")
+
+    if (duplicateShaderFileName != None):
+      duplicatedFile = self.duplicateFile(copiedShaderFileName, duplicateShaderFileName)
+
+      if self.errorMsgText != "" : 
+        self.duplicateErrorMsg.text = self.errorMsgText
+        self.duplicateErrorMsg.show()
+      else:
+        qt.QDesktopServices.openUrl(qt.QUrl("file:///"+duplicatedFile, qt.QUrl.TolerantMode))
+  
+
+  def onOpenCustomShaderButtonClicked(self) :
+    """ Function to open custom shader file.
 
     """
     shaderPath = self.getPath(CustomShader.GetClassName(self.customShaderCombo.currentText).__name__)
@@ -379,7 +413,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       self.enableRotationCheckBox.hide()
       self.enableRotationCheckBox.setChecked(False)
 
-  def reloadCurrentCustomShaderButtonClicked(self):
+  def onReloadCurrentCustomShaderButtonClicked(self):
     """ Function to reload the current custom shader.
 
     """
@@ -548,7 +582,15 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.className = self.newCustomShaderNameInput.text
     self.displayName = self.newCustomShaderDisplayInput.text
     self.addParamCreateShader.shaderDisplayName = self.newCustomShaderDisplayInput.text
-    self.newCustomShaderFile = self.duplicate_file("Template", self.className)
+    self.newCustomShaderFile = self.duplicateFile("Template", self.className)
+    if self.errorMsgText != "" : 
+      self.errorMsg.text = self.errorMsgText
+      self.errorMsg.show()
+      self.createCustomShaderButton.enabled = False
+      return False
+    else:
+      self.createCustomShaderButton.enabled = True
+
     if(self.newCustomShaderFile != False):
       self.errorMsg.hide()
       self.addParamCreateShader.addParamCombo.show()
@@ -586,7 +628,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.createCustomShaderButton.enabled = len(self.newCustomShaderNameInput.text) > 0 and len(self.newCustomShaderDisplayInput.text) > 0
     self.errorMsg.hide()
 
-  def duplicate_file(self, old_file_name, new_file_name):
+  def duplicateFile(self, old_file_name, new_file_name):
     """ Function to create a new class from the template
 
     """
@@ -600,18 +642,16 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     
     #check if file already exists
     if (os.path.exists(dst_file)):
-      self.errorMsg.text = "The class \""+new_file_name+"\" exists already. Please check the name and try again."
-      self.errorMsg.show()
-      self.createCustomShaderButton.enabled = False
+      self.errorMsgText = "The class \""+new_file_name+"\" exists already. Please check the name and try again."
       return False
     else:
-      self.createCustomShaderButton.enabled = True
+      self.errorMsgText = ""
 
     if (shutil.copy(src_file, dst_file)) :
+      self.errorMsgText = ""
       return dst_file
     else :
-      self.errorMsg.text = "There is an error with the class name \""+new_file_name+"\". Please check the name and try again."
-      self.errorMsg.show()
+      self.errorMsgText = "There is an error with the class name \""+new_file_name+"\". Please check the name and try again."
 
   def setup_file(self, file_, className, displayName):
     """ Function to modify the new class with regex to match the given infos
@@ -758,9 +798,11 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     if i == (self.customShaderCombo.count - 1):
       self.openCustomShaderButton.setEnabled(False)
       self.reloadCurrentCustomShaderButton.setEnabled(False)
+      self.duplicateCustomShaderButton.setEnabled(False)
     else :
       self.openCustomShaderButton.setEnabled(True)
       self.reloadCurrentCustomShaderButton.setEnabled(True)
+      self.duplicateCustomShaderButton.setEnabled(True)
     
     self.logic.setCustomShaderType(self.customShaderCombo.currentText)
     self.UpdateShaderParametersUI()
@@ -1000,7 +1042,6 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
       
       pointIndex = caller.GetDisplayNode().GetActiveControlPoint()
       caller.GetNthFiducialWorldCoordinates(pointIndex, world)
-      
       if self.centerPointIndex != -1 :
         caller.SetNthFiducialWorldCoordinates(self.centerPointIndex, world)
         caller.RemoveNthControlPoint(pointIndex)
