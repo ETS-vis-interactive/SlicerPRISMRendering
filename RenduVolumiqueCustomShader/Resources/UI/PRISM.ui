@@ -6,14 +6,29 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>443</width>
-    <height>510</height>
+    <width>459</width>
+    <height>374</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="sizeConstraint">
+    <enum>QLayout::SetMinimumSize</enum>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item>
     <widget class="ctkCollapsibleButton" name="dataCollapsibleButton">
      <property name="enabled">
@@ -38,9 +53,12 @@
       <bool>false</bool>
      </property>
      <property name="collapsedHeight">
-      <number>38</number>
+      <number>0</number>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_5">
+      <property name="spacing">
+       <number>5</number>
+      </property>
       <item>
        <layout class="QHBoxLayout" name="dataLayout">
         <item>
@@ -64,10 +82,10 @@
            <bool>false</bool>
           </property>
           <property name="addEnabled">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
           <property name="removeEnabled">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -94,48 +112,61 @@
       <string>View Setup</string>
      </property>
      <property name="collapsed">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="collapsedHeight">
-      <number>27</number>
+      <number>0</number>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_9">
+      <property name="spacing">
+       <number>5</number>
+      </property>
+      <property name="bottomMargin">
+       <number>7</number>
+      </property>
       <item>
-       <layout class="QGridLayout" name="viewSetupCollapsibleButtonLayout">
-        <item row="0" column="2">
-         <widget class="QCheckBox" name="enableROICheckBox">
-          <property name="text">
-           <string>Enable Cropping</string>
-          </property>
-         </widget>
+       <layout class="QVBoxLayout" name="viewSetupCollapsibleButtonLayout">
+        <item>
+         <layout class="QGridLayout" name="viewSetupCollapsibleButtonLayout_2">
+          <item row="0" column="1">
+           <widget class="QCheckBox" name="volumeRenderingCheckBox">
+            <property name="text">
+             <string>Volume Rendering</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QCheckBox" name="enableRotationCheckBox">
+            <property name="text">
+             <string>Enable Rotation</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QCheckBox" name="enableROICheckBox">
+            <property name="text">
+             <string>Enable Cropping</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QCheckBox" name="enableScalingCheckBox">
+            <property name="text">
+             <string>Enable Scaling</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QCheckBox" name="displayROICheckBox">
+            <property name="text">
+             <string>Display ROI</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
-        <item row="0" column="1">
-         <widget class="QCheckBox" name="volumeRenderingCheckBox">
-          <property name="text">
-           <string>Volume Rendering</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="3">
-         <widget class="QCheckBox" name="displayROICheckBox">
-          <property name="text">
-           <string>Display ROI</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="3">
-         <widget class="QCheckBox" name="enableRotationCheckBox">
-          <property name="text">
-           <string>Enable Rotation</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="2">
-         <widget class="QCheckBox" name="enableScalingCheckBox">
-          <property name="text">
-           <string>Enable Scaling</string>
-          </property>
-         </widget>
+        <item>
+         <widget class="qMRMLVolumePropertyNodeWidget" name="volumePropertyNodeWidget"/>
         </item>
        </layout>
       </item>
@@ -150,6 +181,12 @@
        <height>0</height>
       </size>
      </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>16777215</height>
+      </size>
+     </property>
      <property name="text">
       <string>Custom Shader</string>
      </property>
@@ -157,7 +194,7 @@
       <bool>true</bool>
      </property>
      <property name="collapsedHeight">
-      <number>27</number>
+      <number>0</number>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_3">
       <item>
@@ -167,13 +204,26 @@
         </property>
         <item row="0" column="0" colspan="2">
          <layout class="QGridLayout" name="customShaderLayout">
-          <item row="0" column="3">
-           <widget class="QPushButton" name="openCustomShaderButton">
+          <item row="0" column="4">
+           <widget class="QPushButton" name="duplicateCustomShaderButton">
             <property name="enabled">
              <bool>false</bool>
             </property>
             <property name="text">
-             <string>Open</string>
+             <string>Duplicate</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="customShaderLabel">
+            <property name="minimumSize">
+             <size>
+              <width>20</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Custom Shader : </string>
             </property>
            </widget>
           </item>
@@ -190,26 +240,13 @@
           <item row="0" column="1">
            <widget class="QComboBox" name="customShaderCombo"/>
           </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="customShaderLabel">
-            <property name="minimumSize">
-             <size>
-              <width>20</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Custom Shader : </string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="4">
-           <widget class="QPushButton" name="duplicateCustomShaderButton">
+          <item row="0" column="3">
+           <widget class="QPushButton" name="openCustomShaderButton">
             <property name="enabled">
              <bool>false</bool>
             </property>
             <property name="text">
-             <string>Duplicate</string>
+             <string>Open</string>
             </property>
            </widget>
           </item>
@@ -228,6 +265,12 @@
        <height>0</height>
       </size>
      </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>16777215</height>
+      </size>
+     </property>
      <property name="sizeIncrement">
       <size>
        <width>0</width>
@@ -238,10 +281,10 @@
       <string>Modify Custom Shader</string>
      </property>
      <property name="collapsed">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="collapsedHeight">
-      <number>27</number>
+      <number>0</number>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_4">
       <item>
@@ -275,7 +318,7 @@
            </size>
           </property>
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="codeTab">
            <attribute name="title">
@@ -378,6 +421,12 @@
        <height>0</height>
       </size>
      </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>16777215</height>
+      </size>
+     </property>
      <property name="sizeIncrement">
       <size>
        <width>0</width>
@@ -388,7 +437,7 @@
       <string>Create New Custom Shader</string>
      </property>
      <property name="collapsed">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="collapsedHeight">
       <number>27</number>
@@ -472,11 +521,6 @@
     </widget>
    </item>
   </layout>
-  <zorder>modifyCustomShaderCollapsibleButton</zorder>
-  <zorder>dataCollapsibleButton</zorder>
-  <zorder>viewSetupCollapsibleButton</zorder>
-  <zorder>customShaderCollapsibleButton</zorder>
-  <zorder>newCustomShaderCollapsibleButton</zorder>
  </widget>
  <customwidgets>
   <customwidget>
@@ -489,6 +533,11 @@
    <class>qMRMLNodeComboBox</class>
    <extends>QWidget</extends>
    <header>qMRMLNodeComboBox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>qMRMLVolumePropertyNodeWidget</class>
+   <extends>QWidget</extends>
+   <header>qMRMLVolumePropertyNodeWidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
