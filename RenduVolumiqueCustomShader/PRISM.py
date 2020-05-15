@@ -76,15 +76,11 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.ui.enableScalingCheckBox.hide()
     self.ui.enableRotationCheckBox.hide()
 
+    self.ui.volumePropertyNodeWidget.hide()
     """
-    self.vpnw = slicer.qMRMLVolumePropertyNodeWidget()
-    vpn = slicer.mrmlScene.GetNodeByID("vtkMRMLVolumePropertyNode1")
-    self.vpnw.setMRMLVolumePropertyNode(vpn)
     tf = vpn.GetColor()
     test = ctk.ctkVTKScalarsToColorsWidget()
     test.view().addColorTransferFunction(tf)
-    #viewSetupLayout.addWidget(self.vpnw, 2,0)
-    viewSetupLayout.addWidget(test, 2,0)
     """
     
     #
@@ -156,7 +152,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.ui.editSourceButton.connect('clicked()', self.onEditSourceButtonClicked)
     
     self.addParamModifyShader = ModifyParamWidget()
-    self.ui.paramLayout.removeWidget(self.ui.emptyText)
+    self.ui.emptyText.hide()
     self.ui.paramLayout.addLayout(self.addParamModifyShader.addParamLayout, 0, 0)
     self.ui.paramLayout.addLayout(self.addParamModifyShader.paramLayout, 1, 0)
     self.addParamModifyShader.addParamCombo.show()
@@ -620,6 +616,10 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         self.ROI.SetDisplayVisibility(0)
         self.resetROI()
         self.ui.enableROICheckBox.show()
+        self.ui.volumePropertyNodeWidget.show() 
+        volumePropertyNode = slicer.mrmlScene.GetNodeByID("vtkMRMLVolumePropertyNode1")
+        self.ui.volumePropertyNodeWidget.setMRMLVolumePropertyNode(volumePropertyNode)
+
 
     else:
       if self.logic.volumeRenderingDisplayNode:
