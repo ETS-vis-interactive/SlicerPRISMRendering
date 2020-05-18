@@ -75,13 +75,6 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.ui.displayROICheckBox.hide()
     self.ui.enableScalingCheckBox.hide()
     self.ui.enableRotationCheckBox.hide()
-
-    self.ui.volumePropertyNodeWidget.hide()
-    """
-    tf = vpn.GetColor()
-    test = ctk.ctkVTKScalarsToColorsWidget()
-    test.view().addColorTransferFunction(tf)
-    """
     
     #
     # Custom Shader Area
@@ -616,9 +609,21 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         self.ROI.SetDisplayVisibility(0)
         self.resetROI()
         self.ui.enableROICheckBox.show()
-        self.ui.volumePropertyNodeWidget.show() 
+        """
         volumePropertyNode = slicer.mrmlScene.GetNodeByID("vtkMRMLVolumePropertyNode1")
-        self.ui.volumePropertyNodeWidget.setMRMLVolumePropertyNode(volumePropertyNode)
+        transfertFunction = volumePropertyNode.GetColor()
+        transfertFunction.RemoveAllPoints()
+        a = [0,0,0,0,0,0]
+        transfertFunction.GetNodeValue(0, a)
+        transfertFunction.SetNodeValue(0 ,[a[0], 1, 0, 0, a[4], a[5]])
+        transfertFunction.GetNodeValue(1, a)
+        transfertFunction.SetNodeValue(1 ,[a[0], 0, 0, 1, a[4], a[5]])
+
+        self.ui.scalarsToColorsWidget.view().addColorTransferFunction(transfertFunction)
+        self.ui.scalarsToColorsWidget.view().setAxesToChartBounds()
+        self.ui.scalarsToColorsWidget.view().show()
+        self.ui.scalarsToColorsWidget.setFixedHeight(100)
+        """
 
 
     else:
@@ -777,27 +782,24 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         targetPointButton.clicked.connect(lambda _, name = p, btn = targetPointButton : self.logic.setPlacingMarkups(paramName = name, btn = btn,  interaction = 1))
         self.ui.customShaderParametersLayout.addRow(qt.QLabel(params[p]['displayName']), targetPointButton)
       
-    params = self.logic.customShader.shaderbParams
+    params = self.logic.customShader.shaderrParams
     paramNames = params.keys()
     if params:
       for p in paramNames:
-        self.addCarvingCheckBox = qt.QCheckBox(params[p]['displayName'])
-        self.addCarvingCheckBox.toggled.connect(lambda _, name = p, cbx = self.addCarvingCheckBox : self.logic.enableCarving(paramName = name, type_ = "bool", checkBox = cbx))
-        self.ui.customShaderParametersLayout.addRow(self.addCarvingCheckBox)
-        self.logic.carvingEnabled = params[p]['defaultValue']
-      
-      #hide widgets related to carving
-      for i in range(self.ui.customShaderParametersLayout.count()):
-        widget = self.ui.customShaderParametersLayout.itemAt(i).widget()
-        if widget :
-          if widget.objectName == 'radius' :
-            self.logic.radiusSlider = [self.ui.customShaderParametersLayout.itemAt(i-1).widget(), self.ui.customShaderParametersLayout.itemAt(i).widget()]
-            self.logic.radiusSlider[0].hide()
-            self.logic.radiusSlider[1].hide()
-          elif widget.objectName == 'center' :
-            self.logic.centerButton = [self.ui.customShaderParametersLayout.itemAt(i-1).widget(), self.ui.customShaderParametersLayout.itemAt(i).widget()]
-            self.logic.centerButton[0].hide()
-            self.logic.centerButton[1].hide()
+        label = qt.QLabel(params[p]['displayName'])
+        label.setMinimumWidth(80)
+        slider = ctk.ctkDoubleRangeSlider()
+        slider.minimum = params[p]['defaultValue'][0]
+        slider.minimumPosition = params[p]['defaultValue'][0]
+        slider.minimumValue = params[p]['defaultValue'][0]
+        slider.maximum = params[p]['defaultValue'][1]
+        slider.maximumValue = params[p]['defaultValue'][1]
+        slider.maximumPosition = params[p]['defaultValue'][1]
+        slider.orientation = 1
+        slider.singleStep = ( (slider.maximum - slider.minimum) * 0.01 )
+        slider.setObjectName(p)
+        slider.valuesChanged.connect( lambda min_, max_, p=p : self.logic.onCustomShaderParamChanged([min_, max_], p, "range") )
+        self.ui.customShaderParametersLayout.addRow(label,slider)
   
   def prismPath(self) :
     return os.path.dirname(eval('slicer.modules.prism.path'))
@@ -1009,6 +1011,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
         paramName (int): name of the parameter to be changed
         type_ (float or type): type of the parameter to be changed
     """
+    print(value)
     self.customShader.setShaderParameter(paramName, value, type_)
 
   def createEndPoints(self):

@@ -4,9 +4,7 @@ from Resources.CustomShader import CustomShader
 # Chroma depth shader
 #------------------------------------------------------------------------------------
 class ChromaDepthShader(CustomShader):
-  shaderfParams = { 'depthMinRange' : { 'displayName' : 'Depth Min Range', 'min' : -100, 'max' : 10, 'defaultValue' : -80 }, \
-                   'depthMaxRange' : { 'displayName' : 'Depth Max Range', 'min' : -100, 'max' : 140, 'defaultValue' : 100 }, \
-   }
+  shaderrParams = { 'depthRange' : { 'displayName' : 'Depth Range', 'defaultValue' : [-100, 100]}}
                    
 
   def __init__(self, shaderPropertyNode):
@@ -31,8 +29,9 @@ vec4 computeColor(vec4 scalar, float opacity)
     // color and the far color. depthRange specifies the depth range, in voxel
     // coordinates, between the front color and back color.
     vec3 camInTexCoord = (ip_inverseTextureDataAdjusted * vec4(g_eyePosObj.xyz,1.0) ).xyz;
-    float depthRangeInTexCoordStart = (ip_inverseTextureDataAdjusted * vec4(0,0,depthMinRange,1.0) ).z;
-    float depthRangeInTexCoordEnd = (ip_inverseTextureDataAdjusted * vec4(0,0,depthMaxRange,1.0) ).z;
+    // ramnère les distance de slicer au système de coordonnée de la texture 3D
+    float depthRangeInTexCoordStart = (ip_inverseTextureDataAdjusted * vec4(0,0,depthRangeMin,1.0) ).z;
+    float depthRangeInTexCoordEnd = (ip_inverseTextureDataAdjusted * vec4(0,0,depthRangeMax,1.0) ).z;
     vec3 dp = g_dataPos - camInTexCoord;
     vec3 dv = vec3(0.5,0.5,0.5) - camInTexCoord;
     float lv = length(dv);

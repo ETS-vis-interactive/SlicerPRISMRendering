@@ -50,7 +50,7 @@
       <string>Data</string>
      </property>
      <property name="collapsed">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="collapsedHeight">
       <number>0</number>
@@ -165,10 +165,10 @@
           </item>
          </layout>
         </item>
-        <item>
-         <widget class="qMRMLVolumePropertyNodeWidget" name="volumePropertyNodeWidget"/>
-        </item>
        </layout>
+      </item>
+      <item>
+       <widget class="ctkVTKScalarsToColorsWidget" name="scalarsToColorsWidget"/>
       </item>
      </layout>
     </widget>
@@ -437,7 +437,7 @@
       <string>Create New Custom Shader</string>
      </property>
      <property name="collapsed">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="collapsedHeight">
       <number>27</number>
@@ -524,6 +524,11 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>ctkVTKScalarsToColorsWidget</class>
+   <extends>QWidget</extends>
+   <header>ctkVTKScalarsToColorsWidget.h</header>
+  </customwidget>
+  <customwidget>
    <class>ctkCollapsibleButton</class>
    <extends>QWidget</extends>
    <header>ctkCollapsibleButton.h</header>
@@ -533,11 +538,6 @@
    <class>qMRMLNodeComboBox</class>
    <extends>QWidget</extends>
    <header>qMRMLNodeComboBox.h</header>
-  </customwidget>
-  <customwidget>
-   <class>qMRMLVolumePropertyNodeWidget</class>
-   <extends>QWidget</extends>
-   <header>qMRMLVolumePropertyNodeWidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
