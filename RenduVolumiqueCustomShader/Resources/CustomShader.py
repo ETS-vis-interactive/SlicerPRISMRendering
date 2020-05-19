@@ -14,7 +14,8 @@ class CustomShader():
   shader4fParams = {}
   shaderbParams = {}
   shaderrParams = {}
-
+  shadertfParams = {}
+  
   def __init__(self, shaderPropertyNode):
     assert shaderPropertyNode != None, 'CustomShader: a valid shader property node must provided to the constructor'
     self.shaderPropertyNode = shaderPropertyNode

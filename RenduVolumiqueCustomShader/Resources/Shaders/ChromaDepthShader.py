@@ -5,6 +5,7 @@ from Resources.CustomShader import CustomShader
 #------------------------------------------------------------------------------------
 class ChromaDepthShader(CustomShader):
   shaderrParams = { 'depthRange' : { 'displayName' : 'Depth Range', 'defaultValue' : [-100, 100]}}
+  shadertfParams = { 'scalarColorMapping' : { 'displayName' : 'Scalar Color Mapping'}}
                    
 
   def __init__(self, shaderPropertyNode):

@@ -806,7 +806,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         slider.valuesChanged.connect( lambda min_, max_, p=p : self.logic.onCustomShaderParamChanged([min_, max_], p, "range") )
         self.ui.customShaderParametersLayout.addRow(label,slider)
     
-    """
+    
     params = self.logic.customShader.shadertfParams
     paramNames = params.keys()
     if params:
@@ -814,7 +814,13 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         label = qt.QLabel(params[p]['displayName'])
         widget = ctk.ctkVTKScalarsToColorsWidget()
         volumePropertyNode = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
+        """
+        self.transfertFunction = vtk.vtkColorTransferFunction()
+        self.transfertFunction.DeepCopy(volumePropertyNode.GetColor())
+        volumePropertyNode.SetColor(self.transfertFunction)
+        """
         transfertFunction = volumePropertyNode.GetColor()
+        
         first = [0,0,0,0,0,0]
         last = [0,0,0,0,0,0]
         transfertFunction.GetNodeValue(0, first)
@@ -823,15 +829,15 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         transfertFunction.AdjustRange((0,1))
         transfertFunction.AdjustRange((0,300))
         transfertFunction.SetNodeValue(0 ,[0, 1, 0, 0, first[4], first[5]])
-        transfertFunction.SetNodeValue(1 ,[300, 0, 1, 0, last[4], last[5]])
-
+        transfertFunction.SetNodeValue(1 ,[300, 0, 0, 1, last[4], last[5]])
+        
         widget.view().addColorTransferFunction(transfertFunction)
         widget.view().setAxesToChartBounds()
         widget.setFixedHeight(100)
         widget.view().show()
 
         self.ui.customShaderParametersLayout.addRow(label, widget)
-      """
+      
   
   def prismPath(self) :
     return os.path.dirname(eval('slicer.modules.prism.path'))
