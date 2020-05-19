@@ -11,18 +11,24 @@ import textwrap
 import importlib.util
 import inspect
 from pathlib import Path
+from distutils.util import strtobool
 
 from Resources.ModifyParamWidget import ModifyParamWidget
 from Resources.CustomShader import CustomShader
-#from Resources.ColorMapping import ColorMappingEventFilter
-#from Resources.ColorMapping import ColorMapping
+
 #
 # PRISM
 #
+class PRISMSaveDataDialog:
+  def __init__(self, parent):
+    self.parent = parent
+    parent.fileType = 'PRISMFile'
+    parent.description = 'PRISM'
+    parent.action = slicer.qSlicerSaveDataDialog.Write  
 
 class PRISM(ScriptedLoadableModule):
   """Uses ScriptedLoadableModule base class, available at:
-  https://github.com/Slicer/Slicer/blob/master/   Base/Python/slicer/ScriptedLoadableModule.py
+    https://github.com/Slicer/Slicer/blob/master/Base/Python/slicer/ScriptedLoadableModule.py
   """
 
   def __init__(self, parent):
@@ -184,6 +190,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.ui.newCustomShaderLayout.addLayout(self.addParamCreateShader.addParamLayout, 0, 0)
     self.ui.newCustomShaderLayout.addLayout(self.addParamCreateShader.paramLayout, 1, 0)
     
+    self.ui.saveSceneButton.connect('clicked()', self.onSaveSceneButtonClicked)
     # Initialize state
     self.onSelect()
     self.onModify()
@@ -191,6 +198,12 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.currXAngle = 0.0
     self.currYAngle = 0.0
     self.currZAngle = 0.0
+
+  def onSaveSceneButtonClicked(self):
+    io = slicer.app.ioManager()
+    saved = io.openSaveDataDialog()
+    if (saved) : 
+      self.saveSceneParameters()
 
   def getText(self):
     """ Function to create a window with input to get the file name.
@@ -544,7 +557,9 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     #import shaders
     for c in CustomShader.allClasses:
       __import__('Resources.Shaders.' + str(c.__name__))
-
+    
+    self.getSceneParameters()
+    
     # init shader
     if self.ui.volumeRenderingCheckBox.isChecked() and self.ui.imageSelector.currentNode():
       self.logic.renderVolume(self.ui.imageSelector.currentNode())
@@ -563,6 +578,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         calldata (vtkMRMLVolumeNode): Volume node added (about to be added) to the scene.
     """
     node = calldata
+
     if isinstance(node, slicer.vtkMRMLVolumeNode):
       # Call showVolumeRendering using a timer instead of calling it directly
       # to allow the volume loading to fully complete.
@@ -609,21 +625,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         self.ROI.SetDisplayVisibility(0)
         self.resetROI()
         self.ui.enableROICheckBox.show()
-        """
-        volumePropertyNode = slicer.mrmlScene.GetNodeByID("vtkMRMLVolumePropertyNode1")
-        transfertFunction = volumePropertyNode.GetColor()
-        transfertFunction.RemoveAllPoints()
-        a = [0,0,0,0,0,0]
-        transfertFunction.GetNodeValue(0, a)
-        transfertFunction.SetNodeValue(0 ,[a[0], 1, 0, 0, a[4], a[5]])
-        transfertFunction.GetNodeValue(1, a)
-        transfertFunction.SetNodeValue(1 ,[a[0], 0, 0, 1, a[4], a[5]])
 
-        self.ui.scalarsToColorsWidget.view().addColorTransferFunction(transfertFunction)
-        self.ui.scalarsToColorsWidget.view().setAxesToChartBounds()
-        self.ui.scalarsToColorsWidget.view().show()
-        self.ui.scalarsToColorsWidget.setFixedHeight(100)
-        """
 
 
     else:
@@ -642,31 +644,37 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """" Function to save parameters values and nodes references from parameter node
     
     """
-    parametersNode = slicer.vtkMRMLScriptedModuleNode()
-    parametersNode.SetName("parametersNode")
-
-    parametersNode.SetParameter("volumeRenderingCheckBoxState", self.ui.volumeRenderingCheckBox.isChecked())
-    parametersNode.SetParameter("enableROICheckBoxState", self.ui.enableROICheckBox.isChecked())
-    parametersNode.SetParameter("displayROICheckBoxState", self.ui.displayROICheckBox.isChecked())
-    parametersNode.SetParameter("enableRotationCheckBoxState", self.ui.enableRotationCheckBox.isChecked())
-    parametersNode.SetParameter("enableScalingCheckBoxState", self.ui.enableScalingCheckBox.isChecked())
-
-    #inputNode = slicer.util.getNode("InputNode")
-    #parametersNode.SetNodeReferenceID("InputNode", inputNode.GetID())
-
+    try : 
+      parametersNode = slicer.util.getNode("ParametersNode")
+    except :
+      parametersNode = slicer.vtkMRMLScriptedModuleNode()
+      parametersNode.SetName("ParametersNode")
+    
+    parametersNode.SetParameter("volumePath", self.ui.imageSelector.currentNode().GetStorageNode().GetFileName())
+    parametersNode.SetParameter("volumeRenderingCheckBoxState", str(self.ui.volumeRenderingCheckBox.isChecked()))
+    parametersNode.SetParameter("enableROICheckBoxState", str(self.ui.enableROICheckBox.isChecked()))
+    parametersNode.SetParameter("displayROICheckBoxState", str(self.ui.displayROICheckBox.isChecked()))
+    parametersNode.SetParameter("enableRotationCheckBoxState", str(self.ui.enableRotationCheckBox.isChecked()))
+    parametersNode.SetParameter("enableScalingCheckBoxState", str(self.ui.enableScalingCheckBox.isChecked()))
+    
     slicer.mrmlScene.AddNode(parametersNode)
-  
+    slicer.util.saveScene(slicer.mrmlScene.GetURL())
+
   def getSceneParameters(self) :
     """ Function to retrieve parameters values and nodes references from parameter node
     
     """
-    parametersNode = slicer.util.getNode("parametersNode")
-    
-    self.ui.volumeRenderingCheckBox.setChecked(parameteparametersNoderNode.GetParameter("volumeRenderingCheckBoxState"))
-    self.ui.enableROICheckBox.setChecked(parameteparametersNoderNode.GetParameter("enableROICheckBoxState"))
-    self.ui.displayROICheckBox.setChecked(parameteparametersNoderNode.GetParameter("displayROICheckBoxState"))
-    self.ui.enableRotationCheckBox.setChecked(parameteparametersNoderNode.GetParameter("enableRotationCheckBoxState"))
-    self.ui.enableScalingCheckBox.setChecked(parameteparametersNoderNode.GetParameter("enableScalingCheckBoxState"))
+    try :
+      parametersNode = slicer.util.getNode("ParametersNode")
+      slicer.util.loadVolume(parametersNode.GetParameter("volumePath"))
+      self.ui.volumeRenderingCheckBox.setChecked(strtobool(parametersNode.GetParameter("volumeRenderingCheckBoxState")))
+      self.ui.enableROICheckBox.setChecked(strtobool(parametersNode.GetParameter("enableROICheckBoxState")))
+      self.ui.displayROICheckBox.setChecked(strtobool(parametersNode.GetParameter("displayROICheckBoxState")))
+      self.ui.enableRotationCheckBox.setChecked(strtobool(parametersNode.GetParameter("enableRotationCheckBoxState")))
+      self.ui.enableScalingCheckBox.setChecked(strtobool(parametersNode.GetParameter("enableScalingCheckBoxState")))
+
+    except :
+      pass
     
     #inputNode = parameterNode.GetNodeReference("InputNode")
 
@@ -788,18 +796,42 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       for p in paramNames:
         label = qt.QLabel(params[p]['displayName'])
         label.setMinimumWidth(80)
-        slider = ctk.ctkDoubleRangeSlider()
+        slider = ctk.ctkRangeWidget()
         slider.minimum = params[p]['defaultValue'][0]
-        slider.minimumPosition = params[p]['defaultValue'][0]
         slider.minimumValue = params[p]['defaultValue'][0]
         slider.maximum = params[p]['defaultValue'][1]
         slider.maximumValue = params[p]['defaultValue'][1]
-        slider.maximumPosition = params[p]['defaultValue'][1]
-        slider.orientation = 1
         slider.singleStep = ( (slider.maximum - slider.minimum) * 0.01 )
         slider.setObjectName(p)
         slider.valuesChanged.connect( lambda min_, max_, p=p : self.logic.onCustomShaderParamChanged([min_, max_], p, "range") )
         self.ui.customShaderParametersLayout.addRow(label,slider)
+    
+    """
+    params = self.logic.customShader.shadertfParams
+    paramNames = params.keys()
+    if params:
+      for p in paramNames:
+        label = qt.QLabel(params[p]['displayName'])
+        widget = ctk.ctkVTKScalarsToColorsWidget()
+        volumePropertyNode = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
+        transfertFunction = volumePropertyNode.GetColor()
+        first = [0,0,0,0,0,0]
+        last = [0,0,0,0,0,0]
+        transfertFunction.GetNodeValue(0, first)
+        transfertFunction.GetNodeValue(1, last)
+
+        transfertFunction.AdjustRange((0,1))
+        transfertFunction.AdjustRange((0,300))
+        transfertFunction.SetNodeValue(0 ,[0, 1, 0, 0, first[4], first[5]])
+        transfertFunction.SetNodeValue(1 ,[300, 0, 1, 0, last[4], last[5]])
+
+        widget.view().addColorTransferFunction(transfertFunction)
+        widget.view().setAxesToChartBounds()
+        widget.setFixedHeight(100)
+        widget.view().show()
+
+        self.ui.customShaderParametersLayout.addRow(label, widget)
+      """
   
   def prismPath(self) :
     return os.path.dirname(eval('slicer.modules.prism.path'))
@@ -1011,7 +1043,6 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
         paramName (int): name of the parameter to be changed
         type_ (float or type): type of the parameter to be changed
     """
-    print(value)
     self.customShader.setShaderParameter(paramName, value, type_)
 
   def createEndPoints(self):

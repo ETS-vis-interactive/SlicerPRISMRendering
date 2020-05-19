@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>459</width>
-    <height>374</height>
+    <width>429</width>
+    <height>660</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -30,6 +30,39 @@
     <number>0</number>
    </property>
    <item>
+    <widget class="QCommandLinkButton" name="saveSceneButton">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
+       <kerning>true</kerning>
+      </font>
+     </property>
+     <property name="text">
+      <string>Save Scene</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>13</width>
+       <height>13</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="ctkCollapsibleButton" name="dataCollapsibleButton">
      <property name="enabled">
       <bool>true</bool>
@@ -50,7 +83,7 @@
       <string>Data</string>
      </property>
      <property name="collapsed">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="collapsedHeight">
       <number>0</number>
@@ -112,7 +145,7 @@
       <string>View Setup</string>
      </property>
      <property name="collapsed">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="collapsedHeight">
       <number>0</number>
@@ -167,9 +200,6 @@
         </item>
        </layout>
       </item>
-      <item>
-       <widget class="ctkVTKScalarsToColorsWidget" name="scalarsToColorsWidget"/>
-      </item>
      </layout>
     </widget>
    </item>
@@ -191,7 +221,7 @@
       <string>Custom Shader</string>
      </property>
      <property name="collapsed">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="collapsedHeight">
       <number>0</number>
@@ -281,7 +311,7 @@
       <string>Modify Custom Shader</string>
      </property>
      <property name="collapsed">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="collapsedHeight">
       <number>0</number>
@@ -318,7 +348,7 @@
            </size>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="codeTab">
            <attribute name="title">
@@ -398,7 +428,7 @@
               <item row="1" column="0">
                <widget class="QLabel" name="emptyText">
                 <property name="text">
-                 <string>Empty</string>
+                 <string/>
                 </property>
                </widget>
               </item>
@@ -520,14 +550,22 @@
      </layout>
     </widget>
    </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>ctkVTKScalarsToColorsWidget</class>
-   <extends>QWidget</extends>
-   <header>ctkVTKScalarsToColorsWidget.h</header>
-  </customwidget>
   <customwidget>
    <class>ctkCollapsibleButton</class>
    <extends>QWidget</extends>
