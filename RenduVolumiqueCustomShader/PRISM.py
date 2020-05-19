@@ -312,6 +312,13 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     clsmembers = inspect.getmembers(customShaderModule, inspect.isclass)
     globals()[submoduleName] = clsmembers[0][1]
     
+    try :
+      self.transfertFunction
+      volumePropertyNode = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
+      volumePropertyNode.SetColor(self.transfertFunction)
+    except :
+      pass
+
     #reset customShader
     #reset UI
     self.logic.setupCustomShader()
@@ -420,6 +427,14 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.modifiedShader = self.ui.modifyCustomShaderCombo.currentText
     self.addParamModifyShader.shaderDisplayName = self.ui.modifyCustomShaderCombo.currentText
     self.ui.ModifyCSTabs.visible = True
+
+    try :
+      self.transfertFunction
+      volumePropertyNode = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
+      volumePropertyNode.SetColor(self.transfertFunction)
+    except :
+      pass
+      
 
   def onShaderTagsTypeComboIndexChanged(self, value):
     """ Function to set which shader tag type will be added to the shader.
@@ -814,13 +829,9 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         label = qt.QLabel(params[p]['displayName'])
         widget = ctk.ctkVTKScalarsToColorsWidget()
         volumePropertyNode = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
-        """
+        transfertFunction = volumePropertyNode.GetColor()
         self.transfertFunction = vtk.vtkColorTransferFunction()
         self.transfertFunction.DeepCopy(volumePropertyNode.GetColor())
-        volumePropertyNode.SetColor(self.transfertFunction)
-        """
-        transfertFunction = volumePropertyNode.GetColor()
-        
         first = [0,0,0,0,0,0]
         last = [0,0,0,0,0,0]
         transfertFunction.GetNodeValue(0, first)
@@ -877,6 +888,13 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.cleanup()
 
     globals()['PRISM'] = slicer.util.reloadScriptedModule('PRISM')
+    
+    try :
+      self.transfertFunction
+      volumePropertyNode = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
+      volumePropertyNode.SetColor(self.transfertFunction)
+    except :
+      pass
 
   def cleanup(self):
     self.resetROI()
