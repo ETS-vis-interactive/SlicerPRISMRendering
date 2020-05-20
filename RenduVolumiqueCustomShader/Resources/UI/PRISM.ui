@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>429</width>
-    <height>660</height>
+    <height>348</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -119,6 +119,9 @@
           </property>
           <property name="removeEnabled">
            <bool>true</bool>
+          </property>
+          <property name="editEnabled">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -311,7 +314,7 @@
       <string>Modify Custom Shader</string>
      </property>
      <property name="collapsed">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="collapsedHeight">
       <number>0</number>
@@ -467,7 +470,7 @@
       <string>Create New Custom Shader</string>
      </property>
      <property name="collapsed">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="collapsedHeight">
       <number>27</number>
@@ -541,7 +544,7 @@
            </size>
           </property>
           <property name="text">
-           <string>Empty</string>
+           <string/>
           </property>
          </widget>
         </item>

@@ -90,6 +90,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     # Custom shader combobox to select a type of custom shader
     # Populate combobox with every types of shader available
     allShaderTypes = CustomShader.GetAllShaderClassNames()
+    self.allClasses = CustomShader.allClasses
     for shaderType in allShaderTypes:
       self.ui.customShaderCombo.addItem(shaderType)
     self.ui.customShaderCombo.setCurrentIndex(len(allShaderTypes)-1)
@@ -434,7 +435,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       volumePropertyNode.SetColor(self.transfertFunction)
     except :
       pass
-      
+
 
   def onShaderTagsTypeComboIndexChanged(self, value):
     """ Function to set which shader tag type will be added to the shader.
@@ -570,8 +571,9 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """ Function call to initialize the all user interface based on current scene.
     """ 
     #import shaders
-    for c in CustomShader.allClasses:
+    for c in self.allClasses:
       __import__('Resources.Shaders.' + str(c.__name__))
+
     
     self.getSceneParameters()
     
@@ -631,25 +633,41 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
         #init ROI
         self.renderingDisplayNode = slicer.util.getNodesByClass("vtkMRMLVolumeRenderingDisplayNode")[0]
-        self.transformDisplayNode = slicer.mrmlScene.AddNode(slicer.vtkMRMLTransformDisplayNode())
-        self.transformDisplayNode.SetEditorRotationEnabled(False)
-        self.transformNode = slicer.mrmlScene.AddNode(slicer.vtkMRMLTransformNode())
-        self.transformNode.SetAndObserveDisplayNodeID(self.transformDisplayNode.GetID())
-        self.ROI = slicer.mrmlScene.GetNodeByID("vtkMRMLAnnotationROINode1")
+        
+        allTransformDisplayNodes = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLTransformDisplayNode','TransformDisplayNode')
+        if allTransformDisplayNodes.GetNumberOfItems() > 0:
+          self.transformDisplayNode = allTransformDisplayNodes.GetItemAsObject(0)
+        else:
+          self.transformDisplayNode = slicer.mrmlScene.AddNewNodeByClass('vtkMRMLTransformDisplayNode')
+          self.transformDisplayNode.SetName('TransformDisplayNode')
+          self.transformDisplayNode.SetEditorRotationEnabled(False)
+
+        allTransformNodes = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLTransformNode','TransformNode')
+        if allTransformNodes.GetNumberOfItems() > 0:
+          self.transformNode = allTransformNodes.GetItemAsObject(0)
+        else:
+          self.transformNode = slicer.mrmlScene.AddNewNodeByClass('vtkMRMLTransformNode')
+          self.transformNode.SetName('TransformNode')
+          self.transformNode.SetAndObserveDisplayNodeID(self.transformDisplayNode.GetID())
+        
+        allAnnotationROINodes = slicer.mrmlScene.GetNodesByClass('vtkMRMLAnnotationROINode')
+        if allAnnotationROINodes.GetNumberOfItems() > 0:
+          self.ROI = allAnnotationROINodes.GetItemAsObject(0)
+        else:
+          self.ROI = slicer.mrmlScene.AddNewNodeByClass('vtkMRMLAnnotationROINode')
+          self.ROI.SetName('ROI')
+
+        self.ROI.SetAndObserveDisplayNodeID(self.transformDisplayNode.GetID())
         self.ROI.SetAndObserveTransformNodeID(self.transformNode.GetID())
         self.ROI.SetDisplayVisibility(0)
         self.resetROI()
         self.ui.enableROICheckBox.show()
-
-
 
     else:
       if self.logic.volumeRenderingDisplayNode:
         self.logic.volumeRenderingDisplayNode.SetVisibility(False)
         self.ui.enableROICheckBox.setChecked(False)
         self.ui.displayROICheckBox.setChecked(False)
-        slicer.mrmlScene.RemoveNode(self.transformNode)
-
         self.ui.enableROICheckBox.hide()
         self.ui.displayROICheckBox.hide()
       self.ui.customShaderCollapsibleButton.hide()
@@ -869,7 +887,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     logging.debug("Reloading Shaders")
     shaderNames = []
-    for c in CustomShader.allClasses:
+    for c in self.allClasses:
       shaderNames.append(c.__name__)
     
     shaderPackageName = "Resources.Shaders"
@@ -905,6 +923,8 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       slicer.mrmlScene.RemoveNode(self.transformDisplayNode)
     except: 
       pass
+
+  
 ##################################################################################
 # PRISMLogic
 ##################################################################################
@@ -964,7 +984,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     """
     self.pointModifiedEventTag = self.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.onEndPointsChanged)
     self.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, self.onEndPointAdded)
-    #slicer.mrmlScene.AddObserver(slicer.mrmlScene.EndCloseEvent, self.onCloseScene)  
+    slicer.mrmlScene.AddObserver(slicer.mrmlScene.EndCloseEvent, self.onCloseScene)  
 
   #
   # End points functions
@@ -1041,9 +1061,17 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
       self.currentMarkupBtn.setText('Reset ' + self.pointType)
       self.pointType  = ''
 
-  def deleteNode(self):
-    node = slicer.util.getNodesByClass("vtkMRMLScalarVolumeNode")
-    slicer.mrmlScene.RemoveNode(node[0])
+  def deleteNodes(self):
+    try :
+      node = slicer.util.getNodesByClass("vtkMRMLScalarVolumeNode")
+      slicer.mrmlScene.RemoveNode(node[0])
+      slicer.mrmlScene.RemoveNode(self.shaderPropertyNode)
+      slicer.mrmlScene.RemoveNode(self.endPoints)
+      CustomShader.clear()
+    except:
+      pass
+
+
   def setPlacingMarkups(self, paramName, btn, interaction = 1, persistence = 0):
     """ Activate Slicer markups module to set one or multiple markups in the given markups fiducial list.
 
@@ -1327,3 +1355,6 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
         displayNode.GetVolumePropertyNode().Copy(logic.GetPresetByName('CT-Chest-Contrast-Enhanced'))
       # Turn off shading
       displayNode.GetVolumePropertyNode().GetVolumeProperty().SetShade(False)
+
+  def onCloseScene(self, caller, event):
+    self.deleteNodes()
