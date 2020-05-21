@@ -263,10 +263,10 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     """
     if self.ui.enableROICheckBox.isChecked():
-      self.renderingDisplayNode.SetCroppingEnabled(True)
+      self.logic.volumeRenderingDisplayNode.SetCroppingEnabled(True)
       self.ui.displayROICheckBox.show()
     else:
-      self.renderingDisplayNode.SetCroppingEnabled(False)
+      self.logic.volumeRenderingDisplayNode.SetCroppingEnabled(False)
       self.ui.displayROICheckBox.hide()
       self.ui.displayROICheckBox.setChecked(False)
 
@@ -632,7 +632,6 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         self.ui.customShaderCollapsibleButton.show()
 
         #init ROI
-        self.renderingDisplayNode = slicer.util.getNodesByClass("vtkMRMLVolumeRenderingDisplayNode")[0]
         
         allTransformDisplayNodes = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLTransformDisplayNode','TransformDisplayNode')
         if allTransformDisplayNodes.GetNumberOfItems() > 0:
@@ -649,14 +648,9 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
           self.transformNode = slicer.mrmlScene.AddNewNodeByClass('vtkMRMLTransformNode')
           self.transformNode.SetName('TransformNode')
           self.transformNode.SetAndObserveDisplayNodeID(self.transformDisplayNode.GetID())
-        
-        allAnnotationROINodes = slicer.mrmlScene.GetNodesByClass('vtkMRMLAnnotationROINode')
-        if allAnnotationROINodes.GetNumberOfItems() > 0:
-          self.ROI = allAnnotationROINodes.GetItemAsObject(0)
-        else:
-          self.ROI = slicer.mrmlScene.AddNewNodeByClass('vtkMRMLAnnotationROINode')
-          self.ROI.SetName('ROI')
 
+        ROINodeID = self.logic.volumeRenderingDisplayNode.GetROINodeID()
+        self.ROI = slicer.util.getNode(ROINodeID)
         self.ROI.SetAndObserveDisplayNodeID(self.transformDisplayNode.GetID())
         self.ROI.SetAndObserveTransformNodeID(self.transformNode.GetID())
         self.ROI.SetDisplayVisibility(0)
