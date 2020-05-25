@@ -314,7 +314,6 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     globals()[submoduleName] = clsmembers[0][1]
     
     try :
-      self.transfertFunction
       volumePropertyNode = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
       volumePropertyNode.SetColor(self.transfertFunction)
     except :
@@ -430,7 +429,6 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.ui.ModifyCSTabs.visible = True
 
     try :
-      self.transfertFunction
       volumePropertyNode = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
       volumePropertyNode.SetColor(self.transfertFunction)
     except :
@@ -595,7 +593,6 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         calldata (vtkMRMLVolumeNode): Volume node added (about to be added) to the scene.
     """
     node = calldata
-
     if isinstance(node, slicer.vtkMRMLVolumeNode):
       # Call showVolumeRendering using a timer instead of calling it directly
       # to allow the volume loading to fully complete.
@@ -612,10 +609,11 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     if not node:
       return
 
+    
     # render selected volume
     if self.ui.volumeRenderingCheckBox.isChecked():
-      self.logic.renderVolume(self.ui.imageSelector.currentNode())
-      self.UpdateShaderParametersUI()
+      self.ui.volumeRenderingCheckBox.setChecked(False)
+      self.ui.volumeRenderingCheckBox.setChecked(True)
 
   #
   # View setup callbacks
@@ -902,7 +900,6 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     globals()['PRISM'] = slicer.util.reloadScriptedModule('PRISM')
     
     try :
-      self.transfertFunction
       volumePropertyNode = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
       volumePropertyNode.SetColor(self.transfertFunction)
     except :
@@ -1296,7 +1293,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
 
     # Set value as class parameter to be accesed in other functions
     self.volumeRenderingDisplayNode = displayNode
- 
+
   def setCustomShaderType(self, shaderTypeName):
     """ Set given shader type as current active shader
 
@@ -1313,14 +1310,13 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     # TODO: not sure we want to get any node from the scene here. It might be better to find out if one is already associated with the volume
     
     CustomShader.GetAllShaderClassNames()
-    allShaderProperty = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLShaderPropertyNode',shaderPropertyName)
-    if allShaderProperty.GetNumberOfItems() == 0:
+    try :
+      self.shaderPropertyNode = self.volumeRenderingDisplayNode.GetShaderPropertyNode()
+    except :
       self.shaderPropertyNode = slicer.vtkMRMLShaderPropertyNode()
       self.shaderPropertyNode.SetName(shaderPropertyName)
       slicer.mrmlScene.AddNode(self.shaderPropertyNode)
-    else:
-      self.shaderPropertyNode = allShaderProperty.GetItemAsObject(0)
-    allShaderProperty = None
+
     self.customShader = CustomShader.InstanciateCustomShader(self.customShaderType,self.shaderPropertyNode)
     self.customShader.setupShader()
 
