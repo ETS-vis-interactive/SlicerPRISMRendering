@@ -28,6 +28,7 @@ def dumpFunctionName(func):
 # PRISM
 #
 class PRISMSaveDataDialog:
+  @dumpFunctionName
   def __init__(self, parent):
     self.parent = parent
     parent.fileType = 'PRISMFile'
@@ -40,6 +41,7 @@ class PRISM(ScriptedLoadableModule):
   """
 
   
+  @dumpFunctionName
   def __init__(self, parent):
     ScriptedLoadableModule.__init__(self, parent)
     self.parent.title = "PRISM"
@@ -58,7 +60,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
   https://github.com/Slicer/Slicer/blob/master/Base/Python/slicer/ScriptedLoadableModule.py
   """
 
-  
+  @dumpFunctionName
   def setup(self):
     ScriptedLoadableModuleWidget.setup(self)
 
@@ -214,11 +216,11 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.currZAngle = 0.0
 
     #save widgets
-    self.widgets = self.ui.centralWidget.findChildren(qt.QCheckBox())  \
+    self.widgets = list(self.ui.centralWidget.findChildren(qt.QCheckBox())  \
     + self.ui.centralWidget.findChildren(qt.QPushButton()) \
-    + self.ui.centralWidget.findChildren(qt.QComboBox())
+    + self.ui.centralWidget.findChildren(qt.QComboBox()))
     self.nodeSelectorWidgets = [self.ui.imageSelector, self.ui.parametersNodeSelector]
-    
+    self.init = 0
     # Set parameter node (widget will observe it)
     self.updateNodeSelector()
     self.setAndObserveParameterNode()
@@ -226,8 +228,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     # Update GUI  
     self.updateGUIFromParameterNode()
 
-
-  
+  @dumpFunctionName
   def updateNodeSelector(self):
     if self.ui.parametersNodeSelector.currentNode() is None:
       parameterNode = self.logic.getParameterNode()
@@ -239,33 +240,36 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
           volumeNode = slicer.util.loadVolume(volumePath)
           self.ui.imageSelector.setCurrentNode(volumeNode)
         
-  
+  @dumpFunctionName
   def cleanup(self):
     self.removeGUIObservers()
 
     if self.logic.parameterNode and self.logic.parameterNodeObserver:
       slicer.mrmlScene.RemoveObserver(self.logic.parameterNodeObserver)
   
-  
+  @dumpFunctionName
   def setAndObserveParameterNode(self, caller=None, event=None):
     # Remove observer to old parameter node
     if self.logic.parameterNode and self.logic.parameterNodeObserver:
-      self.logic.parameterNode.RemoveObserver(self.logic.parameterNodeObserver)
+      #self.logic.parameterNode.RemoveObserver(self.logic.parameterNodeObserver) #FIXME
       self.logic.parameterNodeObserver = None
     # Set and observe new parameter node
     self.logic.parameterNode = self.ui.parametersNodeSelector.currentNode()
+    """
     if self.logic.parameterNode:
       self.logic.parameterNodeObserver = self.logic.parameterNode.AddObserver(vtk.vtkCommand.ModifiedEvent, self.onParameterNodeModified)
-
-  
+    """
   def getClassName(self, widget):
     import sys
     if sys.version_info.major == 2:
       return widget.metaObject().className()
     else:
-      return widget.metaObject().getClassName()
-
+      try :
+        return widget.metaObject().getClassName()
+      except:
+        return widget.view().metaObject().getClassName()
   
+  @dumpFunctionName
   def updateGUIFromParameterNode(self, caller=None, event=None):
     if not self.logic.parameterNode:
       return
@@ -276,7 +280,6 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     
     #disables updateParameterNodeFromGUI signal 
     self.removeGUIObservers()
-    print(self.widgets)
     for w in self.widgets:
       widgetClassName = self.getClassName(w)
       if widgetClassName=="QPushButton":
@@ -289,13 +292,23 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         index = int(parameterNode.GetParameter(w.name))
         w.setCurrentIndex(index)
       elif widgetClassName=="ctkSliderWidget":
-        value = float(parameterNode.GetParameter(w.name))
-        w.setValue(value)
+        if parameterNode.GetParameter(w.name) != '' :
+          value = float(parameterNode.GetParameter(w.name))
+          w.setValue(value)
       elif widgetClassName=="ctkRangeWidget":
-        values = parameterNode.GetParameter(w.name).split(',')     
-        w.minimumValue = float(values[0])
-        w.maximumValue = float(values[1])
-    
+        if parameterNode.GetParameter(w.name) != '' :
+          values = parameterNode.GetParameter(w.name).split(',')     
+          w.minimumValue = float(values[0])
+          w.maximumValue = float(values[1])
+      """
+      elif widgetClassName == "ctkVTKScalarsToColorsWidget":
+        i = 0
+        values = parameterNode.GetParameter(CSName+str(i))
+        while values != '':
+          transfertFunction.SetNodeValue(i, [int(i) for i in values.split(",")])
+          i+=1
+          values = self.logic.parameterNode.GetParameter(CSName+str(i))
+      """
     for w in self.nodeSelectorWidgets:
       oldBlockSignalsState =w.blockSignals(True)
       w.setCurrentNodeID(parameterNode.GetNodeReferenceID(w.name))
@@ -304,32 +317,70 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.addGUIObservers()
 
   
-  def updateParameterNodeFromGUI(self, caller = None, event= None):
+  @dumpFunctionName
+  def updateParameterNodeFromGUI(self, value = None, widget = None):
     parameterNode = self.logic.parameterNode
     oldModifiedState = parameterNode.StartModify()
 
     if self.ui.imageSelector.currentNode() is None:
       return 
-
-    parameterNode.SetParameter("volumePath", self.ui.imageSelector.currentNode().GetStorageNode().GetFileName())
-    for w in self.widgets :
-      widgetClassName = self.getClassName(w)
+    
+    if widget is not None :
+      widgetClassName = self.getClassName(widget)
       if widgetClassName=="QPushButton" :
-        parameterNode.SetParameter(w.name, "1") if w.enabled else parameterNode.SetParameter(w.name, "0")
+        parameterNode.SetParameter(widget.name, "1") if widget.enabled else parameterNode.SetParameter(widget.name, "0")
       elif widgetClassName == "QCheckBox":
-        parameterNode.SetParameter(w.name, "1") if w.checked else parameterNode.SetParameter(w.name, "0")
+        parameterNode.SetParameter(widget.name, "1") if w.checked else parameterNode.SetParameter(widget.name, "0")
       elif widgetClassName == "QComboBox" or widgetClassName == "ctkComboBox" :
-        parameterNode.SetParameter(w.name, str(w.currentIndex))
+        parameterNode.SetParameter(widget.name, str(widget.currentIndex))
       elif widgetClassName == "ctkSliderWidget":
-        parameterNode.SetParameter(w.name, str(w.value))
+        parameterNode.SetParameter(widget.name, str(widget.value))
       elif widgetClassName == "ctkRangeWidget":
-        parameterNode.SetParameter(w.name, str(w.minimumValue) + ',' + str(w.maximumValue))
-    
-    for w in self.nodeSelectorWidgets:
-      parameterNode.SetNodeReferenceID(w.name, w.currentNodeID)
-    parameterNode.EndModify(oldModifiedState)
-    
+        parameterNode.SetParameter(widget.name, str(widget.minimumValue) + ',' + str(widget.maximumValue))
+      """
+      elif widgetClassName == "ctkVTKScalarsToColorsWidget":
+        volumePropertyNode = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
+        transfertFunction = volumePropertyNode.GetColor()
+        values = [0,0,0,0,0,0]
+        i = 0
+        res = transfertFunction.GetNodeValue(i, values)
+        while (res == 1):
+          i+=1
+          res = transfertFunction.GetNodeValue(i, values)
+          parameterNode.SetParameter(CSName+str(i), ",".join("{0}".format(n) for n in values))
+      """
+    else :
+      parameterNode.SetParameter("volumePath", self.ui.imageSelector.currentNode().GetStorageNode().GetFileName())
+      for w in self.widgets :
+        widgetClassName = self.getClassName(w)
+        if widgetClassName=="QPushButton" :
+          parameterNode.SetParameter(w.name, "1") if w.enabled else parameterNode.SetParameter(w.name, "0")
+        elif widgetClassName == "QCheckBox":
+          parameterNode.SetParameter(w.name, "1") if w.checked else parameterNode.SetParameter(w.name, "0")
+        elif widgetClassName == "QComboBox" or widgetClassName == "ctkComboBox" :
+          parameterNode.SetParameter(w.name, str(w.currentIndex))
+        elif widgetClassName == "ctkSliderWidget":
+          parameterNode.SetParameter(w.name, str(w.value))
+        elif widgetClassName == "ctkRangeWidget":
+          parameterNode.SetParameter(w.name, str(w.minimumValue) + ',' + str(w.maximumValue))
+        """
+        elif widgetClassName == "ctkVTKScalarsToColorsWidget":
+          volumePropertyNode = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
+          transfertFunction = volumePropertyNode.GetColor()
+          values = [0,0,0,0,0,0]
+          i = 0
+          res = transfertFunction.GetNodeValue(i, values)
+          while (res == 1):
+            i+=1
+            res = transfertFunction.GetNodeValue(i, values)
+            parameterNode.SetParameter(CSName+str(i), ",".join("{0}".format(n) for n in values))
+        """
+      for w in self.nodeSelectorWidgets:
+        parameterNode.SetNodeReferenceID(w.name, w.currentNodeID)
+      parameterNode.EndModify(oldModifiedState)
+      
   
+  @dumpFunctionName
   def addGUIObservers(self):
     for w in self.widgets:
       widgetClassName = self.getClassName(w)
@@ -344,6 +395,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       w.connect("currentNodeIDChanged(QString)", self.updateParameterNodeFromGUI)
 
   
+  @dumpFunctionName
   def removeGUIObservers(self):
     for w in self.widgets:
       widgetClassName = self.getClassName(w)
@@ -362,10 +414,12 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       w.disconnect("currentNodeIDChanged(QString)", self.updateParameterNodeFromGUI)
     
   
+  @dumpFunctionName
   def onParameterNodeModified(self, observer, eventid):
     self.updateGUIFromParameterNode()
 
   
+  @dumpFunctionName
   def getText(self):
     """ Function to create a window with input to get the file name.
 
@@ -375,6 +429,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       return text
 
   
+  @dumpFunctionName
   def onDuplicateCustomShaderButtonClicked(self) :
     """ Function to duplicate custom shader file.
 
@@ -393,6 +448,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
   
 
   
+  @dumpFunctionName
   def onOpenCustomShaderButtonClicked(self, caller=None, event=None) :
     """ Function to open custom shader file.
 
@@ -401,6 +457,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     qt.QDesktopServices.openUrl(qt.QUrl("file:///"+shaderPath, qt.QUrl.TolerantMode))
 
   
+  @dumpFunctionName
   def onEnableRotationCheckBoxToggled(self, caller=None, event=None) :
     """ Function to enable rotating ROI box.
 
@@ -413,6 +470,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
   
 
   
+  @dumpFunctionName
   def onEnableScalingCheckBoxToggled(self, caller=None, event=None) :
     """ Function to enable scaling ROI box.
 
@@ -424,6 +482,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
 
   
+  @dumpFunctionName
   def onEnableROICheckBoxToggled(self, caller=None, event=None):
     """ Function to enable ROI cropping and show/hide ROI Display properties.
 
@@ -437,6 +496,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       self.ui.displayROICheckBox.setChecked(False)
 
   
+  @dumpFunctionName
   def onDisplayROICheckBoxToggled(self, caller=None, event=None):
     """ Function to display ROI box and show/hide scaling and rotation parameters.
 
@@ -453,6 +513,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       self.ui.enableRotationCheckBox.setChecked(False)
 
   
+  @dumpFunctionName
   def onReloadCurrentCustomShaderButtonClicked(self, caller=None, event=None):
     """ Function to reload the current custom shader.
 
@@ -495,6 +556,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.cleanup()
 
   
+  @dumpFunctionName
   def onModifyCustomShaderButtonClicked(self, caller=None, event=None):
     """ Function to add the new shader replacement to a file.
 
@@ -533,6 +595,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.ui.addedMsg.show()
 
   
+  @dumpFunctionName
   def getPath(self, name, packageName = 'Resources/Shaders') :
     """ Function to get a selected shader file path.
 
@@ -545,6 +608,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     return None
 
   
+  @dumpFunctionName
   def onShaderOpenFileButtonClicked(self, caller=None, event=None):
     """ Function to open a file containing the new shader replacement.
 
@@ -575,6 +639,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     qt.QDesktopServices.openUrl(qt.QUrl("file:///"+modifiedShaderPath, qt.QUrl.TolerantMode))
 
   
+  @dumpFunctionName
   def updateComboBox(self, tab, comboBox, func):
     """ Function to populate a combobox from an array.
 
@@ -590,6 +655,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     comboBox.activated.connect(func)
   
   
+  @dumpFunctionName
   def onModifyCustomShaderComboIndexChanged(self, value):
     """ Function to set which shader will be modified.
 
@@ -608,6 +674,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
 
   
+  @dumpFunctionName
   def onShaderTagsTypeComboIndexChanged(self, value):
     """ Function to set which shader tag type will be added to the shader.
 
@@ -621,6 +688,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.updateComboBox(tab, self.ui.shaderTagsCombo, self.onShaderTagsComboIndexChanged)
  
   
+  @dumpFunctionName
   def onShaderTagsComboIndexChanged(self, value):
     """ Function to set which shader tag will be added to the shader.
 
@@ -635,6 +703,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
 
   
+  @dumpFunctionName
   def onNewCustomShaderButtonClicked(self):
     """ Function to create a new file with the associated class.
 
@@ -664,6 +733,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       self.ui.newCustomShaderDisplayInput.setEnabled(False)
 
   
+  @dumpFunctionName
   def onEditSourceButtonClicked(self):
     """ Function to create a new file with the custom shader and open the file in editor
 
@@ -677,6 +747,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     qt.QDesktopServices.openUrl(qt.QUrl("file:///"+self.newCustomShaderFile, qt.QUrl.TolerantMode))
 
   
+  @dumpFunctionName
   def onModify(self):
     """ Function to activate or deactivate the button to modify a custom shader
 
@@ -684,6 +755,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.ui.modifyCustomShaderButton.enabled = len(self.ui.shaderModifications.document().toPlainText()) > 0
 
   
+  @dumpFunctionName
   def onSelect(self):
     """ Function to activate or deactivate the button to create a custom shader
 
@@ -692,6 +764,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.ui.errorMsg.hide()
 
   
+  @dumpFunctionName
   def duplicateFile(self, old_file_name, new_file_name):
     """ Function to create a new class from the template
 
@@ -718,6 +791,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       self.ui.errorMsgText = "There is an error with the class name \""+new_file_name+"\". Please check the name and try again."
 
   
+  @dumpFunctionName
   def setup_file(self, file_, className, displayName):
     """ Function to modify the new class with regex to match the given infos
 
@@ -746,6 +820,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
 
   
+  @dumpFunctionName
   def initState(self):
     """ Function call to initialize the all user interface based on current scene.
     """ 
@@ -765,6 +840,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
   #
 
   
+  @dumpFunctionName
   def onImageSelectorNodeAdded(self, calldata):
     """ Callback function when a volume node is added to the scene by the user.
 
@@ -784,6 +860,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       self.ui.imageSelector.nodeAdded.disconnect()
 
   
+  @dumpFunctionName
   def onImageSelectorChanged(self, node):
     """ Callback function when the volume node has been changed in the dedicated combobox.
         Setup slice nodes to display selected node and render it in the 3d view.
@@ -801,6 +878,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
   #
 
   
+  @dumpFunctionName
   def onVolumeRenderingCheckBoxToggled(self, caller=None, event=None)      :
     """ Callback function when the volume rendering check box is toggled. Activate or deactivate 
     the rendering of the selected volume.
@@ -846,6 +924,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       self.ui.customShaderCollapsibleButton.hide()
       
   
+  @dumpFunctionName
   def resetROI(self):
     """ Function to reset the ROI in the scene.
     
@@ -858,6 +937,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       ROINodes.SetName("ROI")
 
   
+  @dumpFunctionName
   def onDisplayControlsCheckBoxToggled(self, caller=None, event=None):
     """ Callback function triggered when the display controls check box is toggled.
         Show/hide in the VR view scene the controls at the location of the Windows Mixed Reality controllers.
@@ -872,12 +952,18 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
   #
 
   
+  @dumpFunctionName
   def onCustomShaderComboIndexChanged(self, i):
     """ Callback function when the custom shader combo box is changed.
 
     Args:
     i (int) : index of the element
     """
+    self.logic.setCustomShaderType(self.ui.customShaderCombo.currentText)
+    self.UpdateShaderParametersUI()
+    self.updateParameterNodeFromGUI(self.ui.customShaderCombo.currentText, self.ui.customShaderCombo)
+    self.updateGUIFromParameterNode()
+  
     if i == (self.ui.customShaderCombo.count - 1):
       self.ui.openCustomShaderButton.setEnabled(False)
       self.ui.reloadCurrentCustomShaderButton.setEnabled(False)
@@ -886,33 +972,46 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       self.ui.openCustomShaderButton.setEnabled(True)
       self.ui.reloadCurrentCustomShaderButton.setEnabled(True)
       self.ui.duplicateCustomShaderButton.setEnabled(True)
-    
-    self.logic.setCustomShaderType(self.ui.customShaderCombo.currentText)
-    self.UpdateShaderParametersUI()
 
-  
+  def addToWidgetList(self, widget, name):
+    """ Function to add a widget to self.widgets without duplicate/
+    Args:
+        widget (QObject) : widget to be added to the list.
+        name (string) : name of the widget
+    """
+    found = 0
+    for i, w in enumerate(self.widgets):
+      if w.name == name :
+        found = 1
+        self.widgets[i] = widget
+      
+    if not found :
+      self.widgets.append(widget)
+
+  @dumpFunctionName
   def UpdateShaderParametersUI(self):
     """ Updates the shader parameters on the UI.
 
     """
     if not self.logic.customShader:
       return
+
     # Clear all the widgets except the combobox selector
     while self.ui.customShaderParametersLayout.count() != 1:
       item = self.ui.customShaderParametersLayout.takeAt(self.ui.customShaderParametersLayout.count() - 1)
       if item != None:
         widget = item.widget()
         if widget != None:
+          state = widget.blockSignals(True)
           widget.setParent(None)
-
     try :
       self.logic.endPoints.RemoveAllMarkups()
     except :
       pass
-    
     lenWidgets = len(self.widgets)
+    
+    CSName = self.ui.customShaderCombo.currentText.replace(" ", "")
 
-    #FIXME parameters are saved with self.logic.parameterNode but are erased while going through this function
     # Instanciate a slider for each floating parameter of the active shader
     params = self.logic.customShader.shaderfParams
     paramNames = params.keys()
@@ -925,13 +1024,14 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       f = str(params[p]['defaultValue'])
       slider.setDecimals(f[::-1].find('.'))
       slider.singleStep = ( (slider.maximum - slider.minimum) * 0.01 )
-      slider.setObjectName(p)
+      slider.setObjectName(CSName + p)
       slider.setValue(self.logic.customShader.getShaderParameter(p, float))
       slider.valueChanged.connect(lambda value, p=p : self.logic.onCustomShaderParamChanged(value, p, float) )
-      slider.valueChanged.connect(lambda value : self.updateParameterNodeFromGUI(value))
+      slider.valueChanged.connect(lambda value, w = slider : self.updateParameterNodeFromGUI(value, w))
       slider.setParent(self.ui.customShaderParametersLayout)
-      self.ui.customShaderParametersLayout.addRow(label,slider)
-      self.widgets += (slider,)
+      self.ui.customShaderParametersLayout.addRow(label, slider)
+      
+      self.addToWidgetList(slider, CSName+p)
 
     # Instanciate a slider for each integer parameter of the active shader
     params = self.logic.customShader.shaderiParams
@@ -943,16 +1043,16 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       slider.minimum = params[p]['min']
       slider.maximum = params[p]['max']
       slider.singleStep = ( (slider.maximum - slider.minimum) * 0.05)
-      slider.setObjectName(p)
+      slider.setObjectName(CSName+p)
       slider.setDecimals(0)
       slider.setValue(int(self.logic.customShader.getShaderParameter(p, int)))
       slider.valueChanged.connect(lambda value, p=p : self.logic.onCustomShaderParamChanged(value, p, int) )
-      slider.valueChanged.connect(lambda value : self.updateParameterNodeFromGUI(value))
+      slider.valueChanged.connect(lambda value, w = slider : self.updateParameterNodeFromGUI(value, w))
       slider.setParent(self.ui.customShaderParametersLayout)
-      self.ui.customShaderParametersLayout.addRow(label,slider)
-      self.widgets += (slider,)
+      self.ui.customShaderParametersLayout.addRow(label, slider)
+      
+      self.addToWidgetList(slider, CSName+p)
     
-    #TODO add to widget list to save parameter in the scene
     # Instanciate a markup
     params = self.logic.customShader.shader4fParams
     paramNames = params.keys()
@@ -965,11 +1065,14 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
         targetPointButton = qt.QPushButton("Initialize " + params[p]['displayName'])
         targetPointButton.setToolTip( "Place a markup" )
-        targetPointButton.setObjectName(p)
+        targetPointButton.setObjectName(CSName+p)
         targetPointButton.clicked.connect(lambda _, name = p, btn = targetPointButton : self.logic.setPlacingMarkups(paramName = name, btn = btn,  interaction = 1))
+        #targetPointButton.connect(lambda value, w = slider : self.updateParameterNodeFromGUI(value, w)) #FIXME value
         targetPointButton.setParent(self.ui.customShaderParametersLayout)
         self.ui.customShaderParametersLayout.addRow(qt.QLabel(params[p]['displayName']), targetPointButton)
-      
+        #self.addToWidgetList(targetPointButton, CSName+p)
+    
+    #FIXME the value is erased by getVolumeRange()
     params = self.logic.customShader.shaderrParams
     paramNames = params.keys()
     if params:
@@ -982,14 +1085,14 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         slider.maximum = params[p]['defaultValue'][1]
         slider.maximumValue = params[p]['defaultValue'][1]
         slider.singleStep = ( (slider.maximum - slider.minimum) * 0.01 )
-        slider.setObjectName(p)
+        slider.setObjectName(CSName+p)
         slider.setParent(self.ui.customShaderParametersLayout)
         slider.valuesChanged.connect(lambda min_, max_, p=p : self.logic.onCustomShaderParamChanged([min_, max_], p, "range") )
-        slider.valueChanged.connect(lambda value : self.updateParameterNodeFromGUI(value))
-        self.ui.customShaderParametersLayout.addRow(label,slider)
-        self.widgets += (slider,)
+        slider.valuesChanged.connect(lambda value, w = slider : self.updateParameterNodeFromGUI(value, w))
+        self.ui.customShaderParametersLayout.addRow(label, slider)
 
-    #TODO add to widget list to save parameter in the scene
+        self.addToWidgetList(slider, CSName+p)
+
     params = self.logic.customShader.shadertfParams
     paramNames = params.keys()
     if params:
@@ -999,9 +1102,12 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         volumePropertyNode = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
         label = qt.QLabel(params[p]['displayName'])
         widget = ctk.ctkVTKScalarsToColorsWidget()
+        widget.setObjectName(CSName+p)
+
         transfertFunction = volumePropertyNode.GetColor()
         self.transfertFunction = vtk.vtkColorTransferFunction()
         self.transfertFunction.DeepCopy(volumePropertyNode.GetColor())
+
         first = [0,0,0,0,0,0]
         last = [0,0,0,0,0,0]
         transfertFunction.GetNodeValue(0, first)
@@ -1011,19 +1117,30 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         transfertFunction.AdjustRange((0,300))
         transfertFunction.SetNodeValue(0 ,[0, 1, 0, 0, first[4], first[5]])
         transfertFunction.SetNodeValue(1 ,[300, 0, 0, 1, last[4], last[5]])
-        
+       
         widget.view().addColorTransferFunction(transfertFunction)
         widget.view().setAxesToChartBounds()
         widget.setFixedHeight(100)
         widget.view().show()
-
+        
+        #colorPickerButton = widget.findChild(ctk.ctkColorPickerButton, "ColorPickerButton")
+        #colorPickerButton.toggled.connect(lambda value, w = slider : self.updateParameterNodeFromGUI(value, w))
+        #xSpinBox = widget.findChild(qt.QDoubleSpinBox, "XSpinBox")
+        #xSpinBox.valueChanged.connect(lambda value, w = slider : self.updateParameterNodeFromGUI(value, w))
+        #self.addToWidgetList(slider, CSName+p)
+        
         self.ui.customShaderParametersLayout.addRow(label, widget)
     
     #check if widgets have been added
-    if (len(self.widgets) > lenWidgets):
+    """
+    self.init += 1
+    if self.init == 2 :
       self.updateGUIFromParameterNode()
+    elif self.init > 2 :
+      self.updateParameterNodeFromGUI()
+    """
 
-  
+  @dumpFunctionName
   def prismPath(self) :
     """ Returns the module.
 
@@ -1031,6 +1148,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     return os.path.dirname(eval('slicer.modules.prism.path'))
 
   
+  @dumpFunctionName
   def onReload(self):
     """ Reload the modules.
 
@@ -1074,6 +1192,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       pass
 
   
+  @dumpFunctionName
   def cleanup(self):
     self.resetROI()
     self.ui.enableROICheckBox.setChecked(False)
@@ -1092,6 +1211,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 class PRISMLogic(ScriptedLoadableModuleLogic):
   
   
+  @dumpFunctionName
   def __init__(self):
     ScriptedLoadableModuleLogic.__init__(self)
     self.createEndPoints()
@@ -1121,10 +1241,11 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     self.parameterNode = None
     self.parameterNodeObserver = None
     self.addObservers()
-  
 
 
+
   
+  @dumpFunctionName
   def enableCarving(self, paramName, type_, checkBox) :
     if checkBox.isChecked() :  
       if paramName == 'sphere' :
@@ -1145,6 +1266,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     self.customShader.setShaderParameter(paramName, self.carvingEnabled, type_)
 
   
+  @dumpFunctionName
   def addObservers(self):
     """ Create all observers needed in the UI to ensure a correct behaviour
     """
@@ -1158,6 +1280,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
 
   @vtk.calldata_type(vtk.VTK_INT)
   
+  @dumpFunctionName
   def onEndPointsChanged(self, caller, event, call_data):
     """ Callback function to get the position of the modified point
     Note: @vtk.calldata_type(vtk.VTK_OBJECT) function get calling instance as a vtkMRMLNode to be accesed in the function.
@@ -1176,6 +1299,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
       self.onCustomShaderParamChanged(world, name, "markup")
     
   
+  @dumpFunctionName
   def onEndPointAdded(self, caller, event):
     """ Callback function to get the position of the new point.
     Args:
@@ -1230,6 +1354,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
       self.pointType  = ''
 
   
+  @dumpFunctionName
   def deleteNodes(self):
     try :
       node = slicer.util.getNodesByClass("vtkMRMLScalarVolumeNode")
@@ -1242,6 +1367,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
 
 
   
+  @dumpFunctionName
   def setPlacingMarkups(self, paramName, btn, interaction = 1, persistence = 0):
     """ Activate Slicer markups module to set one or multiple markups in the given markups fiducial list.
 
@@ -1258,6 +1384,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     self.pointType = paramName
     
   
+  @dumpFunctionName
   def onCustomShaderParamChanged(self, value, paramName, type_ ):
     """ Change the custom parameters in the shader.
 
@@ -1268,7 +1395,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     """
     self.customShader.setShaderParameter(paramName, value, type_)
 
-  
+  @dumpFunctionName
   def createEndPoints(self):
     # retrieve end points in the scene or create the node
     allEndPoints = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLMarkupsFiducialNode','EndPoints')
@@ -1285,6 +1412,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     allEndPoints = None 
   
   
+  @dumpFunctionName
   def getEntry(self):
     """ Get Entry point position. If not yet placed, return (0,0,0).
 
@@ -1297,10 +1425,12 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     return entry
   
   
+  @dumpFunctionName
   def setEntry(self,entry):
     self.endPoints.SetNthFiducialPositionFromArray(1, entry)
 
   
+  @dumpFunctionName
   def getTarget(self):
     """ Get Target point position. If not yet placed, return (0,0,0).
 
@@ -1313,6 +1443,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     return target
 
   
+  @dumpFunctionName
   def setTarget(self,target):
     self.endPoints.SetNthFiducialPositionFromArray(0, target)   
 
@@ -1322,6 +1453,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
 
 
   
+  @dumpFunctionName
   def activateVR(self):
     from Resources.VirtualRealityHelper import VirtualRealityHelper
     self.vrhelper = VirtualRealityHelper(self.volumeRenderingDisplayNode)
@@ -1334,6 +1466,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
 
 
   
+  @dumpFunctionName
   def delayedInitVRObserver(self):
     ltn = self.vrhelper.getLeftTransformNode()
     self.leftTransformModifiedTag = ltn.AddObserver(slicer.vtkMRMLTransformNode.TransformModifiedEvent,self.onLeftControllerMoved)
@@ -1342,6 +1475,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
 
 
   
+  @dumpFunctionName
   def onRightControllerTriggerPressed(self):
     """ Callback function on trigger pressed event. If controller is near the entry point, starts modification of its position.
     """
@@ -1366,6 +1500,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
       self.endPoints.SetNthControlPointSelected(1, True)
 
   
+  @dumpFunctionName
   def onRightControllerTriggerReleased(self):
     """ Callback function when right trigger is released. Drop entry point at current controller position.
     """
@@ -1376,6 +1511,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
       self.movingEntry = False
 
   
+  @dumpFunctionName
   def onRightControllerMoved(self,caller,event):
     """ Callback function when a the right controller position has changed.
     """
@@ -1397,6 +1533,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     self.vrhelper.lastControllerPos = controllerPos
 
   
+  @dumpFunctionName
   def onLeftControllerTriggerPressed(self):
     """ Callback function on trigger pressed event. If a shader with "relativePosition" parameter has been selected
         allows user to change this parameter based on future position compared to the position when pressed.
@@ -1410,12 +1547,14 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
       self.moveRelativePosition = True
 
   
+  @dumpFunctionName
   def onLeftControllerTriggerReleased(self):
     """ Callback function on trigger released event. Stop changing the relativePosition shader parameter.
     """
     self.moveRelativePosition = False
 
   
+  @dumpFunctionName
   def onLeftControllerMoved(self,caller,event):
     """ Callback function when a the left controller position has changed. Used to change "relativePosition"
         current shader parameter and laser position.
@@ -1444,6 +1583,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
   #
 
   
+  @dumpFunctionName
   def renderVolume(self, volumeNode):
     """ Use Slicer Volume Rendering module to initialize and setup rendering of the given volume node.
     Args:
@@ -1489,6 +1629,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     self.volumeRenderingDisplayNode = displayNode
 
   
+  @dumpFunctionName
   def setCustomShaderType(self, shaderTypeName):
     """ Set given shader type as current active shader
 
@@ -1499,6 +1640,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     self.setupCustomShader()
 
   
+  @dumpFunctionName
   def setupCustomShader(self):
     """ Get or create shader property node and initialize custom shader.
     """
@@ -1512,9 +1654,9 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
       self.shaderPropertyNode = self.volumeRenderingDisplayNode.GetShaderPropertyNode()
 
     self.customShader = CustomShader.InstanciateCustomShader(self.customShaderType, self.shaderPropertyNode)
-    self.customShader.setupShader()
-
+    self.customShader.setupShader() 
   
+  @dumpFunctionName
   def updateVolumeColorMapping(self, volumeNode, displayNode, volumePropertyNode = None):
     """ Given a volume, compute a default color mapping to render volume in the given display node.
         If a volume property node is given to the function, uses it as color mapping.
@@ -1542,5 +1684,6 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
       displayNode.GetVolumePropertyNode().GetVolumeProperty().SetShade(False)
 
   
+  @dumpFunctionName
   def onCloseScene(self, caller, event):
     self.deleteNodes()
