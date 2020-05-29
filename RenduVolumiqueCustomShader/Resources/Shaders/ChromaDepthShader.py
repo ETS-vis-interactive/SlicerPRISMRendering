@@ -9,7 +9,6 @@ class ChromaDepthShader(CustomShader):
   shaderrParams = { 'depthRange' : { 'displayName' : 'Depth Range', 'defaultValue' : [0, 1]}}
   shadertfParams = { 'scalarColorMapping' : { 'displayName' : 'Scalar Color Mapping'}}
                    
-
   def __init__(self, shaderPropertyNode):
     CustomShader.__init__(self, shaderPropertyNode)
     self.shaderrParams['depthRange']['defaultValue'][0] = -1* self.getVolumeRange()
@@ -18,9 +17,9 @@ class ChromaDepthShader(CustomShader):
   @classmethod
   def GetDisplayName(cls):
     return 'Chroma Depth Perception'
-  
+
   def getVolumeRange(self):
-    volumeNode = slicer.modules.PRISMWidget.logic.volumeRenderingDisplayNode.GetVolumeNode()
+    volumeNode = slicer.modules.PRISMWidget.ui.imageSelector.currentNode().GetVolumeDisplayNode().GetVolumeNode()
     dim = [0, 0, 0]
     volumeNode.GetImageData().GetDimensions(dim)
     return math.sqrt(dim[0]**2 + dim[1]**2 + dim[2]**2)/2
