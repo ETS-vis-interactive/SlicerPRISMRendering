@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>429</width>
-    <height>348</height>
+    <width>642</width>
+    <height>648</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -309,10 +309,10 @@
       </size>
      </property>
      <property name="text">
-      <string>Modify Custom Shader</string>
+      <string>Modify or Create Custom Shader</string>
      </property>
      <property name="collapsed">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="collapsedHeight">
       <number>0</number>
@@ -323,24 +323,7 @@
         <property name="sizeConstraint">
          <enum>QLayout::SetMinimumSize</enum>
         </property>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>Shader :</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QComboBox" name="modifyCustomShaderCombo">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>20</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
+        <item row="2" column="1">
          <widget class="QTabWidget" name="ModifyCSTabs">
           <property name="minimumSize">
            <size>
@@ -439,112 +422,79 @@
           </widget>
          </widget>
         </item>
-       </layout>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="ctkCollapsibleButton" name="newCustomShaderCollapsibleButton">
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="sizeIncrement">
-      <size>
-       <width>0</width>
-       <height>1550</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>Create New Custom Shader</string>
-     </property>
-     <property name="collapsed">
-      <bool>true</bool>
-     </property>
-     <property name="collapsedHeight">
-      <number>27</number>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_6">
-      <item>
-       <layout class="QVBoxLayout" name="newCustomShaderCollapsibleButtonLayout">
-        <item>
-         <widget class="QLineEdit" name="newCustomShaderNameInput">
-          <property name="toolTip">
-           <string>Name of the class that will be created.</string>
-          </property>
-          <property name="placeholderText">
-           <string>Class name</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="errorMsg">
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="newCustomShaderDisplayInput">
-          <property name="toolTip">
-           <string>Name of the shader that will be displayed in the combo box.</string>
-          </property>
-          <property name="placeholderText">
-           <string>Display name</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="createCustomShaderButton">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="toolTip">
-           <string>Creates a new custom shader class.</string>
-          </property>
-          <property name="text">
-           <string>Create</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="editSourceButton">
-          <property name="enabled">
-           <bool>true</bool>
-          </property>
-          <property name="toolTip">
-           <string>Edit the new custom shader source code.</string>
-          </property>
-          <property name="text">
-           <string>Edit</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QGridLayout" name="newCustomShaderLayout">
         <item row="0" column="0">
-         <widget class="QLabel" name="emptyText2">
-          <property name="maximumSize">
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Shader :</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="modifyCustomShaderCombo">
+          <property name="minimumSize">
            <size>
-            <width>16777215</width>
-            <height>16777215</height>
+            <width>0</width>
+            <height>20</height>
            </size>
           </property>
-          <property name="text">
-           <string/>
-          </property>
          </widget>
+        </item>
+        <item row="1" column="1">
+         <layout class="QVBoxLayout" name="newCustomShaderCollapsibleButtonLayout">
+          <item>
+           <widget class="QLineEdit" name="newCustomShaderNameInput">
+            <property name="toolTip">
+             <string>Name of the class that will be created.</string>
+            </property>
+            <property name="placeholderText">
+             <string>Class name</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="errorMsg">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="newCustomShaderDisplayInput">
+            <property name="toolTip">
+             <string>Name of the shader that will be displayed in the combo box.</string>
+            </property>
+            <property name="placeholderText">
+             <string>Display name</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="createCustomShaderButton">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="toolTip">
+             <string>Creates a new custom shader class.</string>
+            </property>
+            <property name="text">
+             <string>Create</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="editSourceButton">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="toolTip">
+             <string>Edit the new custom shader source code.</string>
+            </property>
+            <property name="text">
+             <string>Edit</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </item>

@@ -129,21 +129,19 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     "None":"None"
     }
           
-    # populate combobox
-    self.updateComboBox(allShaderTypes, self.ui.modifyCustomShaderCombo, self.onModifyCustomShaderComboIndexChanged)
+    # populate comboboxes
+    modifyCustomShaderItems = allShaderTypes.copy()
+    modifyCustomShaderItems[len(modifyCustomShaderItems)-1] =  "Create new Custom Shader"
+    self.updateComboBox(modifyCustomShaderItems, self.ui.modifyCustomShaderCombo, self.onModifyCustomShaderComboIndexChanged)
     self.updateComboBox(list(self.allShaderTagTypes.keys()), self.ui.shaderTagsTypeCombo, self.onShaderTagsTypeComboIndexChanged)
-
-    self.ui.shaderTagsCombo.hide()
-    self.ui.shaderTagsComboLabel.hide()
-    self.ui.shaderModificationsLabel.hide()
-    self.ui.shaderModifications.hide()
-    self.ui.shaderOpenFileButton.hide()
-    self.ui.modifyCustomShaderButton.hide()
-    self.ui.errorMsg.hide()
-    self.ui.addedMsg.hide()
+    
+    self.ui.ModifyCSTabs.visible = False
+    
     self.ui.editSourceButton.hide()
-
+    self.ui.errorMsg.hide()
     self.ui.errorMsg.setStyleSheet("color: red")
+    
+    self.ui.addedMsg.hide()
 
     self.ui.shaderModifications.textChanged.connect(self.onModify)
     self.ui.shaderOpenFileButton.connect('clicked()', self.onShaderOpenFileButtonClicked)
@@ -181,17 +179,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.displayControlsCheckBox.text = "Display VR controls"
     VRActionsVBoxLayout.addWidget(self.displayControlsCheckBox)
     """
-    
-    #
-    # Creation of Custom Shader Area
-    #
-    
-    self.addParamCreateShader = ModifyParamWidget()
-    self.addParamCreateShader.addParamButtonState()
-    self.ui.emptyText2.hide()
-    self.ui.newCustomShaderLayout.addLayout(self.addParamCreateShader.addParamLayout, 0, 0)
-    self.ui.newCustomShaderLayout.addLayout(self.addParamCreateShader.paramLayout, 1, 0)
-    
+
     # Initialize state
     self.onSelect()
     self.onModify()
@@ -213,6 +201,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     # Update GUI  
     self.updateGUIFromParameterNode()
   
+
   def updateNodeSelector(self):
     """ Function to update the node selectors.
 
@@ -641,15 +630,22 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         value (list): current value of the comboBox.
     """
     self.modifiedShader = self.ui.modifyCustomShaderCombo.currentText
-    self.addParamModifyShader.shaderDisplayName = self.ui.modifyCustomShaderCombo.currentText
-    self.ui.ModifyCSTabs.visible = True
 
-    try :
-      volumePropertyNode = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
-      volumePropertyNode.SetColor(self.transfertFunction)
-    except :
-      pass
-
+    if (self.ui.modifyCustomShaderCombo.currentIndex == self.ui.modifyCustomShaderCombo.count-1):
+      self.ui.createCustomShaderButton.show()
+      self.ui.editSourceButton.show()
+      self.ui.newCustomShaderDisplayInput.show()
+      self.ui.newCustomShaderNameInput.show()
+      if self.ui.editSourceButton.enabled == False:
+        self.ui.ModifyCSTabs.visible = False
+    else :
+      self.ui.createCustomShaderButton.hide()
+      self.ui.editSourceButton.hide()
+      self.ui.errorMsg.hide()
+      self.ui.newCustomShaderDisplayInput.hide()
+      self.ui.newCustomShaderNameInput.hide()
+      self.addParamModifyShader.shaderDisplayName = self.ui.modifyCustomShaderCombo.currentText
+      self.ui.ModifyCSTabs.visible = True
 
   def onShaderTagsTypeComboIndexChanged(self, value):
     """ Function to set which shader tag type will be added to the shader.
@@ -682,7 +678,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """
     self.className = self.ui.newCustomShaderNameInput.text
     self.displayName = self.ui.newCustomShaderDisplayInput.text
-    self.addParamCreateShader.shaderDisplayName = self.ui.newCustomShaderDisplayInput.text
+    self.addParamModifyShader.shaderDisplayName = self.ui.newCustomShaderDisplayInput.text
     self.newCustomShaderFile = self.duplicateFile("Template", self.className)
     if self.ui.errorMsgText != "" : 
       self.ui.errorMsg.text = self.ui.errorMsgText
@@ -694,15 +690,17 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     if(self.newCustomShaderFile != False):
       self.ui.errorMsg.hide()
-      self.addParamCreateShader.addParamCombo.show()
-      self.addParamCreateShader.addParamLayout.itemAt(0,0).widget().show()
+      self.addParamModifyShader.addParamCombo.show()
+      self.addParamModifyShader.addParamLayout.itemAt(0,0).widget().show()
       self.setup_file(self.newCustomShaderFile, self.className, self.displayName)
       self.ui.editSourceButton.show()
       CustomShader.GetAllShaderClassNames()
+      self.modifiedShader = self.displayName
       self.ui.customShaderCombo.addItem(self.displayName)
       self.ui.createCustomShaderButton.enabled = False
       self.ui.newCustomShaderNameInput.setEnabled(False)
       self.ui.newCustomShaderDisplayInput.setEnabled(False)
+      self.ui.ModifyCSTabs.visible = True
 
   def onEditSourceButtonClicked(self):
     """ Function to create a new file with the custom shader and open the file in editor
@@ -1038,21 +1036,24 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
         self.addToWidgetList(slider, CSName+p)
 
+
+
     params = self.logic.customShader.shadertfParams
     paramNames = params.keys()
     if params:
       if self.logic.volumeRenderingDisplayNode is None :
         return
       for p in paramNames:
-        volumePropertyNode = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
         label = qt.QLabel(params[p]['displayName'])
         widget = ctk.ctkVTKScalarsToColorsWidget()
         widget.setObjectName(CSName+p)
-        transfertFunction = volumePropertyNode.GetColor()
-
+        volumePropertyNode = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
         #TODO find a way to keep the transfert function for each shader
         self.transfertFunction = vtk.vtkColorTransferFunction()
         self.transfertFunction.DeepCopy(volumePropertyNode.GetColor())
+        transfertFunction = volumePropertyNode.GetColor()
+        transfertFunction.AddObserver(vtk.vtkCommand.InteractionEvent, lambda o, e, w = widget : self.updateParameterNodeFromGUI([o,e], w))
+
         first = [0,0,0,0,0,0]
         last = [0,0,0,0,0,0]
         transfertFunction.GetNodeValue(0, first)
@@ -1060,7 +1061,9 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
         transfertFunction.RemoveAllPoints()
         transfertFunction.AdjustRange((0, 300))
+        #first point in red
         transfertFunction.SetNodeValue(0 ,[0, 1, 0, 0, first[4], first[5]])
+        #last point in blue
         transfertFunction.SetNodeValue(1 ,[300, 0, 0, 1, last[4], last[5]])
        
         widget.view().addColorTransferFunction(transfertFunction)
@@ -1068,23 +1071,10 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         widget.setFixedHeight(100)
         widget.view().show()
         
-        #TODO find a way to get the ctk.ctkVTKScalarsToColorsWidget() signal
-        colorPickerButton = widget.findChild(ctk.ctkColorPickerButton, "ColorPickerButton")
-        colorPickerButton.toggled.connect(lambda value, w = widget : self.updateParameterNodeFromGUI(value, w))
-        xSpinBox = widget.findChild(qt.QDoubleSpinBox, "XSpinBox")
-        xSpinBox.valueChanged.connect(lambda value, w = widget : self.updateParameterNodeFromGUI(value, w))
         self.addToWidgetList(widget, CSName+p)
         
         self.ui.customShaderParametersLayout.addRow(label, widget)
     
-    #check if widgets have been added
-    """
-    self.init += 1
-    if self.init == 2 :
-      self.updateGUIFromParameterNode()
-    elif self.init > 2 :
-      self.updateParameterNodeFromGUI()
-    """
   def prismPath(self) :
     """ Returns the module.
 

@@ -18,3 +18,4 @@ class Template(CustomShader):
   def setupShader(self):
     super(Template,self).setupShader()
     self.shaderProperty.ClearAllFragmentShaderReplacements()
+    #shaderreplacement
