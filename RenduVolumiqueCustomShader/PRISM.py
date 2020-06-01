@@ -50,7 +50,8 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
   """Uses ScriptedLoadableModuleWidget base class, available at:
   https://github.com/Slicer/Slicer/blob/master/Base/Python/slicer/ScriptedLoadableModule.py
   """
-def setup(self):
+
+  def setup(self):
     ScriptedLoadableModuleWidget.setup(self)
 
     self.logic = PRISMLogic()
@@ -216,7 +217,8 @@ def setup(self):
     self.addGUIObservers()
     # Update GUI  
     self.updateGUIFromParameterNode()
-def updateNodeSelector(self):
+  
+  def updateNodeSelector(self):
     """ Function to update the node selectors.
 
     """
@@ -229,7 +231,8 @@ def updateNodeSelector(self):
         if len(volumePath) != 0 :
           volumeNode = slicer.util.loadVolume(volumePath)
           self.ui.imageSelector.setCurrentNode(volumeNode)
-        def cleanup(self):
+  
+  def cleanup(self):
     """ Function to clean up the scene.
 
     """
@@ -238,6 +241,7 @@ def updateNodeSelector(self):
 
     if self.logic.parameterNode and self.logic.parameterNodeObserver:
       slicer.mrmlScene.RemoveObserver(self.logic.parameterNodeObserver)
+  
   def setAndObserveParameterNode(self, caller=None, event=None):
     """ Function to set the parameter node.
 
@@ -263,6 +267,7 @@ def updateNodeSelector(self):
         return widget.metaObject().getClassName()
       except:
         return widget.view().metaObject().getClassName()
+  
   def updateGUIFromParameterNode(self, caller=None, event=None):
     """ Function to update GUI from parameter node values
 
@@ -308,7 +313,7 @@ def updateNodeSelector(self):
             values = self.logic.parameterNode.GetParameter(w.name+str(i))
 
     for w in self.nodeSelectorWidgets:
-      oldBlockSignalsState =w.blockSignals(True)
+      oldBlockSignalsState = w.blockSignals(True)
       w.setCurrentNodeID(parameterNode.GetNodeReferenceID(w.name))
       w.blockSignals(oldBlockSignalsState)
 
@@ -379,8 +384,8 @@ def updateNodeSelector(self):
             parameterNode.SetParameter(w.name+str(i), ",".join("{0}".format(n) for n in values))
             i+=1
             res = transfertFunction.GetNodeValue(i, values)
-          if (parameterNode.GetParameter(widget.name+str(i)) != ''):
-            parameterNode.SetParameter(widget.name+str(i), '')
+          if (parameterNode.GetParameter(w.name+str(i)) != ''):
+            parameterNode.SetParameter(w.name+str(i), '')
 
       for w in self.nodeSelectorWidgets:
         parameterNode.SetNodeReferenceID(w.name, w.currentNodeID)
@@ -632,7 +637,9 @@ def updateNodeSelector(self):
     for e in tab:
       comboBox.addItem(e)
     comboBox.setCurrentIndex(len(tab)-1)
-    comboBox.activated.connect(func)def onModifyCustomShaderComboIndexChanged(self, value):
+    comboBox.activated.connect(func)
+    
+  def onModifyCustomShaderComboIndexChanged(self, value):
     """ Function to set which shader will be modified.
 
     Args:
@@ -831,7 +838,7 @@ def updateNodeSelector(self):
   # View setup callbacks
   #
 
-  def onVolumeRenderingCheckBoxToggled(self, caller=None, event=None)      :
+  def onVolumeRenderingCheckBoxToggled(self, caller=None, event=None):
     """ Callback function when the volume rendering check box is toggled. Activate or deactivate 
     the rendering of the selected volume.
     """
@@ -908,7 +915,8 @@ def updateNodeSelector(self):
     self.logic.setCustomShaderType(self.ui.customShaderCombo.currentText)
     self.UpdateShaderParametersUI()
     self.updateParameterNodeFromGUI(self.ui.customShaderCombo.currentText, self.ui.customShaderCombo)
-    self.updateGUIFromParameterNode()  if i == (self.ui.customShaderCombo.count - 1):
+    self.updateGUIFromParameterNode()
+    if i == (self.ui.customShaderCombo.count - 1):
       self.ui.openCustomShaderButton.setEnabled(False)
       self.ui.reloadCurrentCustomShaderButton.setEnabled(False)
       self.ui.duplicateCustomShaderButton.setEnabled(False)
@@ -931,7 +939,8 @@ def updateNodeSelector(self):
       
     if not found :
       self.widgets.append(widget)
-def UpdateShaderParametersUI(self):
+
+  def UpdateShaderParametersUI(self):
     """ Updates the shader parameters on the UI.
 
     """
@@ -1054,7 +1063,7 @@ def UpdateShaderParametersUI(self):
         transfertFunction.GetNodeValue(0, first)
         transfertFunction.GetNodeValue(1, last)
 
-        transfertFunction.AdjustRange((0,1))
+        transfertFunction.RemoveAllPoints()
         transfertFunction.AdjustRange((0, 300))
         transfertFunction.SetNodeValue(0 ,[0, 1, 0, 0, first[4], first[5]])
         transfertFunction.SetNodeValue(1 ,[300, 0, 0, 1, last[4], last[5]])
@@ -1081,7 +1090,7 @@ def UpdateShaderParametersUI(self):
     elif self.init > 2 :
       self.updateParameterNodeFromGUI()
     """
-def prismPath(self) :
+  def prismPath(self) :
     """ Returns the module.
 
     """
@@ -1144,7 +1153,8 @@ def prismPath(self) :
 # PRISMLogic
 ##################################################################################
 
-class PRISMLogic(ScriptedLoadableModuleLogic):def __init__(self):
+class PRISMLogic(ScriptedLoadableModuleLogic):
+  def __init__(self):
     ScriptedLoadableModuleLogic.__init__(self)
     self.createEndPoints()
 
@@ -1312,7 +1322,8 @@ class PRISMLogic(ScriptedLoadableModuleLogic):def __init__(self):
         type_ (float or type): type of the parameter to be changed
     """
     self.customShader.setShaderParameter(paramName, value, type_)
-def createEndPoints(self):
+  
+  def createEndPoints(self):
     # retrieve end points in the scene or create the node
     allEndPoints = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLMarkupsFiducialNode','EndPoints')
     if allEndPoints.GetNumberOfItems() > 0:
@@ -1325,7 +1336,9 @@ def createEndPoints(self):
       self.endPoints.SetName("EndPoints")
       self.endPoints.GetDisplayNode().SetGlyphScale(6.0)
       self.endPoints.RemoveAllMarkups()
-    allEndPoints = None def getEntry(self):
+    allEndPoints = None
+    
+  def getEntry(self):
     """ Get Entry point position. If not yet placed, return (0,0,0).
 
     Returns:
@@ -1334,7 +1347,9 @@ def createEndPoints(self):
     entry = [0, 0, 0]
     if self.endPoints.GetNumberOfControlPoints() >= 2:
       self.endPoints.GetNthFiducialPosition(1, entry)
-    return entrydef setEntry(self,entry):
+    return entry
+  
+  def setEntry(self,entry):
     self.endPoints.SetNthFiducialPositionFromArray(1, entry)
 
   def getTarget(self):
@@ -1444,7 +1459,7 @@ def createEndPoints(self):
     self.moveRelativePosition = False
 
   def onLeftControllerMoved(self,caller,event):
-    """ Callback function when a the left controller position has changed. Used to change "relativePosition"
+    """ Callback function w hen a the left controller position has changed. Used to change "relativePosition"
         current shader parameter and laser position.
     """
     # Check if the trigger is currently being pressed
@@ -1537,6 +1552,7 @@ def createEndPoints(self):
 
     self.customShader = CustomShader.InstanciateCustomShader(self.customShaderType, self.shaderPropertyNode)
     self.customShader.setupShader() 
+
   def updateVolumeColorMapping(self, volumeNode, displayNode, volumePropertyNode = None):
     """ Given a volume, compute a default color mapping to render volume in the given display node.
         If a volume property node is given to the function, uses it as color mapping.
