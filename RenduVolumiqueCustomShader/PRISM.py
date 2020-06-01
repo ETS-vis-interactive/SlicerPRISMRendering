@@ -27,11 +27,6 @@ def dumpFunctionName(func):
 #
 # PRISM
 #
-class PRISMSaveDataDialog:def __init__(self, parent):
-    self.parent = parent
-    parent.fileType = 'PRISMFile'
-    parent.description = 'PRISM'
-    parent.action = slicer.qSlicerSaveDataDialog.Write  
 
 class PRISM(ScriptedLoadableModule):
   """Uses ScriptedLoadableModule base class, available at:
