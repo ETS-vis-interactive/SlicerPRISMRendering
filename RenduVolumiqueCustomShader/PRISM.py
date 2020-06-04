@@ -517,6 +517,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param event Event that triggered the function.
     """   
     log.info(get_function_name()  + str(get_function_parameters_and_values()))
+
     if self.ui.enableROICheckBox.isChecked():
       self.logic.volumeRenderingDisplayNode.SetCroppingEnabled(True)
       self.ui.displayROICheckBox.show()
@@ -979,8 +980,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
           self.transformNode.SetName('TransformNode')
           self.transformNode.SetAndObserveDisplayNodeID(self.transformDisplayNode.GetID())
 
-        ROINodeID = self.logic.volumeRenderingDisplayNode.GetROINodeID()
-        self.ROI = slicer.util.getNode(ROINodeID)
+        self.ROI = self.logic.volumeRenderingDisplayNode.GetROINode()
         self.ROI.SetAndObserveDisplayNodeID(self.transformDisplayNode.GetID())
         self.ROI.SetAndObserveTransformNodeID(self.transformNode.GetID())
         self.ROI.SetDisplayVisibility(0)
