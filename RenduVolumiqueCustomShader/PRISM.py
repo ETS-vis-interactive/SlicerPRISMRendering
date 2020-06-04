@@ -80,7 +80,6 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     # Data Area
     #
     self.ui.imageSelector.setMRMLScene( slicer.mrmlScene )
-    #self.ui.imageSelector.connect("nodeAdded(vtkMRMLNode*)", self.onImageSelectorNodeAdded) #FIXME
     self.ui.imageSelector.currentNodeChanged.connect(lambda value, w = self.ui.imageSelector : self.onImageSelectorChanged(value, w))
     self.ui.parametersNodeSelector.setMRMLScene( slicer.mrmlScene )
     self.ui.parametersNodeSelector.connect('currentNodeChanged(vtkMRMLNode*)', self.setAndObserveParameterNode)
@@ -317,9 +316,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
             transfertFunction.SetNodeValue(i,[int(float(i)) for i in values.split(",")])
             i+=1
             values = self.logic.parameterNode.GetParameter(w.name+str(i))
-        elif widgetClassName == "qMRMLNodeComboBox":
-          pass #TODO changer dans self.nodeSelectorWidgets
-
+            
     for w in self.nodeSelectorWidgets:
       oldBlockSignalsState = w.blockSignals(True)
       w.setCurrentNodeID(parameterNode.GetNodeReferenceID(w.name))
@@ -364,8 +361,6 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         res = transfertFunction.GetNodeValue(i, values)
       if (parameterNode.GetParameter(widget.name+str(i)) != ''):
         parameterNode.SetParameter(widget.name+str(i), '')
-    elif widgetClassName == "qMRMLNodeComboBox":
-      pass #TODO same as upper function
       
     for w in self.nodeSelectorWidgets:
       parameterNode.SetNodeReferenceID(w.name, w.currentNodeID)
@@ -389,8 +384,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         w.valueChanged.connect(lambda value, w = w : self.updateParameterNodeFromGUI(value, w))
       elif widgetClassName == "ctkRangeWidget":
         w.valuesChanged.connect(lambda value, w = w : self.updateParameterNodeFromGUI(value, w))
-      elif widgetClassName == "qMRMLNodeComboBox":
-        pass #TODO
+
     for w in self.nodeSelectorWidgets:
       w.connect("currentNodeIDChanged(Qstr)", lambda value, w = w : self.updateParameterNodeFromGUI(value, w))
 
@@ -421,11 +415,6 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         d = w.valuesChanged.disconnect(self.updateParameterNodeFromGUI) 
         while d :
           d = w.valuesChanged.disconnect(self.updateParameterNodeFromGUI)
-      """
-      elif widgetClassName == "qMRMLNodeComboBox":
-        while True :
-          pass #TODO
-      """
 
     for w in self.nodeSelectorWidgets:
       w.disconnect("currentNodeIDChanged(Qstr)", self.updateParameterNodeFromGUI)
@@ -908,24 +897,6 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
   # Data callbacks
   #
 
-  def onImageSelectorNodeAdded(self, calldata):
-    """!@brief Callback function when a volume node is added to the scene by the user.
-    @param calldata vtkMRMLVolumeNode : Volume node added (about to be added) to the scene.
-    """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
-
-    node = calldata
-    if isinstance(node, slicer.vtkMRMLVolumeNode):
-      # Call showVolumeRendering using a timer instead of calling it directly
-      # to allow the volume loading to fully complete.
-      
-      if self.ui.volumeRenderingCheckBox.isChecked() and self.ui.imageSelector.currentNode() is None:
-        self.ui.imageSelector.setCurrentNode(node)
-        qt.QTimer.singleShot(0, lambda: self.logic.renderVolume(node))
-        self.UpdateShaderParametersUI()
-      self.ui.imageSelector.currentNodeChanged.connect(lambda value, w = self.ui.imageSelector : self.onImageSelectorChanged(value, w))
-      self.ui.imageSelector.nodeAdded.disconnect()
-
   def onImageSelectorChanged(self, node, widget):
     """!@brief Callback function when the volume node has been changed in the dedicated combobox.
     Setup slice nodes to display selected node and render it in the 3d view.
@@ -1050,23 +1021,24 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       self.ui.reloadCurrentCustomShaderButton.setEnabled(True)
       self.ui.duplicateCustomShaderButton.setEnabled(True)
 
-  def addToWidgetList(self, widget, name):
+  def addToWidgetList(self, widget, name, tab = self.widgets):
     """!@brief Function to add a widget to self.widgets without duplicate.
 
 
     @param widget QObject : Widget to be added to the list.
     @param name str : Name of the widget.
+    @param tab array[QObject] : List being appended.
     """
     log.info(get_function_name()  + str(get_function_parameters_and_values()))
    
     found = 0
-    for i, w in enumerate(self.widgets):
+    for i, w in enumerate(tab):
       if w.name == name :
         found = 1
-        self.widgets[i] = widget
+        tab[i] = widget
       
     if not found :
-      self.widgets.append(widget)
+      tab.append(widget)
 
   def UpdateShaderParametersUI(self):
     """!@brief Updates the shader parameters on the UI.
@@ -1224,8 +1196,8 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         imageSelector.showHidden = False
         imageSelector.showChildNodeTypes = False
         imageSelector.setObjectName(CSName+p)
-
-        self.addToWidgetList(imageSelector, CSName+p)
+        imageSelector.setCurrentNode(None)
+        self.addToWidgetList(imageSelector, CSName+p, self.nodeSelectorWidgets)
         self.ui.customShaderParametersLayout.addRow(label, imageSelector)
         imageSelector.currentNodeChanged.connect(lambda value, w = imageSelector : self.onImageSelectorChanged(value, w))
         imageSelector.currentNodeChanged.connect(lambda value, w = imageSelector : self.updateParameterNodeFromGUI(value, w))
