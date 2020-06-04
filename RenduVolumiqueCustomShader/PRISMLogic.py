@@ -1,3 +1,5 @@
+#@file PRISMLogic.py
+
 import os, sys
 import unittest
 import vtk, qt, ctk, slicer
@@ -13,14 +15,30 @@ import inspect
 from pathlib import Path
 from distutils.util import strtobool
 from inspect import signature
+import traceback
 
 from Resources.ModifyParamWidget import ModifyParamWidget
 from Resources.CustomShader import CustomShader
 
-##################################################################################
-# PRISMLogic
-##################################################################################
+try:
+    import colorlog
+except ImportError:
+    pass
 
+def get_function_name():
+    return traceback.extract_stack(None, 2)[0][2]
+
+def get_function_parameters_and_values():
+    frame = inspect.currentframe().f_back
+    args, _, _, values = inspect.getargvalues(frame)
+    return ([(i, values[i]) for i in args])
+
+log = logging.getLogger(__name__)
+
+"""!@class PRISMLogic
+@brief class PRISMLogic
+@param ScriptedLoadableModuleLogic class: Uses ScriptedLoadableModuleLogic base class, available at: https://github.com/Slicer/Slicer/blob/master/Base/Python/slicer/ScriptedLoadableModuleLogic.py
+""" 
 class PRISMLogic(ScriptedLoadableModuleLogic):
   def __init__(self):
     ScriptedLoadableModuleLogic.__init__(self)
@@ -32,6 +50,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
 
     # init volume rendering active node
     self.volumeRenderingDisplayNode = None
+    self.secondVolumeRenderingDisplayNode = None
 
     # hide volume rendering display node possibly loaded with the scene
     renderingDisplayNodes = slicer.util.getNodesByClass("vtkMRMLVolumeRenderingDisplayNode")
@@ -52,9 +71,14 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     self.parameterNodeObserver = None
     self.addObservers()
 
-
-
   def enableCarving(self, paramName, type_, checkBox) :
+    """!@brief Function to enable carving in the volume.
+
+    @param paramName str : Name of the parameter.
+    @param type_ str : Type of the parameter.
+    @param checkBox QCheckbox : Checkbox to enable or disable carving.
+    """
+
     if checkBox.isChecked() :  
       if paramName == 'sphere' :
         self.radiusSlider[0].show()
@@ -74,8 +98,9 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     self.customShader.setShaderParameter(paramName, self.carvingEnabled, type_)
 
   def addObservers(self):
-    """ Create all observers needed in the UI to ensure a correct behaviour
+    """!@brief Function to create all observers needed in the UI to ensure a correct behaviour.
     """
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     self.pointModifiedEventTag = self.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.onEndPointsChanged)
     self.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, self.onEndPointAdded)
     slicer.mrmlScene.AddObserver(slicer.mrmlScene.EndCloseEvent, self.onCloseScene)  
@@ -86,14 +111,14 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
 
   @vtk.calldata_type(vtk.VTK_INT)
   def onEndPointsChanged(self, caller, event, call_data):
-    """ Callback function to get the position of the modified point
+    """!@brief Callback function to get the position of the modified point.
     Note: @vtk.calldata_type(vtk.VTK_OBJECT) function get calling instance as a vtkMRMLNode to be accesed in the function.
 
-    Args:
-        caller (slicer.mrmlScene): Slicer active scene.
-        event (string): Flag corresponding to the triggered event.
-        call_data (vtkMRMLNode): Node added to the scene.
+    @param caller slicer.mrmlScene: Slicer active scene.
+    @param event str: Flag corresponding to the triggered event.
+    @param call_data vtkMRMLNode: Node added to the scene.
     """
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     #check if the point was added from the module and was set
     if (call_data == self.centerPointIndex or call_data == self.entryPointIndex or call_data == self.targetPointIndex ):
@@ -103,11 +128,11 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
       self.onCustomShaderParamChanged(world, name, "markup")
     
   def onEndPointAdded(self, caller, event):
-    """ Callback function to get the position of the new point.
-    Args:
-        caller (slicer.mrmlScene): Slicer active scene.
-        event (string): Flag corresponding to the triggered event.
+    """!@brief Callback function to get the position of the new point.
+    @param caller slicer.mrmlScene: Slicer active scene.
+    @param event str: Flag corresponding to the triggered event.
     """
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     world = [0, 0, 0, 0]
 
     if (self.pointType == 'center'):
@@ -156,6 +181,9 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
       self.pointType  = ''
 
   def deleteNodes(self):
+    """!@brief Deletes the nodes in the scene.
+
+    """
     try :
       node = slicer.util.getNodesByClass("vtkMRMLScalarVolumeNode")
       slicer.mrmlScene.RemoveNode(node[0])
@@ -167,13 +195,13 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
 
 
   def setPlacingMarkups(self, paramName, btn, interaction = 1, persistence = 0):
-    """ Activate Slicer markups module to set one or multiple markups in the given markups fiducial list.
+    """!@brief Activate Slicer markups module to set one or multiple markups in the given markups fiducial list.
 
-    Args:
-        markupsFiducialNode (vtkMRMLMarkupsFiducialNode): List in which adding new markups.
-        interaction (int): 0: /, 1: place, 2: view transform, 3: / ,4: Select
-        persistence (int): 0: unique, 1: peristent
+    @param markupsFiducialNode vtkMRMLMarkupsFiducialNode : List in which adding new markups.
+    @param interaction int : 0: /, 1: place, 2: view transform, 3: / ,4: Select
+    @param persistence int : 0: unique, 1: peristent
     """
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     self.currentMarkupBtn = btn
     interactionNode = slicer.mrmlScene.GetNodeByID("vtkMRMLInteractionNodeSingleton")
     interactionNode.SetCurrentInteractionMode(interaction)
@@ -182,16 +210,19 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     self.pointType = paramName
     
   def onCustomShaderParamChanged(self, value, paramName, type_ ):
-    """ Change the custom parameters in the shader.
+    """!@brief Change the custom parameters in the shader.
 
-    Args:
-        value : value to be changed
-        paramName (int): name of the parameter to be changed
-        type_ (float or type): type of the parameter to be changed
+    @param value : value to be changed
+    @param paramName int : name of the parameter to be changed
+    @param type_ (float or type): type of the parameter to be changed
     """
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     self.customShader.setShaderParameter(paramName, value, type_)
   
   def createEndPoints(self):
+    """!@brief Create endpoints.
+
+    """
     # retrieve end points in the scene or create the node
     allEndPoints = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLMarkupsFiducialNode','EndPoints')
     if allEndPoints.GetNumberOfItems() > 0:
@@ -207,37 +238,43 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     allEndPoints = None
     
   def getEntry(self):
-    """ Get Entry point position. If not yet placed, return (0,0,0).
+    """!@brief Get Entry point position. If not yet placed, return (0,0,0).
 
-    Returns:
-        array[double]: Entry markups position if placed, empty array if not.
+    @return array[double]: Entry markups position if placed, empty array if not.
     """
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     entry = [0, 0, 0]
     if self.endPoints.GetNumberOfControlPoints() >= 2:
       self.endPoints.GetNthFiducialPosition(1, entry)
     return entry
   
-  def setEntry(self,entry):
+  def setEntry(self, entry):
+    """!@brief Set Entry point position.
+    @param entry array[double]: Entry markups position.
+    """
     self.endPoints.SetNthFiducialPositionFromArray(1, entry)
 
   def getTarget(self):
-    """ Get Target point position. If not yet placed, return (0,0,0).
+    """!@brief Get Target point position. If not yet placed, return (0,0,0).
 
-    Returns:
-        array[double]: Entry markups position if placed, empty array if not.
+    @return array[double]: Entry markups position if placed, empty array if not.
     """
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     target = [0, 0, 0]
     if self.endPoints.GetNumberOfControlPoints() >= 1:
       self.endPoints.GetNthFiducialPosition(0, target)
     return target
 
   def setTarget(self,target):
+    """!@brief Set Target point position.
+
+    @param target array[double]: Entry markups position.
+    """
     self.endPoints.SetNthFiducialPositionFromArray(0, target)   
 
   #
   # VR Related functions
   #
-
 
   def activateVR(self):
     from Resources.VirtualRealityHelper import VirtualRealityHelper
@@ -258,8 +295,9 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
 
 
   def onRightControllerTriggerPressed(self):
-    """ Callback function on trigger pressed event. If controller is near the entry point, starts modification of its position.
+    """!@brief Callback function on trigger pressed event. If controller is near the entry point, starts modification of its position.
     """
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     if not self.getNumberOfPoints(self.endPoints) == 2:
       return
     controllerPos = self.vrhelper.getRightControllerPosition()
@@ -281,8 +319,9 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
       self.endPoints.SetNthControlPointSelected(1, True)
 
   def onRightControllerTriggerReleased(self):
-    """ Callback function when right trigger is released. Drop entry point at current controller position.
+    """!@brief Callback function when right trigger is released. Drop entry point at current controller position.
     """
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     if self.movingEntry:
       # Unselect point to restore default red color. Check comment above.
       self.endPoints.SetNthControlPointSelected(1, True)
@@ -290,8 +329,9 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
       self.movingEntry = False
 
   def onRightControllerMoved(self,caller,event):
-    """ Callback function when a the right controller position has changed.
+    """!@brief Callback function when a the right controller position has changed.
     """
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     if self.vrhelper.rightControlsDisplayMarkups.GetDisplayNode().GetVisibility():
       self.vrhelper.setControlsMarkupsPositions("Right")
     if not self.getNumberOfPoints(self.endPoints) == 2:
@@ -310,9 +350,10 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     self.vrhelper.lastControllerPos = controllerPos
 
   def onLeftControllerTriggerPressed(self):
-    """ Callback function on trigger pressed event. If a shader with "relativePosition" parameter has been selected
+    """!@brief Callback function on trigger pressed event. If a shader with "relativePosition" parameter has been selected
         allows user to change this parameter based on future position compared to the position when pressed.
     """
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     if not self.customShader:
       return
     if self.customShader.hasShaderParameter('relativePosition', float):
@@ -322,14 +363,16 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
       self.moveRelativePosition = True
 
   def onLeftControllerTriggerReleased(self):
-    """ Callback function on trigger released event. Stop changing the relativePosition shader parameter.
+    """!@brief Callback function on trigger released event. Stop changing the relativePosition shader parameter.
     """
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     self.moveRelativePosition = False
 
   def onLeftControllerMoved(self,caller,event):
-    """ Callback function w hen a the left controller position has changed. Used to change "relativePosition"
+    """!@brief Callback function w hen a the left controller position has changed. Used to change "relativePosition"
         current shader parameter and laser position.
     """
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     # Check if the trigger is currently being pressed
     if self.moveRelativePosition:
       # Compute distance between entry and target, then normalize
@@ -353,26 +396,40 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
   # Volume Rendering functions
   #
 
-  def renderVolume(self, volumeNode):
-    """ Use Slicer Volume Rendering module to initialize and setup rendering of the given volume node.
-    Args:
-        volumeNode (vtkMRMLVolumeNode): Volume node to be rendered.
+  def renderVolume(self, volumeNode, multipleVolumes = False):
+    """!@brief Use Slicer Volume Rendering module to initialize and setup rendering of the given volume node.
+    
+    @param volumeNode vtkMRMLVolumeNode : Volume node to be rendered.
     """
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     logic = slicer.modules.volumerendering.logic()
 
     # Set custom shader to renderer
     self.setupCustomShader()
 
-    # Turn off previous rendering
-    if self.volumeRenderingDisplayNode:
+    #if multiple volumes not enabled, turn off previous rendering
+    if not multipleVolumes and self.volumeRenderingDisplayNode:
       self.volumeRenderingDisplayNode.SetVisibility(False)
+        
+    #if multiple volumes is enabled and number of volumes > 1, , turn off second rendering
+    allVolumeRenderingDisplayNodes = set(slicer.util.getNodesByClass("vtkMRMLVolumeRenderingDisplayNode"))
+    
+    numberOfVolumeRenderingDisplayNodes = len([i for i in allVolumeRenderingDisplayNodes if i.GetVisibility() == 1])
+    print(numberOfVolumeRenderingDisplayNodes)
+    print(multipleVolumes)
+    if self.secondVolumeRenderingDisplayNode:
+      if numberOfVolumeRenderingDisplayNodes > 1 and multipleVolumes:
+        self.secondVolumeRenderingDisplayNode.SetVisibility(False)
 
     # Check if node selected has a renderer
     displayNode = logic.GetFirstVolumeRenderingDisplayNode(volumeNode)
     if displayNode:
-      self.volumeRenderingDisplayNode = displayNode
-      self.volumeRenderingDisplayNode.SetVisibility(True)
-      self.volumeRenderingDisplayNode.SetNodeReferenceID("shaderProperty", self.shaderPropertyNode.GetID())
+      displayNode.SetVisibility(True)
+      displayNode.SetNodeReferenceID("shaderProperty", self.shaderPropertyNode.GetID())
+      if multipleVolumes :
+        self.secondVolumeRenderingDisplayNode = displayNode
+      else:
+        self.volumeRenderingDisplayNode = displayNode
       return
 
     # if not, create a renderer
@@ -395,20 +452,24 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     displayNode.SetVisibility(True)
 
     # Set value as class parameter to be accesed in other functions
-    self.volumeRenderingDisplayNode = displayNode
+    if multipleVolumes :
+      self.secondVolumeRenderingDisplayNode = displayNode
+    else:
+      self.volumeRenderingDisplayNode = displayNode
 
   def setCustomShaderType(self, shaderTypeName):
     """ Set given shader type as current active shader
 
-    Args:
-        shaderTypeName (string): 'Sphere Carving', 'Opacity Peeling'. Name corresponding to the type of rendering needed.
+    @param shaderTypeName str : 'Sphere Carving', 'Opacity Peeling'. Name corresponding to the type of rendering needed.
     """
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     self.customShaderType = shaderTypeName
     self.setupCustomShader()
 
   def setupCustomShader(self):
-    """ Get or create shader property node and initialize custom shader.
+    """!@brief Get or create shader property node and initialize custom shader.
     """
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     shaderPropertyName = "ShaderProperty"
     CustomShader.GetAllShaderClassNames()
     if self.volumeRenderingDisplayNode is None :
@@ -422,14 +483,14 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     self.customShader.setupShader() 
 
   def updateVolumeColorMapping(self, volumeNode, displayNode, volumePropertyNode = None):
-    """ Given a volume, compute a default color mapping to render volume in the given display node.
+    """!@brief Given a volume, compute a default color mapping to render volume in the given display node.
         If a volume property node is given to the function, uses it as color mapping.
 
-    Args:
-        volumeNode: (vtkMRMLVolumeNode): Volume node to be rendered.
-        displayNode: (vtkMRMLVolumeRenderingDisplayNode) Default rendering display node. (CPU RayCast, GPU RayCast, Multi-Volume)
-        volumePropertyNode (vtkMRMLVolumePropertyNode): Volume propery node that carries the color mapping wanted.
+    @param volumeNode: (vtkMRMLVolumeNode): Volume node to be rendered.
+    @param displayNode: (vtkMRMLVolumeRenderingDisplayNode) Default rendering display node. (CPU RayCast, GPU RayCast, Multi-Volume)
+    @param volumePropertyNode vtkMRMLVolumePropertyNode : Volume propery node that carries the color mapping wanted.
     """
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     if not displayNode:
       return
     if volumePropertyNode:
@@ -448,4 +509,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
       displayNode.GetVolumePropertyNode().GetVolumeProperty().SetShade(False)
 
   def onCloseScene(self, caller, event):
+    """!@brief Function called when the scene is closed. Delete nodes in the scene.
+
+    """
     self.deleteNodes()

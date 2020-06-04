@@ -1,12 +1,15 @@
+#@file CustomShader.py
+
 import imp
 import sys
 import inspect
 import os
 import importlib.util
 
-#------------------------------------------------------------------------------------
-# Generic Custom Shader
-#------------------------------------------------------------------------------------
+"""!@class CustomShader
+@brief class CustomShader
+Generic Custom Shader
+""" 
 class CustomShader():
 
   shaderfParams = {}
@@ -15,6 +18,7 @@ class CustomShader():
   shaderbParams = {}
   shaderrParams = {}
   shadertfParams = {}
+  shadervParams = {}
   
   def __init__(self, shaderPropertyNode):
     assert shaderPropertyNode != None, 'CustomShader: a valid shader property node must provided to the constructor'
@@ -22,23 +26,34 @@ class CustomShader():
     self.shaderProperty = shaderPropertyNode.GetShaderProperty()
     self.shaderUniforms = self.shaderPropertyNode.GetFragmentUniforms()
     self.paramfValues = {}
+    self.paramiValues = {}
+    self.param4fValues = {}
+    self.parambValues = {}   
+    self.paramrValues = {}   
+    self.paramtfValues = {}   
+    self.paramvValues = {}   
     for p in self.shaderfParams.keys():
       self.paramfValues[p] = self.shaderfParams[p]['defaultValue']
-    self.paramiValues = {}
     for p in self.shaderiParams.keys():
       self.paramiValues[p] = self.shaderiParams[p]['defaultValue']
-    self.param4fValues = {}
     for p in self.shader4fParams.keys():
       self.param4fValues[p] = self.shader4fParams[p]['defaultValue']   
-    self.parambValues = {}   
     for p in self.shaderbParams.keys():
       self.parambValues[p] = self.shaderbParams[p]['defaultValue']   
-    self.paramrValues = {}   
     for p in self.shaderrParams.keys():
       self.paramrValues[p] = self.shaderrParams[p]['defaultValue']  
+    for p in self.shadertfParams.keys():
+      self.paramtfValues[p] = self.shadertfParams[p]['defaultValue']  
+    for p in self.shadervParams.keys():
+      self.paramvValues[p] = self.shadervParams[p]['defaultValue']  
 
   @classmethod
-  def InstanciateCustomShader(cls, shaderDisplayName,shaderPropertyNode):
+  def InstanciateCustomShader(cls, shaderDisplayName, shaderPropertyNode):
+    """!@brief Function instanciate a custom shdaer.
+
+    @param shaderDisplayName str : Display name of the shader.
+    @param shaderPropertyNode vtkMRMLShaderPropertyNode : Shader property node.
+    """
     if shaderDisplayName == cls.GetDisplayName():
       return CustomShader(shaderPropertyNode)
 
@@ -49,7 +64,10 @@ class CustomShader():
 
   @classmethod
   def GetAllShaderClassNames(cls):
-    
+    """!@brief Function to get the class names of all of the shaders.
+    @return array[str] names of all the classes.
+
+    """
     allNames = [] #names of shaders
     cls.allClasses = [] #classes of shaders
 
@@ -91,10 +109,16 @@ class CustomShader():
 
   @classmethod
   def GetDisplayName(cls):
+    """!@brief Function to get the name of the current class.
+    @return str Display name.
+    """
     return 'None'
   
   @classmethod
   def GetClassName(cls, shaderDisplayName):
+    """!@brief Function to get a class from it's display name.
+    @return cls class.
+    """
     if shaderDisplayName == cls.GetDisplayName():
       return CustomShader
 
@@ -105,6 +129,9 @@ class CustomShader():
   
   @classmethod
   def GetClass(cls, shaderName):
+    """!@brief Function to get a class from it's name.
+    @return cls class.
+    """
     if shaderName == cls.__name__:
       return CustomShader
 
@@ -115,18 +142,31 @@ class CustomShader():
 
   @classmethod
   def hasShaderParameter(cls, name, type_):
+    """!@brief Function to check if a parameter is in the shader.
+    @param name str : name of the parameter.
+    @param type str : type of the parameter.
+    @return bool True if the parameter is in the shader, else False.
+    """
     if type_ == float :
       return name in cls.shaderfParams
     elif type_ == int :
       return name in cls.shaderiParams
 
   def getParameterNames(self):
+    """!@brief Function to get the shader parameter names
+    @return array[str] Names of the parameters.
+    """
     return []
 
   def getShaderPropertyNode(self):
+    """!@brief Function to get the shader property node of the shader.
+    @return vtkMRMLShaderPropertyNode shader property node of the shader.
+    """
     return self.shaderPropertyNode
 
   def setupShader(self):
+    """!@brief Function to setup the shader.
+    """
     self.clear()
     self.setAllUniforms()
 
@@ -134,6 +174,8 @@ class CustomShader():
     pass
 
   def setAllUniforms(self):
+    """!@brief Function to set the uniforms of the shader.
+    """
     for p in self.paramfValues.keys():
       self.shaderUniforms.SetUniformf(p, self.paramfValues[p])
 
@@ -155,6 +197,11 @@ class CustomShader():
       self.shaderUniforms.SetUniformi(p+ "Max", int(self.paramrValues[p][1]))
 
   def setShaderParameter(self, paramName, paramValue, type_):
+    """!@brief Function to set the parameters of the shader.
+    @param paramName str : Name of the parameter.
+    @param paramValue int|float|str : Value of the parameter.
+    @param type_ str : Type of the parameter.
+    """
     if type_ == float :
       p = self.paramfValues.get(paramName)
       if p != None:
@@ -186,11 +233,16 @@ class CustomShader():
         self.shaderUniforms.SetUniformi(paramName+ "Max", int(paramValue[1]))
 
   def getShaderParameter(self, paramName, type_):
+    """!@brief Function to get the parameters of the shader.
+    @return paramValue int|float|str : Value of the parameter.
+    """
     if type_ == float :
       return self.paramfValues.get(paramName)
     if type_ == int :
       return self.paramiValues.get(paramName)
 
   def clear(self):
+    """!@brief Function to clear the shader.
+    """
     self.shaderUniforms.RemoveAllUniforms()
     self.shaderProperty.ClearAllFragmentShaderReplacements()
