@@ -63,7 +63,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """!@brief Function to setup the class.
 
     """   
-    log.info(get_function_name()+ str(get_function_parameters_and_values()))
+    #log.info(get_function_name()+ str(get_function_parameters_and_values()))
     ScriptedLoadableModuleWidget.setup(self)
 
     self.logic = PRISMLogic()
@@ -216,7 +216,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.updateGUIFromParameterNode()
   
   def updateNodeSelector(self):
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     """!@brief Function to update the node selectors.
 
     """
@@ -231,7 +231,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
           self.ui.imageSelector.setCurrentNode(volumeNode)
   
   def cleanup(self):
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     """!@brief Function to clean up the scene.
 
     """
@@ -241,7 +241,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       slicer.mrmlScene.RemoveObserver(self.logic.parameterNodeObserver)
   
   def setAndObserveParameterNode(self, caller=None, event=None):
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     """!@brief Function to set the parameter node.
 
     """
@@ -277,7 +277,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param caller Caller of the function.
     @param event Event that triggered the function.
     """   
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     if not self.logic.parameterNode:
       return
     parameterNode = self.logic.parameterNode
@@ -330,7 +330,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param value float : value of the widget. 
     @param widget QObject : widget being modified. 
     """   
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     parameterNode = self.logic.parameterNode
     oldModifiedState = parameterNode.StartModify()
 
@@ -371,7 +371,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """!@brief Function to add observers to the GUI's widgets.
 
     """   
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     for w in self.widgets:
       widgetClassName = self.getClassName(w)
       if widgetClassName=="QPushButton" :
@@ -392,7 +392,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """!@brief Function to remove observers from the GUI's widgets.
     
     """  
-    log.info(get_function_name()  + str(get_function_parameters_and_values())) 
+    #log.info(get_function_name()  + str(get_function_parameters_and_values())) 
     for w in self.widgets:
       widgetClassName = self.getClassName(w)
       if widgetClassName=="QPushButton" :
@@ -426,7 +426,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         observer {[type]}  [description]
         eventid {[type]}  [description]
     """   
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     self.updateGUIFromParameterNode()
 
   def getText(self):
@@ -434,7 +434,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     @return str File name.
     """   
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     text = qt.QInputDialog.getText(qt.QMainWindow(), "Duplicate file name","Enter file name:", qt.QLineEdit.Normal, "")
     if text != '':
       return text
@@ -443,7 +443,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """!@brief Function to duplicate custom shader file.
 
     """   
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     duplicateShaderFileName = self.getText()
     copiedShaderFileName = str(CustomShader.GetClassName(self.ui.customShaderCombo.currentText).__name__ + ".py")
 
@@ -464,7 +464,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param caller Caller of the function.
     @param event Event that triggered the function.
     """   
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     shaderPath = self.getPath(CustomShader.GetClassName(self.ui.customShaderCombo.currentText).__name__)
     qt.QDesktopServices.openUrl(qt.QUrl("file:///"+shaderPath, qt.QUrl.TolerantMode))
 
@@ -475,7 +475,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param caller Caller of the function.
     @param event Event that triggered the function.
     """   
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     if self.ui.enableRotationCheckBox.isChecked():
       self.transformDisplayNode.SetEditorRotationEnabled(True)
@@ -490,7 +490,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param caller Caller of the function.
     @param event Event that triggered the function.
     """   
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     if self.ui.enableScalingCheckBox.isChecked():
       self.transformDisplayNode.SetEditorScalingEnabled(True)
@@ -505,7 +505,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param caller Caller of the function.
     @param event Event that triggered the function.
     """   
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     if self.ui.enableROICheckBox.isChecked():
       self.logic.volumeRenderingDisplayNode.SetCroppingEnabled(True)
@@ -522,7 +522,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param caller Caller of the function.
     @param event Event that triggered the function.
     """   
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     if self.ui.displayROICheckBox.isChecked():
       self.transformDisplayNode.EditorVisibilityOn()
@@ -542,7 +542,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param caller Caller of the function.
     @param event Event that triggered the function.
     """   
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     currentShader = self.ui.customShaderCombo.currentText
     
@@ -589,7 +589,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param event Event that triggered the function.
     """
 
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     shaderTagType = self.allShaderTagTypes.get(self.modifiedShaderTagType, "")
     shaderTag = shaderTagType[self.modifiedShaderTag]
@@ -635,7 +635,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     @return $nPath of the shader.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     class_ = CustomShader.GetClass(name)
     if class_ :
@@ -651,7 +651,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param caller Caller of the function.
     @param event Event that triggered the function.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     shaderTagType = self.allShaderTagTypes.get(self.modifiedShaderTagType, "")
     shaderTag = shaderTagType[self.modifiedShaderTag]
@@ -686,7 +686,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param comboBox QComboBox : ComboBox to be modified.
     @param func func : [Connect function when the ComboBox index is changed.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     
     comboBox.clear()  
     for e in tab:
@@ -700,7 +700,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     @param value list : current value of the comboBox.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     self.modifiedShader = self.ui.modifyCustomShaderCombo.currentText
 
@@ -725,7 +725,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     @param value list : current value of the comboBox.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     
     self.modifiedShaderTagType = self.ui.shaderTagsTypeCombo.currentText
     self.ui.shaderTagsCombo.show()
@@ -739,7 +739,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     @param value list : current value of the comboBox.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
   
     self.modifiedShaderTag = self.ui.shaderTagsCombo.currentText
     self.ui.shaderModificationsLabel.show()
@@ -753,7 +753,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     @return bool Returns False when an error occurs.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     self.className = self.ui.newCustomShaderNameInput.text
     self.displayName = self.ui.newCustomShaderDisplayInput.text
@@ -785,7 +785,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """!@brief Function to create a new file with the custom shader and open the file in editor.
 
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     new_file_name = self.className
     file_path = os.path.realpath(__file__)
@@ -799,7 +799,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """!@brief Function to activate or deactivate the button to modify a custom shader.
 
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     self.ui.modifyCustomShaderButton.enabled = len(self.ui.shaderModifications.document().toPlainText()) > 0
 
@@ -807,7 +807,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """!@brief Function to activate or deactivate the button to create a custom shader.
 
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     self.ui.createCustomShaderButton.enabled = len(self.ui.newCustomShaderNameInput.text) > 0 and len(self.ui.newCustomShaderDisplayInput.text) > 0
     self.ui.errorMsg.hide()
@@ -821,7 +821,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     @return str Path of the newly created file.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     file_path = os.path.realpath(__file__)
     file_dir, filename = os.path.split(file_path)
@@ -851,7 +851,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param className str : Name of the class being modified.
     @paramdisplayName str : Display name of the class being modified.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     import os, sys
     import re
@@ -880,7 +880,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """!@brief Function call to initialize the all user interface based on current scene.
 
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     #import shaders
     for c in self.allClasses:
@@ -904,7 +904,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param node vtkMRMLVolumeNode : Volume node selected in the scene.
     @param widget QObject : Widget modified.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     
     if not node:
       return
@@ -927,7 +927,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param caller Caller of the function.
     @param event Event that triggered the function.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     if self.ui.volumeRenderingCheckBox.isChecked():
       if self.ui.imageSelector.currentNode():
@@ -974,7 +974,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """!@brief Function to reset the ROI in the scene.
 
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     ROINode = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLAnnotationROINode','AnnotationROI')
     if ROINode.GetNumberOfItems() > 0:
@@ -990,7 +990,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param caller Caller of the function.
     @param event Event that triggered the function.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     if self.displayControlsCheckBox.isChecked():
       self.logic.vrhelper.showVRControls()
@@ -1006,7 +1006,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     @param i int : Index of the element.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     self.logic.setCustomShaderType(self.ui.customShaderCombo.currentText)
     self.UpdateShaderParametersUI()
@@ -1029,7 +1029,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param name str : Name of the widget.
     @param tab array[QObject] : List being appended.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
    
     found = 0
     for i, w in enumerate(tab):
@@ -1044,7 +1044,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """!@brief Updates the shader parameters on the UI.
 
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     if not self.logic.customShader:
       return
@@ -1207,7 +1207,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     @return str Module's path.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     return os.path.dirname(eval('slicer.modules.prism.path'))
 
@@ -1215,7 +1215,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """!@brief Reload the modules.
 
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     log.debug("Reloading Packages")
     packageName='Resources'
