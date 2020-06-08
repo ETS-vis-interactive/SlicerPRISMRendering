@@ -1021,7 +1021,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       self.ui.reloadCurrentCustomShaderButton.setEnabled(True)
       self.ui.duplicateCustomShaderButton.setEnabled(True)
 
-  def addToWidgetList(self, widget, name, tab = self.widgets):
+  def addToWidgetList(self, widget, name, tab):
     """!@brief Function to add a widget to self.widgets without duplicate.
 
 
@@ -1084,7 +1084,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       slider.setParent(self.ui.customShaderParametersLayout)
       self.ui.customShaderParametersLayout.addRow(label, slider)
       
-      self.addToWidgetList(slider, CSName+p)
+      self.addToWidgetList(slider, CSName+p, self.widgets)
 
     # Instanciate a slider for each integer parameter of the active shader
     params = self.logic.customShader.shaderiParams
@@ -1104,7 +1104,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       slider.setParent(self.ui.customShaderParametersLayout)
       self.ui.customShaderParametersLayout.addRow(label, slider)
       
-      self.addToWidgetList(slider, CSName+p)
+      self.addToWidgetList(slider, CSName+p, self.widgets)
     
     # Instanciate a markup
     params = self.logic.customShader.shader4fParams
@@ -1123,7 +1123,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         targetPointButton.clicked.connect(lambda value, w = slider : self.updateParameterNodeFromGUI(value, w))
         targetPointButton.setParent(self.ui.customShaderParametersLayout)
         self.ui.customShaderParametersLayout.addRow(qt.QLabel(params[p]['displayName']), targetPointButton)
-        self.addToWidgetList(targetPointButton, CSName+p)
+        self.addToWidgetList(targetPointButton, CSName+p, self.widgets)
     
     params = self.logic.customShader.shaderrParams
     paramNames = params.keys()
@@ -1143,7 +1143,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         slider.valuesChanged.connect(lambda value1, value2, w = slider : self.updateParameterNodeFromGUI([value1, value2], w))
         self.ui.customShaderParametersLayout.addRow(label, slider)
 
-        self.addToWidgetList(slider, CSName+p)
+        self.addToWidgetList(slider, CSName+p, self.widgets)
 
     params = self.logic.customShader.shadertfParams
     paramNames = params.keys()
@@ -1178,7 +1178,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         widget.setFixedHeight(100)
         widget.view().show()
         
-        self.addToWidgetList(widget, CSName+p)
+        self.addToWidgetList(widget, CSName+p, self.widgets)
         self.ui.customShaderParametersLayout.addRow(label, widget)
   
     params = self.logic.customShader.shadervParams
