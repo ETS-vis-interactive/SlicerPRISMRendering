@@ -202,6 +202,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.currXAngle = 0.0
     self.currYAngle = 0.0
     self.currZAngle = 0.0
+    self.secondColorTransferFunctionWidget = None
     #save widgets
     self.widgets = list(self.ui.centralWidget.findChildren(qt.QCheckBox())  \
     + self.ui.centralWidget.findChildren(qt.QPushButton()) \
@@ -308,14 +309,10 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
           w.minimumValue = float(values[0])
           w.maximumValue = float(values[1])
         elif widgetClassName == "ctkVTKScalarsToColorsWidget":
-          volumePropertyNode = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
-          transfertFunction = volumePropertyNode.GetColor()
-          i = 0
-          values = self.logic.parameterNode.GetParameter(w.name+str(i))
-          while values != '':
-            transfertFunction.SetNodeValue(i,[int(float(i)) for i in values.split(",")])
-            i+=1
+          transferFunction = w.view().colorTransferFunctionPlots()[0].GetColorTransferFunction()
+          for i in range(transferFunction.GetSize()):
             values = self.logic.parameterNode.GetParameter(w.name+str(i))
+            transferFunction.SetNodeValue(i, [int(float(k)) for k in values.split(",")])
             
     for w in self.nodeSelectorWidgets:
       oldBlockSignalsState = w.blockSignals(True)
@@ -324,11 +321,11 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     self.addGUIObservers()
 
-  def updateParameterNodeFromGUI(self, value, widget):
+  def updateParameterNodeFromGUI(self, value, w):
     """!@brief Function to update the parameter node from gui values.
 
-    @param value float : value of the widget. 
-    @param widget QObject : widget being modified. 
+    @param value float : Value of the widget. 
+    @param w QObject : Widget being modified. 
     """   
     #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     parameterNode = self.logic.parameterNode
@@ -337,30 +334,32 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     if self.ui.imageSelector.currentNode() is None:
       return 
     
-    widgetClassName = self.getClassName(widget)
+    widgetClassName = self.getClassName(w)
     if widgetClassName=="QPushButton" :
-      parameterNode.SetParameter(widget.name, "1") if widget.enabled else parameterNode.SetParameter(widget.name, "0")
+      parameterNode.SetParameter(w.name, "1") if w.enabled else parameterNode.SetParameter(w.name, "0")
     elif widgetClassName == "QCheckBox":
-      parameterNode.SetParameter(widget.name, "1") if widget.checked else parameterNode.SetParameter(widget.name, "0")
+      parameterNode.SetParameter(w.name, "1") if w.checked else parameterNode.SetParameter(w.name, "0")
     elif widgetClassName == "QComboBox" or widgetClassName == "ctkComboBox" :
-      parameterNode.SetParameter(widget.name, str(widget.currentIndex))
+      parameterNode.SetParameter(w.name, str(w.currentIndex))
     elif widgetClassName == "ctkSliderWidget":
-      parameterNode.SetParameter(widget.name, str(widget.value))
+      parameterNode.SetParameter(w.name, str(w.value))
     elif widgetClassName == "ctkRangeWidget":
-      parameterNode.SetParameter(widget.name, str(widget.minimumValue) + ',' + str(widget.maximumValue))
+      parameterNode.SetParameter(w.name, str(w.minimumValue) + ',' + str(w.maximumValue))
     elif widgetClassName == "ctkVTKScalarsToColorsWidget": 
-      volumePropertyNode = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
-      transfertFunction = volumePropertyNode.GetColor()
-      parameterNode.SetParameter(widget.name, "transferFunction")
+      transferFunction = w.view().colorTransferFunctionPlots()[0].GetColorTransferFunction()
+      parameterNode.SetParameter(w.name, "transferFunction")
       values = [0,0,0,0,0,0]
-      i = 0
-      res = transfertFunction.GetNodeValue(i, values)
-      while (res == 1):
-        parameterNode.SetParameter(widget.name+str(i), ",".join("{0}".format(n) for n in values))
+      for i in range(transferFunction.GetSize()):
+        transferFunction.GetNodeValue(i, values)
+        parameterNode.SetParameter(w.name+str(i), ",".join("{0}".format(n) for n in values))
+      
+      #if points are deleted, remove them from the parameter node
+      i+=1
+      val = parameterNode.GetParameter(w.name+str(i))
+      while val != '':
+        parameterNode.UnsetParameter(w.name+str(i))
         i+=1
-        res = transfertFunction.GetNodeValue(i, values)
-      if (parameterNode.GetParameter(widget.name+str(i)) != ''):
-        parameterNode.SetParameter(widget.name+str(i), '')
+        val = parameterNode.GetParameter(w.name+str(i))
       
     for w in self.nodeSelectorWidgets:
       parameterNode.SetNodeReferenceID(w.name, w.currentNodeID)
@@ -383,7 +382,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       elif widgetClassName == "ctkSliderWidget":
         w.valueChanged.connect(lambda value, w = w : self.updateParameterNodeFromGUI(value, w))
       elif widgetClassName == "ctkRangeWidget":
-        w.valuesChanged.connect(lambda value, w = w : self.updateParameterNodeFromGUI(value, w))
+        w.valuesChanged.connect(lambda value1, value2, w = w : self.updateParameterNodeFromGUI([value2, value2], w))
 
     for w in self.nodeSelectorWidgets:
       w.connect("currentNodeIDChanged(Qstr)", lambda value, w = w : self.updateParameterNodeFromGUI(value, w))
@@ -570,7 +569,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     
     try :
       volumePropertyNode = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
-      volumePropertyNode.SetColor(self.transfertFunction)
+      volumePropertyNode.SetColor(self.transferFunction)
     except :
       pass
 
@@ -912,6 +911,8 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     #if the selector is a parameter of a shader
     if widget != self.ui.imageSelector :
       self.logic.renderVolume(widget.currentNode(), True)
+      volumePropertyNode = self.logic.secondVolumeRenderingDisplayNode.GetVolumePropertyNode()
+      self.createColorTransferFunctionWidget(volumePropertyNode, self.colorTransferFunctionParams, self.colorTransferFunctionParamName, True)
 
     elif self.ui.volumeRenderingCheckBox.isChecked():
       self.ui.volumeRenderingCheckBox.setChecked(False)
@@ -1063,7 +1064,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       pass
     lenWidgets = len(self.widgets)
     
-    CSName = self.ui.customShaderCombo.currentText.replace(" ", "")
+    self.CSName = self.ui.customShaderCombo.currentText.replace(" ", "")
 
     # Instanciate a slider for each floating parameter of the active shader
     params = self.logic.customShader.shaderfParams
@@ -1077,14 +1078,14 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       f = str(params[p]['defaultValue'])
       slider.setDecimals(f[::-1].find('.'))
       slider.singleStep = ( (slider.maximum - slider.minimum) * 0.01 )
-      slider.setObjectName(CSName + p)
+      slider.setObjectName(self.CSName + p)
       slider.setValue(self.logic.customShader.getShaderParameter(p, float))
       slider.valueChanged.connect(lambda value, p=p : self.logic.onCustomShaderParamChanged(value, p, float) )
       slider.valueChanged.connect(lambda value, w = slider : self.updateParameterNodeFromGUI(value, w))
       slider.setParent(self.ui.customShaderParametersLayout)
       self.ui.customShaderParametersLayout.addRow(label, slider)
       
-      self.addToWidgetList(slider, CSName+p, self.widgets)
+      self.addToWidgetList(slider, self.CSName+p, self.widgets)
 
     # Instanciate a slider for each integer parameter of the active shader
     params = self.logic.customShader.shaderiParams
@@ -1096,7 +1097,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       slider.minimum = params[p]['min']
       slider.maximum = params[p]['max']
       slider.singleStep = ( (slider.maximum - slider.minimum) * 0.05)
-      slider.setObjectName(CSName+p)
+      slider.setObjectName(self.CSName+p)
       slider.setDecimals(0)
       slider.setValue(int(self.logic.customShader.getShaderParameter(p, int)))
       slider.valueChanged.connect(lambda value, p=p : self.logic.onCustomShaderParamChanged(value, p, int) )
@@ -1104,7 +1105,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       slider.setParent(self.ui.customShaderParametersLayout)
       self.ui.customShaderParametersLayout.addRow(label, slider)
       
-      self.addToWidgetList(slider, CSName+p, self.widgets)
+      self.addToWidgetList(slider, self.CSName+p, self.widgets)
     
     # Instanciate a markup
     params = self.logic.customShader.shader4fParams
@@ -1118,12 +1119,12 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
         targetPointButton = qt.QPushButton("Initialize " + params[p]['displayName'])
         targetPointButton.setToolTip( "Place a markup" )
-        targetPointButton.setObjectName(CSName+p)
+        targetPointButton.setObjectName(self.CSName+p)
         targetPointButton.clicked.connect(lambda _, name = p, btn = targetPointButton : self.logic.setPlacingMarkups(paramName = name, btn = btn,  interaction = 1))
         targetPointButton.clicked.connect(lambda value, w = slider : self.updateParameterNodeFromGUI(value, w))
         targetPointButton.setParent(self.ui.customShaderParametersLayout)
         self.ui.customShaderParametersLayout.addRow(qt.QLabel(params[p]['displayName']), targetPointButton)
-        self.addToWidgetList(targetPointButton, CSName+p, self.widgets)
+        self.addToWidgetList(targetPointButton, self.CSName+p, self.widgets)
     
     params = self.logic.customShader.shaderrParams
     paramNames = params.keys()
@@ -1137,49 +1138,41 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         slider.maximum = params[p]['defaultValue'][1]
         slider.maximumValue = params[p]['defaultValue'][1]
         slider.singleStep = ( (slider.maximum - slider.minimum) * 0.01 )
-        slider.setObjectName(CSName+p)
+        slider.setObjectName(self.CSName+p)
         slider.setParent(self.ui.customShaderParametersLayout)
         slider.valuesChanged.connect(lambda min_, max_, p=p : self.logic.onCustomShaderParamChanged([min_, max_], p, "range") )
         slider.valuesChanged.connect(lambda value1, value2, w = slider : self.updateParameterNodeFromGUI([value1, value2], w))
         self.ui.customShaderParametersLayout.addRow(label, slider)
 
-        self.addToWidgetList(slider, CSName+p, self.widgets)
+        self.addToWidgetList(slider, self.CSName+p, self.widgets)
 
     params = self.logic.customShader.shadertfParams
     paramNames = params.keys()
     if params:
       if self.logic.volumeRenderingDisplayNode is None :
         return
+
+      #verify if the volume has only one transfert function defined.
+      volumes = [params[p]['defaultVolume'] for p in paramNames]
+      if len(volumes) != len(set(volumes)) :
+        log.error("Multiples transfert functions associated to one volume.")
+
       for p in paramNames:
-        label = qt.QLabel(params[p]['displayName'])
-        widget = ctk.ctkVTKScalarsToColorsWidget()
-        widget.setObjectName(CSName+p)
-        volumePropertyNode = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
-        #TODO find a way to keep the transfert function for each shader
-        self.transfertFunction = vtk.vtkColorTransferFunction()
-        self.transfertFunction.DeepCopy(volumePropertyNode.GetColor())
-        transfertFunction = volumePropertyNode.GetColor()
-        transfertFunction.AddObserver(vtk.vtkCommand.InteractionEvent, lambda o, e, w = widget : self.updateParameterNodeFromGUI([o,e], w))
-
-        first = [0,0,0,0,0,0]
-        last = [0,0,0,0,0,0]
-        transfertFunction.GetNodeValue(0, first)
-        transfertFunction.GetNodeValue(1, last)
-
-        transfertFunction.RemoveAllPoints()
-        transfertFunction.AdjustRange((0, 300))
-        #first point in red
-        transfertFunction.SetNodeValue(0 ,[0, 1, 0, 0, first[4], first[5]])
-        #last point in blue
-        transfertFunction.SetNodeValue(1 ,[300, 0, 0, 1, last[4], last[5]])
-       
-        widget.view().addColorTransferFunction(transfertFunction)
-        widget.view().setAxesToChartBounds()
-        widget.setFixedHeight(100)
-        widget.view().show()
+        if params[p]['defaultVolume'] == 0 :
+          volumePropertyNode = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
+        else : 
+          if self.logic.secondVolumeRenderingDisplayNode is not None: 
+            volumePropertyNode = self.logic.secondVolumeRenderingDisplayNode.GetVolumePropertyNode()
+          else :
+            self.colorTransferFunctionParams = params[p]
+            self.colorTransferFunctionParamName = p
+            continue        
         
-        self.addToWidgetList(widget, CSName+p, self.widgets)
-        self.ui.customShaderParametersLayout.addRow(label, widget)
+        #TODO find a way to keep the transfert function for each shader
+        self.transferFunction = vtk.vtkColorTransferFunction()
+        self.transferFunction.DeepCopy(volumePropertyNode.GetColor())
+
+        self.createColorTransferFunctionWidget(volumePropertyNode, params[p], p)
   
     params = self.logic.customShader.shadervParams
     paramNames = params.keys()
@@ -1195,13 +1188,50 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         imageSelector.noneEnabled = False
         imageSelector.showHidden = False
         imageSelector.showChildNodeTypes = False
-        imageSelector.setObjectName(CSName+p)
+        imageSelector.setObjectName(self.CSName+p)
         imageSelector.setCurrentNode(None)
-        self.addToWidgetList(imageSelector, CSName+p, self.nodeSelectorWidgets)
+        self.addToWidgetList(imageSelector, self.CSName+p, self.nodeSelectorWidgets)
         self.ui.customShaderParametersLayout.addRow(label, imageSelector)
         imageSelector.currentNodeChanged.connect(lambda value, w = imageSelector : self.onImageSelectorChanged(value, w))
         imageSelector.currentNodeChanged.connect(lambda value, w = imageSelector : self.updateParameterNodeFromGUI(value, w))
     
+  def createColorTransferFunctionWidget(self, volumePropertyNode, params, p, secondTf = False) :
+    """!@brief Function to create a transfert fuction widget.
+
+    @param volumePropertyNode vtkMRMLVolumePropertyNode : Volume property node to be associated to the widget.
+    @param param dict : Parameters to add to the widget.
+    @param p str : Parameter's name.
+    """
+    transferFunction = volumePropertyNode.GetColor()
+    #check if the widget for the second volume already exists and replace the transfert function
+    if self.secondColorTransferFunctionWidget is not None :
+      self.secondColorTransferFunctionWidget.view().addColorTransferFunction(transferFunction)
+      return
+
+    label = qt.QLabel(params['displayName'])
+    widget = ctk.ctkVTKScalarsToColorsWidget()
+    widget.setObjectName(self.CSName+p)
+    transferFunction.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = widget : self.updateParameterNodeFromGUI([o,e], w))
+
+    #change the points to the ones specified in the shader
+    if 'defaultColors' in params:
+      colors = params['defaultColors']
+      nbColors = len(colors)
+      transferFunction.RemoveAllPoints()
+      transferFunction.AdjustRange((0, colors[nbColors-1][0]))
+      for i in range(nbColors):
+        transferFunction.SetNodeValue(i, colors[i])  
+
+    widget.view().addColorTransferFunction(transferFunction)
+    widget.view().setAxesToChartBounds()
+    widget.setFixedHeight(100)
+
+    self.addToWidgetList(widget, self.CSName+p, self.widgets)
+    self.ui.customShaderParametersLayout.addRow(label, widget)
+
+    if secondTf :
+      self.secondColorTransferFunctionWidget = widget
+
   def prismPath(self) :
     """!@brief Function to get the module's path.
 
@@ -1252,7 +1282,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     
     try :
       volumePropertyNode = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
-      volumePropertyNode.SetColor(self.transfertFunction)
+      volumePropertyNode.SetColor(self.transferFunction)
     except :
       pass
 

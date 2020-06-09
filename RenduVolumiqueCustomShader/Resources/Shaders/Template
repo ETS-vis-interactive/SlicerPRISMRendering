@@ -8,6 +8,11 @@ class Template(CustomShader):
   shaderfParams = {}
   shaderiParams = {}
   shader4fParams = {}
+  shaderbParams = {}
+  shaderrParams = {}
+  shadertfParams = {}
+  shadervParams = {}
+  
   def __init__(self, shaderPropertyNode):
     CustomShader.__init__(self,shaderPropertyNode)
 
