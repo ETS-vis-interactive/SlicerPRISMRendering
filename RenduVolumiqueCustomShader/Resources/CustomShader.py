@@ -134,7 +134,10 @@ class CustomShader():
     """
     if shaderName == cls.__name__:
       return CustomShader
-
+  
+    if not hasattr(cls, "allClasses"):
+      print("ok")
+      cls.GetAllShaderClassNames()
     for c in cls.allClasses:
       if c.__name__ == shaderName:
         return c

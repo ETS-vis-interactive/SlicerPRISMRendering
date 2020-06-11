@@ -8,7 +8,7 @@ class PlaneIntersectingShader(CustomShader):
   shaderfParams = { 'relativePosition' : { 'displayName' : 'Relative Position', 'min' : 0.0, 'max' : 1.0, 'defaultValue' : 0.5 }}
   shader4fParams = {'entry': {'displayName': 'Entry', 'defaultValue': {'x': 0.0, 'y': 0.0, 'z': 0.0, 'w': 0.0}}, \
                     'target': {'displayName': 'Target', 'defaultValue': {'x': 0.0, 'y': 0.0, 'z': 0.0, 'w': 0.0}}}
-  shaderbParams = { 'plane' : { 'displayName' : '3rd Plane', 'defaultValue' : 0}}
+  shaderbParams = { 'plane' : { 'displayName' : 'Third Plane', 'defaultValue' : 0}}
 
   def __init__(self, shaderPropertyNode):
     CustomShader.__init__(self,shaderPropertyNode)

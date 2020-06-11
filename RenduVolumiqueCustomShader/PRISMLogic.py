@@ -70,6 +70,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     self.parameterNode = None
     self.parameterNodeObserver = None
     self.addObservers()
+    self.transferFunction = vtk.vtkColorTransferFunction()
 
   def enableCarving(self, paramName, type_, checkBox) :
     """!@brief Function to enable carving in the volume.
@@ -415,8 +416,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     allVolumeRenderingDisplayNodes = set(slicer.util.getNodesByClass("vtkMRMLVolumeRenderingDisplayNode"))
     
     numberOfVolumeRenderingDisplayNodes = len([i for i in allVolumeRenderingDisplayNodes if i.GetVisibility() == 1])
-    print(numberOfVolumeRenderingDisplayNodes)
-    print(multipleVolumes)
+
     if self.secondVolumeRenderingDisplayNode:
       if numberOfVolumeRenderingDisplayNodes > 1 and multipleVolumes:
         self.secondVolumeRenderingDisplayNode.SetVisibility(False)
@@ -456,6 +456,10 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
       self.secondVolumeRenderingDisplayNode = displayNode
     else:
       self.volumeRenderingDisplayNode = displayNode
+    
+    volumePropertyNode = displayNode.GetVolumePropertyNode()
+    self.transferFunction = volumePropertyNode.GetColor() 
+  
 
   def setCustomShaderType(self, shaderTypeName):
     """ Set given shader type as current active shader

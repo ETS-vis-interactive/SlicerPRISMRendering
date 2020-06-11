@@ -206,8 +206,9 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     #save widgets
     self.widgets = list(self.ui.centralWidget.findChildren(qt.QCheckBox())  \
     + self.ui.centralWidget.findChildren(qt.QPushButton()) \
-    + self.ui.centralWidget.findChildren(qt.QComboBox()))
-    self.nodeSelectorWidgets = [self.ui.imageSelector, self.ui.parametersNodeSelector]
+    + self.ui.centralWidget.findChildren(qt.QComboBox()) \
+    + self.ui.centralWidget.findChildren(slicer.qMRMLNodeComboBox()))
+
     self.init = 0
     # Set parameter node (widget will observe it)
     self.updateNodeSelector()
@@ -262,14 +263,18 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     @return str class name of the widget.
     """
-    import sys
-    if sys.version_info.  major == 2:
-      return widget.metaObject().className()
-    else:
-      try :
-        return widget.metaObject().getClassName()
-      except:
-        return widget.view().metaObject().getClassName()
+    try :
+      return widget.metaObject().getClassName()
+    except :
+      pass
+    try :
+      return widget.view().metaObject().getClassName()
+    except :
+      pass
+    try :
+      return widget.GetClassName()
+    except :
+      pass
   
   def updateGUIFromParameterNode(self, caller=None, event=None):
     """!@brief Function to update GUI from parameter node values
@@ -295,29 +300,37 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         if widgetClassName=="QPushButton":
           enabled = (int(value) != 0)
           w.setEnabled(enabled)
+
         elif widgetClassName=="QCheckBox":
           checked = (int(value) != 0)
           w.setChecked(checked)
+
         elif widgetClassName=="QComboBox" or widgetClassName == "ctkComboBox":
           index = int(value)
           w.setCurrentIndex(index)
+
         elif widgetClassName=="ctkSliderWidget":
           value = float(value)
           w.setValue(value)
+
         elif widgetClassName=="ctkRangeWidget":
           values = value.split(',')     
           w.minimumValue = float(values[0])
           w.maximumValue = float(values[1])
-        elif widgetClassName == "ctkVTKScalarsToColorsWidget":
-          transferFunction = w.view().colorTransferFunctionPlots()[0].GetColorTransferFunction()
+
+        elif widgetClassName == "ctkVTKScalarsToColorsWidget" or widgetClassName == "vtkColorTransferFunction":
+          if widgetClassName == "vtkColorTransferFunction" :
+            transferFunction = w
+          else :
+            transferFunction = w.view().colorTransferFunctionPlots()[0].GetColorTransferFunction()
           for i in range(transferFunction.GetSize()):
             values = self.logic.parameterNode.GetParameter(w.name+str(i))
             transferFunction.SetNodeValue(i, [int(float(k)) for k in values.split(",")])
-            
-    for w in self.nodeSelectorWidgets:
-      oldBlockSignalsState = w.blockSignals(True)
-      w.setCurrentNodeID(parameterNode.GetNodeReferenceID(w.name))
-      w.blockSignals(oldBlockSignalsState)
+
+        elif widgetClassName == "qMRMLNodeComboBox":
+          oldBlockSignalsState = w.blockSignals(True)
+          w.setCurrentNodeID(parameterNode.GetNodeReferenceID(w.name))
+          w.blockSignals(oldBlockSignalsState)
 
     self.addGUIObservers()
 
@@ -345,23 +358,31 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       parameterNode.SetParameter(w.name, str(w.value))
     elif widgetClassName == "ctkRangeWidget":
       parameterNode.SetParameter(w.name, str(w.minimumValue) + ',' + str(w.maximumValue))
-    elif widgetClassName == "ctkVTKScalarsToColorsWidget": 
-      transferFunction = w.view().colorTransferFunctionPlots()[0].GetColorTransferFunction()
+    elif widgetClassName == "ctkVTKScalarsToColorsWidget" or widgetClassName == "vtkColorTransferFunction":
+      if widgetClassName == "vtkColorTransferFunction" :
+        transferFunction = w
+      else :
+        try :
+          transferFunction = w.view().colorTransferFunctionPlots()[0].GetColorTransferFunction()
+        except :
+          return
+
       parameterNode.SetParameter(w.name, "transferFunction")
+      nbPoints = transferFunction.GetSize()
       values = [0,0,0,0,0,0]
-      for i in range(transferFunction.GetSize()):
-        transferFunction.GetNodeValue(i, values)
-        parameterNode.SetParameter(w.name+str(i), ",".join("{0}".format(n) for n in values))
-      
-      #if points are deleted, remove them from the parameter node
-      i+=1
-      val = parameterNode.GetParameter(w.name+str(i))
-      while val != '':
-        parameterNode.UnsetParameter(w.name+str(i))
+      if nbPoints > 0:
+        for i in range(nbPoints):
+          transferFunction.GetNodeValue(i, values)
+          parameterNode.SetParameter(w.name+str(i), ",".join("{0}".format(n) for n in values))
+
+        #if points are deleted, remove them from the parameter node
         i+=1
         val = parameterNode.GetParameter(w.name+str(i))
-      
-    for w in self.nodeSelectorWidgets:
+        while val != '':
+          parameterNode.UnsetParameter(w.name+str(i))
+          i+=1
+          val = parameterNode.GetParameter(w.name+str(i))
+    elif widgetClassName == "qMRMLNodeComboBox":
       parameterNode.SetNodeReferenceID(w.name, w.currentNodeID)
     parameterNode.EndModify(oldModifiedState)
 
@@ -383,9 +404,13 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         w.valueChanged.connect(lambda value, w = w : self.updateParameterNodeFromGUI(value, w))
       elif widgetClassName == "ctkRangeWidget":
         w.valuesChanged.connect(lambda value1, value2, w = w : self.updateParameterNodeFromGUI([value2, value2], w))
-
-    for w in self.nodeSelectorWidgets:
-      w.connect("currentNodeIDChanged(Qstr)", lambda value, w = w : self.updateParameterNodeFromGUI(value, w))
+      elif widgetClassName == "vtkColorTransferFunction" :
+        w.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = w : self.updateParameterNodeFromGUI([o,e], w))
+      elif widgetClassName == "ctkVTKScalarsToColorsWidget":
+        transferFunction = w.view().colorTransferFunctionPlots()[0].GetColorTransferFunction()
+        transferFunction.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = transferFunction : self.updateParameterNodeFromGUI([o,e], w))
+      elif widgetClassName == "qMRMLNodeComboBox":
+        w.connect("currentNodeIDChanged(Qstr)", lambda value, w = w : self.updateParameterNodeFromGUI(value, w))
 
   def removeGUIObservers(self):
     """!@brief Function to remove observers from the GUI's widgets.
@@ -395,28 +420,22 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     for w in self.widgets:
       widgetClassName = self.getClassName(w)
       if widgetClassName=="QPushButton" :
-        d = w.clicked.disconnect(self.updateParameterNodeFromGUI) 
-        while d :
-          d = w.clicked.disconnect(self.updateParameterNodeFromGUI)
+        w.clicked.disconnect(self.updateParameterNodeFromGUI) 
       elif widgetClassName == "QCheckBox":
-        d = w.toggled.disconnect(self.updateParameterNodeFromGUI) 
-        while d :
-          d = w.toggled.disconnect(self.updateParameterNodeFromGUI)
+        w.toggled.disconnect(self.updateParameterNodeFromGUI) 
       elif widgetClassName == "QComboBox":
-        d = w.currentIndexChanged.disconnect(self.updateParameterNodeFromGUI) 
-        while d :
-          d = w.currentIndexChanged.disconnect(self.updateParameterNodeFromGUI)
+        w.currentIndexChanged.disconnect(self.updateParameterNodeFromGUI)
       elif widgetClassName == "ctkSliderWidget":
-        d = w.valueChanged.disconnect(self.updateParameterNodeFromGUI) 
-        while d :
-          d = w.valueChanged.disconnect(self.updateParameterNodeFromGUI)
+        w.valueChanged.disconnect(self.updateParameterNodeFromGUI)
       elif widgetClassName == "ctkRangeWidget":
-        d = w.valuesChanged.disconnect(self.updateParameterNodeFromGUI) 
-        while d :
-          d = w.valuesChanged.disconnect(self.updateParameterNodeFromGUI)
-
-    for w in self.nodeSelectorWidgets:
-      w.disconnect("currentNodeIDChanged(Qstr)", self.updateParameterNodeFromGUI)
+        w.valuesChanged.disconnect(self.updateParameterNodeFromGUI)
+      elif widgetClassName == "vtkColorTransferFunction" :
+        w.RemoveObserver(vtk.vtkCommand.ModifiedEvent)
+      elif widgetClassName == "ctkVTKScalarsToColorsWidget" :
+        transferFunction = w.view().colorTransferFunctionPlots()[0].GetColorTransferFunction()
+        transferFunction.RemoveObserver(vtk.vtkCommand.ModifiedEvent)
+      elif widgetClassName == "qMRMLNodeComboBox":
+        w.disconnect("currentNodeIDChanged(Qstr)", self.updateParameterNodeFromGUI)
     
   def onParameterNodeModified(self, observer, eventid):
     """!@brief Function to update the parameter node.
@@ -566,12 +585,6 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     globals()[shaderName] = clsmembers[1][1]
     clsmembers = inspect.getmembers(customShaderModule, inspect.isclass)
     globals()[submoduleName] = clsmembers[0][1]
-    
-    try :
-      volumePropertyNode = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
-      volumePropertyNode.SetColor(self.transferFunction)
-    except :
-      pass
 
     #reset customShader
     #reset UI
@@ -1022,24 +1035,24 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       self.ui.reloadCurrentCustomShaderButton.setEnabled(True)
       self.ui.duplicateCustomShaderButton.setEnabled(True)
 
-  def addToWidgetList(self, widget, name, tab):
+  def appendList(self, widget, name):
     """!@brief Function to add a widget to self.widgets without duplicate.
 
 
     @param widget QObject : Widget to be added to the list.
     @param name str : Name of the widget.
-    @param tab array[QObject] : List being appended.
     """
     #log.info(get_function_name()  + str(get_function_parameters_and_values()))
    
     found = 0
-    for i, w in enumerate(tab):
+    #check if the widget is in the list
+    for i, w in enumerate(self.widgets):
       if w.name == name :
         found = 1
-        tab[i] = widget
+        self.widgets[i] = widget
       
     if not found :
-      tab.append(widget)
+      self.widgets.append(widget)
 
   def UpdateShaderParametersUI(self):
     """!@brief Updates the shader parameters on the UI.
@@ -1085,7 +1098,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       slider.setParent(self.ui.customShaderParametersLayout)
       self.ui.customShaderParametersLayout.addRow(label, slider)
       
-      self.addToWidgetList(slider, self.CSName+p, self.widgets)
+      self.appendList(slider, self.CSName+p)
 
     # Instanciate a slider for each integer parameter of the active shader
     params = self.logic.customShader.shaderiParams
@@ -1105,7 +1118,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       slider.setParent(self.ui.customShaderParametersLayout)
       self.ui.customShaderParametersLayout.addRow(label, slider)
       
-      self.addToWidgetList(slider, self.CSName+p, self.widgets)
+      self.appendList(slider, self.CSName+p)
     
     # Instanciate a markup
     params = self.logic.customShader.shader4fParams
@@ -1124,7 +1137,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         targetPointButton.clicked.connect(lambda value, w = slider : self.updateParameterNodeFromGUI(value, w))
         targetPointButton.setParent(self.ui.customShaderParametersLayout)
         self.ui.customShaderParametersLayout.addRow(qt.QLabel(params[p]['displayName']), targetPointButton)
-        self.addToWidgetList(targetPointButton, self.CSName+p, self.widgets)
+        self.appendList(targetPointButton, self.CSName+p)
     
     params = self.logic.customShader.shaderrParams
     paramNames = params.keys()
@@ -1144,7 +1157,34 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         slider.valuesChanged.connect(lambda value1, value2, w = slider : self.updateParameterNodeFromGUI([value1, value2], w))
         self.ui.customShaderParametersLayout.addRow(label, slider)
 
-        self.addToWidgetList(slider, self.CSName+p, self.widgets)
+        self.appendList(slider, self.CSName+p)
+    
+    params = self.logic.customShader.shaderbParams
+    paramNames = params.keys()
+    if params:
+      for p in paramNames:
+        self.addCarvingCheckBox = qt.QCheckBox(params[p]['displayName'])
+        self.addCarvingCheckBox.setObjectName(self.CSName+p)
+        self.addCarvingCheckBox.toggled.connect(lambda _, name = p, cbx = self.addCarvingCheckBox : self.logic.enableCarving(paramName = name, type_ = "bool", checkBox = cbx))
+        self.ui.customShaderParametersLayout.addRow(self.addCarvingCheckBox)
+        self.logic.carvingEnabled = params[p]['defaultValue']
+        
+        self.addCarvingCheckBox.toggled.connect(lambda value, w = self.addCarvingCheckBox : self.updateParameterNodeFromGUI(value, w))
+        
+        self.appendList(self.addCarvingCheckBox, self.CSName+p)
+
+      #hide widgets related to carving
+      for i in range(self.ui.customShaderParametersLayout.count()):
+        widget = self.ui.customShaderParametersLayout.itemAt(i).widget()
+        if widget :
+          if widget.objectName == self.CSName+'radius' :
+            self.logic.radiusSlider = [self.ui.customShaderParametersLayout.itemAt(i-1).widget(), self.ui.customShaderParametersLayout.itemAt(i).widget()]
+            self.logic.radiusSlider[0].hide()
+            self.logic.radiusSlider[1].hide()
+          elif widget.objectName == self.CSName+'center' :
+            self.logic.centerButton = [self.ui.customShaderParametersLayout.itemAt(i-1).widget(), self.ui.customShaderParametersLayout.itemAt(i).widget()]
+            self.logic.centerButton[0].hide()
+            self.logic.centerButton[1].hide()
 
     params = self.logic.customShader.shadertfParams
     paramNames = params.keys()
@@ -1168,12 +1208,17 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
             self.colorTransferFunctionParamName = p
             continue        
         
-        #TODO find a way to keep the transfert function for each shader
-        self.transferFunction = vtk.vtkColorTransferFunction()
-        self.transferFunction.DeepCopy(volumePropertyNode.GetColor())
-
         self.createColorTransferFunctionWidget(volumePropertyNode, params[p], p)
-  
+    else :
+      #keep the original transfert function
+      volumePropertyNode = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
+      transferFunction = vtk.vtkColorTransferFunction()
+      transferFunction.DeepCopy(self.logic.transferFunction)
+      transferFunction.name = self.CSName + transferFunction.GetClassName()
+      transferFunction.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = transferFunction : self.updateParameterNodeFromGUI([o,e], w))
+      volumePropertyNode.SetColor(transferFunction)
+      self.appendList(transferFunction, self.CSName+transferFunction.name)
+
     params = self.logic.customShader.shadervParams
     paramNames = params.keys()
     if params:
@@ -1190,11 +1235,11 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         imageSelector.showChildNodeTypes = False
         imageSelector.setObjectName(self.CSName+p)
         imageSelector.setCurrentNode(None)
-        self.addToWidgetList(imageSelector, self.CSName+p, self.nodeSelectorWidgets)
+        self.appendList(imageSelector, self.CSName+p)
         self.ui.customShaderParametersLayout.addRow(label, imageSelector)
         imageSelector.currentNodeChanged.connect(lambda value, w = imageSelector : self.onImageSelectorChanged(value, w))
         imageSelector.currentNodeChanged.connect(lambda value, w = imageSelector : self.updateParameterNodeFromGUI(value, w))
-    
+  
   def createColorTransferFunctionWidget(self, volumePropertyNode, params, p, secondTf = False) :
     """!@brief Function to create a transfert fuction widget.
 
@@ -1226,7 +1271,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     widget.view().setAxesToChartBounds()
     widget.setFixedHeight(100)
 
-    self.addToWidgetList(widget, self.CSName+p, self.widgets)
+    self.appendList(widget, self.CSName+p)
     self.ui.customShaderParametersLayout.addRow(label, widget)
 
     if secondTf :
@@ -1258,33 +1303,32 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         imp.load_module(packageName+'.'+submoduleName, fp, modulePath, ('.py', 'rt', imp.PY_SOURCE))
 
     log.debug("Reloading Shaders")
-    shaderNames = []
-    for c in self.allClasses:
-      shaderNames.append(c.__name__)
-    
-    shaderPackageName = "Resources.Shaders"
-    
-    for shaderName in shaderNames :
-      shaderPath = self.getPath(shaderName)
-      with open(shaderPath, "rt") as fp:
-        imp.load_module(shaderPackageName+'.'+shaderName, fp, shaderPath, ('.py', 'rt', imp.PY_SOURCE))
+    try :
+      shaderNames = []
+      for c in self.allClasses:
+        shaderNames.append(c.__name__)
+      
+      shaderPackageName = "Resources.Shaders"
+      
+      for shaderName in shaderNames :
+        shaderPath = self.getPath(shaderName)
+        with open(shaderPath, "rt") as fp:
+          imp.load_module(shaderPackageName+'.'+shaderName, fp, shaderPath, ('.py', 'rt', imp.PY_SOURCE))
+    except:
+      pass
 
     log.debug("Reloading PRISM")
     packageNames=['PRISM', 'PRISMLogic']
     
     for packageName in packageNames :
-      with open(shaderPath, "rt") as fp:
-          imp.load_module(packageName, fp, self.prismPath(), ('.py', 'rt', imp.PY_SOURCE))
+      path = os.path.join(self.prismPath(), packageName + '.py').replace("\\", "/")
+      with open(path, "rt") as fp:
+        imp.load_module(packageName, fp, self.prismPath(), ('.py', 'rt', imp.PY_SOURCE))
 
     self.cleanup()
 
     globals()['PRISM'] = slicer.util.reloadScriptedModule('PRISM')
-    
-    try :
-      volumePropertyNode = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
-      volumePropertyNode.SetColor(self.transferFunction)
-    except :
-      pass
+
 
   def cleanup(self):
     self.resetROI()
