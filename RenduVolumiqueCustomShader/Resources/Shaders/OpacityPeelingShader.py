@@ -11,7 +11,7 @@ class OpacityPeelingShader(CustomShader):
                    
   shaderiParams = {'wantedLayer' : { 'displayName' : 'Wanted Layer', 'min' : 1.0, 'max' : 20.0, 'defaultValue' : 1.0 }}
 
-  shaderbParams = { 'sphere' : { 'displayName' : 'Sphere Carving', 'defaultValue' : 0}}
+  shaderbParams = { 'sphere' : { 'displayName' : 'Sphere Carving', 'defaultValue' : 0, 'optionalWidgets' : ['center', 'radius']}}
   
   shader4fParams = {'center': {'displayName': 'Center', 'defaultValue': {'x': 0.0, 'y': 0.0, 'z': 0.0, 'w': 0.0}}}
 
