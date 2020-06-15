@@ -17,7 +17,6 @@ from distutils.util import strtobool
 from inspect import signature
 import traceback
 
-from Resources.ModifyParamWidget import ModifyParamWidget
 from Resources.CustomShader import CustomShader
 
 try:

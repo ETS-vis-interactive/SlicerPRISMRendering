@@ -61,13 +61,6 @@
       </property>
       <item>
        <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="0">
-         <widget class="QLabel" name="imageSelectorLabel">
-          <property name="text">
-           <string>Image Volume :</string>
-          </property>
-         </widget>
-        </item>
         <item row="0" column="1">
          <widget class="qMRMLNodeComboBox" name="imageSelector">
           <property name="toolTip">
@@ -92,34 +85,10 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="parametersLabel">
+        <item row="0" column="0">
+         <widget class="QLabel" name="imageSelectorLabel">
           <property name="text">
-           <string>Pameters :</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="qMRMLNodeComboBox" name="parametersNodeSelector">
-          <property name="toolTip">
-           <string>&quot;Pick parameter set&quot;</string>
-          </property>
-          <property name="nodeTypes">
-           <stringlist>
-            <string>vtkMRMLScriptedModuleNode</string>
-           </stringlist>
-          </property>
-          <property name="showHidden">
-           <bool>true</bool>
-          </property>
-          <property name="showChildNodeTypes">
-           <bool>false</bool>
-          </property>
-          <property name="baseName">
-           <string>PRISM</string>
-          </property>
-          <property name="renameEnabled">
-           <bool>true</bool>
+           <string>Image Volume :</string>
           </property>
          </widget>
         </item>
@@ -299,7 +268,7 @@
      <property name="maximumSize">
       <size>
        <width>16777215</width>
-       <height>20</height>
+       <height>16777215</height>
       </size>
      </property>
      <property name="sizeIncrement">
@@ -312,7 +281,7 @@
       <string>Modify or Create Custom Shader</string>
      </property>
      <property name="collapsed">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="collapsedHeight">
       <number>0</number>
