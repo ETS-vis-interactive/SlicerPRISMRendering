@@ -191,6 +191,13 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     ## w value of the parameter
     self.addWInput = qt.QDoubleSpinBox()
 
+    ## Boolean value of the parameter
+    self.addBoolean = qt.QComboBox()
+    
+    ## Min range value of the parameter
+    self.addRangeMinValueInput = qt.QDoubleSpinBox()
+    ## Max ange value of the parameter
+    self.addRangeMaxValueInput = qt.QDoubleSpinBox()
     ## Button to add the parameter to the shader
     self.addParamButton = qt.QPushButton("Add parameter")
     ## Message to inform the user of the status of the current action
@@ -198,7 +205,14 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     ## Layout containing the combobox and message
     self.addParamLayout = qt.QFormLayout()
     ## Layout containing the parameters
-    self.paramLayout = qt.QFormLayout()
+    self.paramLayout = qt.QVBoxLayout()
+
+    self.defaultLayout = qt.QFormLayout()
+    self.intFloatLayout = qt.QFormLayout()
+    self.pointLayout = qt.QFormLayout()
+    self.booleanLayout = qt.QFormLayout()
+    self.rangeLayout = qt.QFormLayout()
+    
     ## Display name of the shader
     self.shaderDisplayName = ""
     self.createParametersLayout()
@@ -207,7 +221,8 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.ui.paramLayout.addLayout(self.addParamLayout, 0, 0)
     self.ui.paramLayout.addLayout(self.paramLayout, 1, 0)
     self.addParamCombo.show()
-    self.addParamLayout.itemAt(0,0).widget().show()
+
+    
     """
     # 
     # VR Actions Area
@@ -282,6 +297,11 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.addParamCombo.addItem("Integer")
     self.addParamCombo.addItem("Float")
     self.addParamCombo.addItem("Point")
+    self.addParamCombo.addItem("Boolean")
+    self.addParamCombo.addItem("Range")
+    self.addParamCombo.addItem("Transfer Function")
+    self.addParamCombo.addItem("Volume")
+
     self.addParamCombo.setCurrentIndex(0)
     self.addParamCombo.activated.connect(self.onAddParamComboIndexChanged)
     self.addParamCombo.hide()
@@ -307,95 +327,146 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.addZInput.valueChanged.connect(self.addParamButtonState)
     self.addWInput.setRange(-1000, 1000)
     self.addWInput.valueChanged.connect(self.addParamButtonState)
+    
+    # Values of the parameter if boolean
+    self.addBoolean.addItem("Select value")
+    self.addBoolean.addItem("True")
+    self.addBoolean.addItem("False")
+    self.addBoolean.setCurrentIndex(0)
+    self.addBoolean.activated.connect(self.addParamButtonState)
 
+    # Values of the parameter if range
+    self.addRangeMinValueInput.setRange(-1000, 1000)
+    self.addRangeMinValueInput.valueChanged.connect(self.addParamButtonState)
+    self.addRangeMaxValueInput.setRange(-1000, 1000)
+    self.addRangeMaxValueInput.valueChanged.connect(self.addParamButtonState)
+
+    self.addParamButton.enabled = False
     self.addParamButton.connect('clicked()', self.addParamButtonClicked)
     self.addedMsg.hide()
     
-    self.addParamLayout.addRow("Add parameter", self.addParamCombo)
+    self.addParamLayout.addRow("Type :", self.addParamCombo)
     self.addParamLayout.addRow("", self.addedMsg)
-    self.addParamLayout.itemAt(0,0).widget().hide()
-
-    self.paramLayout.addRow("Name :", self.addNameInput)
-    self.paramLayout.addRow("Display name :", self.addDisplayNameInput)
-    self.paramLayout.addRow("Min value : ", self.addMinValueInput)
-    self.paramLayout.addRow("Max value", self.addMaxValueInput)
-    self.paramLayout.addRow("Default value :", self.addDefaultValueInput)
-    self.paramLayout.addRow("x : ", self.addXInput)
-    self.paramLayout.addRow("y : ", self.addYInput)
-    self.paramLayout.addRow("z : ", self.addZInput)
-    self.paramLayout.addRow("w : ", self.addWInput)
-    self.paramLayout.addRow(self.addParamButton)
-    self.clearLayout(self.paramLayout)
 
 
+    self.addParamLayout.addRow("Name :", self.addNameInput)
+    self.addParamLayout.addRow("Display name :", self.addDisplayNameInput)
+
+    self.intFloatLayout.addRow("Min value : ", self.addMinValueInput)
+    self.intFloatLayout.addRow("Max value", self.addMaxValueInput)
+    self.intFloatLayout.addRow("Default value :", self.addDefaultValueInput)
+    self.paramLayout.addLayout(self.intFloatLayout)
+    
+    
+    self.pointLayout.addRow("x : ", self.addXInput)
+    self.pointLayout.addRow("y : ", self.addYInput)
+    self.pointLayout.addRow("z : ", self.addZInput)
+    self.pointLayout.addRow("w : ", self.addWInput)
+    self.paramLayout.addLayout(self.pointLayout)
+
+    self.booleanLayout.addRow("Default value : ", self.addBoolean)
+    self.paramLayout.addLayout(self.booleanLayout)
+
+    self.rangeLayout.addRow("Min value : ", self.addRangeMinValueInput)
+    self.rangeLayout.addRow("Max value : ", self.addRangeMaxValueInput)
+    self.paramLayout.addLayout(self.rangeLayout)
+
+    self.defaultLayout.addRow(self.addParamButton)
+    self.paramLayout.addLayout(self.defaultLayout)
+    self.hideLayout(self.paramLayout)
+    self.hideLayout(self.intFloatLayout)
+    self.hideLayout(self.intFloatLayout)
+    self.hideLayout(self.booleanLayout)
+    self.hideLayout(self.rangeLayout)
+    
   def resetLayout(self, layout) :
     """!@brief Function to reset a specific layout.
     @param layout qLayout : layout to reset
     """
 
     self.addParamCombo.setCurrentIndex(0)
-    self.clearLayout(layout)
-    layout.itemAt(0, 1).widget().clear()
+    self.hideLayout(layout)
+
     layout.itemAt(1, 1).widget().clear()
-    for i in range(2, 8) :
-      layout.itemAt(i, 1).widget().setValue(0)
+    layout.itemAt(2, 1).widget().clear()
+    
+    for i in range(int(self.intFloatLayout.count()/2)):
+      self.intFloatLayout.itemAt(i, 1).widget().setValue(0)
+    for i in range(int(self.pointLayout.count()/2)):
+      self.pointLayout.itemAt(i, 1).widget().setValue(0)
   
-  def clearLayout(self, layout) :
+  def hideLayout(self, layout) :
     """!@brief Function to clear the widgets of a specific layout.
     @param layout qLayout : layout to clear
 
     """
     for i in range(layout.count()): 
-      layout.itemAt(i).widget().hide()
+      item = layout.itemAt(i)
+      if item != None :
+        widget = item.widget()
+        if widget != None :
+          widget.hide()
 
-  def showLayout(self, layout, nb) :
+  def showLayout(self, layout) :
     """!@brief Function to show specific widgets of a layout.
     @param layout qLayout : layout to reset
     @param nb int : range of the widgets
 
     """
-    if nb  == 11 :
-      for i in range(0, nb - 1): 
-        layout.itemAt(i).widget().show()
-    else:
-      for i in range(0, 4): 
-        layout.itemAt(i).widget().show()
-      for i in range(10, 10 + nb): 
-        layout.itemAt(i).widget().show()
-    layout.itemAt(layout.count()-1).widget().show()
+    for i in range(layout.count()): 
+      item = layout.itemAt(i)
+      if item != None :
+        widget = item.widget()
+        if widget != None :
+          widget.show()
 
   def onAddParamComboIndexChanged(self, i):
     """!@brief Sets the current parameter type according to the combobox input.
     @param i int : index of the current input
 
     """
-    self.clearLayout(self.paramLayout)
+    self.hideLayout(self.intFloatLayout)
+    self.hideLayout(self.pointLayout)
     self.addedMsg.hide()
-    self.paramLayout.itemAt(0, 1).widget().clear()
-    self.paramLayout.itemAt(1, 1).widget().clear()
+
+    #clear the name and display name
+    self.addParamLayout.itemAt(2, 1).widget().clear()
+    self.addParamLayout.itemAt(3, 1).widget().clear()
     
     param = self.addParamCombo.currentText
+
     if param == "Integer" :
-      self.showLayout(self.paramLayout, 11)
-      for i in range(2, 5) :
-        self.paramLayout.itemAt(i, 1).widget().setDecimals(0)
+      self.showLayout(self.intFloatLayout)
+      for i in range(int(self.intFloatLayout.count()/2)):
+        self.intFloatLayout.itemAt(i, 1).widget().setDecimals(0)
       ## Type of the parameter added to the shader
       self.addParamType = "shaderiParams"
     elif param == "Float" : 
-      self.showLayout(self.paramLayout, 11)
-      for i in range(2, 5) :
-        self.paramLayout.itemAt(i, 1).widget().setDecimals(3)
+      self.showLayout(self.intFloatLayout)
+      for i in range(int(self.intFloatLayout.count()/2)):
+        self.intFloatLayout.itemAt(i, 1).widget().setDecimals(3)
       self.addParamType = "shaderfParams"
     elif param == "Point" :
-      self.showLayout(self.paramLayout, 8)
-      for i in range(5, 9) :
-        self.paramLayout.itemAt(i, 1).widget().setDecimals(3)
+      self.showLayout(self.pointLayout)
+      for i in range(int(self.pointLayout.count()/2)):
+        self.pointLayout.itemAt(i, 1).widget().setDecimals(3)
       self.addParamType = "shader4fParams"
+    elif param ==  "Boolean" :
+      self.showLayout(self.booleanLayout)
+      self.addParamType = "shaderbParams"
+    elif param ==  "Range" :
+      self.showLayout(self.rangeLayout)
+      self.addParamType = "shaderrParams"
+    """
+    elif param ==  "Transfer Function" :
+      self.addParamType = "shadertfParams"
+    elif param ==  "Volume" :
+      self.addParamType = "shadervParams"
+
+    """
+    
     # TODO add the other types of parameters
-    #"shaderbParams"
-    #"shaderrParams"
-    #"shadertfParams"
-    #"shadervParams"
+
 
   def addParamButtonState(self):
     """!@brief Function to enable or disable the button to change the parametters.
@@ -407,30 +478,38 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """!@brief Function to get the current parameters and add them into a dictionnary.
     
     """
-    name = self.paramLayout.itemAt(0, 1).widget().text
-    displayName = self.paramLayout.itemAt(1, 1).widget().text
+    name = self.addParamLayout.itemAt(2, 1).widget().text
+    displayName = self.addParamLayout.itemAt(3, 1).widget().text
 
     if self.addParamType == "shaderiParams" :
-      min_ = int(self.paramLayout.itemAt(2, 1).widget().value)
-      max_ = int(self.paramLayout.itemAt(3, 1).widget().value)
-      default = int(self.paramLayout.itemAt(4, 1).widget().value)
+      min_ = int(self.intFloatLayout.itemAt(0, 1).widget().value)
+      max_ = int(self.intFloatLayout.itemAt(1, 1).widget().value)
+      default = int(self.intFloatLayout.itemAt(3, 1).widget().value)
       newValue = {name : { 'displayName' : displayName, 'min' : min_, 'max' : max_, 'defaultValue' : default }}
     elif self.addParamType == "shaderfParams" :
-      min_ = self.paramLayout.itemAt(2, 1).widget().value
-      max_ = self.paramLayout.itemAt(3, 1).widget().value
-      default = self.paramLayout.itemAt(4, 1).widget().value
+      min_ = self.intFloatLayout.itemAt(0, 1).widget().value
+      max_ = self.intFloatLayout.itemAt(1, 1).widget().value
+      default = self.intFloatLayout.itemAt(2, 1).widget().value
       newValue = {name : { 'displayName' : displayName, 'min' : min_, 'max' : max_, 'defaultValue' : default }}
-    else:
-      x = self.paramLayout.itemAt(5, 1).widget().value
-      y = self.paramLayout.itemAt(6, 1).widget().value
-      z = self.paramLayout.itemAt(7, 1).widget().value
-      w = self.paramLayout.itemAt(8, 1).widget().value
+    elif self.addParamType == "shader4fParams":
+      x = self.pointLayout.itemAt(0, 1).widget().value
+      y = self.pointLayout.itemAt(1, 1).widget().value
+      z = self.pointLayout.itemAt(2, 1).widget().value
+      w = self.pointLayout.itemAt(3, 1).widget().value
       newValue = { name : { 'displayName' : displayName, 'defaultValue' : {'x' : x, 'y' : y, 'z' : z, "w" : w }}}
+    elif self.addParamType == "shaderbParams":
+      value = int(self.booleanLayout.itemAt(0, 1).widget().currentText == 'True')
+      newValue = { name : { 'displayName' : displayName, 'defaultValue' : 0, 'optionalWidgets' : []}}
+    elif self.addParamType == "shaderrParams":
+      min_ = self.rangeLayout.itemAt(0, 1).widget().value
+      max_ = self.rangeLayout.itemAt(1, 1).widget().value
+      newValue = { name : { 'displayName' : displayName, 'defaultValue' : [min_, max_]}}
 
     self.addedMsg.setText("Parameter \"" + displayName +"\" added to shader \""+self.shaderDisplayName+"\".")
     self.modifyDict(self.shaderDisplayName, self.addParamType, newValue)
     self.addedMsg.show()
-    self.resetLayout(self.paramLayout)
+    self.resetLayout(self.intFloatLayout)
+    self.resetLayout(self.pointLayout)
 
   def modifyDict(self, shader, dictType, value):
     """!@brief Function to modify the specified dictionnary in the specified shader.
@@ -1134,6 +1213,8 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     # Import shaders
     for c in self.allClasses:
+      if c.__name__ == 'Template':
+        continue
       __import__('Resources.Shaders.' + str(c.__name__))
     
     # Init shader
