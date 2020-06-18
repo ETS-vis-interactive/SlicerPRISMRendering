@@ -631,7 +631,8 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       elif widgetClassName == "ctkRangeWidget":
         w.valuesChanged.disconnect(self.updateParameterNodeFromGUI)
       elif widgetClassName == "vtkColorTransferFunction" or widgetClassName == "vtkPiecewiseFunction":
-        w.RemoveAllObservers()
+        #w.RemoveAllObservers()
+        pass
       elif widgetClassName == "qMRMLNodeComboBox":
         w.currentNodeChanged.disconnect(self.updateParameterNodeFromGUI)
     
@@ -1166,11 +1167,12 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       self.logic.renderVolume(widget.currentNode(), True)
       volumePropertyNode = self.logic.secondaryVolumeRenderingDisplayNodes[self.logic.currentVolume].GetVolumePropertyNode()
 
-      volumeID = index * self.numberOfTFTypes
+      volumeID = index
+      TFID = volumeID * self.numberOfTFTypes
 
-      for i, tf in enumerate(self.transferFunctionParams[volumeID:volumeID+self.numberOfTFTypes]):
-        j = volumeID + i
-        self.createTransferFunctionWidget(volumePropertyNode, tf, self.transferFunctionParamsName[j], True, volumeID)
+      for i, tf in enumerate(self.transferFunctionParams[TFID:TFID+self.numberOfTFTypes]):
+        j = TFID + i
+        self.createTransferFunctionWidget(volumePropertyNode, tf, self.transferFunctionParamsName[j], True, volumeID  )
       self.updateParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
     elif self.ui.volumeRenderingCheckBox.isChecked():
       self.ui.volumeRenderingCheckBox.setChecked(False)
@@ -1226,7 +1228,8 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         self.logic.volumeRenderingDisplayNode.SetVisibility(False)
         if self.logic.secondaryVolumeRenderingDisplayNodes :
           for i in range(self.logic.numberOfVolumes):
-            self.logic.secondaryVolumeRenderingDisplayNodes[i].SetVisibility(False)
+            if self.logic.secondaryVolumeRenderingDisplayNodes[i] != None:
+              self.logic.secondaryVolumeRenderingDisplayNodes[i].SetVisibility(False)
         self.ui.enableROICheckBox.setChecked(False)
         self.ui.displayROICheckBox.setChecked(False)
         self.ui.enableROICheckBox.hide()
@@ -1276,8 +1279,9 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.UpdateShaderParametersUI()
     self.updateParameterNodeFromGUI(self.ui.customShaderCombo.currentText, self.ui.customShaderCombo)
     self.updateGUIFromParameterNode()
+    
     # If there is no selected shader, disables the buttons.
-    if i == (self.ui.customShaderCombo.count - 1):
+    if i == (self.ui.customShaderCombo.currentText == "None"):
       self.ui.openCustomShaderButton.setEnabled(False)
       self.ui.reloadCurrentCustomShaderButton.setEnabled(False)
       self.ui.duplicateCustomShaderButton.setEnabled(False)
@@ -1299,7 +1303,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     found = False
     # Check if the widget is in the list
     for i, w in enumerate(self.widgets):
-      if w.name == name:
+      if w.name == name and name !="":
         found = True
         index = i
         break
@@ -1314,7 +1318,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """!@brief Updates the shader parameters on the UI.
 
     """
-    ##log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     self.removeGUIObservers()
 
     if self.logic.customShader == None:
@@ -1436,7 +1440,9 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       # If a transfer function is specified, add the widget
       if self.logic.volumeRenderingDisplayNode is None :
         return
+
       self.addTransferFunctions(params, paramNames, 0)
+
     else :
       # Keep the original transfert functions
       volumePropertyNode = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
@@ -1445,8 +1451,8 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       colorTransferFunction.name = "Original" + colorTransferFunction.GetClassName() 
       colorTransferFunction.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = colorTransferFunction : self.updateParameterNodeFromGUI([o,e], w))
       volumePropertyNode.SetColor(colorTransferFunction)
-      self.appendList(colorTransferFunction, colorTransferFunction.name)
 
+      self.appendList(colorTransferFunction, colorTransferFunction.name)
       opacityTransferFunction = vtk.vtkPiecewiseFunction()
       opacityTransferFunction.DeepCopy(self.logic.opacityTransferFunction)
       opacityTransferFunction.name = "Original" + opacityTransferFunction.GetClassName()
@@ -1464,7 +1470,11 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       if len(set(volumes)) != len(params):
         log.error("Multiples volumes defined.")
       self.logic.numberOfVolumes = len(volumes)
-
+    else :
+      if self.logic.secondaryVolumeRenderingDisplayNodes :
+        for i in range(self.logic.numberOfVolumes):
+          if self.logic.secondaryVolumeRenderingDisplayNodes[i] != None:
+            self.logic.secondaryVolumeRenderingDisplayNodes[i].SetVisibility(False)
 
     for i, p in enumerate(paramNames):
       # Check that each volume has only one of each type of transfer functions.      
@@ -1543,7 +1553,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       # IF this is the principal volume
       if volumePrincipal :
         volumePropertyNode = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
-        self.createTransferFunctionWidget(volumePropertyNode, params[p], p, volumeID)
+        self.createTransferFunctionWidget(volumePropertyNode, params[p], p, False, volumeID)
       else : 
         # If this is a secondary volume
         transferFunctionID = volumeID * self.numberOfTFTypes
@@ -1577,7 +1587,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
           if (widget.name == widgetName):
             return i
 
-  def createTransferFunctionWidget(self, volumePropertyNode, params, p, secondTf = False, volumeID = 0) :
+  def createTransferFunctionWidget(self, volumePropertyNode, params, p, secondTf, volumeID) :
     """!@brief Function to create a transfert fuction widget.
 
     @param volumePropertyNode vtkMRMLVolumePropertyNode : Volume property node to be associated to the widget.
@@ -1597,17 +1607,22 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     # Check if the widget for the nth volume already exists
     if secondTf :
       widget = self.secondColorTransferFunctionWidget[volumeID][TFType]
+
       if widget is not None :
         # Remove widget and label
         widget.setParent(None)
-        widget = None
+        self.secondColorTransferFunctionWidget[volumeID][TFType] = None
+        #widget = None
         label = self.ui.centralWidget.findChild(qt.QLabel, self.CSName + transferFunction.GetClassName() + p + "Label")
-        label.setParent(None)
+        if label != None:
+          label.setParent(None)
 
     # Create the widget
     label = qt.QLabel(params['displayName'])
     label.setObjectName(self.CSName + transferFunction.GetClassName() + p + "Label")
+
     widget = ctk.ctkVTKScalarsToColorsWidget()
+    widget.setObjectName(self.CSName + transferFunction.GetClassName() + p + "Widget")
     transferFunction.name = self.CSName + transferFunction.GetClassName() + p
     transferFunction.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = transferFunction : self.updateParameterNodeFromGUI([o,"add widget"], w))
 
@@ -1630,6 +1645,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.appendList(transferFunction, transferFunction.name)
 
     self.ui.customShaderParametersLayout.addRow(label, widget)
+
     if secondTf :
       self.secondColorTransferFunctionWidget[volumeID][TFType] = widget
 

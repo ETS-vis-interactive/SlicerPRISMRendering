@@ -7,30 +7,27 @@ import vtk, qt, ctk, slicer
 #------------------------------------------------------------------------------------
 class ChromaDepthShader(CustomShader):
   shaderrParams = { 'depthRange' : { 'displayName' : 'Depth Range', 'defaultValue' : [0, 1]}}
-  shadertfParams = { 'scalarColorMapping' : { 'displayName' : 'Scalar Color Mapping', 'defaultColors' : [[0, 1, 0, 0, 1, 1], [300, 0, 0, 1, 1, 1]], 'type' : 'color'}, \
+  shadertfParams = { 'scalarColorMapping' : { 'displayName' : 'Scalar Color Mapping', 'defaultColors' : [[0, 1, 0, 0, 0, 0.5], [300, 0, 0, 1, 0, 0.5]], 'type' : 'color'}, \
     'scalarOpacityMapping' : { 'displayName' : 'Scalar Opacity Mapping', 'defaultColors' : [], 'type' : 'scalarOpacity'}}
-  
-  shadervParams = { 'bloodflow' : { 'displayName' : 'Blood Flow', 'defaultVolume' : 1, 'transferFunctions' : \
-  { 'scalarColorMapping2' : { 'displayName' : 'Scalar Color Mapping second', 'defaultColors' : [[0, 0, 1, 0, 0.5, 0.0], [300, 1, 0, 0, 0.5, 0.0]], 'type' : 'color'},\
-   'scalarOpacityMapping2' : { 'displayName' : 'Scalar Opacity Mapping second', 'defaultColors' : [], 'type' : 'scalarOpacity'}}}, \
-     'bloodflow2' : { 'displayName' : 'Blood Flow2', 'defaultVolume' : 2, 'transferFunctions' : \
-  { 'scalarColorMapping3' : { 'displayName' : 'Scalar Color Mapping third', 'defaultColors' : [[0, 0.8, 0.75, 0.8, 0.5, 0.0], [300, 1, 0, 0, 0.5, 0.0]], 'type' : 'color'},\
-   'scalarOpacityMapping3' : { 'displayName' : 'Scalar Opacity Mapping third', 'defaultColors' : [], 'type' : 'scalarOpacity'}}}}
                    
   def __init__(self, shaderPropertyNode):
     CustomShader.__init__(self, shaderPropertyNode)
-    self.shaderrParams['depthRange']['defaultValue'][0] = -1* self.getVolumeRange()
-    self.shaderrParams['depthRange']['defaultValue'][1] = self.getVolumeRange()
+    volumeRange = self.getVolumeRange()
+    if volumeRange :
+      self.shaderrParams['depthRange']['defaultValue'][0] = -1* volumeRange
+      self.shaderrParams['depthRange']['defaultValue'][1] = volumeRange
 
   @classmethod
   def GetDisplayName(cls):
     return 'Chroma Depth Perception'
 
   def getVolumeRange(self):
-    volumeNode = slicer.modules.PRISMWidget.ui.imageSelector.currentNode().GetVolumeDisplayNode().GetVolumeNode()
-    dim = [0, 0, 0]
-    volumeNode.GetImageData().GetDimensions(dim)
-    return math.sqrt(dim[0]**2 + dim[1]**2 + dim[2]**2)/2
+    imageSelectorNode = slicer.modules.PRISMWidget.ui.imageSelector.currentNode()
+    if imageSelectorNode != None :
+      volumeNode = imageSelectorNode.GetVolumeDisplayNode().GetVolumeNode()
+      dim = [0, 0, 0]
+      volumeNode.GetImageData().GetDimensions(dim)
+      return math.sqrt(dim[0]**2 + dim[1]**2 + dim[2]**2)/2
 
   def setupShader(self):
     super(ChromaDepthShader,self).setupShader()

@@ -74,7 +74,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     self.opacityTransferFunction = vtk.vtkPiecewiseFunction()
     self.optionalWidgets = {}
     self.numberOfVolumes = 0
-
+    
   def enableOption(self, paramName, type_, checkBox, CSName) :
     """!@brief Function to add or remove parameters according to the value of the boolean.
 
@@ -459,10 +459,9 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
       self.secondaryVolumeRenderingDisplayNodes[self.currentVolume] = displayNode
     else:
       self.volumeRenderingDisplayNode = displayNode
-    
-    volumePropertyNode = displayNode.GetVolumePropertyNode()
-    self.colorTransferFunction = volumePropertyNode.GetColor() 
-    self.opacityTransferFunction = volumePropertyNode.GetScalarOpacity() 
+      volumePropertyNode = displayNode.GetVolumePropertyNode()
+      self.colorTransferFunction = volumePropertyNode.GetColor() 
+      self.opacityTransferFunction = volumePropertyNode.GetScalarOpacity() 
   
 
   def setCustomShaderType(self, shaderTypeName):
