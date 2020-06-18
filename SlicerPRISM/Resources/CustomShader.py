@@ -43,9 +43,10 @@ class CustomShader():
     for p in self.shaderrParams.keys():
       self.paramrValues[p] = self.shaderrParams[p]['defaultValue']  
     for p in self.shadertfParams.keys():
-      self.paramtfValues[p] = self.shadertfParams[p]['defaultVolume']  
+      self.paramtfValues[p] = self.shadertfParams[p]['defaultColors']  
     for p in self.shadervParams.keys():
-      self.paramvValues[p] = self.shadervParams[p]['defaultValue']  
+      self.paramvValues[p] = self.shadervParams[p]['defaultVolume']  
+    
 
   @classmethod
   def InstanciateCustomShader(cls, shaderDisplayName, shaderPropertyNode):

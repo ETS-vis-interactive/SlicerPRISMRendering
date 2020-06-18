@@ -7,9 +7,15 @@ import vtk, qt, ctk, slicer
 #------------------------------------------------------------------------------------
 class ChromaDepthShader(CustomShader):
   shaderrParams = { 'depthRange' : { 'displayName' : 'Depth Range', 'defaultValue' : [0, 1]}}
-  shadertfParams = { 'scalarColorMapping' : { 'displayName' : 'Scalar Color Mapping', 'defaultVolume' : 0, 'defaultColors' : [[0, 1, 0, 0, 0.5, 0.0], [300, 0, 0, 1, 0.5, 0.0]]}, \
-     'scalarColorMapping2' : { 'displayName' : 'Scalar Color Mapping2', 'defaultVolume' : 1, 'defaultColors' : [[0, 1, 0, 0, 0.5, 0.0], [300, 0, 0, 1, 0.5, 0.0]]}}
-  shadervParams = { 'bloodflow' : { 'displayName' : 'Blood Flow', 'defaultValue' : 0}}
+  shadertfParams = { 'scalarColorMapping' : { 'displayName' : 'Scalar Color Mapping', 'defaultColors' : [[0, 1, 0, 0, 1, 1], [300, 0, 0, 1, 1, 1]], 'type' : 'color'}, \
+    'scalarOpacityMapping' : { 'displayName' : 'Scalar Opacity Mapping', 'defaultColors' : [], 'type' : 'scalarOpacity'}}
+  
+  shadervParams = { 'bloodflow' : { 'displayName' : 'Blood Flow', 'defaultVolume' : 1, 'transferFunctions' : \
+  { 'scalarColorMapping2' : { 'displayName' : 'Scalar Color Mapping second', 'defaultColors' : [[0, 0, 1, 0, 0.5, 0.0], [300, 1, 0, 0, 0.5, 0.0]], 'type' : 'color'},\
+   'scalarOpacityMapping2' : { 'displayName' : 'Scalar Opacity Mapping second', 'defaultColors' : [], 'type' : 'scalarOpacity'}}}, \
+     'bloodflow2' : { 'displayName' : 'Blood Flow2', 'defaultVolume' : 2, 'transferFunctions' : \
+  { 'scalarColorMapping3' : { 'displayName' : 'Scalar Color Mapping third', 'defaultColors' : [[0, 0.8, 0.75, 0.8, 0.5, 0.0], [300, 1, 0, 0, 0.5, 0.0]], 'type' : 'color'},\
+   'scalarOpacityMapping3' : { 'displayName' : 'Scalar Opacity Mapping third', 'defaultColors' : [], 'type' : 'scalarOpacity'}}}}
                    
   def __init__(self, shaderPropertyNode):
     CustomShader.__init__(self, shaderPropertyNode)

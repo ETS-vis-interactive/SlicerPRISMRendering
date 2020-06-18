@@ -46,10 +46,10 @@ class PRISM(ScriptedLoadableModule):
     self.parent.title = "PRISM"
     self.parent.categories = ["Projet"]
     self.parent.dependencies = []
-    self.parent.contributors = ["Simon Drouin"]
+    self.parent.contributors = ["Tiphaine RICHARD"]
     self.parent.helpText = """A scripted module to edit custom volume rendering shaders."""
     self.parent.helpText += self.getDefaultModuleDocumentationLink()
-    self.parent.acknowledgementText ="""This file was developped by Simon Drouin at Ecole de Technologie Superieure (Montreal, Canada)"""
+    self.parent.acknowledgementText ="""This file was developped by Tiphaine RICHARD at Ecole de Technologie Superieure (Montreal, Canada)"""
 
 
 """!@class PRISMWidget
@@ -62,7 +62,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """!@brief Function to setup the class.
 
     """   
-    log.info(get_function_name()+ str(get_function_parameters_and_values()))
+    #log.info(get_function_name()+ str(get_function_parameters_and_values()))
     ScriptedLoadableModuleWidget.setup(self)
 
     ## Logic of module
@@ -127,8 +127,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     # Modification and Creation of Custom Shader Area
     #
 
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    with open(dir_path+'/shaderTags.json', 'r') as f:
+    with open(self.resourcePath('shaderTags.json'), 'r') as f:
       data = json.load(f)
 
     allShaderDecTags = data['allShaderDecTags']    
@@ -243,13 +242,22 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.currYAngle = 0.0   
     ## Current z angle of the ROI
     self.currZAngle = 0.0
-    ## Widget containing the transfer function of the second volume
-    self.secondColorTransferFunctionWidget = None
+    ## Widget containing the transfer functions of the secondary volumes
+    self.secondColorTransferFunctionWidget = {volumeID : {'color': None, 'scalarOpacity': None } for volumeID in range(20) } 
     ## All widgets of the UI that will be saved
     self.widgets = list(self.ui.centralWidget.findChildren(qt.QCheckBox())  \
     + self.ui.centralWidget.findChildren(qt.QPushButton()) \
     + self.ui.centralWidget.findChildren(qt.QComboBox()) \
     + self.ui.centralWidget.findChildren(slicer.qMRMLNodeComboBox()))
+
+    ## Transfer function with its parameters
+    self.transferFunctionParams = []
+
+    ## Number of transfer function types
+    self.numberOfTFTypes = 2
+
+    ## Transfer function name
+    self.transferFunctionParamsName = []
 
     # Set parameter node
     self.setAndObserveParameterNode()
@@ -453,18 +461,8 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     fin.write(data)
     fin.close()
 
-  def cleanup(self):
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
-    """!@brief Function to clean up the scene.
-
-    """
-    self.removeGUIObservers()
-
-    if self.logic.parameterNode and self.logic.parameterNodeObserver:
-      slicer.mrmlScene.RemoveObserver(self.logic.parameterNodeObserver)
-  
   def setAndObserveParameterNode(self, caller=None, event=None):
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     """!@brief Function to set the parameter node.
 
     """
@@ -505,7 +503,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param caller Caller of the function.
     @param event Event that triggered the function.
     """   
-    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    ##log.info(get_function_name()  + str(get_function_parameters_and_values()))
     if not self.logic.parameterNode:
       return
     parameterNode = self.logic.parameterNode
@@ -521,37 +519,26 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         if widgetClassName=="QPushButton":
           enabled = (int(value) != 0)
           w.setEnabled(enabled)
-
         elif widgetClassName=="QCheckBox":
           checked = (int(value) != 0)
           w.setChecked(checked)
-
-        elif widgetClassName=="QComboBox" or widgetClassName == "ctkComboBox":
+        elif widgetClassName=="QComboBox":
           index = int(value)
           w.setCurrentIndex(index)
-
         elif widgetClassName=="ctkSliderWidget":
           value = float(value)
           w.setValue(value)
-
         elif widgetClassName=="ctkRangeWidget":
           values = value.split(',')     
           w.minimumValue = float(values[0])
           w.maximumValue = float(values[1])
-
-        elif widgetClassName == "ctkVTKScalarsToColorsWidget" or widgetClassName == "vtkColorTransferFunction":
-          if widgetClassName == "vtkColorTransferFunction" :
-            transferFunction = w
-          else :
-            transferFunction = w.view().colorTransferFunctionPlots()[0].GetColorTransferFunction()
-          for i in range(transferFunction.GetSize()):
+        elif widgetClassName == "vtkColorTransferFunction" or widgetClassName == "vtkPiecewiseFunction":
+          for i in range(w.GetSize()):
             values = self.logic.parameterNode.GetParameter(w.name+str(i))
-            transferFunction.SetNodeValue(i, [int(float(k)) for k in values.split(",")])
-
-        elif widgetClassName == "qMRMLNodeComboBox":
-          oldBlockSignalsState = w.blockSignals(True)
-          w.setCurrentNodeID(parameterNode.GetNodeReferenceID(w.name))
-          w.blockSignals(oldBlockSignalsState)
+            if values != "" :
+              w.SetNodeValue(i, [int(float(k)) for k in values.split(",")])
+      elif widgetClassName == "qMRMLNodeComboBox":
+        w.setCurrentNodeID(parameterNode.GetNodeReferenceID(w.name))
 
     self.addGUIObservers()
 
@@ -561,39 +548,34 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param value float : Value of the widget. 
     @param w QObject : Widget being modified. 
     """   
-    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    ##log.info(get_function_name()  + str(get_function_parameters_and_values()))
     parameterNode = self.logic.parameterNode
     oldModifiedState = parameterNode.StartModify()
 
     if self.ui.imageSelector.currentNode() is None:
       return 
-    
+
     widgetClassName = self.getClassName(w)
     if widgetClassName=="QPushButton" :
       parameterNode.SetParameter(w.name, "1") if w.enabled else parameterNode.SetParameter(w.name, "0")
     elif widgetClassName == "QCheckBox":
       parameterNode.SetParameter(w.name, "1") if w.checked else parameterNode.SetParameter(w.name, "0")
-    elif widgetClassName == "QComboBox" or widgetClassName == "ctkComboBox" :
+    elif widgetClassName == "QComboBox":
       parameterNode.SetParameter(w.name, str(w.currentIndex))
     elif widgetClassName == "ctkSliderWidget":
       parameterNode.SetParameter(w.name, str(w.value))
     elif widgetClassName == "ctkRangeWidget":
       parameterNode.SetParameter(w.name, str(w.minimumValue) + ',' + str(w.maximumValue))
-    elif widgetClassName == "ctkVTKScalarsToColorsWidget" or widgetClassName == "vtkColorTransferFunction":
-      if widgetClassName == "vtkColorTransferFunction" :
-        transferFunction = w
-      else :
-        try :
-          transferFunction = w.view().colorTransferFunctionPlots()[0].GetColorTransferFunction()
-        except :
-          return
-
+    elif widgetClassName == "vtkColorTransferFunction" or widgetClassName == "vtkPiecewiseFunction":
       parameterNode.SetParameter(w.name, "transferFunction")
-      nbPoints = transferFunction.GetSize()
-      values = [0,0,0,0,0,0]
+      nbPoints = w.GetSize()
+      if widgetClassName == "vtkColorTransferFunction" :
+        values = [0,0,0,0,0,0]
+      else :
+        values = [0,0,0,0]
       if nbPoints > 0:
         for i in range(nbPoints):
-          transferFunction.GetNodeValue(i, values)
+          w.GetNodeValue(i, values)
           parameterNode.SetParameter(w.name+str(i), ",".join("{0}".format(n) for n in values))
 
         # If points are deleted, remove them from the parameter node
@@ -612,7 +594,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """!@brief Function to add observers to the GUI's widgets.
 
     """   
-    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    ##log.info(get_function_name()  + str(get_function_parameters_and_values()))
     for w in self.widgets:
       widgetClassName = self.getClassName(w)
       if widgetClassName=="QPushButton" :
@@ -625,19 +607,17 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         w.valueChanged.connect(lambda value, w = w : self.updateParameterNodeFromGUI(value, w))
       elif widgetClassName == "ctkRangeWidget":
         w.valuesChanged.connect(lambda value1, value2, w = w : self.updateParameterNodeFromGUI([value2, value2], w))
-      elif widgetClassName == "vtkColorTransferFunction" :
-        w.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = w : self.updateParameterNodeFromGUI([o,e], w))
-      elif widgetClassName == "ctkVTKScalarsToColorsWidget":
-        transferFunction = w.view().colorTransferFunctionPlots()[0].GetColorTransferFunction()
-        transferFunction.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = transferFunction : self.updateParameterNodeFromGUI([o,e], w))
+      elif widgetClassName == "vtkColorTransferFunction" or widgetClassName == "vtkPiecewiseFunction":
+        w.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = w : self.updateParameterNodeFromGUI([o,"add observers"], w))
       elif widgetClassName == "qMRMLNodeComboBox":
-        w.connect("currentNodeIDChanged(Qstr)", lambda value, w = w : self.updateParameterNodeFromGUI(value, w))
+        w.currentNodeChanged.connect(lambda value, w = w : self.updateParameterNodeFromGUI(value, w))
 
   def removeGUIObservers(self):
     """!@brief Function to remove observers from the GUI's widgets.
     
     """  
-    #log.info(get_function_name()  + str(get_function_parameters_and_values())) 
+
+    ##log.info(get_function_name()  + str(get_function_parameters_and_values())) 
     for w in self.widgets:
       widgetClassName = self.getClassName(w)
       if widgetClassName=="QPushButton" :
@@ -650,13 +630,10 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         w.valueChanged.disconnect(self.updateParameterNodeFromGUI)
       elif widgetClassName == "ctkRangeWidget":
         w.valuesChanged.disconnect(self.updateParameterNodeFromGUI)
-      elif widgetClassName == "vtkColorTransferFunction" :
-        w.RemoveObserver(vtk.vtkCommand.ModifiedEvent)
-      elif widgetClassName == "ctkVTKScalarsToColorsWidget" :
-        transferFunction = w.view().colorTransferFunctionPlots()[0].GetColorTransferFunction()
-        transferFunction.RemoveObserver(vtk.vtkCommand.ModifiedEvent)
+      elif widgetClassName == "vtkColorTransferFunction" or widgetClassName == "vtkPiecewiseFunction":
+        w.RemoveAllObservers()
       elif widgetClassName == "qMRMLNodeComboBox":
-        w.disconnect("currentNodeIDChanged(Qstr)", self.updateParameterNodeFromGUI)
+        w.currentNodeChanged.disconnect(self.updateParameterNodeFromGUI)
     
   def onParameterNodeModified(self, observer, eventid):
     """!@brief Function to update the parameter node.
@@ -665,7 +642,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         observer {[type]}  [description]
         eventid {[type]}  [description]
     """   
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     self.updateGUIFromParameterNode()
 
   def getText(self):
@@ -673,7 +650,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     @return str File name.
     """   
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     text = qt.QInputDialog.getText(qt.QMainWindow(), "Duplicate file name","Enter file name:", qt.QLineEdit.Normal, "")
     if text != '':
       return text
@@ -682,7 +659,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """!@brief Function to duplicate custom shader file.
 
     """   
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     duplicateShaderFileName = self.getText()
     copiedShaderFileName = str(CustomShader.GetClassName(self.ui.customShaderCombo.currentText).__name__ + ".py")
 
@@ -706,7 +683,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param caller Caller of the function.
     @param event Event that triggered the function.
     """   
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     shaderPath = self.getPath(CustomShader.GetClassName(self.ui.customShaderCombo.currentText).__name__)
     qt.QDesktopServices.openUrl(qt.QUrl("file:///"+shaderPath, qt.QUrl.TolerantMode))
 
@@ -717,7 +694,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param caller Caller of the function.
     @param event Event that triggered the function.
     """   
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     if self.ui.enableRotationCheckBox.isChecked():
       self.transformDisplayNode.SetEditorRotationEnabled(True)
@@ -732,7 +709,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param caller Caller of the function.
     @param event Event that triggered the function.
     """   
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     if self.ui.enableScalingCheckBox.isChecked():
       self.transformDisplayNode.SetEditorScalingEnabled(True)
@@ -747,7 +724,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param caller Caller of the function.
     @param event Event that triggered the function.
     """   
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     if self.ui.enableROICheckBox.isChecked():
       self.logic.volumeRenderingDisplayNode.SetCroppingEnabled(True)
@@ -764,7 +741,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param caller Caller of the function.
     @param event Event that triggered the function.
     """   
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     if self.ui.displayROICheckBox.isChecked():
       self.transformDisplayNode.EditorVisibilityOn()
@@ -784,7 +761,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param caller Caller of the function.
     @param event Event that triggered the function.
     """   
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     ## Current shader display name
     currentShader = self.ui.customShaderCombo.currentText
@@ -823,11 +800,8 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     globals()[submoduleName] = clsmembers[0][1]
 
     # Reset customShader
-    # Reset UI
     self.logic.setupCustomShader()
-    self.UpdateShaderParametersUI()    
     
-    self.cleanup()
 
   def onModifyCustomShaderButtonClicked(self, caller=None, event=None):
     """!@brief Function to add the new shader replacement to a file.
@@ -837,7 +811,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param event Event that triggered the function.
     """
 
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     ## Type of the choosen shader tag
     shaderTagType = self.allShaderTagTypes.get(self.modifiedShaderTagType, "")
@@ -890,7 +864,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     @return Path of the shader.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     ## Class of the specified shader.
     class_ = CustomShader.GetClass(name)
@@ -908,7 +882,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param caller Caller of the function.
     @param event Event that triggered the function.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     ## Type of the selected shader tag
     shaderTagType = self.allShaderTagTypes.get(self.modifiedShaderTagType, "")
@@ -948,7 +922,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param comboBox QComboBox : ComboBox to be modified.
     @param func func : [Connect function when the ComboBox index is changed.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     
     comboBox.clear()  
     for e in tab:
@@ -962,7 +936,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     @param value list : current value of the comboBox.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     ## Display name of the shader.
     self.modifiedShader = self.ui.modifyCustomShaderCombo.currentText
@@ -988,7 +962,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     @param value list : current value of the comboBox.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     ## Type of the shader tag being modified
     self.modifiedShaderTagType = self.ui.shaderTagsTypeCombo.currentText
     self.ui.shaderTagsCombo.show()
@@ -1003,7 +977,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     @param value list : current value of the comboBox.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     ## Type of the shader tag being modified
     self.modifiedShaderTag = self.ui.shaderTagsCombo.currentText
     self.ui.shaderModificationsLabel.show()
@@ -1017,7 +991,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     @return bool Returns False when an error occurs.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     ## Name of the class that will be created (entered by user)
     self.className = self.ui.newCustomShaderNameInput.text
@@ -1056,7 +1030,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """!@brief Function to create a new file with the custom shader and open the file in editor.
 
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     ## Name of the class that will be created
     new_file_name = self.className
@@ -1072,7 +1046,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """!@brief Function to activate or deactivate the button to modify a custom shader.
 
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     self.ui.modifyCustomShaderButton.enabled = len(self.ui.shaderModifications.document().toPlainText()) > 0
 
@@ -1080,7 +1054,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """!@brief Function to activate or deactivate the button to create a custom shader.
 
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     self.ui.createCustomShaderButton.enabled = len(self.ui.newCustomShaderNameInput.text) > 0 and len(self.ui.newCustomShaderDisplayInput.text) > 0
     self.ui.errorMsg.hide()
@@ -1094,7 +1068,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     @return str Path of the newly created file.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     ## Path of the current file
     file_path = os.path.realpath(__file__)
     file_dir, filename = os.path.split(file_path)
@@ -1125,7 +1099,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param className str : Name of the class being modified.
     @paramdisplayName str : Display name of the class being modified.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     import os, sys
     import re
@@ -1155,7 +1129,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """!@brief Function to initialize the all user interface based on current scene.
 
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     # Import shaders
     for c in self.allClasses:
@@ -1165,6 +1139,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     if self.ui.volumeRenderingCheckBox.isChecked() and self.ui.imageSelector.currentNode():
       self.logic.renderVolume(self.ui.imageSelector.currentNode())
       self.ui.imageSelector.currentNodeChanged.connect(lambda value, w = self.ui.imageSelector : self.onImageSelectorChanged(value, w))
+      self.ui.imageSelector.currentNodeChanged.connect(lambda value, w = self.ui.imageSelector : self.updateParameterNodeFromGUI(value, w))
       self.ui.imageSelector.nodeAdded.disconnect()
       self.UpdateShaderParametersUI()    
 
@@ -1172,28 +1147,35 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
   # Data callbacks
   #
 
-  def onImageSelectorChanged(self, node, widget):
+  def onImageSelectorChanged(self, node, widget, index=0):
     """!@brief Callback function when the volume node has been changed in the dedicated combobox.
     Setup slice nodes to display selected node and render it in the 3d view.
 
     @param node vtkMRMLVolumeNode : Volume node selected in the scene.
     @param widget QObject : Widget modified.
+    @param index int : Index of the widget being modified.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     
     if not node:
       return
     
     # If the selector is a parameter of a shader
     if widget != self.ui.imageSelector :
+      self.logic.currentVolume = index
       self.logic.renderVolume(widget.currentNode(), True)
-      volumePropertyNode = self.logic.secondVolumeRenderingDisplayNode.GetVolumePropertyNode()
-      self.createColorTransferFunctionWidget(volumePropertyNode, self.colorTransferFunctionParams, self.colorTransferFunctionParamName, True)
+      volumePropertyNode = self.logic.secondaryVolumeRenderingDisplayNodes[self.logic.currentVolume].GetVolumePropertyNode()
 
+      volumeID = index * self.numberOfTFTypes
+
+      for i, tf in enumerate(self.transferFunctionParams[volumeID:volumeID+self.numberOfTFTypes]):
+        j = volumeID + i
+        self.createTransferFunctionWidget(volumePropertyNode, tf, self.transferFunctionParamsName[j], True, volumeID)
+      self.updateParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
     elif self.ui.volumeRenderingCheckBox.isChecked():
       self.ui.volumeRenderingCheckBox.setChecked(False)
       self.ui.customShaderCombo.currentIndex = self.ui.customShaderCombo.count -1 
-  #
+  #s
   # View setup callbacks
   #
 
@@ -1204,7 +1186,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param caller Caller of the function.
     @param event Event that triggered the function.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     if self.ui.volumeRenderingCheckBox.isChecked():
       if self.ui.imageSelector.currentNode():
@@ -1242,8 +1224,9 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     else:
       if self.logic.volumeRenderingDisplayNode:
         self.logic.volumeRenderingDisplayNode.SetVisibility(False)
-        if self.logic.secondVolumeRenderingDisplayNode:
-          self.logic.secondVolumeRenderingDisplayNode.SetVisibility(False)
+        if self.logic.secondaryVolumeRenderingDisplayNodes :
+          for i in range(self.logic.numberOfVolumes):
+            self.logic.secondaryVolumeRenderingDisplayNodes[i].SetVisibility(False)
         self.ui.enableROICheckBox.setChecked(False)
         self.ui.displayROICheckBox.setChecked(False)
         self.ui.enableROICheckBox.hide()
@@ -1254,7 +1237,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """!@brief Function to reset the ROI in the scene.
 
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     ## Node of the roi
     ROINode = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLAnnotationROINode','AnnotationROI')
@@ -1271,7 +1254,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param caller Caller of the function.
     @param event Event that triggered the function.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     if self.displayControlsCheckBox.isChecked():
       self.logic.vrhelper.showVRControls()
@@ -1287,7 +1270,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     @param i int : Index of the element.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     self.logic.setCustomShaderType(self.ui.customShaderCombo.currentText)
     self.UpdateShaderParametersUI()
@@ -1310,16 +1293,19 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param widget QObject : Widget to be added to the list.
     @param name str : Name of the widget.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
    
     ## Widget is in the list or not
     found = False
     # Check if the widget is in the list
     for i, w in enumerate(self.widgets):
-      found = w.name == name 
+      if w.name == name:
+        found = True
+        index = i
+        break
       
     if found :
-      self.widgets[i] = widget
+      self.widgets[index] = widget
     else:
       self.widgets.append(widget)
 
@@ -1328,11 +1314,11 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """!@brief Updates the shader parameters on the UI.
 
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    ##log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    self.removeGUIObservers()
 
-    if not self.logic.customShader:
+    if self.logic.customShader == None:
       return
-
 
     # Clear all the widgets except the combobox selector
     while self.ui.customShaderParametersLayout.count() != 1:
@@ -1341,7 +1327,6 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       if item != None:
         widget = item.widget()
         if widget != None:
-          state = widget.blockSignals(True)
           widget.setParent(None)
     try :
       self.logic.endPoints.RemoveAllMarkups()
@@ -1434,47 +1419,56 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       self.ui.customShaderParametersLayout.addRow(label, slider)
 
       self.appendList(slider, self.CSName+p)
-    
 
-    ## Transfer function parameters
+    ## Transfer function of the first volume
     params = self.logic.customShader.shadertfParams
     paramNames = params.keys()
-    if params:
+    if len(params) > self.numberOfTFTypes:
+      log.error("Too many transfer function have been defined.")
+    
+
+    TFTypes = [params[p]['type'] for p in paramNames]
+    # Check that each volume has only one of each type of transfer functions.
+    if len(TFTypes) != len(set(TFTypes)) and len(TFTypes) > self.numberOfTFTypes:
+      log.error("One transfer function has been assigned multiple times to the same volume2.")
+    
+    if paramNames:
+      # If a transfer function is specified, add the widget
       if self.logic.volumeRenderingDisplayNode is None :
         return
-
-      # Verify if the volume has only one transfert function defined.
-      volumes = [params[p]['defaultVolume'] for p in paramNames]
-      if len(volumes) != len(set(volumes)) :
-        log.error("Multiples transfert functions associated to one volume.")
-
-      for p in paramNames:
-        if params[p]['defaultVolume'] == 0 :
-          volumePropertyNode = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
-        else : 
-          if self.logic.secondVolumeRenderingDisplayNode is not None: 
-            volumePropertyNode = self.logic.secondVolumeRenderingDisplayNode.GetVolumePropertyNode()
-          else :
-            self.colorTransferFunctionParams = params[p]
-            ## Name of the transfer function
-            self.colorTransferFunctionParamName = p
-            continue        
-        
-        self.createColorTransferFunctionWidget(volumePropertyNode, params[p], p)
+      self.addTransferFunctions(params, paramNames, 0)
     else :
-      # Keep the original transfert function
+      # Keep the original transfert functions
       volumePropertyNode = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
-      transferFunction = vtk.vtkColorTransferFunction()
-      transferFunction.DeepCopy(self.logic.transferFunction)
-      transferFunction.name = self.CSName + transferFunction.GetClassName()
-      transferFunction.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = transferFunction : self.updateParameterNodeFromGUI([o,e], w))
-      volumePropertyNode.SetColor(transferFunction)
-      self.appendList(transferFunction, self.CSName+transferFunction.name)
+      colorTransferFunction = vtk.vtkColorTransferFunction()
+      colorTransferFunction.DeepCopy(self.logic.colorTransferFunction)
+      colorTransferFunction.name = "Original" + colorTransferFunction.GetClassName() 
+      colorTransferFunction.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = colorTransferFunction : self.updateParameterNodeFromGUI([o,e], w))
+      volumePropertyNode.SetColor(colorTransferFunction)
+      self.appendList(colorTransferFunction, colorTransferFunction.name)
+
+      opacityTransferFunction = vtk.vtkPiecewiseFunction()
+      opacityTransferFunction.DeepCopy(self.logic.opacityTransferFunction)
+      opacityTransferFunction.name = "Original" + opacityTransferFunction.GetClassName()
+      opacityTransferFunction.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = opacityTransferFunction : self.updateParameterNodeFromGUI([o,e], w))
+      volumePropertyNode.SetScalarOpacity(opacityTransferFunction)
+      self.appendList(opacityTransferFunction, colorTransferFunction.name)
 
     ## Volumes parameters
     params = self.logic.customShader.shadervParams
     paramNames = params.keys()
-    for p in paramNames:
+
+    if params :
+      # Check that each volume is used only once
+      volumes = [params[p]['defaultVolume'] for p in paramNames]
+      if len(set(volumes)) != len(params):
+        log.error("Multiples volumes defined.")
+      self.logic.numberOfVolumes = len(volumes)
+
+
+    for i, p in enumerate(paramNames):
+      # Check that each volume has only one of each type of transfer functions.      
+
       label = qt.QLabel(params[p]['displayName'])
       imageSelector = slicer.qMRMLNodeComboBox()
       imageSelector.setMRMLScene( slicer.mrmlScene )
@@ -1489,9 +1483,17 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       imageSelector.setCurrentNode(None)
       self.appendList(imageSelector, self.CSName+p)
       self.ui.customShaderParametersLayout.addRow(label, imageSelector)
-      imageSelector.currentNodeChanged.connect(lambda value, w = imageSelector : self.onImageSelectorChanged(value, w))
       imageSelector.currentNodeChanged.connect(lambda value, w = imageSelector : self.updateParameterNodeFromGUI(value, w))
-  
+      imageSelector.currentNodeChanged.connect(lambda value, w = imageSelector, index = i : self.onImageSelectorChanged(value, w, index))
+      
+      if params[p]['transferFunctions'] != {} :
+        tfParams = params[p]['transferFunctions']
+        tfParamNames = tfParams.keys()
+        TFTypes = [tfParams[p]['type'] for p in tfParamNames]
+        if len(TFTypes) != len(set(TFTypes)) or len(TFTypes) > self.numberOfTFTypes:
+          log.error("One transfer function has been assigned multiple times to the same volume.")
+        self.addTransferFunctions(params[p]['transferFunctions'], params[p]['transferFunctions'].keys(), params[p]['defaultVolume'])
+
     ## Boolean parameters
     params = self.logic.customShader.shaderbParams
     paramNames = params.keys()
@@ -1518,7 +1520,47 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
           else :
             self.logic.optionalWidgets[self.CSName+p] = [widget]
           self.logic.optionalWidgets[self.CSName+p] += [label]
-    
+    self.addGUIObservers()
+
+  def addTransferFunctions(self, params, paramNames, volumeID):
+
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    """!@brief Function to add transfer function widgets to the ui.
+
+    @param params params : Dictionnary of transfert functions.
+    @param params paramNames : Name of the transfert functions.
+    @param params volumeID : ID of the volume.
+
+    @return Null if error.
+    """
+    if volumeID == 0:
+      volumePrincipal = True
+    else :
+      volumePrincipal = False
+      #minus one because the array of TF starts at 0
+      volumeID -=1
+    for i, p in enumerate(paramNames):
+      # IF this is the principal volume
+      if volumePrincipal :
+        volumePropertyNode = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
+        self.createTransferFunctionWidget(volumePropertyNode, params[p], p, volumeID)
+      else : 
+        # If this is a secondary volume
+        transferFunctionID = volumeID * self.numberOfTFTypes
+        # If the volume of the transfer function is already rendered create the widget
+        if self.logic.secondaryVolumeRenderingDisplayNodes[volumeID] is not None: 
+          volumePropertyNode = self.logic.secondaryVolumeRenderingDisplayNodes[volumeID].GetVolumePropertyNode()
+          self.createTransferFunctionWidget(volumePropertyNode, params[p], p, True, volumeID)
+        else :
+          # Add the transfer functions to a list, so when the volume is rendered the widgets can be created
+          if len(self.transferFunctionParams) <= transferFunctionID + i:
+            self.transferFunctionParams.append(params[p])
+            self.transferFunctionParamsName.append(p)
+          else :
+            self.transferFunctionParams[transferFunctionID + i] = params[p]
+            ## Name of the transfer function
+            self.transferFunctionParamsName[transferFunctionID + i] = p
+
   def getWidgetPosition(self, layout, widgetName):
     """!@brief Function to get the widget's position in a layout.
 
@@ -1535,27 +1577,42 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
           if (widget.name == widgetName):
             return i
 
-  def createColorTransferFunctionWidget(self, volumePropertyNode, params, p, secondTf = False) :
+  def createTransferFunctionWidget(self, volumePropertyNode, params, p, secondTf = False, volumeID = 0) :
     """!@brief Function to create a transfert fuction widget.
 
     @param volumePropertyNode vtkMRMLVolumePropertyNode : Volume property node to be associated to the widget.
     @param param dict : Parameters to add to the widget.
     @param p str : Parameter's name.
+    @param TFType str : Type of the transfer function, can be 'color', 'scalarOpacity'.
+    @param params volumeID : ID of the volume.
     """
+    ##log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    TFType = params['type']
     ## Transfer function of the volume
-    transferFunction = volumePropertyNode.GetColor()
-    # Check if the widget for the second volume already exists and replace the transfert function
-    if self.secondColorTransferFunctionWidget is not None :
-      self.secondColorTransferFunctionWidget.view().addColorTransferFunction(transferFunction)
-      return
+    if TFType == 'color':
+      transferFunction = volumePropertyNode.GetColor()
+    elif TFType == 'scalarOpacity':
+      transferFunction = volumePropertyNode.GetScalarOpacity()
+    
+    # Check if the widget for the nth volume already exists
+    if secondTf :
+      widget = self.secondColorTransferFunctionWidget[volumeID][TFType]
+      if widget is not None :
+        # Remove widget and label
+        widget.setParent(None)
+        widget = None
+        label = self.ui.centralWidget.findChild(qt.QLabel, self.CSName + transferFunction.GetClassName() + p + "Label")
+        label.setParent(None)
 
+    # Create the widget
     label = qt.QLabel(params['displayName'])
+    label.setObjectName(self.CSName + transferFunction.GetClassName() + p + "Label")
     widget = ctk.ctkVTKScalarsToColorsWidget()
-    widget.setObjectName(self.CSName+p)
-    transferFunction.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = widget : self.updateParameterNodeFromGUI([o,e], w))
+    transferFunction.name = self.CSName + transferFunction.GetClassName() + p
+    transferFunction.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = transferFunction : self.updateParameterNodeFromGUI([o,"add widget"], w))
 
     # Change the points to the ones specified in the shader
-    if 'defaultColors' in params:
+    if params['defaultColors'] != [] :
       colors = params['defaultColors']
       nbColors = len(colors)
       transferFunction.RemoveAllPoints()
@@ -1563,22 +1620,25 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       for i in range(nbColors):
         transferFunction.SetNodeValue(i, colors[i])  
 
-    widget.view().addColorTransferFunction(transferFunction)
+    if TFType == 'color':
+      widget.view().addColorTransferFunction(transferFunction)
+    elif TFType == 'scalarOpacity':
+      widget.view().addOpacityFunction(transferFunction)
+    
     widget.view().setAxesToChartBounds()
     widget.setFixedHeight(100)
+    self.appendList(transferFunction, transferFunction.name)
 
-    self.appendList(widget, self.CSName+p)
     self.ui.customShaderParametersLayout.addRow(label, widget)
-
     if secondTf :
-      self.secondColorTransferFunctionWidget = widget
+      self.secondColorTransferFunctionWidget[volumeID][TFType] = widget
 
   def prismPath(self) :
     """!@brief Function to get the module's path.
 
     @return str Module's path.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     return os.path.dirname(eval('slicer.modules.prism.path'))
 
@@ -1586,7 +1646,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """!@brief Reload the modules.
 
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    ##log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     log.debug("Reloading Packages")
     packageName='Resources'
@@ -1621,16 +1681,22 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       with open(path, "rt") as fp:
         imp.load_module(packageName, fp, self.prismPath(), ('.py', 'rt', imp.PY_SOURCE))
 
-    self.cleanup()
-
     globals()['PRISM'] = slicer.util.reloadScriptedModule('PRISM')
 
 
   def cleanup(self):
+    """!@brief Function to clean up the scene.
+
+    """
+    ##log.info(get_function_name()  + str(get_function_parameters_and_values()))
+
+    self.removeGUIObservers()
+    if self.logic.parameterNode and self.logic.parameterNodeObserver:
+      slicer.mrmlScene.RemoveObserver(self.logic.parameterNodeObserver)
+    
     self.resetROI()
     self.ui.enableROICheckBox.setChecked(False)
     self.ui.displayROICheckBox.setChecked(False)
-    self.removeGUIObservers()
     try :
       slicer.mrmlScene.RemoveNode(self.transformNode)
       slicer.mrmlScene.RemoveNode(self.transformDisplayNode)
