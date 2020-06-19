@@ -167,60 +167,11 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.ui.newCustomShaderDisplayInput.textChanged.connect(self.onSelect)
     self.ui.createCustomShaderButton.clicked.connect(self.onNewCustomShaderButtonClicked)
     self.ui.editSourceButton.connect('clicked()', self.onEditSourceButtonClicked)
-    
-    ## Combobox to select the type of parameter to add to the shader
-    self.addParamCombo = qt.QComboBox()
-    ## Input to enter the name of the parameter to add to the shader
-    self.addNameInput = qt.QLineEdit()
-    ## Input to enter the display name of the shader
-    self.addDisplayNameInput = qt.QLineEdit()
 
-    ## Minimum value of the parameter
-    self.addMinValueInput = qt.QDoubleSpinBox()
-    ## Maximum value of the parameter
-    self.addMaxValueInput = qt.QDoubleSpinBox()
-    ## Default value of the parameter
-    self.addDefaultValueInput = qt.QDoubleSpinBox()
 
-    ## x value of the parameter
-    self.addXInput = qt.QDoubleSpinBox()
-    ## y value of the parameter
-    self.addYInput = qt.QDoubleSpinBox()
-    ## z value of the parameter
-    self.addZInput = qt.QDoubleSpinBox()
-    ## w value of the parameter
-    self.addWInput = qt.QDoubleSpinBox()
-
-    ## Boolean value of the parameter
-    self.addBoolean = qt.QComboBox()
-    
-    ## Min range value of the parameter
-    self.addRangeMinValueInput = qt.QDoubleSpinBox()
-    ## Max ange value of the parameter
-    self.addRangeMaxValueInput = qt.QDoubleSpinBox()
-    ## Button to add the parameter to the shader
-    self.addParamButton = qt.QPushButton("Add parameter")
-    ## Message to inform the user of the status of the current action
-    self.addedMsg = qt.QLabel()
-    ## Layout containing the combobox and message
-    self.addParamLayout = qt.QFormLayout()
-    ## Layout containing the parameters
-    self.paramLayout = qt.QVBoxLayout()
-
-    self.defaultLayout = qt.QFormLayout()
-    self.intFloatLayout = qt.QFormLayout()
-    self.pointLayout = qt.QFormLayout()
-    self.booleanLayout = qt.QFormLayout()
-    self.rangeLayout = qt.QFormLayout()
-    
     ## Display name of the shader
     self.shaderDisplayName = ""
     self.createParametersLayout()
-
-    self.ui.emptyText.hide()
-    self.ui.paramLayout.addLayout(self.addParamLayout, 0, 0)
-    self.ui.paramLayout.addLayout(self.paramLayout, 1, 0)
-    self.addParamCombo.show()
 
     
     """
@@ -293,107 +244,131 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """!@brief Function to create the parameters layout to enable adding new parameters to a file.
 
     """
-    self.addParamCombo.addItem("Select type")
-    self.addParamCombo.addItem("Integer")
-    self.addParamCombo.addItem("Float")
-    self.addParamCombo.addItem("Point")
-    self.addParamCombo.addItem("Boolean")
-    self.addParamCombo.addItem("Range")
-    self.addParamCombo.addItem("Transfer Function")
-    self.addParamCombo.addItem("Volume")
-
-    self.addParamCombo.setCurrentIndex(0)
-    self.addParamCombo.activated.connect(self.onAddParamComboIndexChanged)
-    self.addParamCombo.hide()
-
-    self.addNameInput.textChanged.connect(self.addParamButtonState)
-
-    self.addDisplayNameInput.textChanged.connect(self.addParamButtonState)
+    self.ui.addParamCombo.activated.connect(self.onAddParamComboIndexChanged)
+    self.ui.addNameInput.textChanged.connect(self.addParamButtonState)
+    self.ui.addDisplayNameInput.textChanged.connect(self.addParamButtonState)
 
     # Values of the parameter if int or float
-    self.addMinValueInput.setRange(-1000, 1000)
-    self.addMinValueInput.valueChanged.connect(self.addParamButtonState)
-    self.addMaxValueInput.setRange(-1000, 1000)
-    self.addMaxValueInput.valueChanged.connect(self.addParamButtonState)
-    self.addDefaultValueInput.valueChanged.connect(self.addParamButtonState)
-    self.addDefaultValueInput.setRange(-1000, 1000)
+    self.ui.addMinValueInput.valueChanged.connect(self.addParamButtonState)
+    self.ui.addMaxValueInput.valueChanged.connect(self.addParamButtonState)
+    self.ui.addDefaultValueInput.valueChanged.connect(self.addParamButtonState)
 
     # Values of the parameter if point
-    self.addXInput.setRange(-1000, 1000)
-    self.addXInput.valueChanged.connect(self.addParamButtonState)
-    self.addYInput.setRange(-1000, 1000)
-    self.addYInput.valueChanged.connect(self.addParamButtonState)
-    self.addZInput.setRange(-1000, 1000)
-    self.addZInput.valueChanged.connect(self.addParamButtonState)
-    self.addWInput.setRange(-1000, 1000)
-    self.addWInput.valueChanged.connect(self.addParamButtonState)
+    self.ui.addXInput.valueChanged.connect(self.addParamButtonState)
+    self.ui.addYInput.valueChanged.connect(self.addParamButtonState)
+    self.ui.addZInput.valueChanged.connect(self.addParamButtonState)
+    self.ui.addWInput.valueChanged.connect(self.addParamButtonState)
     
     # Values of the parameter if boolean
-    self.addBoolean.addItem("Select value")
-    self.addBoolean.addItem("True")
-    self.addBoolean.addItem("False")
-    self.addBoolean.setCurrentIndex(0)
-    self.addBoolean.activated.connect(self.addParamButtonState)
+    self.ui.addBooleanCombo.activated.connect(self.addParamButtonState)
 
     # Values of the parameter if range
-    self.addRangeMinValueInput.setRange(-1000, 1000)
-    self.addRangeMinValueInput.valueChanged.connect(self.addParamButtonState)
-    self.addRangeMaxValueInput.setRange(-1000, 1000)
-    self.addRangeMaxValueInput.valueChanged.connect(self.addParamButtonState)
+    self.ui.addRangeMinValueInput.valueChanged.connect(self.addParamButtonState)
+    self.ui.addRangeMaxValueInput.valueChanged.connect(self.addParamButtonState)
 
-    self.addParamButton.enabled = False
-    self.addParamButton.connect('clicked()', self.addParamButtonClicked)
-    self.addedMsg.hide()
+    # Values of the parameter if transfer function
+    self.ui.addTypeCombo.activated.connect(self.onAddTypeComboChanged)
+    self.ui.addPointsCombo.activated.connect(self.onAddPointsComboChanged)
+    self.ui.addTFRInput.valueChanged.connect(self.addParamButtonState)
+    self.ui.addTFGInput.valueChanged.connect(self.addParamButtonState)
+    self.ui.addTFBInput.valueChanged.connect(self.addParamButtonState)
+    self.ui.addTFOInput.valueChanged.connect(self.addParamButtonState)
+    self.ui.addTFMInput.valueChanged.connect(self.addParamButtonState)
+    self.ui.addTFSInput.valueChanged.connect(self.addParamButtonState)
+
+
+    #values of the parameter if volume
+    self.ui.volumeIDInput.valueChanged.connect(self.addParamButtonState)
+    self.ui.addTFCombo.activated.connect(self.onAddTFComboChanged)
+
+    self.ui.addParamButton.enabled = False
+    self.ui.addParamButton.connect('clicked()', self.addParamButtonClicked)
+
+    self.hideLayout(self.ui.paramLayout)
+    self.hideLayout(self.ui.intFloatLayout)
+    self.hideLayout(self.ui.pointLayout)
+    self.hideLayout(self.ui.booleanLayout)
+    self.hideLayout(self.ui.rangeLayout)
+    self.hideLayout(self.ui.transferFunctionLayout)
+    self.hideLayout(self.ui.volumeLayout)
+    self.ui.addParamCombo.show()
+  
+  def onAddTFComboChanged(self) :
+    if self.ui.addTFCombo.currentText.startswith('Hide'):
+      self.onAddParamComboIndexChanged(0)
+    elif self.ui.addTFCombo.currentText.startswith('Show'):
+      self.ui.TFNameInput.show()
+      self.ui.TFNameLabel.show()
+      self.ui.addTypeCombo.show()
+      self.ui.addTypeLabel.show()
+
+  def onAddPointsComboChanged(self):
     
-    self.addParamLayout.addRow("Type :", self.addParamCombo)
-    self.addParamLayout.addRow("", self.addedMsg)
+    if self.ui.addPointsCombo.currentText.startswith('Keep'):
+      self.onAddParamComboIndexChanged(0)
+      self.ui.addTFXInput.hide()
+      self.ui.addTFRInput.hide()
+      self.ui.addTFGInput.hide()
+      self.ui.addTFBInput.hide()
+      self.ui.addTFMInput.hide()
+      self.ui.addTFSInput.hide()
+      self.ui.addTFOInput.hide()
+      return
+    if self.ui.addTypeCombo.currentText == "Color":
+      self.ui.addTFXInput.show()
+      self.ui.addTFRInput.show()
+      self.ui.addTFGInput.show()
+      self.ui.addTFBInput.show()
+      self.ui.addTFMInput.show()
+      self.ui.addTFSInput.show()
+      self.ui.addTFOInput.hide()
+      self.ui.addTFXLabel.show()
+      self.ui.addTFRLabel.show()
+      self.ui.addTFGLabel.show()
+      self.ui.addTFBLabel.show()
+      self.ui.addTFMLabel.show()
+      self.ui.addTFSLabel.show()
+      self.ui.addTFOLabel.hide()
+    elif self.ui.addTypeCombo.currentText == "Scalar Opacity":
+      self.ui.addTFXInput.show()
+      self.ui.addTFMInput.show()
+      self.ui.addTFSInput.show()
+      self.ui.addTFOInput.show()
+      self.ui.addTFRInput.hide()
+      self.ui.addTFGInput.hide()
+      self.ui.addTFBInput.hide()
+      self.ui.addTFXLabel.show()
+      self.ui.addTFMLabel.show()
+      self.ui.addTFSLabel.show()
+      self.ui.addTFOLabel.show()
+      self.ui.addTFRLabel.hide()
+      self.ui.addTFGLabel.hide()
+      self.ui.addTFBLabel.hide()
 
-
-    self.addParamLayout.addRow("Name :", self.addNameInput)
-    self.addParamLayout.addRow("Display name :", self.addDisplayNameInput)
-
-    self.intFloatLayout.addRow("Min value : ", self.addMinValueInput)
-    self.intFloatLayout.addRow("Max value", self.addMaxValueInput)
-    self.intFloatLayout.addRow("Default value :", self.addDefaultValueInput)
-    self.paramLayout.addLayout(self.intFloatLayout)
+  def onAddTypeComboChanged(self):
+    if self.ui.addTypeCombo.currentIndex != 0:
+      self.ui.addPointsCombo.show()
+      self.ui.addPointsLabel.show()
+    else:
+      self.ui.addPointsCombo.hide()
+      self.ui.addPointsLabel.hide()
     
-    
-    self.pointLayout.addRow("x : ", self.addXInput)
-    self.pointLayout.addRow("y : ", self.addYInput)
-    self.pointLayout.addRow("z : ", self.addZInput)
-    self.pointLayout.addRow("w : ", self.addWInput)
-    self.paramLayout.addLayout(self.pointLayout)
 
-    self.booleanLayout.addRow("Default value : ", self.addBoolean)
-    self.paramLayout.addLayout(self.booleanLayout)
-
-    self.rangeLayout.addRow("Min value : ", self.addRangeMinValueInput)
-    self.rangeLayout.addRow("Max value : ", self.addRangeMaxValueInput)
-    self.paramLayout.addLayout(self.rangeLayout)
-
-    self.defaultLayout.addRow(self.addParamButton)
-    self.paramLayout.addLayout(self.defaultLayout)
-    self.hideLayout(self.paramLayout)
-    self.hideLayout(self.intFloatLayout)
-    self.hideLayout(self.intFloatLayout)
-    self.hideLayout(self.booleanLayout)
-    self.hideLayout(self.rangeLayout)
-    
   def resetLayout(self, layout) :
     """!@brief Function to reset a specific layout.
     @param layout qLayout : layout to reset
     """
 
-    self.addParamCombo.setCurrentIndex(0)
+    self.ui.addParamCombo.setCurrentIndex(0)
     self.hideLayout(layout)
 
     layout.itemAt(1, 1).widget().clear()
     layout.itemAt(2, 1).widget().clear()
     
-    for i in range(int(self.intFloatLayout.count()/2)):
-      self.intFloatLayout.itemAt(i, 1).widget().setValue(0)
-    for i in range(int(self.pointLayout.count()/2)):
-      self.pointLayout.itemAt(i, 1).widget().setValue(0)
+    for i in range(int(self.ui.intFloatLayout.count()/2)):
+      self.ui.intFloatLayout.itemAt(i, 1).widget().setValue(0)
+    for i in range(int(self.ui.pointLayout.count()/2)):
+      self.ui.pointLayout.itemAt(i, 1).widget().setValue(0)
   
   def hideLayout(self, layout) :
     """!@brief Function to clear the widgets of a specific layout.
@@ -425,91 +400,173 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param i int : index of the current input
 
     """
-    self.hideLayout(self.intFloatLayout)
-    self.hideLayout(self.pointLayout)
-    self.addedMsg.hide()
+    self.hideLayout(self.ui.intFloatLayout)
+    self.hideLayout(self.ui.pointLayout)
+    self.ui.addedStatusMsg.hide()
 
     #clear the name and display name
-    self.addParamLayout.itemAt(2, 1).widget().clear()
-    self.addParamLayout.itemAt(3, 1).widget().clear()
+    self.ui.addNameInput.clear()
+    self.ui.addDisplayNameInput.clear()
     
-    param = self.addParamCombo.currentText
+    param = self.ui.addParamCombo.currentText
 
     if param == "Integer" :
-      self.showLayout(self.intFloatLayout)
-      for i in range(int(self.intFloatLayout.count()/2)):
-        self.intFloatLayout.itemAt(i, 1).widget().setDecimals(0)
+      self.showLayout(self.ui.intFloatLayout)
+      for i in range(int(self.ui.intFloatLayout.count())):
+        if i.getClassName == "QDoubleSpinBox":
+          self.ui.intFloatLayout.itemAt(i).widget().setDecimals(0)
       ## Type of the parameter added to the shader
       self.addParamType = "shaderiParams"
     elif param == "Float" : 
-      self.showLayout(self.intFloatLayout)
-      for i in range(int(self.intFloatLayout.count()/2)):
-        self.intFloatLayout.itemAt(i, 1).widget().setDecimals(3)
+      self.showLayout(self.ui.intFloatLayout)
+      for i in range(int(self.ui.intFloatLayout.count())):
+        if i.getClassName == "QDoubleSpinBox":
+          self.ui.intFloatLayout.itemAt(i).widget().setDecimals(3)
       self.addParamType = "shaderfParams"
     elif param == "Point" :
-      self.showLayout(self.pointLayout)
-      for i in range(int(self.pointLayout.count()/2)):
-        self.pointLayout.itemAt(i, 1).widget().setDecimals(3)
+      self.showLayout(self.ui.pointLayout)
+      for i in range(int(self.ui.pointLayout.count())):
+        if i.getClassName == "QDoubleSpinBox":
+          self.ui.pointLayout.itemAt(i).widget().setDecimals(3)
       self.addParamType = "shader4fParams"
     elif param ==  "Boolean" :
-      self.showLayout(self.booleanLayout)
+      self.showLayout(self.ui.booleanLayout)
       self.addParamType = "shaderbParams"
     elif param ==  "Range" :
-      self.showLayout(self.rangeLayout)
+      self.showLayout(self.ui.rangeLayout)
       self.addParamType = "shaderrParams"
-    """
     elif param ==  "Transfer Function" :
+      self.ui.addTypeCombo.show()
       self.addParamType = "shadertfParams"
     elif param ==  "Volume" :
-      self.addParamType = "shadervParams"
-
-    """
-    
-    # TODO add the other types of parameters
-
+      self.showLayout(self.ui.volumeLayout)
+      self.ui.TFNameLabel.hide()
+      self.ui.TFNameInput.hide()
+      self.ui.TFDisplayNameLabel.hide()
+      self.ui.TFDisplayNameInput.hide()
+      self.addParamType = "shadervParams"    
 
   def addParamButtonState(self):
     """!@brief Function to enable or disable the button to change the parametters.
  
     """
-    self.addParamButton.enabled = len(self.addNameInput.text) > 0 and len(self.addDisplayNameInput.text) > 0
+    self.ui.addParamButton.enabled = len(self.ui.addNameInput.text) > 0 and len(self.ui.addDisplayNameInput.text) > 0
 
   def addParamButtonClicked(self) :
     """!@brief Function to get the current parameters and add them into a dictionnary.
     
     """
-    name = self.addParamLayout.itemAt(2, 1).widget().text
-    displayName = self.addParamLayout.itemAt(3, 1).widget().text
+    name = self.ui.addNameInput.text
+    displayName = self.ui.addDisplayNameInput.text
 
-    if self.addParamType == "shaderiParams" :
-      min_ = int(self.intFloatLayout.itemAt(0, 1).widget().value)
-      max_ = int(self.intFloatLayout.itemAt(1, 1).widget().value)
-      default = int(self.intFloatLayout.itemAt(3, 1).widget().value)
+    if self.addParamType == "shaderiParams" or self.addParamType == "shaderfParams" :
+      # If integer or float
+      min_ = int(self.ui.addMinValueInput.value)
+      max_ = int(self.ui.addMaxValueInput.value)
+      default = int(self.ui.addMDefaultValueInput.value)
       newValue = {name : { 'displayName' : displayName, 'min' : min_, 'max' : max_, 'defaultValue' : default }}
-    elif self.addParamType == "shaderfParams" :
-      min_ = self.intFloatLayout.itemAt(0, 1).widget().value
-      max_ = self.intFloatLayout.itemAt(1, 1).widget().value
-      default = self.intFloatLayout.itemAt(2, 1).widget().value
-      newValue = {name : { 'displayName' : displayName, 'min' : min_, 'max' : max_, 'defaultValue' : default }}
+      if min_ >= max_ :
+        min_label = self.ui.addMinValueLabel.text
+        max_label = self.ui.addMaxValueLabel.text
+        self.ui.addedStatusMsg.setText("The value of parameter \"" + min_label +"\" must be inferior to the value of the parameter \"" + max_label + "\".")
+        self.ui.addedStatusMsg.setStyleSheet("color: red")
+        self.ui.addedStatusMsg.show()
+    
+    # If point
     elif self.addParamType == "shader4fParams":
-      x = self.pointLayout.itemAt(0, 1).widget().value
-      y = self.pointLayout.itemAt(1, 1).widget().value
-      z = self.pointLayout.itemAt(2, 1).widget().value
-      w = self.pointLayout.itemAt(3, 1).widget().value
+      x = self.ui.addXInput.value
+      y = self.ui.addYInput.widget().value
+      z = self.ui.addZInput.widget().value
+      w = self.ui.addWInput.widget().value
       newValue = { name : { 'displayName' : displayName, 'defaultValue' : {'x' : x, 'y' : y, 'z' : z, "w" : w }}}
-    elif self.addParamType == "shaderbParams":
-      value = int(self.booleanLayout.itemAt(0, 1).widget().currentText == 'True')
-      newValue = { name : { 'displayName' : displayName, 'defaultValue' : 0, 'optionalWidgets' : []}}
-    elif self.addParamType == "shaderrParams":
-      min_ = self.rangeLayout.itemAt(0, 1).widget().value
-      max_ = self.rangeLayout.itemAt(1, 1).widget().value
-      newValue = { name : { 'displayName' : displayName, 'defaultValue' : [min_, max_]}}
 
-    self.addedMsg.setText("Parameter \"" + displayName +"\" added to shader \""+self.shaderDisplayName+"\".")
-    self.modifyDict(self.shaderDisplayName, self.addParamType, newValue)
-    self.addedMsg.show()
-    self.resetLayout(self.intFloatLayout)
-    self.resetLayout(self.pointLayout)
+    elif self.addParamType == "shaderbParams":
+      # If boolean
+      value = int(self.ui.addBooleanCombo.currentText == 'True')
+      newValue = { name : { 'displayName' : displayName, 'defaultValue' : 0, 'optionalWidgets' : []}}
+
+    elif self.addParamType == "shaderrParams":
+      # If range
+      min_ = self.ui.addRangeMinValueInput.value
+      max_ = self.ui.addRangeMaxValueInput.value
+      if min_ >= max_ :
+        min_label = self.ui.addRangeMinValueLabel.text
+        max_label = self.ui.addRangeMaxValueLabel.text
+        self.ui.addedStatusMsg.setText("The value of parameterr \"" + min_label +"\" must be inferior to the value of the parameter \"" + max_label + "\".")
+        self.ui.addedStatusMsg.setStyleSheet("color: red")
+        self.ui.addedStatusMsg.show()
+        return
+
+      newValue = { name : { "displayName" : displayName, "defaultValue" : [min_, max_]}}
+    
+    elif self.addParamType == "shadertfParams":
+      # If transfer Function
+      type_ = self.ui.addTypeCombo.currentText
+      if type_ == "Color":
+        values = []
+        values.append(self.ui.addTFXInput.value)
+        values.append(self.ui.addTFRInput.value)
+        values.append(self.ui.addTFGInput.value)
+        values.append(self.ui.addTFBInput.value)
+        values.append(self.ui.addTFMInput.value)
+        values.append(self.ui.addTFSInput.value)
+
+      elif type_ == "Scalar Opacity":
+        values = []
+        values.append(self.ui.addTFXInput.value)
+        values.append(self.ui.addTFMInput.value)
+        values.append(self.ui.addTFSInput.value)
+        values.append(self.ui.addTFOInput.value)
+
+      else :
+
+        return 
+      if self.ui.addPointsCombo.currentText.startswith('Keep') :
+        values = []
+      newValue = { name : { "displayName" : displayName, "defaultColors" : [values], 'type' : type_}}
+      
+    elif self.addParamType == "shadervParams":
+      # If transfer Function
+      volumeID = self.ui.volumeIDInput.value
+      if self.ui.addTFCombo.currentText.startswith('Hide'):
+        newValue = { name : { 'displayName' : displayName, 'defaultVolume' : int(volumeID), 'transferFunctions' : {}}}
+      else:
+        tfName = self.ui.TFNameInput.text
+        tfDisplayName = self.ui.TFDisplayNameInput.text
+        type_ = self.ui.addTypeCombo.currentText
+      
+        if type_ == "Color":
+          values = []
+          values.append(self.ui.addTFXInput.value)
+          values.append(self.ui.addTFRInput.value)
+          values.append(self.ui.addTFGInput.value)
+          values.append(self.ui.addTFBInput.value)
+          values.append(self.ui.addTFMInput.value)
+          values.append(self.ui.addTFSInput.value)
+
+        elif type_ == "Scalar Opacity":
+          values = []
+          values.append(self.ui.addTFXInput.value)
+          values.append(self.ui.addTFMInput.value)
+          values.append(self.ui.addTFSInput.value)
+          values.append(self.ui.addTFOInput.value)
+        
+        if self.ui.addPointsCombo.currentText.startswith('Keep') :
+          values = []
+        newValue = { name : { 'displayName' : displayName, 'defaultVolume' : int(volumeID), 'transferFunctions' : { tfName : { "displayName" : tfDisplayName, "defaultColors" : [values], 'type' : type_}}}}
+
+    msg = self.modifyDict(self.shaderDisplayName, self.addParamType, newValue)
+    if msg != "":
+      self.ui.addedStatusMsg.setText(msg)
+      self.ui.addedStatusMsg.setStyleSheet("color: red")
+      self.ui.addedStatusMsg.show()
+      return
+    
+    self.ui.addedStatusMsg.setText("Parameter \"" + displayName +"\" added to shader \"" + self.shaderDisplayName + "\".")
+    self.ui.addedStatusMsg.show()
+    self.ui.addedStatusMsg.setStyleSheet("")
+    self.resetLayout(self.ui.intFloatLayout)
+    self.resetLayout(self.ui.pointLayout)
 
   def modifyDict(self, shader, dictType, value):
     """!@brief Function to modify the specified dictionnary in the specified shader.
@@ -527,18 +584,73 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     f, filename, description = imp.find_module(packageName)
     packagePath = imp.load_module(packageName, f, filename, description).__path__[0]
     modifiedShaderPath = packagePath+'\\Shaders\\'+ modifiedShaderModule
-    currentDict = str(getattr(modifiedShaderClass, dictType))
-    modifiedDict = getattr(modifiedShaderClass, dictType)
-    modifiedDict.update(value)
+    currentDictStr = str(getattr(modifiedShaderClass, dictType))
+    currentDict = getattr(modifiedShaderClass, dictType)
+    
+    copyWholeDict = True
+    #check if the parameter is not already present in the shader
+    if len(list(currentDict.keys())) > 0 :
+      name = list(value.keys())[0]
+      if name in currentDict:
+        if self.addParamType == "shadervParams" :
+          # If it is a volume
+          for v in currentDict.keys() :
+            if v == name :
+              # If the parameter has transfer functions defined, check if they are ok.
+              if currentDict[v]['transferFunctions'] != {} :
+                currentTFDict = currentDict[v]['transferFunctions']
+                valueTFDict = value[v]['transferFunctions']
+                print(valueTFDict)
+                print(v)
+                for tf in currentTFDict.keys() :
+                  TFname = list(valueTFDict.keys())[0]
+                  print(TFname)
+                  print(tf)
 
+                  # Check if there is already a TF with this name, add the points values
+                  if tf == TFname :
+                    # Check if the TF are of the same type before adding the points.
+                    if currentTFDict[tf]['type'] == valueTFDict[tf]['type']:
+                      currentTFDict[tf]['defaultColors'].append(valueTFDict[tf]['defaultColors'][0])
+                      copyWholeDict = False
+                    else :
+                      return "There is already a transfer function with the same name but a different type in the shader."
+                  else :
+                    return "This type of transfer function already exists in the shader for this volume"
+            
+            # Check if a parameter with the same volume ID has not been created yet.
+            elif currentDict[v]['defaultVolume'] == value[name]['defaultVolume'] :
+              return "The volume ID \"" + str(value[v]['defaultVolume']) + "\" is already assigned to a volume in the shader."
+
+        elif self.addParamType == "shadertfParams":
+          # If the parameter is a TF
+          for tf in currentDict.keys() :
+            # Check if there is already a TF with this name, add the points values
+            if tf == name :
+              # Check if the TF are of the same type before adding the points.
+              if currentDict[tf]['type'] == value[tf]['type']:
+                currentDict[tf]['defaultColors'].append(value[tf]['defaultColors'][0])
+                copyWholeDict = False
+              else :
+                return "There is already a transfer function of this type in the shader"
+            else :
+              return "This transfer function already exists in the shader."
+
+    if copyWholeDict:
+      modifiedDict = getattr(modifiedShaderClass, dictType)
+      modifiedDict.update(value)
+    else :
+      modifiedDict = currentDict
     fin = open(modifiedShaderPath, "rt")
     data = fin.read()
-    data = data.replace(dictType + " = " +currentDict, dictType + " = " +str(modifiedDict))
+    replace = data.replace(dictType + " = " +currentDictStr, dictType + " = " +str(modifiedDict))
     fin.close()
 
     fin = open(modifiedShaderPath, "wt")
-    fin.write(data)
+    fin.write(replace)
     fin.close()
+
+    return ""
 
   def setAndObserveParameterNode(self, caller=None, event=None):
     #log.info(get_function_name()  + str(get_function_parameters_and_values()))
@@ -1093,8 +1205,8 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     if(self.newCustomShaderFile != False):
       self.ui.errorMsg.hide()
       # Show the options to add parameters to the file
-      self.addParamCombo.show()
-      self.addParamLayout.itemAt(0,0).widget().show()
+      self.ui.addParamCombo.show()
+      self.ui.addParamLayout.itemAt(0,0).widget().show()
       # Set up the file with the values entered.
       self.setup_file(self.newCustomShaderFile, self.className, self.displayName)
       self.ui.editSourceButton.show()
