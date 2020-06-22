@@ -413,21 +413,24 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     if param == "Integer" :
       self.showLayout(self.ui.intFloatLayout)
       for i in range(int(self.ui.intFloatLayout.count())):
-        if i.getClassName == "QDoubleSpinBox":
-          self.ui.intFloatLayout.itemAt(i).widget().setDecimals(0)
+        widget = self.ui.intFloatLayout.itemAt(i).widget()
+        if self.getClassName(widget) == "QDoubleSpinBox":
+          widget.setDecimals(0)
       ## Type of the parameter added to the shader
       self.addParamType = "shaderiParams"
     elif param == "Float" : 
       self.showLayout(self.ui.intFloatLayout)
       for i in range(int(self.ui.intFloatLayout.count())):
-        if i.getClassName == "QDoubleSpinBox":
-          self.ui.intFloatLayout.itemAt(i).widget().setDecimals(3)
+        widget = self.ui.intFloatLayout.itemAt(i).widget()
+        if self.getClassName(widget) == "QDoubleSpinBox":
+          widget.setDecimals(3)
       self.addParamType = "shaderfParams"
     elif param == "Point" :
       self.showLayout(self.ui.pointLayout)
       for i in range(int(self.ui.pointLayout.count())):
-        if i.getClassName == "QDoubleSpinBox":
-          self.ui.pointLayout.itemAt(i).widget().setDecimals(3)
+        widget =self.ui.pointLayout.itemAt(i).widget()
+        if self.getClassName(widget) == "QDoubleSpinBox":
+          widget.setDecimals(3)
       self.addParamType = "shader4fParams"
     elif param ==  "Boolean" :
       self.showLayout(self.ui.booleanLayout)
@@ -463,7 +466,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       # If integer or float
       min_ = int(self.ui.addMinValueInput.value)
       max_ = int(self.ui.addMaxValueInput.value)
-      default = int(self.ui.addMDefaultValueInput.value)
+      default = int(self.ui.addDefaultValueInput.value)
       newValue = {name : { 'displayName' : displayName, 'min' : min_, 'max' : max_, 'defaultValue' : default }}
       if min_ >= max_ :
         min_label = self.ui.addMinValueLabel.text
