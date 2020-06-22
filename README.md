@@ -36,7 +36,7 @@ Parameters :
             </ul>
         </td>
         <td>
-            <img src="/SlicerPRISM/Resources/Documentation/Data.png" alt="Data" style="float:right; align:center" width ="300"	title="Data"/>
+            <img src="/SlicerPRISM/Resources/Documentation/Data.png" alt="Data" style="float:right; align:center" width ="100%"	title="Data"/>
         </td>
     </tr>
     <tr>
@@ -53,7 +53,7 @@ Parameters :
             </ul>
         </td>
         <td >
-            <img src="/SlicerPRISM/Resources/Documentation/ViewSetup.png" alt="ViewSetup" style="float:right;" width ="300"	title="ViewSetup"/>
+            <img src="/SlicerPRISM/Resources/Documentation/ViewSetup.png" alt="ViewSetup" style="float:right;" width ="100%"	title="ViewSetup"/>
         </td>
     </tr>
     <tr>
@@ -69,7 +69,7 @@ Parameters :
             </ul>
         </td>
         <td>
-            <img src="/SlicerPRISM/Resources/Documentation/CustomShader.png" alt="CustomShader" style="float:right;" width ="300"	title="CustomShader"/>
+            <img src="/SlicerPRISM/Resources/Documentation/CustomShader.png" alt="CustomShader" style="float:right;" width ="100%"	title="CustomShader"/>
         </td>
     </tr>
     <tr>
@@ -100,17 +100,17 @@ Parameters :
             </ul>
         </td>
         <td>
-            <img src="/SlicerPRISM/Resources/Documentation/MCCustomShader.png" alt="MCCustomShader" style="float:right;" width ="300"	title="MCCustomShader"/>
+            <img src="/SlicerPRISM/Resources/Documentation/MCCustomShader.png" alt="MCCustomShader" style="float:right;" width ="100%"	title="MCCustomShader"/>
         </td>
     </tr>
     <tr>
         <td>
-            <img src="/SlicerPRISM/Resources/Documentation/MCCustomShaderCode.png" alt="MCCustomShaderCode" style="float:right;" width ="300"	title="MCCustomShaderCode"/>
+            <img src="/SlicerPRISM/Resources/Documentation/MCCustomShaderCode.png" alt="MCCustomShaderCode" style="float:right;" width ="100%"	title="MCCustomShaderCode"/>
         </td>
     </tr>
     <tr>
         <td>
-            <img src="/SlicerPRISM/Resources/Documentation/MCCustomShaderParam.png" alt="MCCustomShaderParam" style="float:right;" width ="300"	title="MCCustomShaderParam"/>
+            <img src="/SlicerPRISM/Resources/Documentation/MCCustomShaderParam.png" alt="MCCustomShaderParam" style="float:right;" width ="100%"	title="MCCustomShaderParam"/>
         </td>
     </tr>
     </tbody>
