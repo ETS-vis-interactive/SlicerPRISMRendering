@@ -134,7 +134,7 @@ Parameters :
 </table>
 
 <a name="similar"></a>
-<img src="/SlicerPRISM/Resources/Documentation/UnderConstruction.gif" alt="UnderConstruction" style="float:right;border-radius: 10%; filter:saturate(30%)" width ="50%"	title="MCCustomShaderParam"/>
+<p align="center"><img src="/SlicerPRISM/Resources/Documentation/UnderConstruction.gif" alt="UnderConstruction" style="float:right;" width ="50%"	title="MCCustomShaderParam"/></p>
 ## Similar Modules
 
 <a name="ref"></a>
@@ -151,4 +151,3 @@ Parameters :
 
 <a name="howto"></a>
 ### How Tos
-
