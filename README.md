@@ -20,7 +20,8 @@
 
 **License**: slicer4
 
-**Acknowledgements**: This work is part of 
+**Acknowledgements**: 
+
 
 **Contact**: Tiphaine RICHARD, <email>tiphainejh@gmail.com</email>
 
@@ -133,6 +134,7 @@ Parameters :
 </table>
 
 <a name="similar"></a>
+<img src="/SlicerPRISM/Resources/Documentation/UnderConstruction.gif" alt="UnderConstruction" style="float:right;border-radius: 10%; filter:saturate(30%)" width ="50%"	title="MCCustomShaderParam"/>
 ## Similar Modules
 
 <a name="ref"></a>
