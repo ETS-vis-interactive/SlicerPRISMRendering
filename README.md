@@ -133,8 +133,9 @@ Parameters :
     </tbody>
 </table>
 
-<a name="similar"></a>
 <p align="center"><img src="/SlicerPRISM/Resources/Documentation/UnderConstruction.gif" alt="UnderConstruction" style="float:right;" width ="50%"	title="MCCustomShaderParam"/></p>
+
+<a name="similar"></a>
 ## Similar Modules
 
 <a name="ref"></a>
