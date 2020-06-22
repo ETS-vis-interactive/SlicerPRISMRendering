@@ -2,8 +2,11 @@
 
 ## Introduction and Acknowledgements
 **Title**: SlicerPRISM
+
 **Author(s)/Contributor(s)**: Simon Drouin, Professor at École de technologie supérieure (ÉTS), Montréal, Tiphaine RICHARD, Student Intern at ÉTS.
+
 **License**: slicer4
+
 **Acknowledgements**: This work is part of 
 
 **Contact**: Tiphaine RICHARD, <email>tiphainejh@gmail.com</email>
@@ -20,6 +23,9 @@ This module provides interactive visualization of 3D image data.
 
 Parameters : 
 <table>
+    <col style="width:50%">
+	<col style="width:50%; text-align: center;">
+    <tbody>
     <tr>
         <td>
             <ul> 
@@ -30,7 +36,7 @@ Parameters :
             </ul>
         </td>
         <td>
-            <img src="/SlicerPRISM/Resources/Documentation/Data.png" alt="Data" style="float:right;" width ="300"	title="Data"/>
+            <img src="/SlicerPRISM/Resources/Documentation/Data.png" alt="Data" style="float:right; align:center" width ="300"	title="Data"/>
         </td>
     </tr>
     <tr>
@@ -46,7 +52,7 @@ Parameters :
                 </ul>
             </ul>
         </td>
-        <td>
+        <td >
             <img src="/SlicerPRISM/Resources/Documentation/ViewSetup.png" alt="ViewSetup" style="float:right;" width ="300"	title="ViewSetup"/>
         </td>
     </tr>
@@ -107,7 +113,7 @@ Parameters :
             <img src="/SlicerPRISM/Resources/Documentation/MCCustomShaderParam.png" alt="MCCustomShaderParam" style="float:right;" width ="300"	title="MCCustomShaderParam"/>
         </td>
     </tr>
-
+    </tbody>
 </table>
 
 ## Similar Modules
