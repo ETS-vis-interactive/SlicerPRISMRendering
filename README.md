@@ -1,5 +1,18 @@
 # SlicerPRISM
+1. [ Introduction and Acknowledgements. ](#intro)
+2. [ Module Description. ](#desc)
+3. [ Use Cases. ](#usec)
+4. [ Tutorials. ](#tutos)
+5. [ Panels and their use. ](#panels)
+6. [ Similar Modules. ](#similar)
+7. [ References. ](#ref)
+8. [ Information for Developers. ](#info)
 
+	* [ Limitations. ](#lim)
+	* [ Key nodes and classes. ](#key)
+	* [ How Tos. ](#howto)
+
+<a name="intro"></a>
 ## Introduction and Acknowledgements
 **Title**: SlicerPRISM
 
@@ -11,14 +24,17 @@
 
 **Contact**: Tiphaine RICHARD, <email>tiphainejh@gmail.com</email>
 
+<a name="desc"></a>
 ## Module Description
 This module provides interactive visualization of 3D image data.
 
-
+<a name="usec"></a>
 ## Use Cases
 
+<a name="tutos"></a>
 ## Tutorials
 
+<a name="panels"></a>
 ## Panels and their use
 
 Parameters : 
@@ -116,15 +132,21 @@ Parameters :
     </tbody>
 </table>
 
+<a name="similar"></a>
 ## Similar Modules
 
+<a name="ref"></a>
 ## References
 
+<a name="info"></a>
 ## Information for Developers
 
+<a name="lim"></a>
 ### Limitations
 
+<a name="key"></a>
 ### Key nodes and classes
 
+<a name="howto"></a>
 ### How Tos
 
