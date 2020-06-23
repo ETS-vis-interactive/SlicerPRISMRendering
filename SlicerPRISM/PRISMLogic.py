@@ -409,7 +409,8 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     logic = slicer.modules.volumerendering.logic()
 
     # Set custom shader to renderer
-    self.setupCustomShader()
+    if multipleVolumes == False :
+      self.setupCustomShader()
 
     #if multiple volumes not enabled, turn off previous rendering
     if not multipleVolumes and self.volumeRenderingDisplayNode:
@@ -462,7 +463,9 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
       volumePropertyNode = displayNode.GetVolumePropertyNode()
       self.colorTransferFunction = volumePropertyNode.GetColor() 
       self.opacityTransferFunction = volumePropertyNode.GetScalarOpacity() 
-  
+      self.colorTransferFunction.name = "Original" + self.colorTransferFunction.GetClassName() 
+      self.opacityTransferFunction.name = "Original" + self.opacityTransferFunction.GetClassName()
+
 
   def setCustomShaderType(self, shaderTypeName):
     """ Set given shader type as current active shader

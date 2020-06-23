@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>750</width>
-    <height>1198</height>
+    <width>16777215</width>
+    <height>16777215</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -133,6 +133,12 @@
          <layout class="QGridLayout" name="viewSetupCollapsibleButtonLayout_2">
           <item row="1" column="3">
            <widget class="QCheckBox" name="enableRotationCheckBox">
+            <property name="maximumSize">
+             <size>
+              <width>220</width>
+              <height>16777215</height>
+             </size>
+            </property>
             <property name="text">
              <string>Enable Rotation</string>
             </property>
@@ -140,6 +146,12 @@
           </item>
           <item row="1" column="2">
            <widget class="QCheckBox" name="enableScalingCheckBox">
+            <property name="maximumSize">
+             <size>
+              <width>220</width>
+              <height>16777215</height>
+             </size>
+            </property>
             <property name="text">
              <string>Enable Scaling</string>
             </property>
@@ -147,6 +159,12 @@
           </item>
           <item row="0" column="3">
            <widget class="QCheckBox" name="displayROICheckBox">
+            <property name="maximumSize">
+             <size>
+              <width>220</width>
+              <height>16777215</height>
+             </size>
+            </property>
             <property name="text">
              <string>Display ROI</string>
             </property>
@@ -154,6 +172,12 @@
           </item>
           <item row="0" column="2">
            <widget class="QCheckBox" name="enableROICheckBox">
+            <property name="maximumSize">
+             <size>
+              <width>220</width>
+              <height>16777215</height>
+             </size>
+            </property>
             <property name="text">
              <string>Enable Cropping</string>
             </property>
@@ -161,6 +185,12 @@
           </item>
           <item row="0" column="1">
            <widget class="QCheckBox" name="volumeRenderingCheckBox">
+            <property name="maximumSize">
+             <size>
+              <width>220</width>
+              <height>16777215</height>
+             </size>
+            </property>
             <property name="text">
              <string>Volume Rendering</string>
             </property>
@@ -300,7 +330,7 @@
              <string>Name of the class that will be created.</string>
             </property>
             <property name="placeholderText">
-             <string>Class name</string>
+             <string>Class Name</string>
             </property>
            </widget>
           </item>
@@ -317,7 +347,7 @@
              <string>Name of the shader that will be displayed in the combo box.</string>
             </property>
             <property name="placeholderText">
-             <string>Display name</string>
+             <string>Display Name</string>
             </property>
            </widget>
           </item>

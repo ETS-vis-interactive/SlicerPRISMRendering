@@ -38,7 +38,6 @@ This module provides interactive visualization of 3D image data.
 <a name="panels"></a>
 ## Panels and their use
 
-Parameters : 
 <table>
     <col style="width:50%">
 	<col style="width:50%; text-align: center;">
@@ -94,7 +93,7 @@ Parameters :
             <ul> 
                 <li><b>Modify or Create Custom Shader</b> : Create or Modify a custom shader and add parameters.</li>
                 <ul>
-                    <li><b>Shader</b> : Name of the shader to modify or *Create new Custom Shader* to create a new one.</li>
+                    <li><b>Shader</b> : Name of the shader to modify or <i>Create new Custom Shader</i> to create a new one.</li>
                     <li><b>Class Name</b> : Name of the class that will be created.</li>
                     <li><b>Display Name</b> : Name of the shader that will be displayed in the UI.</li>
                     <li><b>Create</b> : Create the class.</li>
@@ -102,7 +101,7 @@ Parameters :
                     <ul>
                         <li><b>Tag Type</b> : Type of the tag to be remplaced in the shader.</li>
                         <li><b>Shader Tag</b>: Tag to be remplaced in the shader.</li>
-                        <li><b>Shader Code</b> : Code to replace the specified tag in the shader. Can be added directly in the </li>file by clicking *Open File*.
+                        <li><b>Shader Code</b> : Code to replace the specified tag in the shader. Can be added directly in the </li>file by clicking <i>Open File</i>.
                         <li><b>Open File</b> : Open the class containing the shader.</li>
                         <li><b>Modify</b> : Apply the modifications the the class.</li>
                     </ul>
@@ -138,9 +137,11 @@ Parameters :
 <a name="similar"></a>
 ## Similar Modules
 
+[VolumeRendering](https://www.slicer.org/wiki/Documentation/4.10/Modules/VolumeRendering)
 <a name="ref"></a>
 ## References
 
+[PRISM: An open source framework for the interactive design of GPU volume rendering shaders](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0193636)  
 <a name="info"></a>
 ## Information for Developers
 
