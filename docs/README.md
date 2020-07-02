@@ -48,7 +48,7 @@ This module is an implementation of the PRISM customizable volume rendering fram
             </ul>
         </td>
         <td>
-            <img src="/SlicerPRISM/Resources/Documentation/Data.png" alt="Data" width ="50%" title="Data"/>
+            <img src="images/Data.png" alt="Data" width ="50%" title="Data"/>
         </td>
     </tr>
     <tr style="white-space:nowrap;">
@@ -65,7 +65,7 @@ This module is an implementation of the PRISM customizable volume rendering fram
             </ul>
         </td>
         <td style="white-space:nowrap;">
-            <img src="/SlicerPRISM/Resources/Documentation/ViewSetup.png" alt="ViewSetup" width ="50%" title="ViewSetup"/>
+            <img src="docs/images/ViewSetup.png" alt="ViewSetup" width ="50%" title="ViewSetup"/>
         </td>
     </tr>
     <tr style="white-space:nowrap;">
@@ -81,7 +81,7 @@ This module is an implementation of the PRISM customizable volume rendering fram
             </ul>
         </td>
         <td style="white-space:nowrap;">
-            <img src="/SlicerPRISM/Resources/Documentation/CustomShader.png" alt="CustomShader" width ="50%" title="CustomShader"/>
+            <img src="/docs/images/CustomShader.png" alt="CustomShader" width ="50%" title="CustomShader"/>
         </td>
     </tr>
     <tr style="white-space:nowrap;">
@@ -140,6 +140,7 @@ This module is an implementation of the PRISM customizable volume rendering fram
 <a name="info"></a>
 ## Information for Developers
 
+See [this page](https://ets-vis-interactive.github.io/SlicerPRISM/) for the full documentation.
 <a name="lim"></a>
 ### Limitations
 
