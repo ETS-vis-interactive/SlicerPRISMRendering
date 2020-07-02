@@ -37,9 +37,9 @@ This module is an implementation of the PRISM customizable volume rendering fram
 <a name="panels"></a>
 ## Panels and their use
 
-<table>
+<table width = "100%">
     <tr>
-        <td>
+        <td width = "50%">
             <ul> 
                 <li><b>Data</b> : Contains the volume required for SlicerPRISM. </li>
                 <ul>
@@ -48,7 +48,7 @@ This module is an implementation of the PRISM customizable volume rendering fram
             </ul>
         </td>
         <td>
-            <img src="C:/Users/Tiphaine/Dropbox/Fac/Master/Stage/SlicerPRISM/SlicerPRISM/Resources/Documentation/Data.png" alt="Data" width ="50%" title="Data"/>
+            <img src="../Documentation/Data.png" alt="Data" width ="100%" title="Data"/>
         </td>
     </tr>
     <tr>
@@ -65,7 +65,7 @@ This module is an implementation of the PRISM customizable volume rendering fram
             </ul>
         </td>
         <td >
-            <img src="C:/Users/Tiphaine/Dropbox/Fac/Master/Stage/SlicerPRISM/SlicerPRISM/Resources/Documentation/ViewSetup.png" alt="ViewSetup" width ="50%" title="ViewSetup"/>
+            <img src="../Documentation/ViewSetup.png" alt="ViewSetup" width ="100%" title="ViewSetup"/>
         </td>
     </tr>
     <tr>
@@ -81,7 +81,7 @@ This module is an implementation of the PRISM customizable volume rendering fram
             </ul>
         </td>
         <td>
-            <img src="C:/Users/Tiphaine/Dropbox/Fac/Master/Stage/SlicerPRISM/SlicerPRISM/Resources/Documentation/CustomShader.png" alt="CustomShader" width ="50%" title="CustomShader"/>
+            <img src="../Documentation/CustomShader.png" alt="CustomShader" width ="100%" title="CustomShader"/>
         </td>
     </tr>
     <tr>
@@ -112,22 +112,22 @@ This module is an implementation of the PRISM customizable volume rendering fram
             </ul>
         </td>
         <td>
-            <img src="C:/Users/Tiphaine/Dropbox/Fac/Master/Stage/SlicerPRISM/SlicerPRISM/Resources/Documentation/MCCustomShader.png" alt="MCCustomShader" width ="50%" title="MCCustomShader"/>
+            <img src="../Documentation/MCCustomShader.png" alt="MCCustomShader" width ="100%" title="MCCustomShader"/>
         </td>
     </tr>
     <tr>
         <td>
-            <img src="C:/Users/Tiphaine/Dropbox/Fac/Master/Stage/SlicerPRISM/SlicerPRISM/Resources/Documentation/MCCustomShaderCode.png" alt="MCCustomShaderCode" width ="50%" title="MCCustomShaderCode"/>
+            <img src="../Documentation/MCCustomShaderCode.png" alt="MCCustomShaderCode" width ="100%" title="MCCustomShaderCode"/>
         </td>
     </tr>
     <tr>
         <td>
-            <img src="C:/Users/Tiphaine/Dropbox/Fac/Master/Stage/SlicerPRISM/SlicerPRISM/Resources/Documentation/MCCustomShaderParam.png" alt="MCCustomShaderParam" width ="50%" title="MCCustomShaderParam"/>
+            <img src="../Documentation/MCCustomShaderParam.png" alt="MCCustomShaderParam" width ="100%" title="MCCustomShaderParam"/>
         </td>
     </tr>
 </table>
 
-<p align="center"><img src="C:/Users/Tiphaine/Dropbox/Fac/Master/Stage/SlicerPRISM/SlicerPRISM/Resources/Documentation/UnderConstruction.gif" alt="UnderConstruction" style="float:right;" width ="30%" title="MCCustomShaderParam"/></p>
+<p align="center"><img src="../Documentation/UnderConstruction.gif" alt="UnderConstruction" style="float:right;" width ="30%" title="MCCustomShaderParam"/></p>
 
 <a name="similar"></a>
 ## Similar Modules
