@@ -22,12 +22,11 @@
 
 **Acknowledgements**: 
 
-
 **Contact**: Tiphaine RICHARD, <email>tiphainejh@gmail.com</email>
 
 <a name="desc"></a>
 ## Module Description
-This module provides interactive visualization of 3D image data.
+This module is an implementation of the PRISM customizable volume rendering framework in 3D Slicer.
 
 <a name="usec"></a>
 ## Use Cases
