@@ -22,7 +22,7 @@
 
 **Acknowledgements**: 
 
-**Contact**: Tiphaine RICHARD, <email>tiphainejh@gmail.com</email>
+**Contact**: Tiphaine RICHARD, tiphainejh@gmail.com
 
 <a name="desc"></a>
 ## Module Description
@@ -38,11 +38,8 @@ This module is an implementation of the PRISM customizable volume rendering fram
 ## Panels and their use
 
 <table>
-    <col style="width:50%">
-	<col style="width:50%; text-align: center;">
-    <tbody>
-    <tr>
-        <td>
+    <tr style="white-space:nowrap;">
+        <td style="white-space:nowrap;">
             <ul> 
                 <li><b>Data</b> : Contains the volume required for SlicerPRISM. </li>
                 <ul>
@@ -51,11 +48,11 @@ This module is an implementation of the PRISM customizable volume rendering fram
             </ul>
         </td>
         <td>
-            <img src="/SlicerPRISM/Resources/Documentation/Data.png" alt="Data" style="float:right; align:center" width ="100%"	title="Data"/>
+            <img src="/SlicerPRISM/Resources/Documentation/Data.png" alt="Data" width ="50%" title="Data"/>
         </td>
     </tr>
-    <tr>
-        <td>
+    <tr style="white-space:nowrap;">
+        <td style="white-space:nowrap;">
             <ul> 
                 <li> <b>View Setup</b> : Contains the controls for rendering the volume as well as controls for the cropping box (ROI) of the volume. </li>
                 <ul>
@@ -67,12 +64,12 @@ This module is an implementation of the PRISM customizable volume rendering fram
                 </ul>
             </ul>
         </td>
-        <td >
-            <img src="/SlicerPRISM/Resources/Documentation/ViewSetup.png" alt="ViewSetup" style="float:right;" width ="100%"	title="ViewSetup"/>
+        <td style="white-space:nowrap;">
+            <img src="/SlicerPRISM/Resources/Documentation/ViewSetup.png" alt="ViewSetup" width ="50%" title="ViewSetup"/>
         </td>
     </tr>
-    <tr>
-        <td>
+    <tr style="white-space:nowrap;">
+        <td style="white-space:nowrap;">
             <ul> 
                 <li><b>Custom Shader</b> : Controls of the shader.</li>
                 <ul>
@@ -83,12 +80,12 @@ This module is an implementation of the PRISM customizable volume rendering fram
                 </ul>
             </ul>
         </td>
-        <td>
-            <img src="/SlicerPRISM/Resources/Documentation/CustomShader.png" alt="CustomShader" style="float:right;" width ="100%"	title="CustomShader"/>
+        <td style="white-space:nowrap;">
+            <img src="/SlicerPRISM/Resources/Documentation/CustomShader.png" alt="CustomShader" width ="50%" title="CustomShader"/>
         </td>
     </tr>
-    <tr>
-        <td rowspan=3>
+    <tr style="white-space:nowrap;">
+        <td rowspan=3 style="white-space:nowrap;">
             <ul> 
                 <li><b>Modify or Create Custom Shader</b> : Create or Modify a custom shader and add parameters.</li>
                 <ul>
@@ -114,24 +111,23 @@ This module is an implementation of the PRISM customizable volume rendering fram
                 </ul>
             </ul>
         </td>
-        <td>
-            <img src="/SlicerPRISM/Resources/Documentation/MCCustomShader.png" alt="MCCustomShader" style="float:right;" width ="100%"	title="MCCustomShader"/>
+        <td style="white-space:nowrap;">
+            <img src="/SlicerPRISM/Resources/Documentation/MCCustomShader.png" alt="MCCustomShader" width ="50%" title="MCCustomShader"/>
         </td>
     </tr>
-    <tr>
-        <td>
-            <img src="/SlicerPRISM/Resources/Documentation/MCCustomShaderCode.png" alt="MCCustomShaderCode" style="float:right;" width ="100%"	title="MCCustomShaderCode"/>
+    <tr style="white-space:nowrap;">
+        <td style="white-space:nowrap;">
+            <img src="/SlicerPRISM/Resources/Documentation/MCCustomShaderCode.png" alt="MCCustomShaderCode" width ="50%" title="MCCustomShaderCode"/>
         </td>
     </tr>
-    <tr>
-        <td>
-            <img src="/SlicerPRISM/Resources/Documentation/MCCustomShaderParam.png" alt="MCCustomShaderParam" style="float:right;" width ="100%"	title="MCCustomShaderParam"/>
+    <tr style="white-space:nowrap;">
+        <td style="white-space:nowrap;">
+            <img src="/SlicerPRISM/Resources/Documentation/MCCustomShaderParam.png" alt="MCCustomShaderParam" width ="50%" title="MCCustomShaderParam"/>
         </td>
     </tr>
-    </tbody>
 </table>
 
-<p align="center"><img src="/SlicerPRISM/Resources/Documentation/UnderConstruction.gif" alt="UnderConstruction" style="float:right;" width ="50%"	title="MCCustomShaderParam"/></p>
+<p align="center"><img src="/SlicerPRISM/Resources/Documentation/UnderConstruction.gif" alt="UnderConstruction" width ="30%" title="MCCustomShaderParam"/></p>
 
 <a name="similar"></a>
 ## Similar Modules
