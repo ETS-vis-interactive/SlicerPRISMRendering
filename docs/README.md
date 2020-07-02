@@ -65,7 +65,7 @@ This module is an implementation of the PRISM customizable volume rendering fram
             </ul>
         </td>
         <td style="white-space:nowrap;">
-            <img src="/SlicerPRISM/SlicerPRISM/Resources/Documentation/ViewSetup.png" alt="ViewSetup" width ="50%" title="ViewSetup"/>
+            <img src="/SlicerPRISM/Resources/Documentation/ViewSetup.png" alt="ViewSetup" width ="50%" title="ViewSetup"/>
         </td>
     </tr>
     <tr style="white-space:nowrap;">
