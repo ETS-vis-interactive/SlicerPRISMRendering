@@ -65,7 +65,7 @@ This module is an implementation of the PRISM customizable volume rendering fram
             </ul>
         </td>
         <td style="white-space:nowrap;">
-            <img src="docs/images/ViewSetup.png" alt="ViewSetup" width ="50%" title="ViewSetup"/>
+            <img src="images/ViewSetup.png" alt="ViewSetup" width ="50%" title="ViewSetup"/>
         </td>
     </tr>
     <tr style="white-space:nowrap;">
@@ -81,7 +81,7 @@ This module is an implementation of the PRISM customizable volume rendering fram
             </ul>
         </td>
         <td style="white-space:nowrap;">
-            <img src="/docs/images/CustomShader.png" alt="CustomShader" width ="50%" title="CustomShader"/>
+            <img src="images/CustomShader.png" alt="CustomShader" width ="50%" title="CustomShader"/>
         </td>
     </tr>
     <tr style="white-space:nowrap;">
@@ -112,22 +112,22 @@ This module is an implementation of the PRISM customizable volume rendering fram
             </ul>
         </td>
         <td style="white-space:nowrap;">
-            <img src="/SlicerPRISM/Resources/Documentation/MCCustomShader.png" alt="MCCustomShader" width ="50%" title="MCCustomShader"/>
+            <img src="images/MCCustomShader.png" alt="MCCustomShader" width ="50%" title="MCCustomShader"/>
         </td>
     </tr>
     <tr style="white-space:nowrap;">
         <td style="white-space:nowrap;">
-            <img src="/SlicerPRISM/Resources/Documentation/MCCustomShaderCode.png" alt="MCCustomShaderCode" width ="50%" title="MCCustomShaderCode"/>
+            <img src="images/MCCustomShaderCode.png" alt="MCCustomShaderCode" width ="50%" title="MCCustomShaderCode"/>
         </td>
     </tr>
     <tr style="white-space:nowrap;">
         <td style="white-space:nowrap;">
-            <img src="/SlicerPRISM/Resources/Documentation/MCCustomShaderParam.png" alt="MCCustomShaderParam" width ="50%" title="MCCustomShaderParam"/>
+            <img src="images/MCCustomShaderParam.png" alt="MCCustomShaderParam" width ="50%" title="MCCustomShaderParam"/>
         </td>
     </tr>
 </table>
 
-<p align="center"><img src="/SlicerPRISM/Resources/Documentation/UnderConstruction.gif" alt="UnderConstruction" width ="30%" title="MCCustomShaderParam"/></p>
+<p align="center"><img src="images/UnderConstruction.gif" alt="UnderConstruction" width ="30%" title="MCCustomShaderParam"/></p>
 
 <a name="similar"></a>
 ## Similar Modules
