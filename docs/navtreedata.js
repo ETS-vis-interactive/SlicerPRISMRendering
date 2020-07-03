@@ -69,7 +69,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "____init_____8py.html",
-"class_slicer_p_r_i_s_m_1_1_resources_1_1_shaders_1_1_sphere_carving_shader_1_1_sphere_carving_shader.html#aa443cf4c75b5d3be11cc212ced690ee4"
+"class_slicer_p_r_i_s_m_1_1_resources_1_1_virtual_reality_helper_1_1_virtual_reality_helper.html#a4a8426c5920ccc62250ce318e2b09ead"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

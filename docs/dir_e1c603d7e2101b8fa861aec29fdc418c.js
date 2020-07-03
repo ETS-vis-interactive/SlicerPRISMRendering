@@ -7,9 +7,6 @@ var dir_e1c603d7e2101b8fa861aec29fdc418c =
     [ "Decluttering.py", "_decluttering_8py.html", [
       [ "Decluttering", "class_slicer_p_r_i_s_m_1_1_resources_1_1_shaders_1_1_decluttering_1_1_decluttering.html", "class_slicer_p_r_i_s_m_1_1_resources_1_1_shaders_1_1_decluttering_1_1_decluttering" ]
     ] ],
-    [ "DeclutteringShader.py", "_decluttering_shader_8py.html", [
-      [ "DeclutteringShader", "class_slicer_p_r_i_s_m_1_1_resources_1_1_shaders_1_1_decluttering_shader_1_1_decluttering_shader.html", "class_slicer_p_r_i_s_m_1_1_resources_1_1_shaders_1_1_decluttering_shader_1_1_decluttering_shader" ]
-    ] ],
     [ "OpacityPeelingShader.py", "_opacity_peeling_shader_8py.html", [
       [ "OpacityPeelingShader", "class_slicer_p_r_i_s_m_1_1_resources_1_1_shaders_1_1_opacity_peeling_shader_1_1_opacity_peeling_shader.html", "class_slicer_p_r_i_s_m_1_1_resources_1_1_shaders_1_1_opacity_peeling_shader_1_1_opacity_peeling_shader" ]
     ] ],
