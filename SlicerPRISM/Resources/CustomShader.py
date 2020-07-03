@@ -7,31 +7,50 @@ import os
 import importlib.util
 
 """!@class CustomShader
-@brief class CustomShader
+@brief class CustomShader to add new custom shaders to the module
 Generic Custom Shader
 """ 
 class CustomShader():
-
-  shaderfParams = {}
-  shaderiParams = {}
-  shader4fParams = {}
-  shaderbParams = {}
-  shaderrParams = {}
-  shadertfParams = {}
-  shadervParams = {}
   
+  ## Integers parameters of the shader
+  shaderfParams = {}
+  ## Booleans parameters of the shader
+  shaderiParams = {}
+  ## Transfer Functions parameters of the shader 
+  shader4fParams = {}
+  ## Floats parameters of the shader
+  shaderbParams = {}
+  ## Points parameters of the shader
+  shaderrParams = {}
+  ## Ranges parameters of the shader 
+  shadertfParams = {}
+  ## Volumes parameters of the shader 
+  shadervParams = {}
+
   def __init__(self, shaderPropertyNode):
     assert shaderPropertyNode != None, 'CustomShader: a valid shader property node must provided to the constructor'
+    ## Property node of the shader
     self.shaderPropertyNode = shaderPropertyNode
+    ## Properies of the shader
     self.shaderProperty = shaderPropertyNode.GetShaderProperty()
+    ## Uniforms of the shader
     self.shaderUniforms = self.shaderPropertyNode.GetFragmentUniforms()
+
+    ## Floats parameters of the shader
     self.paramfValues = {}
+    ## Integers parameters of the shader
     self.paramiValues = {}
+    ## Points parameters of the shader
     self.param4fValues = {}
-    self.parambValues = {}   
-    self.paramrValues = {}   
-    self.paramtfValues = {}   
-    self.paramvValues = {}   
+    ## Booleans parameters of the shader
+    self.parambValues = {}
+    ## Ranges parameters of the shader 
+    self.paramrValues = {}
+    ## Transfer Functions parameters of the shader 
+    self.paramtfValues = {}
+    ## Volumes parameters of the shader 
+    self.paramvValues = {}
+
     for p in self.shaderfParams.keys():
       self.paramfValues[p] = self.shaderfParams[p]['defaultValue']
     for p in self.shaderiParams.keys():
@@ -50,7 +69,7 @@ class CustomShader():
 
   @classmethod
   def InstanciateCustomShader(cls, shaderDisplayName, shaderPropertyNode):
-    """!@brief Function instanciate a custom shdaer.
+    """!@brief Function to instanciate a custom shader.
 
     @param shaderDisplayName str : Display name of the shader.
     @param shaderPropertyNode vtkMRMLShaderPropertyNode : Shader property node.
@@ -70,7 +89,8 @@ class CustomShader():
 
     """
     allNames = [] #names of shaders
-    cls.allClasses = [] #classes of shaders
+    # Classes of shaders
+    cls.allClasses = []
 
     #get path of package
     packageName = 'Resources'

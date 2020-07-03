@@ -1,0 +1,5 @@
+<map id="onDuplicateCustomShaderButtonClicked" name="onDuplicateCustomShaderButtonClicked">
+<area shape="rect" id="node1" title="Function to duplicate custom shader file." alt="" coords="5,23,220,65"/>
+<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a46d3449d84d3687bf2e6daef46a9a012" title="Function to create a new class from the template." alt="" coords="268,5,363,32"/>
+<area shape="rect" id="node3" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ab776505316edd3e3b118d69ca7f9e480" title="Function to create a window with input to get the file name." alt="" coords="283,56,348,83"/>
+</map>

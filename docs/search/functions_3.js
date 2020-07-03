@@ -1,5 +1,10 @@
 var searchData=
 [
-  ['deletenodes_162',['deleteNodes',['../class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#a657da2e4396e502b80caedcca9e28f22',1,'SlicerPRISM::PRISMLogic::PRISMLogic']]],
-  ['duplicatefile_163',['duplicateFile',['../class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a46d3449d84d3687bf2e6daef46a9a012',1,'SlicerPRISM::PRISM::PRISMWidget']]]
+  ['cleanup_278',['cleanup',['../class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ad437efc961d478c0fbe40e9ad2a0578a',1,'SlicerPRISM::PRISM::PRISMWidget']]],
+  ['clear_279',['clear',['../class_slicer_p_r_i_s_m_1_1_resources_1_1_custom_shader_1_1_custom_shader.html#ad149341d7d849ff957baee565b19c123',1,'SlicerPRISM::Resources::CustomShader::CustomShader']]],
+  ['createendpoints_280',['createEndPoints',['../class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#a5173eecbb877b2a2d986cc60706f2594',1,'SlicerPRISM::PRISMLogic::PRISMLogic']]],
+  ['createhelpcontrolsdisplay_281',['createHelpControlsDisplay',['../class_slicer_p_r_i_s_m_1_1_resources_1_1_virtual_reality_helper_1_1_virtual_reality_helper.html#af1c576a8e7a89bff8bdc2deb63c0e258',1,'SlicerPRISM::Resources::VirtualRealityHelper::VirtualRealityHelper']]],
+  ['createparameterslayout_282',['createParametersLayout',['../class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ac406a5ff5a88ee3578f24b16f74171ab',1,'SlicerPRISM::PRISM::PRISMWidget']]],
+  ['createtransferfunctionwidget_283',['createTransferFunctionWidget',['../class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#adc9c6622ed17fd138cccbdc9c82c1498',1,'SlicerPRISM::PRISM::PRISMWidget']]],
+  ['createvrcontrollerlaser_284',['createVRControllerLaser',['../class_slicer_p_r_i_s_m_1_1_resources_1_1_virtual_reality_helper_1_1_virtual_reality_helper.html#a2bc8c01c41775c613f9bc2e05e426b7f',1,'SlicerPRISM::Resources::VirtualRealityHelper::VirtualRealityHelper']]]
 ];

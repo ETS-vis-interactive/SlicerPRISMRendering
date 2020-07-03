@@ -1,0 +1,5 @@
+<map id="setupCustomShader" name="setupCustomShader">
+<area shape="rect" id="node1" title="Get or create shader property node and initialize custom shader." alt="" coords="208,31,348,57"/>
+<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#a2035ec5a3e3b3e79fa6065f3775fb0c8" title="Use Slicer Volume Rendering module to initialize and setup rendering of the given volume node." alt="" coords="31,5,134,32"/>
+<area shape="rect" id="node3" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#aa3140c75748d4c9c9435a8a24f51c9d3" title="Set given shader type as current active shader." alt="" coords="5,56,160,83"/>
+</map>

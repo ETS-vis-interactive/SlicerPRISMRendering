@@ -1,0 +1,4 @@
+<map id="setCustomShaderType" name="setCustomShaderType">
+<area shape="rect" id="node1" title="Set given shader type as current active shader." alt="" coords="5,5,160,32"/>
+<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#adbde9c2b6f639fec066d50ad4cccf9fd" title="Get or create shader property node and initialize custom shader." alt="" coords="208,5,348,32"/>
+</map>

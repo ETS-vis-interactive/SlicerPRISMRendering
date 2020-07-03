@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['transferfunctionparams_269',['transferFunctionParams',['../class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a814c67deea1acc38183eb499820460d4',1,'SlicerPRISM::PRISM::PRISMWidget']]],
-  ['transferfunctionparamsname_270',['transferFunctionParamsName',['../class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a4e410c5a7311c95875d1ccdf0de1b73a',1,'SlicerPRISM::PRISM::PRISMWidget']]],
-  ['transformdisplaynode_271',['transformDisplayNode',['../class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a13562fdda65cace303e0eb672cea9746',1,'SlicerPRISM::PRISM::PRISMWidget']]],
-  ['transformnode_272',['transformNode',['../class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ac11aa3e24b70474d8decfd3b675d285e',1,'SlicerPRISM::PRISM::PRISMWidget']]]
+  ['rightcontrolsdisplaymarkups_433',['rightControlsDisplayMarkups',['../class_slicer_p_r_i_s_m_1_1_resources_1_1_virtual_reality_helper_1_1_virtual_reality_helper.html#a7a536631c4073aeec345809d6f36bd97',1,'SlicerPRISM::Resources::VirtualRealityHelper::VirtualRealityHelper']]],
+  ['righttransformmodifiedtag_434',['rightTransformModifiedTag',['../class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#a3e1bb69f05a82405f2d97e8c9fe43d9b',1,'SlicerPRISM::PRISMLogic::PRISMLogic']]],
+  ['roi_435',['ROI',['../class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#abb7268f371c78f668295a46b1339381a',1,'SlicerPRISM::PRISM::PRISMWidget']]]
 ];

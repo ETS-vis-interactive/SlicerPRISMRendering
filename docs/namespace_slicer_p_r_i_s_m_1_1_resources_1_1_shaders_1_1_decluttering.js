@@ -1,0 +1,4 @@
+var namespace_slicer_p_r_i_s_m_1_1_resources_1_1_shaders_1_1_decluttering =
+[
+    [ "Decluttering", "class_slicer_p_r_i_s_m_1_1_resources_1_1_shaders_1_1_decluttering_1_1_decluttering.html", "class_slicer_p_r_i_s_m_1_1_resources_1_1_shaders_1_1_decluttering_1_1_decluttering" ]
+];

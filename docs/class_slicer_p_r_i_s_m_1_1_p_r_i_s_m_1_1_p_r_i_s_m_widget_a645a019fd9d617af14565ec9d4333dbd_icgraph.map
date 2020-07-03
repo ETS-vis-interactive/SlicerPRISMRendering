@@ -1,0 +1,6 @@
+<map id="onAddParamComboIndexChanged" name="onAddParamComboIndexChanged">
+<area shape="rect" id="node1" title="Sets the current parameter type according to the combobox input." alt="" coords="453,23,673,50"/>
+<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ac406a5ff5a88ee3578f24b16f74171ab" title="Function to create the parameters layout to enable adding new parameters to a file." alt="" coords="5,23,169,50"/>
+<area shape="rect" id="node3" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ab7c52ead53f10907b9369a7011ed227f" title="Function to hide/show the points related widgets." alt="" coords="217,23,405,50"/>
+<area shape="rect" id="node4" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#aacc3a0a2f4821602d9869f8d12aa2e6a" title="Function to hide/show the transfer functions related widgets." alt="" coords="228,74,395,100"/>
+</map>

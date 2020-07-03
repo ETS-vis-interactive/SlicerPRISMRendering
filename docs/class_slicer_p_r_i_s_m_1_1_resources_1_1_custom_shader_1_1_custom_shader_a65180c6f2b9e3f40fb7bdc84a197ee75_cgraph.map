@@ -1,0 +1,4 @@
+<map id="InstanciateCustomShader" name="InstanciateCustomShader">
+<area shape="rect" id="node1" title="Function to instanciate a custom shader." alt="" coords="5,5,176,32"/>
+<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_resources_1_1_custom_shader_1_1_custom_shader.html#a4ad5db1be2c1a43db4cbe6211e0235d5" title="Function to get the name of the current class." alt="" coords="224,5,344,32"/>
+</map>

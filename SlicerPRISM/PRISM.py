@@ -295,6 +295,8 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.ui.addParamCombo.show()
   
   def onAddTFComboChanged(self) :
+    """!@brief Function to hide/show the transfer functions related widgets.
+    """
     if self.ui.addTFCombo.currentText.startswith('Hide'):
       self.onAddParamComboIndexChanged(0)
     elif self.ui.addTFCombo.currentText.startswith('Show'):
@@ -304,7 +306,8 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       self.ui.addTypeLabel.show()
 
   def onAddPointsComboChanged(self):
-    
+    """!@brief Function to hide/show the points related widgets.
+    """
     if self.ui.addPointsCombo.currentText.startswith('Keep'):
       self.onAddParamComboIndexChanged(0)
       self.ui.addTFXInput.hide()
@@ -347,6 +350,8 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       self.ui.addTFBLabel.hide()
 
   def onAddTypeComboChanged(self):
+    """!@brief Function to hide/show the transfer functions widgets.
+    """
     if self.ui.addTypeCombo.currentIndex != 0:
       self.ui.addPointsCombo.show()
       self.ui.addPointsLabel.show()

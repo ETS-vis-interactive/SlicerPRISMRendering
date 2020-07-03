@@ -1,0 +1,5 @@
+<map id="setAllUniforms" name="setAllUniforms">
+<area shape="rect" id="node1" title="Function to set the uniforms of the shader." alt="" coords="296,53,403,80"/>
+<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_resources_1_1_shaders_1_1_opacity_peeling_shader_1_1_opacity_peeling_shader.html#a37f880c0658348e292fe8afa847c0163" title="Function to setup the shader." alt="" coords="5,5,248,61"/>
+<area shape="rect" id="node3" href="$class_slicer_p_r_i_s_m_1_1_resources_1_1_custom_shader_1_1_custom_shader.html#a37f880c0658348e292fe8afa847c0163" title="Function to setup the shader." alt="" coords="79,85,174,112"/>
+</map>

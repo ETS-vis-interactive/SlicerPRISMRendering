@@ -43,13 +43,16 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     ScriptedLoadableModuleLogic.__init__(self)
     self.createEndPoints()
 
-    # VR interaction parameters
+    ## VR interaction parameters
     self.movingEntry = False
+    ## VR interaction parameters
     self.moveRelativePosition = False
 
-    # init volume rendering active node
+    ## Volume rendering active node
     self.volumeRenderingDisplayNode = None
+    ## Secondary volume rendering active nodes if there are multiple volumes
     self.secondaryVolumeRenderingDisplayNodes = [None]*20
+    ## Index of the current volume
     self.currentVolume = 0
 
     # hide volume rendering display node possibly loaded with the scene
@@ -59,20 +62,33 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     renderingDisplayNodes = None
 
     # By default, no special shader is applied
+    ## Type of the current custom shader
     self.customShaderType = 'None'
+    ## Class of the current custom shader
     self.customShader = None
     
+    ## Type of the annotation point being added to the scene
     self.pointType = ''
+    ## Index of the center point
     self.centerPointIndex = -1
+    ## Index of the target point
     self.targetPointIndex = -1
+    ## Index of the entry point
     self.entryPointIndex = -1
+    ## Markup button that has been pushed when addind an annotation point to the scene
     self.currentMarkupBtn = None
+    ## Current parameter node of the scene
     self.parameterNode = None
+    ## Observer of the parameter node
     self.parameterNodeObserver = None
     self.addObservers()
+    ## Color transfer function of the principal volume
     self.colorTransferFunction = vtk.vtkColorTransferFunction()
+    ## Opacity transfer function of the principal volume
     self.opacityTransferFunction = vtk.vtkPiecewiseFunction()
+    ## Names of the widgets that are optionnal in the current shader
     self.optionalWidgets = {}
+    ## Number of volumes in the shader
     self.numberOfVolumes = 0
     
   def enableOption(self, paramName, type_, checkBox, CSName) :
@@ -87,6 +103,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
       if checkBox.isChecked() :  
         for i in self.optionalWidgets[CSName + paramName] :
           i.show()
+        ## Boolean checking of there is a boolean option enabled/disabled in the shader
         self.optionEnabled = 1
       else: 
         self.optionEnabled = 0
@@ -231,6 +248,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     allEndPoints = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLMarkupsFiducialNode','EndPoints')
     if allEndPoints.GetNumberOfItems() > 0:
       # set node used before reload in the current instance
+      ## All endpoints in the scene
       self.endPoints = allEndPoints.GetItemAsObject(0)
       self.endPoints.RemoveAllMarkups()
       self.endPoints.GetDisplayNode().SetGlyphScale(6.0)
@@ -468,7 +486,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
 
 
   def setCustomShaderType(self, shaderTypeName):
-    """ Set given shader type as current active shader
+    """!@brief Set given shader type as current active shader
 
     @param shaderTypeName str : 'Sphere Carving', 'Opacity Peeling'. Name corresponding to the type of rendering needed.
     """
@@ -483,6 +501,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     shaderPropertyName = "ShaderProperty"
     CustomShader.GetAllShaderClassNames()
     if self.volumeRenderingDisplayNode is None :
+      ## Property node of the current shader
       self.shaderPropertyNode = slicer.vtkMRMLShaderPropertyNode()
       self.shaderPropertyNode.SetName(shaderPropertyName)
       slicer.mrmlScene.AddNode(self.shaderPropertyNode)

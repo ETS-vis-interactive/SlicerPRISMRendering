@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['logic_259',['logic',['../class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a2cbf966fd9fc1fd2a90734a1ad6c794d',1,'SlicerPRISM::PRISM::PRISMWidget']]]
+  ['endpoints_399',['endPoints',['../class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#a83ceb418217486727a2aae17b34eef98',1,'SlicerPRISM::PRISMLogic::PRISMLogic']]],
+  ['entrypointindex_400',['entryPointIndex',['../class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#aadafadea07331b2899119d7ce41158ec',1,'SlicerPRISM::PRISMLogic::PRISMLogic']]]
 ];

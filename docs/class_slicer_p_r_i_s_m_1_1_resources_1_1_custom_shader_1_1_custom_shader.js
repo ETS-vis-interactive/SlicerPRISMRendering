@@ -23,7 +23,14 @@ var class_slicer_p_r_i_s_m_1_1_resources_1_1_custom_shader_1_1_custom_shader =
     [ "paramrValues", "class_slicer_p_r_i_s_m_1_1_resources_1_1_custom_shader_1_1_custom_shader.html#a8236ec00cfd039ec47fbe142f90d0de9", null ],
     [ "paramtfValues", "class_slicer_p_r_i_s_m_1_1_resources_1_1_custom_shader_1_1_custom_shader.html#a4e5b2f5e4cfe32933e4fd1b2378cf2fe", null ],
     [ "paramvValues", "class_slicer_p_r_i_s_m_1_1_resources_1_1_custom_shader_1_1_custom_shader.html#a16a69e307e89f4d099dee9f67c31449e", null ],
+    [ "shader4fParams", "class_slicer_p_r_i_s_m_1_1_resources_1_1_custom_shader_1_1_custom_shader.html#aa443cf4c75b5d3be11cc212ced690ee4", null ],
+    [ "shaderbParams", "class_slicer_p_r_i_s_m_1_1_resources_1_1_custom_shader_1_1_custom_shader.html#a19b1c98c0011d1c202cd9584d9c8cc68", null ],
+    [ "shaderfParams", "class_slicer_p_r_i_s_m_1_1_resources_1_1_custom_shader_1_1_custom_shader.html#aa6480f4e830119d6a4f53564bde66524", null ],
+    [ "shaderiParams", "class_slicer_p_r_i_s_m_1_1_resources_1_1_custom_shader_1_1_custom_shader.html#a6a050427c1e358dcff0800002e870006", null ],
     [ "shaderProperty", "class_slicer_p_r_i_s_m_1_1_resources_1_1_custom_shader_1_1_custom_shader.html#a28354824675e0d1a92cdf7b68db818b1", null ],
     [ "shaderPropertyNode", "class_slicer_p_r_i_s_m_1_1_resources_1_1_custom_shader_1_1_custom_shader.html#af1f999b5ce8e4f349b70ed64a7bc41dd", null ],
-    [ "shaderUniforms", "class_slicer_p_r_i_s_m_1_1_resources_1_1_custom_shader_1_1_custom_shader.html#a205385e94542a3d7c7381e6caada544f", null ]
+    [ "shaderrParams", "class_slicer_p_r_i_s_m_1_1_resources_1_1_custom_shader_1_1_custom_shader.html#ae7e767640f4086f4566c1abcdc639bdd", null ],
+    [ "shadertfParams", "class_slicer_p_r_i_s_m_1_1_resources_1_1_custom_shader_1_1_custom_shader.html#a4283fcd2a6049ef3900efafabd40ab5c", null ],
+    [ "shaderUniforms", "class_slicer_p_r_i_s_m_1_1_resources_1_1_custom_shader_1_1_custom_shader.html#a205385e94542a3d7c7381e6caada544f", null ],
+    [ "shadervParams", "class_slicer_p_r_i_s_m_1_1_resources_1_1_custom_shader_1_1_custom_shader.html#ad305299336566b145a6cc0e9e5d4be1b", null ]
 ];

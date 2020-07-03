@@ -1,0 +1,5 @@
+<map id="renderVolume" name="renderVolume">
+<area shape="rect" id="node1" title="Use Slicer Volume Rendering module to initialize and setup rendering of the given volume node." alt="" coords="5,31,108,57"/>
+<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#adbde9c2b6f639fec066d50ad4cccf9fd" title="Get or create shader property node and initialize custom shader." alt="" coords="178,5,318,32"/>
+<area shape="rect" id="node3" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#a6a466cbdd1ef23e2d5cb1f60ea530682" title="Given a volume, compute a default color mapping to render volume in the given display node." alt="" coords="156,56,340,83"/>
+</map>

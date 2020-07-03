@@ -1,0 +1,4 @@
+<map id="deleteNodes" name="deleteNodes">
+<area shape="rect" id="node1" title="Deletes the nodes in the scene." alt="" coords="160,5,255,32"/>
+<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#a132b0f123f6fdc57ed5a62c70b7326a7" title="Function called when the scene is closed." alt="" coords="5,5,112,32"/>
+</map>
