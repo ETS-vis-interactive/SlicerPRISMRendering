@@ -44,11 +44,11 @@ class PRISM(ScriptedLoadableModule):
   def __init__(self, parent):
     ScriptedLoadableModule.__init__(self, parent)
     self.parent.title = "PRISM"
-    self.parent.categories = ["Projet"]
+    self.parent.categories = ["Rendering"]
     self.parent.dependencies = []
     self.parent.contributors = ["Tiphaine RICHARD"]
-    self.parent.helpText = """A scripted module to edit custom volume rendering shaders."""
-    self.parent.helpText += self.getDefaultModuleDocumentationLink()
+    self.parent.helpText = """This module is an implementation of the PRISM customizable volume rendering framework in 3D Slicer. """
+    self.parent.helpText += "<p>For more information see the <a href=\"https://ets-vis-interactive.github.io/SlicerPRISM/\">online documentation</a>.</p>"
     self.parent.acknowledgementText ="""This file was developped by Tiphaine RICHARD at Ecole de Technologie Superieure (Montreal, Canada)"""
 
 
@@ -89,6 +89,11 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     #
     # View Setup Area
     #
+    # Keep the widgets in position even when hiding
+    sp = self.ui.volumeRenderingCheckBox.sizePolicy
+    sp.setRetainSizeWhenHidden(True)
+    self.ui.enableROICheckBox.setSizePolicy(sp)
+    self.ui.displayROICheckBox.setSizePolicy(sp)
 
     self.ui.volumeRenderingCheckBox.toggled.connect(self.onVolumeRenderingCheckBoxToggled)
     self.ui.enableROICheckBox.toggled.connect(self.onEnableROICheckBoxToggled)
@@ -107,6 +112,11 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.ui.customShaderCollapsibleButton.hide()
 
     # Custom shader combobox to select a type of custom shader
+    self.ui.reloadCurrentCustomShaderButton.hide()
+    self.ui.openCustomShaderButton.hide()
+    self.ui.duplicateCustomShaderButton.hide()
+    self.ui.toolCustomShaderButton.clicked.connect(self.onToolCustomShaderButton)
+
     # Populate combobox with every types of shader available
     
     for shaderType in allShaderTypes:
@@ -952,7 +962,17 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       self.ui.enableScalingCheckBox.setChecked(False)
       self.ui.enableRotationCheckBox.hide()
       self.ui.enableRotationCheckBox.setChecked(False)
-
+  
+  def onToolCustomShaderButton(self) :
+    if self.ui.reloadCurrentCustomShaderButton.visible == True:
+      self.ui.reloadCurrentCustomShaderButton.hide()
+      self.ui.openCustomShaderButton.hide()
+      self.ui.duplicateCustomShaderButton.hide()
+    else :
+      self.ui.reloadCurrentCustomShaderButton.show()
+      self.ui.openCustomShaderButton.show()
+      self.ui.duplicateCustomShaderButton.show()
+  
   def onReloadCurrentCustomShaderButtonClicked(self, caller=None, event=None):
     """!@brief Function to reload the current custom shader.
 

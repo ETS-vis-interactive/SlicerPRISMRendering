@@ -4,12 +4,12 @@ project(SlicerPRISM)
 
 #-----------------------------------------------------------------------------
 # Extension meta-information
-set(EXTENSION_HOMEPAGE "http://slicer.org/slicerWiki/index.php/Documentation/Nightly/Extensions/SlicerPRISM")
-set(EXTENSION_CATEGORY "Projet")
+set(EXTENSION_HOMEPAGE "https://ets-vis-interactive.github.io/SlicerPRISM/")
+set(EXTENSION_CATEGORY "Rendering")
 set(EXTENSION_CONTRIBUTORS "Tiphaine RICHARD (ETS)")
-set(EXTENSION_DESCRIPTION "This is a scripted module to edit custom volume rendering shaders")
-set(EXTENSION_ICONURL "http://www.example.com/Slicer/Extensions/SlicerPRISM.png")
-set(EXTENSION_SCREENSHOTURLS "http://www.example.com/Slicer/Extensions/SlicerPRISM/Screenshots/1.png")
+set(EXTENSION_DESCRIPTION "This module is an implementation of the PRISM customizable volume rendering framework in 3D Slicer.")
+set(EXTENSION_ICONURL "https://github.com/ETS-vis-interactive/SlicerPRISM/blob/master/docs/images/logoSlicerPRISM.png")
+set(EXTENSION_SCREENSHOTURLS "https://github.com/ETS-vis-interactive/SlicerPRISM/blob/master/docs/images/screenshotSlicerPRISM.png")
 set(EXTENSION_DEPENDS "NA") # Specified as a space separated string, a list or 'NA' if any
 
 #-----------------------------------------------------------------------------

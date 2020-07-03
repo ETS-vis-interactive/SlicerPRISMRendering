@@ -41,6 +41,7 @@ var class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget =
     [ "onShaderOpenFileButtonClicked", "class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a591e2cd1c5c25d29a86e537ffa0f431a", null ],
     [ "onShaderTagsComboIndexChanged", "class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#afde6f0fd9b6eab0e808694a361cc4846", null ],
     [ "onShaderTagsTypeComboIndexChanged", "class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ae4585a6c70014093c57fcc1b21de0f71", null ],
+    [ "onToolCustomShaderButton", "class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ab810c838d47058b69d6d5937d88ed8bd", null ],
     [ "onVolumeRenderingCheckBoxToggled", "class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#aeca12365db877fb014a8f9ae49dbdc86", null ],
     [ "prismPath", "class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#af7406c9a5d8910debb54a749fa9462e9", null ],
     [ "removeGUIObservers", "class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a16e1c85444e27fae67a4b0973d36fe67", null ],
