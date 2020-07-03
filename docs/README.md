@@ -63,24 +63,24 @@ This module is an implementation of the PRISM customizable volume rendering fram
     <img src="images/tutorials/modifyCS/2.png" width ="40%"/>
 3. Use the [ Add Code ](#addcode) and [ Add Parameter ](#addparam) tabs to modify the python class UI : 
 
-    <img src="images/tutorials/modifyCS/6.png" width ="40%"/>
+    <img src="images/tutorials/modifyCS/3.png" width ="40%"/>
 
 <a name="addparam"></a>
 ### Adding a parameter to a shader from the UI
 
 1. In the comboBox, select the type of the parameter to add to the shader. 
 
-    <img src="images/tutorials/addparam/1.png" width ="40%"/>
+    <img src="images/tutorials/addParam/1.png" width ="40%"/>
 2. Type the name of the parameter that will be used inside the shader.  
 
-    <img src="images/tutorials/addparam/2.png" width ="40%"/>
+    <img src="images/tutorials/addParam/2.png" width ="40%"/>
 3. Type the display name of the parameter that will be used in the UI.  
 
-    <img src="images/tutorials/addparam/3.png" width ="40%"/>
+    <img src="images/tutorials/addParam/3.png" width ="40%"/>
 4. Modify the values according to the parameter.  
 5. Click the "Add Parameter" button.    
 
-    <img src="images/tutorials/addparam/45.png" width ="40%"/>
+    <img src="images/tutorials/addParam/45.png" width ="40%"/>
 6. Repeat steps 1-5 for each wanted parameter.
 
 <a name="addcode"></a>
@@ -88,13 +88,13 @@ This module is an implementation of the PRISM customizable volume rendering fram
 
 1. In the first comboBox, select the tag type of the code to be added to the shader.  
 
-    <img src="images/tutorials/addcode/1.png" width ="40%"/>
+    <img src="images/tutorials/addCode/1.png" width ="40%"/>
 2. In the second comboBox, select the tag of the code to be added to the shader.  
 
-    <img src="images/tutorials/addcode/2.png" width ="40%"/>
+    <img src="images/tutorials/addCode/2.png" width ="40%"/>
 3. To add the code you can either :  
 
-    <img src="images/tutorials/addcode/3.png" width ="40%"/>   
+    <img src="images/tutorials/addCode/3.png" width ="40%"/>   
 
     * Enter the code in the text area and click on the "Modify" button.
     * Click on the "Open File" button to enter the code directly in the python file.
