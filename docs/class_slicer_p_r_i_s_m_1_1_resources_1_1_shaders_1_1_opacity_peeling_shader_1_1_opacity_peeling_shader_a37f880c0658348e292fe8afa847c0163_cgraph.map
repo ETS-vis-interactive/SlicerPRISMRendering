@@ -1,4 +1,0 @@
-<map id="setupShader" name="setupShader">
-<area shape="rect" id="node1" title="Function to setup the shader." alt="" coords="5,13,100,39"/>
-<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_resources_1_1_custom_shader_1_1_custom_shader.html#afa709225c85d81a8ca96f674e865ffa2" title="Function to set the uniforms of the shader." alt="" coords="148,5,389,47"/>
-</map>

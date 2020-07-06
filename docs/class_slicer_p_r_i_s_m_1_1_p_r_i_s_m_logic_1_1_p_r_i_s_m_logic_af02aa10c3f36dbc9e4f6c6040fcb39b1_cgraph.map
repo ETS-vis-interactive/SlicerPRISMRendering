@@ -1,4 +1,0 @@
-<map id="onRightControllerTriggerPressed" name="onRightControllerTriggerPressed">
-<area shape="rect" id="node1" title="Callback function on trigger pressed event." alt="" coords="5,5,165,47"/>
-<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#ab2ba2b97a3e667b8f577568de11a6c92" title="Get Entry point position." alt="" coords="213,13,284,39"/>
-</map>

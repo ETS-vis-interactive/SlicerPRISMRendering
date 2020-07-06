@@ -1,5 +1,0 @@
-<map id="onOpenCustomShaderButtonClicked" name="onOpenCustomShaderButtonClicked">
-<area shape="rect" id="node1" title="Function to open custom shader file." alt="" coords="5,5,196,47"/>
-<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a1ba3668a0c21b14d86ad81f50450d03b" title="Function to get a selected shader file path." alt="" coords="244,13,311,39"/>
-<area shape="rect" id="node3" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#af7406c9a5d8910debb54a749fa9462e9" title="Function to get the module&#39;s path." alt="" coords="359,13,440,39"/>
-</map>

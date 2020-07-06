@@ -1,4 +1,0 @@
-<map id="onImageSelectorChanged" name="onImageSelectorChanged">
-<area shape="rect" id="node1" title="Callback function when the volume node has been changed in the dedicated combobox." alt="" coords="124,5,295,32"/>
-<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a5354f5739815c9b04b2e8df68991a1b7" title="Function to initialize the all user interface based on current scene." alt="" coords="5,5,76,32"/>
-</map>

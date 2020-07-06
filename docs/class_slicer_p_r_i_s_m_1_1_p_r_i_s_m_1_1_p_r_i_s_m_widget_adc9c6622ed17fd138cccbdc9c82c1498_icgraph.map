@@ -1,6 +1,0 @@
-<map id="createTransferFunctionWidget" name="createTransferFunctionWidget">
-<area shape="rect" id="node1" title="Function to create a transfert fuction widget." alt="" coords="343,31,537,57"/>
-<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ac59c625f0d809c1dd0ec96e9e8312dd8" title="Function to add transfer function widgets to the ui." alt="" coords="136,5,283,32"/>
-<area shape="rect" id="node3" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a54a1afbbde03873c1a73c339eaf4ac63" title="Callback function when the volume node has been changed in the dedicated combobox." alt="" coords="124,56,295,83"/>
-<area shape="rect" id="node4" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a5354f5739815c9b04b2e8df68991a1b7" title="Function to initialize the all user interface based on current scene." alt="" coords="5,56,76,83"/>
-</map>

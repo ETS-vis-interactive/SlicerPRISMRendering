@@ -1,7 +1,0 @@
-<map id="onLeftControllerMoved" name="onLeftControllerMoved">
-<area shape="rect" id="node1" title="Callback function w hen a the left controller position has changed." alt="" coords="5,71,155,97"/>
-<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#ab2ba2b97a3e667b8f577568de11a6c92" title="Get Entry point position." alt="" coords="287,5,357,32"/>
-<area shape="rect" id="node3" href="$class_slicer_p_r_i_s_m_1_1_resources_1_1_virtual_reality_helper_1_1_virtual_reality_helper.html#a0540f1d575f42e8fa3d6013367056cad" title=" " alt="" coords="203,56,441,112"/>
-<area shape="rect" id="node5" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#ac7f193e1acb5a2827b4a2798bcf267a8" title="Get Target point position." alt="" coords="284,136,360,163"/>
-<area shape="rect" id="node4" href="$class_slicer_p_r_i_s_m_1_1_resources_1_1_virtual_reality_helper_1_1_virtual_reality_helper.html#ae13eb7a77da60691d9642cfcb81630fe" title=" " alt="" coords="489,56,728,112"/>
-</map>

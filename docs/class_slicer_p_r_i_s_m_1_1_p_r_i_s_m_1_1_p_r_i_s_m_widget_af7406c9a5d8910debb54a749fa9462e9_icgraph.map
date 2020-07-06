@@ -1,9 +1,0 @@
-<map id="prismPath" name="prismPath">
-<area shape="rect" id="node1" title="Function to get the module&#39;s path." alt="" coords="379,191,460,218"/>
-<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a1ba3668a0c21b14d86ad81f50450d03b" title="Function to get a selected shader file path." alt="" coords="264,158,331,185"/>
-<area shape="rect" id="node5" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ab1895c94043be028238f122374b8df86" title="Reload the modules." alt="" coords="73,253,149,279"/>
-<area shape="rect" id="node3" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ae1a03b1dc14c2746bb2892f37a99e13e" title="Function to add the new shader replacement to a file." alt="" coords="11,5,210,47"/>
-<area shape="rect" id="node4" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a603b7c0196c8c4985ff8c65976e33c7e" title="Function to open custom shader file." alt="" coords="15,71,206,112"/>
-<area shape="rect" id="node6" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a4913ae6c186230db1cfc893f6e9407ec" title="Function to reload the current custom shader." alt="" coords="9,136,213,177"/>
-<area shape="rect" id="node7" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a591e2cd1c5c25d29a86e537ffa0f431a" title="Function to open a file containing the new shader replacement." alt="" coords="5,202,216,229"/>
-</map>

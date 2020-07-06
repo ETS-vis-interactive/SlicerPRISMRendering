@@ -1,4 +1,0 @@
-<map id="onCloseScene" name="onCloseScene">
-<area shape="rect" id="node1" title="Function called when the scene is closed." alt="" coords="5,5,112,32"/>
-<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#a657da2e4396e502b80caedcca9e28f22" title="Deletes the nodes in the scene." alt="" coords="160,5,255,32"/>
-</map>

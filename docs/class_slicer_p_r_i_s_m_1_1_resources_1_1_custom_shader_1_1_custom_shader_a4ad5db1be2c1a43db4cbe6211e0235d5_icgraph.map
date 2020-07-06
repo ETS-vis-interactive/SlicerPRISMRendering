@@ -1,5 +1,0 @@
-<map id="GetDisplayName" name="GetDisplayName">
-<area shape="rect" id="node1" title="Function to get the name of the current class." alt="" coords="224,31,344,57"/>
-<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_resources_1_1_custom_shader_1_1_custom_shader.html#a344ccd90b2c8c6868d8e57fbfa16e4e4" title="Function to get a class from it&#39;s display name." alt="" coords="35,5,146,32"/>
-<area shape="rect" id="node3" href="$class_slicer_p_r_i_s_m_1_1_resources_1_1_custom_shader_1_1_custom_shader.html#a65180c6f2b9e3f40fb7bdc84a197ee75" title="Function to instanciate a custom shader." alt="" coords="5,56,176,83"/>
-</map>

@@ -1,4 +1,0 @@
-<map id="resetROI" name="resetROI">
-<area shape="rect" id="node1" title="Function to reset the ROI in the scene." alt="" coords="120,5,193,32"/>
-<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ad437efc961d478c0fbe40e9ad2a0578a" title="Function to clean up the scene." alt="" coords="5,5,72,32"/>
-</map>

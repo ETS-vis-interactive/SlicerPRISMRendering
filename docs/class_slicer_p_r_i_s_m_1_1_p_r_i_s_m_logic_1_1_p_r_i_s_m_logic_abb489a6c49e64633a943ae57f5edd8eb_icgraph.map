@@ -1,5 +1,0 @@
-<map id="onCustomShaderParamChanged" name="onCustomShaderParamChanged">
-<area shape="rect" id="node1" title="Change the custom parameters in the shader." alt="" coords="200,31,411,57"/>
-<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#a6671941a4f52b9c1996b41e9557c864d" title="Callback function to get the position of the new point." alt="" coords="15,5,142,32"/>
-<area shape="rect" id="node3" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#a92a408ae5db8734e6bacb469864ee574" title="Callback function to get the position of the modified point." alt="" coords="5,56,152,83"/>
-</map>
