@@ -43,107 +43,107 @@ This module is an implementation of the PRISM customizable volume rendering fram
 ### Rendering a volume
 1. Open the "Data" section.
 
-    <img src="https://github.com/ETS-vis-interactive/SlicerPRISM/docs/images/tutorials/render/1.png" width ="40%"/>
+    <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/tutorials/render/1.png" width ="40%"/>
 2. Select your volume in the comboBox.
 
-    <img src="images/tutorials/render/2.png" width ="40%"/>    
+    <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/tutorials/render/2.png" width ="40%"/>    
 3. Open the "View Setup" section.
 
-    <img src="images/tutorials/render/3.png" width ="40%"/>
+    <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/tutorials/render/3.png" width ="40%"/>
 4. Apply the volume rendering to your volume by clicking on the "Volume Rendering" checkBox.
 
-    <img src="images/tutorials/render/4.png" width ="40%"/>
+    <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/tutorials/render/4.png" width ="40%"/>
 ### Applying a shader to a volume
 
 1. [Render the volume](#rendering).
 2. Open the "Custom Shader" section.
 
-    <img src="images/tutorials/applyCS/2.png" width ="40%"/>
+    <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/tutorials/applyCS/2.png" width ="40%"/>
 3. Select the shader of your choice in the comboBox.
 
 4. Adjust the different parameters.
 
 5. If you are currently developping the shader you can click on the "..." button in order to reload, duplicate or open the shader :
     
-    <img src="images/tutorials/applyCS/345.png" width ="40%"/>
+    <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/tutorials/applyCS/345.png" width ="40%"/>
 
     * Reload the shader by clicking on the "Reload" button. This will reload all the new functionnalities added to the file containing the shader.
     * Duplicate the shader by clicking on the "Duplicate" button. This will create a duplicate class of the class containing the shader.
     * Open the shader by clicking on the "Open" button. This will open the class containing the shader in your favorite editor.
     
-    <img src="images/tutorials/applyCS/6.png" width ="40%"/>
+    <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/tutorials/applyCS/6.png" width ="40%"/>
 
 ### Modifying the ROI of a volume
 
 1. [Render the volume](#rendering).
 2. Enable the cropping of the volume with the ROI by clicking on the "Enable Cropping" checkBox.
 
-    <img src="images/tutorials/modifyROI/2.png" width ="40%"/>    
+    <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/tutorials/modifyROI/2.png" width ="40%"/>    
 3. Display the ROI of the volume by clicking on the "Display ROI" checkBox.
 
-    <img src="images/tutorials/modifyROI/3.png" width ="40%"/>
+    <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/tutorials/modifyROI/3.png" width ="40%"/>
 4. You can scale and rotate the ROI :
 
-    <img src="images/tutorials/modifyROI/45.png" width ="40%"/>
+    <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/tutorials/modifyROI/45.png" width ="40%"/>
 
     * Scale the ROI :
         1. Enable the scalling of the ROI by clicking on the "Enable Rotation" checkBox.
         2. Select one of the handle of the ROI and move it towards the center or the outside of the volume to scale the ROI.
 
-        <img src="images/tutorials/modifyROI/scale.gif" width ="40%"/>    
+        <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/tutorials/modifyROI/scale.gif" width ="40%"/>    
     * Rotate the ROI :
         1. Enable the rotation of the ROI by clicking on the "Enable Rotation" checkBox.
         2. Select one of the side of the ROI and move it in any direction to rotate the ROI.
 
-        <img src="images/tutorials/modifyROI/rotate.gif" width ="40%"/>
+        <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/tutorials/modifyROI/rotate.gif" width ="40%"/>
 
 ### Creating a new shader
 1. Open the "Modify or Create Custom Shader" section.
 
-    <img src="images/tutorials/createCS/1.png" width ="40%"/>
+    <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/tutorials/createCS/1.png" width ="40%"/>
 2. In the comboBox, select "Create new Custom Shader".
 
-    <img src="images/tutorials/createCS/2.png" width ="40%"/>
+    <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/tutorials/createCS/2.png" width ="40%"/>
 3. Type the name of the shader that will be used as a class name.
 
-    <img src="images/tutorials/createCS/3.png" width ="40%"/>
+    <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/tutorials/createCS/3.png" width ="40%"/>
 4. Type the display name of the shader that will be used in the UI.
 5. Click the "Create" button.
 
-    <img src="images/tutorials/createCS/45.png" width ="40%"/>
+    <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/tutorials/createCS/45.png" width ="40%"/>
 6. You can either :
     * Click on the "Edit" button and modify the python class manually.
     * Use the [ Add Code ](#addcode) and [ Add Parameter ](#addparam) tabs to modify the python class with the UI : 
 
-        <img src="images/tutorials/createCS/6.png" width ="40%"/>
+        <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/tutorials/createCS/6.png" width ="40%"/>
 
 ### Modifying an existing shader
 1. Open "Modify or Create Custom Shader" section.
 
-    <img src="images/tutorials/modifyCS/1.png" width ="40%"/>
+    <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/tutorials/modifyCS/1.png" width ="40%"/>
 2. In the comboBox, select the shader to modify.
 
-    <img src="images/tutorials/modifyCS/2.png" width ="40%"/>
+    <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/tutorials/modifyCS/2.png" width ="40%"/>
 3. Use the [ Add Code ](#addcode) and [ Add Parameter ](#addparam) tabs to modify the python class UI : 
 
-    <img src="images/tutorials/modifyCS/3.png" width ="40%"/>
+    <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/tutorials/modifyCS/3.png" width ="40%"/>
 
 <a name="addparam"></a>
 ### Adding a parameter to a shader from the UI
 
 1. In the comboBox, select the type of the parameter to add to the shader. 
 
-    <img src="images/tutorials/addParam/1.png" width ="40%"/>
+    <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/tutorials/addParam/1.png" width ="40%"/>
 2. Type the name of the parameter that will be used inside the shader.  
 
-    <img src="images/tutorials/addParam/2.png" width ="40%"/>
+    <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/tutorials/addParam/2.png" width ="40%"/>
 3. Type the display name of the parameter that will be used in the UI.  
 
-    <img src="images/tutorials/addParam/3.png" width ="40%"/>
+    <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/tutorials/addParam/3.png" width ="40%"/>
 4. Modify the values according to the parameter.  
 5. Click the "Add Parameter" button.    
 
-    <img src="images/tutorials/addParam/45.png" width ="40%"/>
+    <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/tutorials/addParam/45.png" width ="40%"/>
 6. Repeat steps 1-5 for each wanted parameter.
 
 <a name="addcode"></a>
@@ -151,13 +151,13 @@ This module is an implementation of the PRISM customizable volume rendering fram
 
 1. In the first comboBox, select the tag type of the code to be added to the shader.  
 
-    <img src="images/tutorials/addCode/1.png" width ="40%"/>
+    <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/tutorials/addCode/1.png" width ="40%"/>
 2. In the second comboBox, select the tag of the code to be added to the shader.  
 
-    <img src="images/tutorials/addCode/2.png" width ="40%"/>
+    <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/tutorials/addCode/2.png" width ="40%"/>
 3. To add the code you can either :  
 
-    <img src="images/tutorials/addCode/3.png" width ="40%"/>   
+    <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/tutorials/addCode/3.png" width ="40%"/>   
 
     * Enter the code in the text area and click on the "Modify" button.
     * Click on the "Open File" button to enter the code directly in the python file.
@@ -180,7 +180,7 @@ This module is an implementation of the PRISM customizable volume rendering fram
             </ul>
         </td>
         <td>
-            <img src="images/Data.png" alt="Data" width ="100%" title="Data"/>
+            <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/Data.png" alt="Data" width ="100%" title="Data"/>
         </td>
     </tr>
     <tr>
@@ -197,7 +197,7 @@ This module is an implementation of the PRISM customizable volume rendering fram
             </ul>
         </td>
         <td align="center" style="width:50%">
-            <img src="images/ViewSetup.png" alt="ViewSetup" width ="100%" title="ViewSetup"/>
+            <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/ViewSetup.png" alt="ViewSetup" width ="100%" title="ViewSetup"/>
         </td>
     </tr>
     <tr>
@@ -213,7 +213,7 @@ This module is an implementation of the PRISM customizable volume rendering fram
             </ul>
         </td>
         <td align="center" style="width:50%">
-            <img src="images/CustomShader.png" alt="CustomShader" width ="100%" title="CustomShader"/>
+            <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/CustomShader.png" alt="CustomShader" width ="100%" title="CustomShader"/>
         </td>
     </tr>
     <tr>
@@ -244,22 +244,22 @@ This module is an implementation of the PRISM customizable volume rendering fram
             </ul>
         </td>
         <td align="center" style="width:50%">
-            <img src="images/MCCustomShader.png" alt="MCCustomShader" width ="100%" title="MCCustomShader"/>
+            <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/MCCustomShader.png" alt="MCCustomShader" width ="100%" title="MCCustomShader"/>
         </td>
     </tr>
     <tr>
         <td align="center" style="width:50%">
-            <img src="images/MCCustomShaderCode.png" alt="MCCustomShaderCode" width ="100%" title="MCCustomShaderCode"/>
+            <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/MCCustomShaderCode.png" alt="MCCustomShaderCode" width ="100%" title="MCCustomShaderCode"/>
         </td>
     </tr>
     <tr>
         <td align="center" style=" width:50%">
-            <img src="images/MCCustomShaderParam.png" alt="MCCustomShaderParam" width ="100%" title="MCCustomShaderParam"/>
+            <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/MCCustomShaderParam.png" alt="MCCustomShaderParam" width ="100%" title="MCCustomShaderParam"/>
         </td>
     </tr>
 </table>
 
-<p align="center"><img src="images/UnderConstruction.gif" alt="UnderConstruction" width ="50%" title="MCCustomShaderParam"/></p>
+<p align="center"><img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/images/UnderConstruction.gif" alt="UnderConstruction" width ="50%" title="MCCustomShaderParam"/></p>
 
 <a name="similar"></a>
 ## Similar Modules

@@ -1,0 +1,4 @@
+<map id="updateVolumeColorMapping" name="updateVolumeColorMapping">
+<area shape="rect" id="node1" title="Given a volume, compute a default color mapping to render volume in the given display node." alt="" coords="156,5,340,32"/>
+<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#a2035ec5a3e3b3e79fa6065f3775fb0c8" title="Use Slicer Volume Rendering module to initialize and setup rendering of the given volume node." alt="" coords="5,5,108,32"/>
+</map>

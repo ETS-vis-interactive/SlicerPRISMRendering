@@ -1,0 +1,4 @@
+<map id="addParamButtonClicked" name="addParamButtonClicked">
+<area shape="rect" id="node1" title="Function to get the current parameters and add them into a dictionnary." alt="" coords="217,5,380,32"/>
+<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ac406a5ff5a88ee3578f24b16f74171ab" title="Function to create the parameters layout to enable adding new parameters to a file." alt="" coords="5,5,169,32"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="createTransferFunctionWidget" name="createTransferFunctionWidget">
+<area shape="rect" id="node1" title="Function to create a transfert fuction widget." alt="" coords="5,31,200,57"/>
+<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a050018ff82526951ddafef689bb131cf" title="Function to add a widget to self.widgets without duplicate." alt="" coords="307,5,392,32"/>
+<area shape="rect" id="node3" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a9c2580701ccfac91074c348bf51d8353" title="Function to update the parameter node from gui values." alt="" coords="248,56,451,83"/>
+<area shape="rect" id="node4" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#adfb7a3a22452b635bb615e4750c2bf29" title="Function to get the class name of a widget." alt="" coords="499,56,605,83"/>
+</map>

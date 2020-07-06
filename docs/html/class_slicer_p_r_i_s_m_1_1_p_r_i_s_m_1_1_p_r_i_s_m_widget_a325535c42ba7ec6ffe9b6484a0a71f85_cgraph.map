@@ -1,0 +1,8 @@
+<map id="onParameterNodeModified" name="onParameterNodeModified">
+<area shape="rect" id="node1" title="Function to update the parameter node." alt="" coords="5,79,180,105"/>
+<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a4cb394295cd619d0c99b9c173ff5de4b" title="Function to update GUI from parameter node values." alt="" coords="228,79,431,105"/>
+<area shape="rect" id="node3" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a69a2d837a10281b583a4e5f9044db193" title="Function to add observers to the GUI&#39;s widgets." alt="" coords="489,28,611,55"/>
+<area shape="rect" id="node4" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#adfb7a3a22452b635bb615e4750c2bf29" title="Function to get the class name of a widget." alt="" coords="920,53,1027,80"/>
+<area shape="rect" id="node6" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a16e1c85444e27fae67a4b0973d36fe67" title="Function to remove observers from the GUI&#39;s widgets." alt="" coords="479,79,621,105"/>
+<area shape="rect" id="node5" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a9c2580701ccfac91074c348bf51d8353" title="Function to update the parameter node from gui values." alt="" coords="669,28,872,55"/>
+</map>

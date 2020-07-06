@@ -1,0 +1,4 @@
+<map id="getTarget" name="getTarget">
+<area shape="rect" id="node1" title="Get Target point position." alt="" coords="203,5,279,32"/>
+<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#a9d2c16412bacf4e807ce418176c0e550" title="Callback function w hen a the left controller position has changed." alt="" coords="5,5,155,32"/>
+</map>

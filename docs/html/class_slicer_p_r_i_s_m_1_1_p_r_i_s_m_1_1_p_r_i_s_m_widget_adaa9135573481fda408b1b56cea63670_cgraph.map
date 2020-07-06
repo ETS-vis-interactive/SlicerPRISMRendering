@@ -1,0 +1,9 @@
+<map id="onCustomShaderComboIndexChanged" name="onCustomShaderComboIndexChanged">
+<area shape="rect" id="node1" title="Callback function when the custom shader combo box is changed." alt="" coords="5,127,200,168"/>
+<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a4cb394295cd619d0c99b9c173ff5de4b" title="Function to update GUI from parameter node values." alt="" coords="248,58,451,85"/>
+<area shape="rect" id="node5" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a9c2580701ccfac91074c348bf51d8353" title="Function to update the parameter node from gui values." alt="" coords="689,83,892,110"/>
+<area shape="rect" id="node7" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#aa315cc715c538dea175216d53f73915e" title="Updates the shader parameters on the UI." alt="" coords="258,185,441,211"/>
+<area shape="rect" id="node3" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a69a2d837a10281b583a4e5f9044db193" title="Function to add observers to the GUI&#39;s widgets." alt="" coords="509,83,631,110"/>
+<area shape="rect" id="node4" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#adfb7a3a22452b635bb615e4750c2bf29" title="Function to get the class name of a widget." alt="" coords="940,58,1047,85"/>
+<area shape="rect" id="node6" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a16e1c85444e27fae67a4b0973d36fe67" title="Function to remove observers from the GUI&#39;s widgets." alt="" coords="499,33,641,59"/>
+</map>

@@ -1,0 +1,14 @@
+<map id="createParametersLayout" name="createParametersLayout">
+<area shape="rect" id="node1" title="Function to create the parameters layout to enable adding new parameters to a file." alt="" coords="5,208,169,235"/>
+<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a1eb16a219f95634ee6a878b4926d5d2a" title="Function to get the current parameters and add them into a dictionnary." alt="" coords="230,56,393,83"/>
+<area shape="rect" id="node5" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a09c30f6796c372b242ca908731f4aa1c" title="Function to clear the widgets of a specific layout." alt="" coords="732,107,817,133"/>
+<area shape="rect" id="node6" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#abb2588d12603fb3de8be8f15a3ee0fd8" title="Function to enable or disable the button to change the parametters." alt="" coords="236,157,387,184"/>
+<area shape="rect" id="node7" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a645a019fd9d617af14565ec9d4333dbd" title="Sets the current parameter type according to the combobox input." alt="" coords="453,233,673,260"/>
+<area shape="rect" id="node10" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ab7c52ead53f10907b9369a7011ed227f" title="Function to hide/show the points related widgets." alt="" coords="217,259,405,285"/>
+<area shape="rect" id="node11" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#aacc3a0a2f4821602d9869f8d12aa2e6a" title="Function to hide/show the transfer functions related widgets." alt="" coords="228,309,395,336"/>
+<area shape="rect" id="node12" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a16963baa48c5178a3d9c56088c3b9c92" title="Function to hide/show the transfer functions widgets." alt="" coords="222,360,401,387"/>
+<area shape="rect" id="node3" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a220c420339b770100d81a3015e0ac60f" title="Function to modify the specified dictionnary in the specified shader." alt="" coords="522,5,605,32"/>
+<area shape="rect" id="node4" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a4d4c0f2a4bf9afc519d14631ee71e1f0" title="Function to reset a specific layout." alt="" coords="518,56,609,83"/>
+<area shape="rect" id="node8" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#adfb7a3a22452b635bb615e4750c2bf29" title="Function to get the class name of a widget." alt="" coords="721,208,828,235"/>
+<area shape="rect" id="node9" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a7ee7b1fc1343a8a2914eb4e0d72668f5" title="Function to show specific widgets of a layout." alt="" coords="729,259,820,285"/>
+</map>

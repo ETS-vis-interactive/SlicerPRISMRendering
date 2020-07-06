@@ -1,0 +1,4 @@
+<map id="onRightControllerMoved" name="onRightControllerMoved">
+<area shape="rect" id="node1" title="Callback function when a the right controller position has changed." alt="" coords="5,5,164,32"/>
+<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#ab2ba2b97a3e667b8f577568de11a6c92" title="Get Entry point position." alt="" coords="212,5,283,32"/>
+</map>
