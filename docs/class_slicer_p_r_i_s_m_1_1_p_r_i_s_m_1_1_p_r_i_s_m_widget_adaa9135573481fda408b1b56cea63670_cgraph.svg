@@ -19,7 +19,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a4cb394295cd619d0c99b9c173ff5de4b" target="_top" xlink:title="Function to update GUI from parameter node values.">
+<g id="a_node2"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a4cb394295cd619d0c99b9c173ff5de4b" xlink:title="Function to update GUI from parameter node values.">
 <polygon fill="none" stroke="black" points="182,-95.5 182,-114.5 334,-114.5 334,-95.5 182,-95.5"/>
 <text text-anchor="middle" x="258" y="-102.5" font-family="Helvetica,sans-Serif" font-size="10.00">updateGUIFromParameterNode</text>
 </a>
@@ -32,7 +32,7 @@
 </g>
 <!-- Node5 -->
 <g id="node5" class="node"><title>Node5</title>
-<g id="a_node5"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a9c2580701ccfac91074c348bf51d8353" target="_top" xlink:title="Function to update the parameter node from gui values.">
+<g id="a_node5"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a9c2580701ccfac91074c348bf51d8353" xlink:title="Function to update the parameter node from gui values.">
 <polygon fill="none" stroke="black" points="513,-76.5 513,-95.5 665,-95.5 665,-76.5 513,-76.5"/>
 <text text-anchor="middle" x="589" y="-83.5" font-family="Helvetica,sans-Serif" font-size="10.00">updateParameterNodeFromGUI</text>
 </a>
@@ -45,7 +45,7 @@
 </g>
 <!-- Node7 -->
 <g id="node7" class="node"><title>Node7</title>
-<g id="a_node7"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#aa315cc715c538dea175216d53f73915e" target="_top" xlink:title="Updates the shader parameters on the UI.">
+<g id="a_node7"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#aa315cc715c538dea175216d53f73915e" xlink:title="Updates the shader parameters on the UI.">
 <polygon fill="none" stroke="black" points="189.5,-0.5 189.5,-19.5 326.5,-19.5 326.5,-0.5 189.5,-0.5"/>
 <text text-anchor="middle" x="258" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">UpdateShaderParametersUI</text>
 </a>
@@ -58,7 +58,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a69a2d837a10281b583a4e5f9044db193" target="_top" xlink:title="Function to add observers to the GUI&#39;s widgets.">
+<g id="a_node3"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a69a2d837a10281b583a4e5f9044db193" xlink:title="Function to add observers to the GUI&#39;s widgets.">
 <polygon fill="none" stroke="black" points="377.5,-76.5 377.5,-95.5 469.5,-95.5 469.5,-76.5 377.5,-76.5"/>
 <text text-anchor="middle" x="423.5" y="-83.5" font-family="Helvetica,sans-Serif" font-size="10.00">addGUIObservers</text>
 </a>
@@ -71,7 +71,7 @@
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>
-<g id="a_node4"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#adfb7a3a22452b635bb615e4750c2bf29" target="_top" xlink:title="Function to get the class name of a widget.">
+<g id="a_node4"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#adfb7a3a22452b635bb615e4750c2bf29" xlink:title="Function to get the class name of a widget.">
 <polygon fill="none" stroke="black" points="701,-95.5 701,-114.5 781,-114.5 781,-95.5 701,-95.5"/>
 <text text-anchor="middle" x="741" y="-102.5" font-family="Helvetica,sans-Serif" font-size="10.00">getClassName</text>
 </a>
@@ -84,7 +84,7 @@
 </g>
 <!-- Node6 -->
 <g id="node6" class="node"><title>Node6</title>
-<g id="a_node6"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a16e1c85444e27fae67a4b0973d36fe67" target="_top" xlink:title="Function to remove observers from the GUI&#39;s widgets.">
+<g id="a_node6"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a16e1c85444e27fae67a4b0973d36fe67" xlink:title="Function to remove observers from the GUI&#39;s widgets.">
 <polygon fill="none" stroke="black" points="370,-114.5 370,-133.5 477,-133.5 477,-114.5 370,-114.5"/>
 <text text-anchor="middle" x="423.5" y="-121.5" font-family="Helvetica,sans-Serif" font-size="10.00">removeGUIObservers</text>
 </a>

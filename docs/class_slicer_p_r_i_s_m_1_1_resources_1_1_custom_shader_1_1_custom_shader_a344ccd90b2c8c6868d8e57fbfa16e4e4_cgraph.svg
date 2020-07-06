@@ -18,7 +18,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_slicer_p_r_i_s_m_1_1_resources_1_1_custom_shader_1_1_custom_shader.html#a5e926f947b2f828b6b26c130f068607f" target="_top" xlink:title="Function to get the class names of all of the shaders.">
+<g id="a_node2"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_resources_1_1_custom_shader_1_1_custom_shader.html#a5e926f947b2f828b6b26c130f068607f" xlink:title="Function to get the class names of all of the shaders.">
 <polygon fill="none" stroke="black" points="119,-38.5 119,-57.5 249,-57.5 249,-38.5 119,-38.5"/>
 <text text-anchor="middle" x="184" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">GetAllShaderClassNames</text>
 </a>
@@ -31,7 +31,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="class_slicer_p_r_i_s_m_1_1_resources_1_1_custom_shader_1_1_custom_shader.html#a4ad5db1be2c1a43db4cbe6211e0235d5" target="_top" xlink:title="Function to get the name of the current class.">
+<g id="a_node3"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_resources_1_1_custom_shader_1_1_custom_shader.html#a4ad5db1be2c1a43db4cbe6211e0235d5" xlink:title="Function to get the name of the current class.">
 <polygon fill="none" stroke="black" points="139,-0.5 139,-19.5 229,-19.5 229,-0.5 139,-0.5"/>
 <text text-anchor="middle" x="184" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">GetDisplayName</text>
 </a>

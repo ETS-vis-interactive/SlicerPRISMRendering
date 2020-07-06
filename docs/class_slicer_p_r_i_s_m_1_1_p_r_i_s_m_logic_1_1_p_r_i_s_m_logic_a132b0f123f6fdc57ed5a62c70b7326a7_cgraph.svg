@@ -18,7 +18,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#a657da2e4396e502b80caedcca9e28f22" target="_top" xlink:title="Deletes the nodes in the scene.">
+<g id="a_node2"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#a657da2e4396e502b80caedcca9e28f22" xlink:title="Deletes the nodes in the scene.">
 <polygon fill="none" stroke="black" points="116,-0.5 116,-19.5 187,-19.5 187,-0.5 116,-0.5"/>
 <text text-anchor="middle" x="151.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">deleteNodes</text>
 </a>

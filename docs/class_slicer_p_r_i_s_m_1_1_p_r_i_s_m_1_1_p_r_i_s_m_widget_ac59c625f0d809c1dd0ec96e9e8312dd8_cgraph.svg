@@ -18,7 +18,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#adc9c6622ed17fd138cccbdc9c82c1498" target="_top" xlink:title="Function to create a transfert fuction widget.">
+<g id="a_node2"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#adc9c6622ed17fd138cccbdc9c82c1498" xlink:title="Function to create a transfert fuction widget.">
 <polygon fill="none" stroke="black" points="146,-19.5 146,-38.5 292,-38.5 292,-19.5 146,-19.5"/>
 <text text-anchor="middle" x="219" y="-26.5" font-family="Helvetica,sans-Serif" font-size="10.00">createTransferFunctionWidget</text>
 </a>
@@ -31,7 +31,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a050018ff82526951ddafef689bb131cf" target="_top" xlink:title="Function to add a widget to self.widgets without duplicate.">
+<g id="a_node3"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a050018ff82526951ddafef689bb131cf" xlink:title="Function to add a widget to self.widgets without duplicate.">
 <polygon fill="none" stroke="black" points="372,-38.5 372,-57.5 436,-57.5 436,-38.5 372,-38.5"/>
 <text text-anchor="middle" x="404" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">appendList</text>
 </a>
@@ -44,7 +44,7 @@
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>
-<g id="a_node4"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a9c2580701ccfac91074c348bf51d8353" target="_top" xlink:title="Function to update the parameter node from gui values.">
+<g id="a_node4"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a9c2580701ccfac91074c348bf51d8353" xlink:title="Function to update the parameter node from gui values.">
 <polygon fill="none" stroke="black" points="328,-0.5 328,-19.5 480,-19.5 480,-0.5 328,-0.5"/>
 <text text-anchor="middle" x="404" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">updateParameterNodeFromGUI</text>
 </a>
@@ -57,7 +57,7 @@
 </g>
 <!-- Node5 -->
 <g id="node5" class="node"><title>Node5</title>
-<g id="a_node5"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#adfb7a3a22452b635bb615e4750c2bf29" target="_top" xlink:title="Function to get the class name of a widget.">
+<g id="a_node5"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#adfb7a3a22452b635bb615e4750c2bf29" xlink:title="Function to get the class name of a widget.">
 <polygon fill="none" stroke="black" points="516,-0.5 516,-19.5 596,-19.5 596,-0.5 516,-0.5"/>
 <text text-anchor="middle" x="556" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">getClassName</text>
 </a>

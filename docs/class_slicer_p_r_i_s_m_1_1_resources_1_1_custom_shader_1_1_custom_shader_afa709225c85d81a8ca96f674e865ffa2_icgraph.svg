@@ -18,7 +18,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_slicer_p_r_i_s_m_1_1_resources_1_1_shaders_1_1_opacity_peeling_shader_1_1_opacity_peeling_shader.html#a37f880c0658348e292fe8afa847c0163" target="_top" xlink:title="Function to setup the shader.">
+<g id="a_node2"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_resources_1_1_shaders_1_1_opacity_peeling_shader_1_1_opacity_peeling_shader.html#a37f880c0658348e292fe8afa847c0163" xlink:title="Function to setup the shader.">
 <polygon fill="none" stroke="black" points="0,-38.5 0,-79.5 182,-79.5 182,-38.5 0,-38.5"/>
 <text text-anchor="start" x="8" y="-67.5" font-family="Helvetica,sans-Serif" font-size="10.00">SlicerPRISM.Resources.Shaders.</text>
 <text text-anchor="start" x="8" y="-56.5" font-family="Helvetica,sans-Serif" font-size="10.00">OpacityPeelingShader.OpacityPeeling</text>
@@ -33,7 +33,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="class_slicer_p_r_i_s_m_1_1_resources_1_1_custom_shader_1_1_custom_shader.html#a37f880c0658348e292fe8afa847c0163" target="_top" xlink:title="Function to setup the shader.">
+<g id="a_node3"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_resources_1_1_custom_shader_1_1_custom_shader.html#a37f880c0658348e292fe8afa847c0163" xlink:title="Function to setup the shader.">
 <polygon fill="none" stroke="black" points="55.5,-0.5 55.5,-19.5 126.5,-19.5 126.5,-0.5 55.5,-0.5"/>
 <text text-anchor="middle" x="91" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">setupShader</text>
 </a>

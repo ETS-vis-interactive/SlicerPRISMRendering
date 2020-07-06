@@ -18,7 +18,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a1ba3668a0c21b14d86ad81f50450d03b" target="_top" xlink:title="Function to get a selected shader file path.">
+<g id="a_node2"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a1ba3668a0c21b14d86ad81f50450d03b" xlink:title="Function to get a selected shader file path.">
 <polygon fill="none" stroke="black" points="93,-19.5 93,-38.5 143,-38.5 143,-19.5 93,-19.5"/>
 <text text-anchor="middle" x="118" y="-26.5" font-family="Helvetica,sans-Serif" font-size="10.00">getPath</text>
 </a>
@@ -31,7 +31,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#af7406c9a5d8910debb54a749fa9462e9" target="_top" xlink:title="Function to get the module&#39;s path.">
+<g id="a_node3"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#af7406c9a5d8910debb54a749fa9462e9" xlink:title="Function to get the module&#39;s path.">
 <polygon fill="none" stroke="black" points="179,-0.5 179,-19.5 240,-19.5 240,-0.5 179,-0.5"/>
 <text text-anchor="middle" x="209.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">prismPath</text>
 </a>

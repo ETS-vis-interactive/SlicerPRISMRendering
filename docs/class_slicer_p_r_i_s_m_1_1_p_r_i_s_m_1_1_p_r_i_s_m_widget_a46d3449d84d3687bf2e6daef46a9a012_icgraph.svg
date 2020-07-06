@@ -18,7 +18,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#abbdf38d4f5a2fe448f6ba7c2b0e8216d" target="_top" xlink:title="Function to duplicate custom shader file.">
+<g id="a_node2"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#abbdf38d4f5a2fe448f6ba7c2b0e8216d" xlink:title="Function to duplicate custom shader file.">
 <polygon fill="none" stroke="black" points="0,-0.5 0,-30.5 161,-30.5 161,-0.5 0,-0.5"/>
 <text text-anchor="start" x="8" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">onDuplicateCustomShaderButton</text>
 <text text-anchor="middle" x="80.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">Clicked</text>

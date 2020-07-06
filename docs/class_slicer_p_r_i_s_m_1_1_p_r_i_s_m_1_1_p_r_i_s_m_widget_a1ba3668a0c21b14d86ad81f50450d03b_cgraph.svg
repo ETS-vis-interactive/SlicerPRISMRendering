@@ -18,7 +18,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#af7406c9a5d8910debb54a749fa9462e9" target="_top" xlink:title="Function to get the module&#39;s path.">
+<g id="a_node2"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#af7406c9a5d8910debb54a749fa9462e9" xlink:title="Function to get the module&#39;s path.">
 <polygon fill="none" stroke="black" points="86,-0.5 86,-19.5 147,-19.5 147,-0.5 86,-0.5"/>
 <text text-anchor="middle" x="116.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">prismPath</text>
 </a>

@@ -18,7 +18,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a69a2d837a10281b583a4e5f9044db193" target="_top" xlink:title="Function to add observers to the GUI&#39;s widgets.">
+<g id="a_node2"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a69a2d837a10281b583a4e5f9044db193" xlink:title="Function to add observers to the GUI&#39;s widgets.">
 <polygon fill="none" stroke="black" points="583,-304.5 583,-323.5 675,-323.5 675,-304.5 583,-304.5"/>
 <text text-anchor="middle" x="629" y="-311.5" font-family="Helvetica,sans-Serif" font-size="10.00">addGUIObservers</text>
 </a>
@@ -31,7 +31,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a4cb394295cd619d0c99b9c173ff5de4b" target="_top" xlink:title="Function to update GUI from parameter node values.">
+<g id="a_node3"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a4cb394295cd619d0c99b9c173ff5de4b" xlink:title="Function to update GUI from parameter node values.">
 <polygon fill="none" stroke="black" points="368,-304.5 368,-323.5 520,-323.5 520,-304.5 368,-304.5"/>
 <text text-anchor="middle" x="444" y="-311.5" font-family="Helvetica,sans-Serif" font-size="10.00">updateGUIFromParameterNode</text>
 </a>
@@ -44,7 +44,7 @@
 </g>
 <!-- Node7 -->
 <g id="node7" class="node"><title>Node7</title>
-<g id="a_node7"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a645a019fd9d617af14565ec9d4333dbd" target="_top" xlink:title="Sets the current parameter type according to the combobox input.">
+<g id="a_node7"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a645a019fd9d617af14565ec9d4333dbd" xlink:title="Sets the current parameter type according to the combobox input.">
 <polygon fill="none" stroke="black" points="738,-57.5 738,-76.5 903,-76.5 903,-57.5 738,-57.5"/>
 <text text-anchor="middle" x="820.5" y="-64.5" font-family="Helvetica,sans-Serif" font-size="10.00">onAddParamComboIndexChanged</text>
 </a>
@@ -57,7 +57,7 @@
 </g>
 <!-- Node11 -->
 <g id="node11" class="node"><title>Node11</title>
-<g id="a_node11"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a16e1c85444e27fae67a4b0973d36fe67" target="_top" xlink:title="Function to remove observers from the GUI&#39;s widgets.">
+<g id="a_node11"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a16e1c85444e27fae67a4b0973d36fe67" xlink:title="Function to remove observers from the GUI&#39;s widgets.">
 <polygon fill="none" stroke="black" points="575.5,-266.5 575.5,-285.5 682.5,-285.5 682.5,-266.5 575.5,-266.5"/>
 <text text-anchor="middle" x="629" y="-273.5" font-family="Helvetica,sans-Serif" font-size="10.00">removeGUIObservers</text>
 </a>
@@ -70,7 +70,7 @@
 </g>
 <!-- Node13 -->
 <g id="node13" class="node"><title>Node13</title>
-<g id="a_node13"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a9c2580701ccfac91074c348bf51d8353" target="_top" xlink:title="Function to update the parameter node from gui values.">
+<g id="a_node13"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a9c2580701ccfac91074c348bf51d8353" xlink:title="Function to update the parameter node from gui values.">
 <polygon fill="none" stroke="black" points="744.5,-228.5 744.5,-247.5 896.5,-247.5 896.5,-228.5 744.5,-228.5"/>
 <text text-anchor="middle" x="820.5" y="-235.5" font-family="Helvetica,sans-Serif" font-size="10.00">updateParameterNodeFromGUI</text>
 </a>
@@ -88,7 +88,7 @@
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>
-<g id="a_node4"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#adaa9135573481fda408b1b56cea63670" target="_top" xlink:title="Callback function when the custom shader combo box is changed.">
+<g id="a_node4"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#adaa9135573481fda408b1b56cea63670" xlink:title="Callback function when the custom shader combo box is changed.">
 <polygon fill="none" stroke="black" points="186,-234 186,-264 332,-264 332,-234 186,-234"/>
 <text text-anchor="start" x="194" y="-252" font-family="Helvetica,sans-Serif" font-size="10.00">onCustomShaderComboIndex</text>
 <text text-anchor="middle" x="259" y="-241" font-family="Helvetica,sans-Serif" font-size="10.00">Changed</text>
@@ -102,7 +102,7 @@
 </g>
 <!-- Node5 -->
 <g id="node5" class="node"><title>Node5</title>
-<g id="a_node5"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a325535c42ba7ec6ffe9b6484a0a71f85" target="_top" xlink:title="Function to update the parameter node.">
+<g id="a_node5"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a325535c42ba7ec6ffe9b6484a0a71f85" xlink:title="Function to update the parameter node.">
 <polygon fill="none" stroke="black" points="193.5,-304.5 193.5,-323.5 324.5,-323.5 324.5,-304.5 193.5,-304.5"/>
 <text text-anchor="middle" x="259" y="-311.5" font-family="Helvetica,sans-Serif" font-size="10.00">onParameterNodeModified</text>
 </a>
@@ -115,7 +115,7 @@
 </g>
 <!-- Node6 -->
 <g id="node6" class="node"><title>Node6</title>
-<g id="a_node6"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#aec96b9b1b3199eeba9f95e65796306c1" target="_top" xlink:title="Function to set the parameter node.">
+<g id="a_node6"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#aec96b9b1b3199eeba9f95e65796306c1" xlink:title="Function to set the parameter node.">
 <polygon fill="none" stroke="black" points="0,-304.5 0,-323.5 150,-323.5 150,-304.5 0,-304.5"/>
 <text text-anchor="middle" x="75" y="-311.5" font-family="Helvetica,sans-Serif" font-size="10.00">setAndObserveParameterNode</text>
 </a>
@@ -128,7 +128,7 @@
 </g>
 <!-- Node8 -->
 <g id="node8" class="node"><title>Node8</title>
-<g id="a_node8"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ac406a5ff5a88ee3578f24b16f74171ab" target="_top" xlink:title="Function to create the parameters layout to enable adding new parameters to a file.">
+<g id="a_node8"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ac406a5ff5a88ee3578f24b16f74171ab" xlink:title="Function to create the parameters layout to enable adding new parameters to a file.">
 <polygon fill="none" stroke="black" points="382.5,-38.5 382.5,-57.5 505.5,-57.5 505.5,-38.5 382.5,-38.5"/>
 <text text-anchor="middle" x="444" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">createParametersLayout</text>
 </a>
@@ -141,7 +141,7 @@
 </g>
 <!-- Node9 -->
 <g id="node9" class="node"><title>Node9</title>
-<g id="a_node9"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ab7c52ead53f10907b9369a7011ed227f" target="_top" xlink:title="Function to hide/show the points related widgets.">
+<g id="a_node9"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ab7c52ead53f10907b9369a7011ed227f" xlink:title="Function to hide/show the points related widgets.">
 <polygon fill="none" stroke="black" points="558.5,-38.5 558.5,-57.5 699.5,-57.5 699.5,-38.5 558.5,-38.5"/>
 <text text-anchor="middle" x="629" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">onAddPointsComboChanged</text>
 </a>
@@ -154,7 +154,7 @@
 </g>
 <!-- Node10 -->
 <g id="node10" class="node"><title>Node10</title>
-<g id="a_node10"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#aacc3a0a2f4821602d9869f8d12aa2e6a" target="_top" xlink:title="Function to hide/show the transfer functions related widgets.">
+<g id="a_node10"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#aacc3a0a2f4821602d9869f8d12aa2e6a" xlink:title="Function to hide/show the transfer functions related widgets.">
 <polygon fill="none" stroke="black" points="566.5,-0.5 566.5,-19.5 691.5,-19.5 691.5,-0.5 566.5,-0.5"/>
 <text text-anchor="middle" x="629" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">onAddTFComboChanged</text>
 </a>
@@ -182,7 +182,7 @@
 </g>
 <!-- Node12 -->
 <g id="node12" class="node"><title>Node12</title>
-<g id="a_node12"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ad437efc961d478c0fbe40e9ad2a0578a" target="_top" xlink:title="Function to clean up the scene.">
+<g id="a_node12"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ad437efc961d478c0fbe40e9ad2a0578a" xlink:title="Function to clean up the scene.">
 <polygon fill="none" stroke="black" points="419,-266.5 419,-285.5 469,-285.5 469,-266.5 419,-266.5"/>
 <text text-anchor="middle" x="444" y="-273.5" font-family="Helvetica,sans-Serif" font-size="10.00">cleanup</text>
 </a>
@@ -210,7 +210,7 @@
 </g>
 <!-- Node14 -->
 <g id="node14" class="node"><title>Node14</title>
-<g id="a_node14"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#adc9c6622ed17fd138cccbdc9c82c1498" target="_top" xlink:title="Function to create a transfert fuction widget.">
+<g id="a_node14"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#adc9c6622ed17fd138cccbdc9c82c1498" xlink:title="Function to create a transfert fuction widget.">
 <polygon fill="none" stroke="black" points="556,-114.5 556,-133.5 702,-133.5 702,-114.5 556,-114.5"/>
 <text text-anchor="middle" x="629" y="-121.5" font-family="Helvetica,sans-Serif" font-size="10.00">createTransferFunctionWidget</text>
 </a>
@@ -223,7 +223,7 @@
 </g>
 <!-- Node16 -->
 <g id="node16" class="node"><title>Node16</title>
-<g id="a_node16"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a54a1afbbde03873c1a73c339eaf4ac63" target="_top" xlink:title="Callback function when the volume node has been changed in the dedicated combobox.">
+<g id="a_node16"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a54a1afbbde03873c1a73c339eaf4ac63" xlink:title="Callback function when the volume node has been changed in the dedicated combobox.">
 <polygon fill="none" stroke="black" points="380,-152.5 380,-171.5 508,-171.5 508,-152.5 380,-152.5"/>
 <text text-anchor="middle" x="444" y="-159.5" font-family="Helvetica,sans-Serif" font-size="10.00">onImageSelectorChanged</text>
 </a>
@@ -236,7 +236,7 @@
 </g>
 <!-- Node17 -->
 <g id="node17" class="node"><title>Node17</title>
-<g id="a_node17"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a5354f5739815c9b04b2e8df68991a1b7" target="_top" xlink:title="Function to initialize the all user interface based on current scene.">
+<g id="a_node17"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a5354f5739815c9b04b2e8df68991a1b7" xlink:title="Function to initialize the all user interface based on current scene.">
 <polygon fill="none" stroke="black" points="232.5,-179.5 232.5,-198.5 285.5,-198.5 285.5,-179.5 232.5,-179.5"/>
 <text text-anchor="middle" x="259" y="-186.5" font-family="Helvetica,sans-Serif" font-size="10.00">initState</text>
 </a>
@@ -249,7 +249,7 @@
 </g>
 <!-- Node15 -->
 <g id="node15" class="node"><title>Node15</title>
-<g id="a_node15"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ac59c625f0d809c1dd0ec96e9e8312dd8" target="_top" xlink:title="Function to add transfer function widgets to the ui.">
+<g id="a_node15"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ac59c625f0d809c1dd0ec96e9e8312dd8" xlink:title="Function to add transfer function widgets to the ui.">
 <polygon fill="none" stroke="black" points="389,-114.5 389,-133.5 499,-133.5 499,-114.5 389,-114.5"/>
 <text text-anchor="middle" x="444" y="-121.5" font-family="Helvetica,sans-Serif" font-size="10.00">addTransferFunctions</text>
 </a>

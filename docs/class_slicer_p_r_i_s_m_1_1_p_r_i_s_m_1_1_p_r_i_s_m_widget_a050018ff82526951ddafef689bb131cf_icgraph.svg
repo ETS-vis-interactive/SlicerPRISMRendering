@@ -18,7 +18,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#adc9c6622ed17fd138cccbdc9c82c1498" target="_top" xlink:title="Function to create a transfert fuction widget.">
+<g id="a_node2"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#adc9c6622ed17fd138cccbdc9c82c1498" xlink:title="Function to create a transfert fuction widget.">
 <polygon fill="none" stroke="black" points="253,-19.5 253,-38.5 399,-38.5 399,-19.5 253,-19.5"/>
 <text text-anchor="middle" x="326" y="-26.5" font-family="Helvetica,sans-Serif" font-size="10.00">createTransferFunctionWidget</text>
 </a>
@@ -31,7 +31,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ac59c625f0d809c1dd0ec96e9e8312dd8" target="_top" xlink:title="Function to add transfer function widgets to the ui.">
+<g id="a_node3"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ac59c625f0d809c1dd0ec96e9e8312dd8" xlink:title="Function to add transfer function widgets to the ui.">
 <polygon fill="none" stroke="black" points="98,-38.5 98,-57.5 208,-57.5 208,-38.5 98,-38.5"/>
 <text text-anchor="middle" x="153" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">addTransferFunctions</text>
 </a>
@@ -44,7 +44,7 @@
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>
-<g id="a_node4"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a54a1afbbde03873c1a73c339eaf4ac63" target="_top" xlink:title="Callback function when the volume node has been changed in the dedicated combobox.">
+<g id="a_node4"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a54a1afbbde03873c1a73c339eaf4ac63" xlink:title="Callback function when the volume node has been changed in the dedicated combobox.">
 <polygon fill="none" stroke="black" points="89,-0.5 89,-19.5 217,-19.5 217,-0.5 89,-0.5"/>
 <text text-anchor="middle" x="153" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">onImageSelectorChanged</text>
 </a>
@@ -57,7 +57,7 @@
 </g>
 <!-- Node5 -->
 <g id="node5" class="node"><title>Node5</title>
-<g id="a_node5"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a5354f5739815c9b04b2e8df68991a1b7" target="_top" xlink:title="Function to initialize the all user interface based on current scene.">
+<g id="a_node5"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a5354f5739815c9b04b2e8df68991a1b7" xlink:title="Function to initialize the all user interface based on current scene.">
 <polygon fill="none" stroke="black" points="0,-0.5 0,-19.5 53,-19.5 53,-0.5 0,-0.5"/>
 <text text-anchor="middle" x="26.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">initState</text>
 </a>

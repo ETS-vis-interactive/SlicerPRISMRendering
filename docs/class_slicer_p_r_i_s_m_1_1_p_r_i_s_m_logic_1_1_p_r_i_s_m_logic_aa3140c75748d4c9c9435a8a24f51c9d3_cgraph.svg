@@ -18,7 +18,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#adbde9c2b6f639fec066d50ad4cccf9fd" target="_top" xlink:title="Get or create shader property node and initialize custom shader.">
+<g id="a_node2"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#adbde9c2b6f639fec066d50ad4cccf9fd" xlink:title="Get or create shader property node and initialize custom shader.">
 <polygon fill="none" stroke="black" points="152,-0.5 152,-19.5 257,-19.5 257,-0.5 152,-0.5"/>
 <text text-anchor="middle" x="204.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">setupCustomShader</text>
 </a>

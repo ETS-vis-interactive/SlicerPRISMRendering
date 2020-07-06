@@ -18,7 +18,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#ae64f0875afe3067b97ba370b354b9213" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#ae64f0875afe3067b97ba370b354b9213" xlink:title=" ">
 <polygon fill="none" stroke="black" points="0,-0.5 0,-19.5 50,-19.5 50,-0.5 0,-0.5"/>
 <text text-anchor="middle" x="25" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">__init__</text>
 </a>

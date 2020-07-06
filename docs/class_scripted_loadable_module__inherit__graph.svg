@@ -22,7 +22,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m.html" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m.html" xlink:title=" ">
 <polygon fill="none" stroke="black" points="29,-0.5 29,-57.5 94,-57.5 94,-0.5 29,-0.5"/>
 <text text-anchor="middle" x="61.5" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">PRISM</text>
 <polyline fill="none" stroke="black" points="29,-38.5 94,-38.5 "/>

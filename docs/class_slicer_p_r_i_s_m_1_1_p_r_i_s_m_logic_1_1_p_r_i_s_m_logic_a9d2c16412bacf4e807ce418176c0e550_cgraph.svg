@@ -18,7 +18,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#ab2ba2b97a3e667b8f577568de11a6c92" target="_top" xlink:title="Get Entry point position.">
+<g id="a_node2"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#ab2ba2b97a3e667b8f577568de11a6c92" xlink:title="Get Entry point position.">
 <polygon fill="none" stroke="black" points="211,-98.5 211,-117.5 264,-117.5 264,-98.5 211,-98.5"/>
 <text text-anchor="middle" x="237.5" y="-105.5" font-family="Helvetica,sans-Serif" font-size="10.00">getEntry</text>
 </a>
@@ -31,7 +31,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="class_slicer_p_r_i_s_m_1_1_resources_1_1_virtual_reality_helper_1_1_virtual_reality_helper.html#a0540f1d575f42e8fa3d6013367056cad" target="_top" xlink:title=" ">
+<g id="a_node3"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_resources_1_1_virtual_reality_helper_1_1_virtual_reality_helper.html#a0540f1d575f42e8fa3d6013367056cad" xlink:title=" ">
 <polygon fill="none" stroke="black" points="148,-38.5 148,-79.5 327,-79.5 327,-38.5 148,-38.5"/>
 <text text-anchor="start" x="156" y="-67.5" font-family="Helvetica,sans-Serif" font-size="10.00">SlicerPRISM.Resources.Virtual</text>
 <text text-anchor="start" x="156" y="-56.5" font-family="Helvetica,sans-Serif" font-size="10.00">RealityHelper.VirtualRealityHelper.get</text>
@@ -46,7 +46,7 @@
 </g>
 <!-- Node5 -->
 <g id="node5" class="node"><title>Node5</title>
-<g id="a_node5"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#ac7f193e1acb5a2827b4a2798bcf267a8" target="_top" xlink:title="Get Target point position.">
+<g id="a_node5"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#ac7f193e1acb5a2827b4a2798bcf267a8" xlink:title="Get Target point position.">
 <polygon fill="none" stroke="black" points="209,-0.5 209,-19.5 266,-19.5 266,-0.5 209,-0.5"/>
 <text text-anchor="middle" x="237.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">getTarget</text>
 </a>
@@ -59,7 +59,7 @@
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>
-<g id="a_node4"><a xlink:href="class_slicer_p_r_i_s_m_1_1_resources_1_1_virtual_reality_helper_1_1_virtual_reality_helper.html#ae13eb7a77da60691d9642cfcb81630fe" target="_top" xlink:title=" ">
+<g id="a_node4"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_resources_1_1_virtual_reality_helper_1_1_virtual_reality_helper.html#ae13eb7a77da60691d9642cfcb81630fe" xlink:title=" ">
 <polygon fill="none" stroke="black" points="363,-38.5 363,-79.5 542,-79.5 542,-38.5 363,-38.5"/>
 <text text-anchor="start" x="371" y="-67.5" font-family="Helvetica,sans-Serif" font-size="10.00">SlicerPRISM.Resources.Virtual</text>
 <text text-anchor="start" x="371" y="-56.5" font-family="Helvetica,sans-Serif" font-size="10.00">RealityHelper.VirtualRealityHelper.get</text>

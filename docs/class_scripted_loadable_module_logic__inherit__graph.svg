@@ -22,7 +22,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html" xlink:title=" ">
 <polygon fill="none" stroke="black" points="0,-0.5 0,-651.5 173,-651.5 173,-0.5 0,-0.5"/>
 <text text-anchor="middle" x="86.5" y="-639.5" font-family="Helvetica,sans-Serif" font-size="10.00">PRISMLogic</text>
 <polyline fill="none" stroke="black" points="0,-632.5 173,-632.5 "/>

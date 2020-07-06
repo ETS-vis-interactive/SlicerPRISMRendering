@@ -18,7 +18,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a220c420339b770100d81a3015e0ac60f" target="_top" xlink:title="Function to modify the specified dictionnary in the specified shader.">
+<g id="a_node2"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a220c420339b770100d81a3015e0ac60f" xlink:title="Function to modify the specified dictionnary in the specified shader.">
 <polygon fill="none" stroke="black" points="161,-38.5 161,-57.5 223,-57.5 223,-38.5 161,-38.5"/>
 <text text-anchor="middle" x="192" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">modifyDict</text>
 </a>
@@ -31,7 +31,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a4d4c0f2a4bf9afc519d14631ee71e1f0" target="_top" xlink:title="Function to reset a specific layout.">
+<g id="a_node3"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a4d4c0f2a4bf9afc519d14631ee71e1f0" xlink:title="Function to reset a specific layout.">
 <polygon fill="none" stroke="black" points="158,-0.5 158,-19.5 226,-19.5 226,-0.5 158,-0.5"/>
 <text text-anchor="middle" x="192" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">resetLayout</text>
 </a>
@@ -44,7 +44,7 @@
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>
-<g id="a_node4"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a09c30f6796c372b242ca908731f4aa1c" target="_top" xlink:title="Function to clear the widgets of a specific layout.">
+<g id="a_node4"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a09c30f6796c372b242ca908731f4aa1c" xlink:title="Function to clear the widgets of a specific layout.">
 <polygon fill="none" stroke="black" points="262,-0.5 262,-19.5 326,-19.5 326,-0.5 262,-0.5"/>
 <text text-anchor="middle" x="294" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">hideLayout</text>
 </a>

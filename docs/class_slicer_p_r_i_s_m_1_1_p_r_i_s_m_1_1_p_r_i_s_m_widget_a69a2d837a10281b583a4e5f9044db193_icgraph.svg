@@ -18,7 +18,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a4cb394295cd619d0c99b9c173ff5de4b" target="_top" xlink:title="Function to update GUI from parameter node values.">
+<g id="a_node2"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a4cb394295cd619d0c99b9c173ff5de4b" xlink:title="Function to update GUI from parameter node values.">
 <polygon fill="none" stroke="black" points="368,-22.5 368,-41.5 520,-41.5 520,-22.5 368,-22.5"/>
 <text text-anchor="middle" x="444" y="-29.5" font-family="Helvetica,sans-Serif" font-size="10.00">updateGUIFromParameterNode</text>
 </a>
@@ -31,7 +31,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#adaa9135573481fda408b1b56cea63670" target="_top" xlink:title="Callback function when the custom shader combo box is changed.">
+<g id="a_node3"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#adaa9135573481fda408b1b56cea63670" xlink:title="Callback function when the custom shader combo box is changed.">
 <polygon fill="none" stroke="black" points="186,-39 186,-69 332,-69 332,-39 186,-39"/>
 <text text-anchor="start" x="194" y="-57" font-family="Helvetica,sans-Serif" font-size="10.00">onCustomShaderComboIndex</text>
 <text text-anchor="middle" x="259" y="-46" font-family="Helvetica,sans-Serif" font-size="10.00">Changed</text>
@@ -45,7 +45,7 @@
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>
-<g id="a_node4"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a325535c42ba7ec6ffe9b6484a0a71f85" target="_top" xlink:title="Function to update the parameter node.">
+<g id="a_node4"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a325535c42ba7ec6ffe9b6484a0a71f85" xlink:title="Function to update the parameter node.">
 <polygon fill="none" stroke="black" points="193.5,-0.5 193.5,-19.5 324.5,-19.5 324.5,-0.5 193.5,-0.5"/>
 <text text-anchor="middle" x="259" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">onParameterNodeModified</text>
 </a>
@@ -58,7 +58,7 @@
 </g>
 <!-- Node5 -->
 <g id="node5" class="node"><title>Node5</title>
-<g id="a_node5"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#aec96b9b1b3199eeba9f95e65796306c1" target="_top" xlink:title="Function to set the parameter node.">
+<g id="a_node5"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#aec96b9b1b3199eeba9f95e65796306c1" xlink:title="Function to set the parameter node.">
 <polygon fill="none" stroke="black" points="0,-0.5 0,-19.5 150,-19.5 150,-0.5 0,-0.5"/>
 <text text-anchor="middle" x="75" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">setAndObserveParameterNode</text>
 </a>

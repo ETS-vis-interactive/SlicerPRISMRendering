@@ -18,7 +18,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#a132b0f123f6fdc57ed5a62c70b7326a7" target="_top" xlink:title="Function called when the scene is closed.">
+<g id="a_node2"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#a132b0f123f6fdc57ed5a62c70b7326a7" xlink:title="Function called when the scene is closed.">
 <polygon fill="none" stroke="black" points="0,-0.5 0,-19.5 80,-19.5 80,-0.5 0,-0.5"/>
 <text text-anchor="middle" x="40" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">onCloseScene</text>
 </a>

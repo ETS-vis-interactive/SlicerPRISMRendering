@@ -18,7 +18,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#adfb7a3a22452b635bb615e4750c2bf29" target="_top" xlink:title="Function to get the class name of a widget.">
+<g id="a_node2"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#adfb7a3a22452b635bb615e4750c2bf29" xlink:title="Function to get the class name of a widget.">
 <polygon fill="none" stroke="black" points="316,-19.5 316,-38.5 396,-38.5 396,-19.5 316,-19.5"/>
 <text text-anchor="middle" x="356" y="-26.5" font-family="Helvetica,sans-Serif" font-size="10.00">getClassName</text>
 </a>
@@ -31,7 +31,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a9c2580701ccfac91074c348bf51d8353" target="_top" xlink:title="Function to update the parameter node from gui values.">
+<g id="a_node3"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a9c2580701ccfac91074c348bf51d8353" xlink:title="Function to update the parameter node from gui values.">
 <polygon fill="none" stroke="black" points="128,-0.5 128,-19.5 280,-19.5 280,-0.5 128,-0.5"/>
 <text text-anchor="middle" x="204" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">updateParameterNodeFromGUI</text>
 </a>

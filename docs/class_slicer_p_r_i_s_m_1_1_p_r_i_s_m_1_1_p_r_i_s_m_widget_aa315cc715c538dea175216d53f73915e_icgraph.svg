@@ -18,7 +18,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a5354f5739815c9b04b2e8df68991a1b7" target="_top" xlink:title="Function to initialize the all user interface based on current scene.">
+<g id="a_node2"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a5354f5739815c9b04b2e8df68991a1b7" xlink:title="Function to initialize the all user interface based on current scene.">
 <polygon fill="none" stroke="black" points="46.5,-50 46.5,-69 99.5,-69 99.5,-50 46.5,-50"/>
 <text text-anchor="middle" x="73" y="-57" font-family="Helvetica,sans-Serif" font-size="10.00">initState</text>
 </a>
@@ -31,7 +31,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#adaa9135573481fda408b1b56cea63670" target="_top" xlink:title="Callback function when the custom shader combo box is changed.">
+<g id="a_node3"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#adaa9135573481fda408b1b56cea63670" xlink:title="Callback function when the custom shader combo box is changed.">
 <polygon fill="none" stroke="black" points="0,-0.5 0,-30.5 146,-30.5 146,-0.5 0,-0.5"/>
 <text text-anchor="start" x="8" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">onCustomShaderComboIndex</text>
 <text text-anchor="middle" x="73" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">Changed</text>

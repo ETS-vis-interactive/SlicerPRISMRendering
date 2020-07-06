@@ -19,7 +19,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a46d3449d84d3687bf2e6daef46a9a012" target="_top" xlink:title="Function to create a new class from the template.">
+<g id="a_node2"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a46d3449d84d3687bf2e6daef46a9a012" xlink:title="Function to create a new class from the template.">
 <polygon fill="none" stroke="black" points="197,-38.5 197,-57.5 268,-57.5 268,-38.5 197,-38.5"/>
 <text text-anchor="middle" x="232.5" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">duplicateFile</text>
 </a>
@@ -32,7 +32,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ab776505316edd3e3b118d69ca7f9e480" target="_top" xlink:title="Function to create a window with input to get the file name.">
+<g id="a_node3"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ab776505316edd3e3b118d69ca7f9e480" xlink:title="Function to create a window with input to get the file name.">
 <polygon fill="none" stroke="black" points="208,-0.5 208,-19.5 257,-19.5 257,-0.5 208,-0.5"/>
 <text text-anchor="middle" x="232.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">getText</text>
 </a>

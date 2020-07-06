@@ -18,7 +18,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#adbde9c2b6f639fec066d50ad4cccf9fd" target="_top" xlink:title="Get or create shader property node and initialize custom shader.">
+<g id="a_node2"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#adbde9c2b6f639fec066d50ad4cccf9fd" xlink:title="Get or create shader property node and initialize custom shader.">
 <polygon fill="none" stroke="black" points="129.5,-38.5 129.5,-57.5 234.5,-57.5 234.5,-38.5 129.5,-38.5"/>
 <text text-anchor="middle" x="182" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">setupCustomShader</text>
 </a>
@@ -31,7 +31,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#a6a466cbdd1ef23e2d5cb1f60ea530682" target="_top" xlink:title="Given a volume, compute a default color mapping to render volume in the given display node.">
+<g id="a_node3"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#a6a466cbdd1ef23e2d5cb1f60ea530682" xlink:title="Given a volume, compute a default color mapping to render volume in the given display node.">
 <polygon fill="none" stroke="black" points="113,-0.5 113,-19.5 251,-19.5 251,-0.5 113,-0.5"/>
 <text text-anchor="middle" x="182" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">updateVolumeColorMapping</text>
 </a>

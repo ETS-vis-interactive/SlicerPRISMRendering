@@ -112,7 +112,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_scripted_loadable_module_widget.html" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="$class_scripted_loadable_module_widget.html" xlink:title=" ">
 <polygon fill="none" stroke="black" points="16,-1084.5 16,-1141.5 170,-1141.5 170,-1084.5 16,-1084.5"/>
 <text text-anchor="middle" x="93" y="-1129.5" font-family="Helvetica,sans-Serif" font-size="10.00">ScriptedLoadableModuleWidget</text>
 <polyline fill="none" stroke="black" points="16,-1122.5 170,-1122.5 "/>

@@ -18,7 +18,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#abb489a6c49e64633a943ae57f5edd8eb" target="_top" xlink:title="Change the custom parameters in the shader.">
+<g id="a_node2"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#abb489a6c49e64633a943ae57f5edd8eb" xlink:title="Change the custom parameters in the shader.">
 <polygon fill="none" stroke="black" points="146,-0.5 146,-19.5 304,-19.5 304,-0.5 146,-0.5"/>
 <text text-anchor="middle" x="225" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">onCustomShaderParamChanged</text>
 </a>

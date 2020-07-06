@@ -18,7 +18,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a1ba3668a0c21b14d86ad81f50450d03b" target="_top" xlink:title="Function to get a selected shader file path.">
+<g id="a_node2"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a1ba3668a0c21b14d86ad81f50450d03b" xlink:title="Function to get a selected shader file path.">
 <polygon fill="none" stroke="black" points="194,-71.5 194,-90.5 244,-90.5 244,-71.5 194,-71.5"/>
 <text text-anchor="middle" x="219" y="-78.5" font-family="Helvetica,sans-Serif" font-size="10.00">getPath</text>
 </a>
@@ -31,7 +31,7 @@
 </g>
 <!-- Node5 -->
 <g id="node5" class="node"><title>Node5</title>
-<g id="a_node5"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ab1895c94043be028238f122374b8df86" target="_top" xlink:title="Reload the modules.">
+<g id="a_node5"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ab1895c94043be028238f122374b8df86" xlink:title="Reload the modules.">
 <polygon fill="none" stroke="black" points="50.5,-0.5 50.5,-19.5 107.5,-19.5 107.5,-0.5 50.5,-0.5"/>
 <text text-anchor="middle" x="79" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">onReload</text>
 </a>
@@ -44,7 +44,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ae1a03b1dc14c2746bb2892f37a99e13e" target="_top" xlink:title="Function to add the new shader replacement to a file.">
+<g id="a_node3"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ae1a03b1dc14c2746bb2892f37a99e13e" xlink:title="Function to add the new shader replacement to a file.">
 <polygon fill="none" stroke="black" points="4.5,-175 4.5,-205 153.5,-205 153.5,-175 4.5,-175"/>
 <text text-anchor="start" x="12.5" y="-193" font-family="Helvetica,sans-Serif" font-size="10.00">onModifyCustomShaderButton</text>
 <text text-anchor="middle" x="79" y="-182" font-family="Helvetica,sans-Serif" font-size="10.00">Clicked</text>
@@ -58,7 +58,7 @@
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>
-<g id="a_node4"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a603b7c0196c8c4985ff8c65976e33c7e" target="_top" xlink:title="Function to open custom shader file.">
+<g id="a_node4"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a603b7c0196c8c4985ff8c65976e33c7e" xlink:title="Function to open custom shader file.">
 <polygon fill="none" stroke="black" points="7.5,-126 7.5,-156 150.5,-156 150.5,-126 7.5,-126"/>
 <text text-anchor="start" x="15.5" y="-144" font-family="Helvetica,sans-Serif" font-size="10.00">onOpenCustomShaderButton</text>
 <text text-anchor="middle" x="79" y="-133" font-family="Helvetica,sans-Serif" font-size="10.00">Clicked</text>
@@ -77,7 +77,7 @@
 </g>
 <!-- Node6 -->
 <g id="node6" class="node"><title>Node6</title>
-<g id="a_node6"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a4913ae6c186230db1cfc893f6e9407ec" target="_top" xlink:title="Function to reload the current custom shader.">
+<g id="a_node6"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a4913ae6c186230db1cfc893f6e9407ec" xlink:title="Function to reload the current custom shader.">
 <polygon fill="none" stroke="black" points="2.5,-77 2.5,-107 155.5,-107 155.5,-77 2.5,-77"/>
 <text text-anchor="start" x="10.5" y="-95" font-family="Helvetica,sans-Serif" font-size="10.00">onReloadCurrentCustomShader</text>
 <text text-anchor="middle" x="79" y="-84" font-family="Helvetica,sans-Serif" font-size="10.00">ButtonClicked</text>
@@ -91,7 +91,7 @@
 </g>
 <!-- Node7 -->
 <g id="node7" class="node"><title>Node7</title>
-<g id="a_node7"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a591e2cd1c5c25d29a86e537ffa0f431a" target="_top" xlink:title="Function to open a file containing the new shader replacement.">
+<g id="a_node7"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a591e2cd1c5c25d29a86e537ffa0f431a" xlink:title="Function to open a file containing the new shader replacement.">
 <polygon fill="none" stroke="black" points="0,-38.5 0,-57.5 158,-57.5 158,-38.5 0,-38.5"/>
 <text text-anchor="middle" x="79" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">onShaderOpenFileButtonClicked</text>
 </a>

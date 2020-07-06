@@ -18,7 +18,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_slicer_p_r_i_s_m_1_1_resources_1_1_shaders_1_1_chroma_depth_shader_1_1_chroma_depth_shader.html#a8310d50253d09cf84226d6c2b774ffa6" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_resources_1_1_shaders_1_1_chroma_depth_shader_1_1_chroma_depth_shader.html#a8310d50253d09cf84226d6c2b774ffa6" xlink:title=" ">
 <polygon fill="none" stroke="black" points="0,-0.5 0,-19.5 50,-19.5 50,-0.5 0,-0.5"/>
 <text text-anchor="middle" x="25" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">__init__</text>
 </a>

@@ -18,7 +18,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a09c30f6796c372b242ca908731f4aa1c" target="_top" xlink:title="Function to clear the widgets of a specific layout.">
+<g id="a_node2"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a09c30f6796c372b242ca908731f4aa1c" xlink:title="Function to clear the widgets of a specific layout.">
 <polygon fill="none" stroke="black" points="104,-0.5 104,-19.5 168,-19.5 168,-0.5 104,-0.5"/>
 <text text-anchor="middle" x="136" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">hideLayout</text>
 </a>

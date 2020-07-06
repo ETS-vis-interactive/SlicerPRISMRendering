@@ -19,7 +19,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#ab2ba2b97a3e667b8f577568de11a6c92" target="_top" xlink:title="Get Entry point position.">
+<g id="a_node2"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#ab2ba2b97a3e667b8f577568de11a6c92" xlink:title="Get Entry point position.">
 <polygon fill="none" stroke="black" points="156,-6 156,-25 209,-25 209,-6 156,-6"/>
 <text text-anchor="middle" x="182.5" y="-13" font-family="Helvetica,sans-Serif" font-size="10.00">getEntry</text>
 </a>

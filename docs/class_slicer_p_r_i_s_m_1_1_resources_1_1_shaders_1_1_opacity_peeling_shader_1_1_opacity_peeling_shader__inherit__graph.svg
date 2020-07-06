@@ -27,7 +27,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_slicer_p_r_i_s_m_1_1_resources_1_1_custom_shader_1_1_custom_shader.html" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_resources_1_1_custom_shader_1_1_custom_shader.html" xlink:title=" ">
 <polygon fill="none" stroke="black" points="0,-149.5 0,-547.5 145,-547.5 145,-149.5 0,-149.5"/>
 <text text-anchor="middle" x="72.5" y="-535.5" font-family="Helvetica,sans-Serif" font-size="10.00">CustomShader</text>
 <polyline fill="none" stroke="black" points="0,-528.5 145,-528.5 "/>

@@ -18,7 +18,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a645a019fd9d617af14565ec9d4333dbd" target="_top" xlink:title="Sets the current parameter type according to the combobox input.">
+<g id="a_node2"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a645a019fd9d617af14565ec9d4333dbd" xlink:title="Sets the current parameter type according to the combobox input.">
 <polygon fill="none" stroke="black" points="336,-38.5 336,-57.5 501,-57.5 501,-38.5 336,-38.5"/>
 <text text-anchor="middle" x="418.5" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">onAddParamComboIndexChanged</text>
 </a>
@@ -31,7 +31,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ac406a5ff5a88ee3578f24b16f74171ab" target="_top" xlink:title="Function to create the parameters layout to enable adding new parameters to a file.">
+<g id="a_node3"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ac406a5ff5a88ee3578f24b16f74171ab" xlink:title="Function to create the parameters layout to enable adding new parameters to a file.">
 <polygon fill="none" stroke="black" points="0,-38.5 0,-57.5 123,-57.5 123,-38.5 0,-38.5"/>
 <text text-anchor="middle" x="61.5" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">createParametersLayout</text>
 </a>
@@ -44,7 +44,7 @@
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>
-<g id="a_node4"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ab7c52ead53f10907b9369a7011ed227f" target="_top" xlink:title="Function to hide/show the points related widgets.">
+<g id="a_node4"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ab7c52ead53f10907b9369a7011ed227f" xlink:title="Function to hide/show the points related widgets.">
 <polygon fill="none" stroke="black" points="159,-38.5 159,-57.5 300,-57.5 300,-38.5 159,-38.5"/>
 <text text-anchor="middle" x="229.5" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">onAddPointsComboChanged</text>
 </a>
@@ -57,7 +57,7 @@
 </g>
 <!-- Node5 -->
 <g id="node5" class="node"><title>Node5</title>
-<g id="a_node5"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#aacc3a0a2f4821602d9869f8d12aa2e6a" target="_top" xlink:title="Function to hide/show the transfer functions related widgets.">
+<g id="a_node5"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#aacc3a0a2f4821602d9869f8d12aa2e6a" xlink:title="Function to hide/show the transfer functions related widgets.">
 <polygon fill="none" stroke="black" points="167,-0.5 167,-19.5 292,-19.5 292,-0.5 167,-0.5"/>
 <text text-anchor="middle" x="229.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">onAddTFComboChanged</text>
 </a>

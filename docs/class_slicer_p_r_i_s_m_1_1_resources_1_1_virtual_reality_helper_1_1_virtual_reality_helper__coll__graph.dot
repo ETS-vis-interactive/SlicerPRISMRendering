@@ -1,0 +1,8 @@
+digraph "VirtualRealityHelper"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="{VirtualRealityHelper\n|+ vr\l+ volumeRenderingDisplayNode\l+ lastControllerPos\l+ laserPoints\l+ laserTubeFilter\l+ laserModelDisplay\l+ leftControlsDisplayMarkups\l+ rightControlsDisplayMarkups\l|+ __init__()\l+ setVRActive()\l+ initDelayedVRParameters()\l+ setVRBackgroundColors()\l+ bringWorldToVRControllers()\l+ getRightTransformNode()\l+ getRightControllerPosition()\l+ getLeftTransformNode()\l+ getLeftControllerPosition()\l+ onLeftControllerTrackpad\lPressed()\l+ onLeftControllerTrackpad\lReleased()\l+ onRightControllerTrackpad\lPressed()\l+ createVRControllerLaser()\l+ createHelpControlsDisplay()\l+ setControlsMarkupsPositions()\l+ updateLaserPosition()\l+ showVRControls()\l+ hideVRControls()\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+}

@@ -18,7 +18,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a4cb394295cd619d0c99b9c173ff5de4b" target="_top" xlink:title="Function to update GUI from parameter node values.">
+<g id="a_node2"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a4cb394295cd619d0c99b9c173ff5de4b" xlink:title="Function to update GUI from parameter node values.">
 <polygon fill="none" stroke="black" points="167,-14.6002 167,-33.6002 319,-33.6002 319,-14.6002 167,-14.6002"/>
 <text text-anchor="middle" x="243" y="-21.6002" font-family="Helvetica,sans-Serif" font-size="10.00">updateGUIFromParameterNode</text>
 </a>
@@ -31,7 +31,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a69a2d837a10281b583a4e5f9044db193" target="_top" xlink:title="Function to add observers to the GUI&#39;s widgets.">
+<g id="a_node3"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a69a2d837a10281b583a4e5f9044db193" xlink:title="Function to add observers to the GUI&#39;s widgets.">
 <polygon fill="none" stroke="black" points="362.5,-52.6002 362.5,-71.6002 454.5,-71.6002 454.5,-52.6002 362.5,-52.6002"/>
 <text text-anchor="middle" x="408.5" y="-59.6002" font-family="Helvetica,sans-Serif" font-size="10.00">addGUIObservers</text>
 </a>
@@ -44,7 +44,7 @@
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>
-<g id="a_node4"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#adfb7a3a22452b635bb615e4750c2bf29" target="_top" xlink:title="Function to get the class name of a widget.">
+<g id="a_node4"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#adfb7a3a22452b635bb615e4750c2bf29" xlink:title="Function to get the class name of a widget.">
 <polygon fill="none" stroke="black" points="686,-33.6002 686,-52.6002 766,-52.6002 766,-33.6002 686,-33.6002"/>
 <text text-anchor="middle" x="726" y="-40.6002" font-family="Helvetica,sans-Serif" font-size="10.00">getClassName</text>
 </a>
@@ -57,7 +57,7 @@
 </g>
 <!-- Node6 -->
 <g id="node6" class="node"><title>Node6</title>
-<g id="a_node6"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a16e1c85444e27fae67a4b0973d36fe67" target="_top" xlink:title="Function to remove observers from the GUI&#39;s widgets.">
+<g id="a_node6"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a16e1c85444e27fae67a4b0973d36fe67" xlink:title="Function to remove observers from the GUI&#39;s widgets.">
 <polygon fill="none" stroke="black" points="355,-14.6002 355,-33.6002 462,-33.6002 462,-14.6002 355,-14.6002"/>
 <text text-anchor="middle" x="408.5" y="-21.6002" font-family="Helvetica,sans-Serif" font-size="10.00">removeGUIObservers</text>
 </a>
@@ -75,7 +75,7 @@
 </g>
 <!-- Node5 -->
 <g id="node5" class="node"><title>Node5</title>
-<g id="a_node5"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a9c2580701ccfac91074c348bf51d8353" target="_top" xlink:title="Function to update the parameter node from gui values.">
+<g id="a_node5"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a9c2580701ccfac91074c348bf51d8353" xlink:title="Function to update the parameter node from gui values.">
 <polygon fill="none" stroke="black" points="498,-52.6002 498,-71.6002 650,-71.6002 650,-52.6002 498,-52.6002"/>
 <text text-anchor="middle" x="574" y="-59.6002" font-family="Helvetica,sans-Serif" font-size="10.00">updateParameterNodeFromGUI</text>
 </a>

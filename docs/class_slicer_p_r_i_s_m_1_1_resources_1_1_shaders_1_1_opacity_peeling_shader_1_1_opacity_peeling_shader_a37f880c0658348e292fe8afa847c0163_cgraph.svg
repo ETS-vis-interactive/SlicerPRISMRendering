@@ -18,7 +18,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_slicer_p_r_i_s_m_1_1_resources_1_1_custom_shader_1_1_custom_shader.html#afa709225c85d81a8ca96f674e865ffa2" target="_top" xlink:title="Function to set the uniforms of the shader.">
+<g id="a_node2"><a xlink:href="$class_slicer_p_r_i_s_m_1_1_resources_1_1_custom_shader_1_1_custom_shader.html#afa709225c85d81a8ca96f674e865ffa2" xlink:title="Function to set the uniforms of the shader.">
 <polygon fill="none" stroke="black" points="107,-0.5 107,-30.5 288,-30.5 288,-0.5 107,-0.5"/>
 <text text-anchor="start" x="115" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">SlicerPRISM.Resources.Custom</text>
 <text text-anchor="middle" x="197.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">Shader.CustomShader.setAllUniforms</text>
