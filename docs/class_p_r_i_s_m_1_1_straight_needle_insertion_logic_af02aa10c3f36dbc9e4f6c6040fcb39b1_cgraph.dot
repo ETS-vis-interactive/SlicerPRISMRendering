@@ -1,0 +1,14 @@
+digraph "onRightControllerTriggerPressed"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="onRightControllerTrigger\lPressed",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="getEntry",height=0.2,width=0.4,color="black",URL="$class_p_r_i_s_m_1_1_straight_needle_insertion_logic.html#ab2ba2b97a3e667b8f577568de11a6c92",tooltip=" "];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="getNumberOfPoints",height=0.2,width=0.4,color="black",URL="$class_p_r_i_s_m_1_1_straight_needle_insertion_logic.html#a31a147450f2ead3e9aeed32d9ead945a",tooltip=" "];
+  Node1 -> Node1 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

@@ -1,0 +1,37 @@
+digraph "getLeftTransformNode"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="getLeftTransformNode",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="createHelpControlsDisplay",height=0.2,width=0.4,color="black",URL="$class_virtual_reality_helper_1_1_custom_v_r.html#af1c576a8e7a89bff8bdc2deb63c0e258",tooltip=" "];
+  Node1 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="getLeftControllerPosition",height=0.2,width=0.4,color="black",URL="$class_virtual_reality_helper_1_1_custom_v_r.html#a0540f1d575f42e8fa3d6013367056cad",tooltip=" "];
+  Node3 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="SlicerPRISM.PRISMLogic.PRISMLogic.on\lLeftControllerMoved",height=0.2,width=0.4,color="black",URL="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#a9d2c16412bacf4e807ce418176c0e550",tooltip="Callback function w hen a the left controller position has changed."];
+  Node3 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="PRISM.StraightNeedleInsertion\lLogic.onLeftControllerMoved",height=0.2,width=0.4,color="black",URL="$class_p_r_i_s_m_1_1_straight_needle_insertion_logic.html#a9d2c16412bacf4e807ce418176c0e550",tooltip=" "];
+  Node5 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="PRISM.StraightNeedleInsertion\lLogic.delayedInitVRObserver",height=0.2,width=0.4,color="black",URL="$class_p_r_i_s_m_1_1_straight_needle_insertion_logic.html#af0ccacbefaa58e984038a12bdaca2aae",tooltip=" "];
+  Node5 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="PRISM.StraightNeedleInsertion\lLogic.onLeftControllerTriggerPressed",height=0.2,width=0.4,color="black",URL="$class_p_r_i_s_m_1_1_straight_needle_insertion_logic.html#acee88635b98aa0ca4480687c0bc8558d",tooltip=" "];
+  Node3 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="updateLaserPosition",height=0.2,width=0.4,color="black",URL="$class_virtual_reality_helper_1_1_custom_v_r.html#ab8ddfd67f45ae3e6555ebb1070b43357",tooltip=" "];
+  Node8 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="SlicerPRISM.Resources.Virtual\lRealityHelper.VirtualRealityHelper.update\lLaserPosition",height=0.2,width=0.4,color="black",URL="$class_slicer_p_r_i_s_m_1_1_resources_1_1_virtual_reality_helper_1_1_virtual_reality_helper.html#ab8ddfd67f45ae3e6555ebb1070b43357",tooltip=" "];
+  Node1 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="SlicerPRISM.Resources.Virtual\lRealityHelper.VirtualRealityHelper.get\lLeftControllerPosition",height=0.2,width=0.4,color="black",URL="$class_slicer_p_r_i_s_m_1_1_resources_1_1_virtual_reality_helper_1_1_virtual_reality_helper.html#a0540f1d575f42e8fa3d6013367056cad",tooltip=" "];
+  Node10 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node1 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

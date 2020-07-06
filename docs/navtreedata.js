@@ -29,18 +29,21 @@ var NAVTREE =
     [ "Module Description", "index.html#autotoc_md2", null ],
     [ "Use Cases", "index.html#autotoc_md3", null ],
     [ "Tutorials", "index.html#autotoc_md4", [
-      [ "Creating a new shader", "index.html#autotoc_md5", null ],
-      [ "Modifying an existing shader", "index.html#autotoc_md6", null ],
-      [ "Adding a parameter to a shader from the UI", "index.html#autotoc_md7", null ],
-      [ "Adding code to a shader from the UI", "index.html#autotoc_md8", null ]
+      [ "Rendering a volume", "index.html#autotoc_md5", null ],
+      [ "Applying a shader to a volume", "index.html#autotoc_md6", null ],
+      [ "Modifying the ROI of a volume", "index.html#autotoc_md7", null ],
+      [ "Creating a new shader", "index.html#autotoc_md8", null ],
+      [ "Modifying an existing shader", "index.html#autotoc_md9", null ],
+      [ "Adding a parameter to a shader from the UI", "index.html#autotoc_md10", null ],
+      [ "Adding code to a shader from the UI", "index.html#autotoc_md11", null ]
     ] ],
-    [ "Panels and their use", "index.html#autotoc_md9", null ],
-    [ "Similar Modules", "index.html#autotoc_md10", null ],
-    [ "References", "index.html#autotoc_md11", null ],
-    [ "Information for Developers", "index.html#autotoc_md12", [
-      [ "Limitations", "index.html#autotoc_md13", null ],
-      [ "Key nodes and classes", "index.html#autotoc_md14", null ],
-      [ "How Tos", "index.html#autotoc_md15", null ]
+    [ "Panels and their use", "index.html#autotoc_md12", null ],
+    [ "Similar Modules", "index.html#autotoc_md13", null ],
+    [ "References", "index.html#autotoc_md14", null ],
+    [ "Information for Developers", "index.html#autotoc_md15", [
+      [ "Limitations", "index.html#autotoc_md16", null ],
+      [ "Key nodes and classes", "index.html#autotoc_md17", null ],
+      [ "How Tos", "index.html#autotoc_md18", null ]
     ] ],
     [ "Packages", "namespaces.html", [
       [ "Packages", "namespaces.html", "namespaces_dup" ],

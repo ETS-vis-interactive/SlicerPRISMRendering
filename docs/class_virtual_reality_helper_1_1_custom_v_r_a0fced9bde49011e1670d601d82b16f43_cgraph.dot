@@ -1,0 +1,21 @@
+digraph "setVRActive"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="setVRActive",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="initDelayedVRParameters",height=0.2,width=0.4,color="black",URL="$class_virtual_reality_helper_1_1_custom_v_r.html#a064c2b5b13886bf746ece6a475332c01",tooltip=" "];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="onLeftControllerTrackpad\lPressed",height=0.2,width=0.4,color="black",URL="$class_virtual_reality_helper_1_1_custom_v_r.html#a0060df9f780f7d1aaff8467f262abf2f",tooltip=" "];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="onLeftControllerTrackpad\lReleased",height=0.2,width=0.4,color="black",URL="$class_virtual_reality_helper_1_1_custom_v_r.html#a0bd1b38023504d8476e81ddd0783fa4e",tooltip=" "];
+  Node1 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="onRightControllerTrackpad\lPressed",height=0.2,width=0.4,color="black",URL="$class_virtual_reality_helper_1_1_custom_v_r.html#a779a7dfa32c0029594ed9a85e752d112",tooltip=" "];
+  Node5 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="bringWorldToVRControllers",height=0.2,width=0.4,color="black",URL="$class_virtual_reality_helper_1_1_custom_v_r.html#a59c43d0b9bd4a0712e89fa2ed3c8848b",tooltip=" "];
+  Node1 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="setVRBackgroundColors",height=0.2,width=0.4,color="black",URL="$class_virtual_reality_helper_1_1_custom_v_r.html#a6ca5aa021e4adce518853f54aa38518a",tooltip=" "];
+}

@@ -1,0 +1,12 @@
+<map id="CustomShader" name="CustomShader">
+<area shape="rect" id="node1" title=" " alt="" coords="715,5,908,508"/>
+<area shape="rect" id="node2" href="$class_custom_shader_1_1_carve_opacity_peeling_shader.html" title=" " alt="" coords="5,571,188,751"/>
+<area shape="rect" id="node3" href="$class_custom_shader_1_1_cube_carving_shader.html" title=" " alt="" coords="212,556,352,765"/>
+<area shape="rect" id="node4" href="$class_custom_shader_1_1_cylinder_intersection_shader.html" title=" " alt="" coords="376,556,553,765"/>
+<area shape="rect" id="node5" href="$class_custom_shader_1_1_double_plane_shader.html" title=" " alt="" coords="577,571,717,751"/>
+<area shape="rect" id="node6" href="$class_custom_shader_1_1_drill_core_shader.html" title=" " alt="" coords="741,556,881,765"/>
+<area shape="rect" id="node7" href="$class_custom_shader_1_1_opacity_peeling_shader.html" title=" " alt="" coords="905,585,1056,736"/>
+<area shape="rect" id="node8" href="$class_custom_shader_1_1_outline_shader.html" title=" " alt="" coords="1080,585,1220,736"/>
+<area shape="rect" id="node9" href="$class_custom_shader_1_1_plane_intersecting_shader.html" title=" " alt="" coords="1245,556,1407,765"/>
+<area shape="rect" id="node10" href="$class_custom_shader_1_1_sphere_carving_shader.html" title=" " alt="" coords="1431,563,1578,758"/>
+</map>

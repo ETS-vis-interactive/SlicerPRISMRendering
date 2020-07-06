@@ -1,0 +1,9 @@
+digraph "Graphical Class Hierarchy"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node0 [label="VirtualRealityHelper",height=0.2,width=0.4,color="black",URL="$class_slicer_p_r_i_s_m_1_1_resources_1_1_virtual_reality_helper_1_1_virtual_reality_helper.html",tooltip=" "];
+}

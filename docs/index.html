@@ -85,7 +85,7 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <div class="title"><a class="el" href="namespace_slicer_p_r_i_s_m.html">SlicerPRISM</a> </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_docs_README"></a></p><ol type="1">
+<div class="textblock"><p><a class="anchor" id="md_docs_files_README"></a></p><ol type="1">
 <li><a href="#intro">Introduction and Acknowledgements.</a></li>
 <li><a href="#desc">Module Description.</a></li>
 <li><a href="#usec">Use Cases.</a></li>
@@ -100,7 +100,7 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </ul>
 </li>
 </ol>
-<p><a class="anchor" id="intro"></a> </p>
+<p><a class="anchor" id="intro"></a></p>
 <h1><a class="anchor" id="autotoc_md1"></a>
 Introduction and Acknowledgements</h1>
 <p><b>Title</b>: <a class="el" href="namespace_slicer_p_r_i_s_m.html">SlicerPRISM</a></p>
@@ -108,17 +108,82 @@ Introduction and Acknowledgements</h1>
 <p><b>License</b>: slicer4</p>
 <p><b>Acknowledgements</b>:</p>
 <p><b>Contact</b>: Tiphaine RICHARD, <a href="#" onclick="location.href='mai'+'lto:'+'tip'+'ha'+'ine'+'jh'+'@gm'+'ai'+'l.c'+'om'; return false;">tipha<span style="display: none;">.nosp@m.</span>inej<span style="display: none;">.nosp@m.</span>h@gma<span style="display: none;">.nosp@m.</span>il.c<span style="display: none;">.nosp@m.</span>om</a></p>
-<p><a class="anchor" id="desc"></a> </p>
+<p><a class="anchor" id="desc"></a></p>
 <h1><a class="anchor" id="autotoc_md2"></a>
 Module Description</h1>
 <p>This module is an implementation of the PRISM customizable volume rendering framework in 3D Slicer.</p>
-<p><a class="anchor" id="usec"></a> </p>
+<p><a class="anchor" id="usec"></a></p>
 <h1><a class="anchor" id="autotoc_md3"></a>
 Use Cases</h1>
-<p><a class="anchor" id="tutos"></a> </p>
+<p><a class="anchor" id="tutos"></a></p>
 <h1><a class="anchor" id="autotoc_md4"></a>
 Tutorials</h1>
+<p><a class="anchor" id="rendering"></a></p>
 <h2><a class="anchor" id="autotoc_md5"></a>
+Rendering a volume</h2>
+<ol type="1">
+<li><p class="startli">Open the "Data" section.</p>
+<p class="startli"><img src="images/tutorials/render/1.png" alt="" width="40%" class="inline"/></p>
+</li>
+<li><p class="startli">Select your volume in the comboBox.</p>
+<p class="startli"><img src="images/tutorials/render/2.png" alt="" width="40%" class="inline"/> <br  />
+</p>
+</li>
+<li><p class="startli">Open the "View Setup" section.</p>
+<p class="startli"><img src="images/tutorials/render/3.png" alt="" width="40%" class="inline"/></p>
+</li>
+<li><p class="startli">Apply the volume rendering to your volume by clicking on the "Volume Rendering" checkBox.</p>
+<p class="startli"><img src="images/tutorials/render/4.png" alt="" width="40%" class="inline"/> </p>
+</li>
+</ol>
+<h2><a class="anchor" id="autotoc_md6"></a>
+Applying a shader to a volume</h2>
+<ol type="1">
+<li><a href="#rendering">Render the volume</a>.</li>
+<li><p class="startli">Open the "Custom Shader" section.</p>
+<p class="startli"><img src="images/tutorials/applyCS/2.png" alt="" width="40%" class="inline"/></p>
+</li>
+<li>Select the shader of your choice in the comboBox.</li>
+<li>Adjust the different parameters.</li>
+<li><p class="startli">If you are currently developping the shader you can click on the "..." button in order to reload, duplicate or open the shader :</p>
+<p class="startli"><img src="images/tutorials/applyCS/345.png" alt="" width="40%" class="inline"/></p><ul>
+<li>Reload the shader by clicking on the "Reload" button. This will reload all the new functionnalities added to the file containing the shader.</li>
+<li>Duplicate the shader by clicking on the "Duplicate" button. This will create a duplicate class of the class containing the shader.</li>
+<li>Open the shader by clicking on the "Open" button. This will open the class containing the shader in your favorite editor.</li>
+</ul>
+<p class="startli"><img src="images/tutorials/applyCS/6.png" alt="" width="40%" class="inline"/></p>
+</li>
+</ol>
+<h2><a class="anchor" id="autotoc_md7"></a>
+Modifying the ROI of a volume</h2>
+<ol type="1">
+<li><a href="#rendering">Render the volume</a>.</li>
+<li><p class="startli">Enable the cropping of the volume with the ROI by clicking on the "Enable Cropping" checkBox.</p>
+<p class="startli"><img src="images/tutorials/modifyROI/2.png" alt="" width="40%" class="inline"/> <br  />
+</p>
+</li>
+<li><p class="startli">Display the ROI of the volume by clicking on the "Display ROI" checkBox.</p>
+<p class="startli"><img src="images/tutorials/modifyROI/3.png" alt="" width="40%" class="inline"/></p>
+</li>
+<li><p class="startli">You can scale and rotate the ROI :</p>
+<p class="startli"><img src="images/tutorials/modifyROI/45.png" alt="" width="40%" class="inline"/></p><ul>
+<li><p class="startli">Scale the ROI :</p><ol type="a">
+<li>Enable the scalling of the ROI by clicking on the "Enable Rotation" checkBox.</li>
+<li>Select one of the handle of the ROI and move it towards the center or the outside of the volume to scale the ROI.</li>
+</ol>
+<p class="startli"><img src="images/tutorials/modifyROI/scale.gif" alt="" width="40%" class="inline"/> <br  />
+</p>
+</li>
+<li><p class="startli">Rotate the ROI :</p><ol type="a">
+<li>Enable the rotation of the ROI by clicking on the "Enable Rotation" checkBox.</li>
+<li>Select one of the side of the ROI and move it in any direction to rotate the ROI.</li>
+</ol>
+<p class="startli"><img src="images/tutorials/modifyROI/rotate.gif" alt="" width="40%" class="inline"/></p>
+</li>
+</ul>
+</li>
+</ol>
+<h2><a class="anchor" id="autotoc_md8"></a>
 Creating a new shader</h2>
 <ol type="1">
 <li><p class="startli">Open the "Modify or Create Custom Shader" section.</p>
@@ -142,7 +207,7 @@ Creating a new shader</h2>
 </ul>
 </li>
 </ol>
-<h2><a class="anchor" id="autotoc_md6"></a>
+<h2><a class="anchor" id="autotoc_md9"></a>
 Modifying an existing shader</h2>
 <ol type="1">
 <li><p class="startli">Open "Modify or Create Custom Shader" section.</p>
@@ -156,7 +221,7 @@ Modifying an existing shader</h2>
 </li>
 </ol>
 <p><a class="anchor" id="addparam"></a> </p>
-<h2><a class="anchor" id="autotoc_md7"></a>
+<h2><a class="anchor" id="autotoc_md10"></a>
 Adding a parameter to a shader from the UI</h2>
 <ol type="1">
 <li><p class="startli">In the comboBox, select the type of the parameter to add to the shader.</p>
@@ -179,7 +244,7 @@ Adding a parameter to a shader from the UI</h2>
 <li>Repeat steps 1-5 for each wanted parameter.</li>
 </ol>
 <p><a class="anchor" id="addcode"></a> </p>
-<h2><a class="anchor" id="autotoc_md8"></a>
+<h2><a class="anchor" id="autotoc_md11"></a>
 Adding code to a shader from the UI</h2>
 <ol type="1">
 <li><p class="startli">In the first comboBox, select the tag type of the code to be added to the shader. <br  />
@@ -201,7 +266,7 @@ Adding code to a shader from the UI</h2>
 <li>Repeat steps 1-3 for each wanted code replacement.</li>
 </ol>
 <p><a class="anchor" id="panels"></a> </p>
-<h1><a class="anchor" id="autotoc_md9"></a>
+<h1><a class="anchor" id="autotoc_md12"></a>
 Panels and their use</h1>
 <table style="table-layout: fixed; width:100%; border: 1px grey; border-collapse: collapse;">
 <tr>
@@ -297,23 +362,23 @@ Panels and their use</h1>
 </table>
 <p><img src="images/UnderConstruction.gif" alt="UnderConstruction" width="50%" title="MCCustomShaderParam" class="inline"/></p>
 <p><a class="anchor" id="similar"></a> </p>
-<h1><a class="anchor" id="autotoc_md10"></a>
+<h1><a class="anchor" id="autotoc_md13"></a>
 Similar Modules</h1>
 <p><a href="https://www.slicer.org/wiki/Documentation/4.10/Modules/VolumeRendering">VolumeRendering</a> <a class="anchor" id="ref"></a> </p>
-<h1><a class="anchor" id="autotoc_md11"></a>
+<h1><a class="anchor" id="autotoc_md14"></a>
 References</h1>
 <p><a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0193636">PRISM: An open source framework for the interactive design of GPU volume rendering shaders</a> <br  />
  <a class="anchor" id="info"></a> </p>
-<h1><a class="anchor" id="autotoc_md12"></a>
+<h1><a class="anchor" id="autotoc_md15"></a>
 Information for Developers</h1>
 <p>See <a href="https://ets-vis-interactive.github.io/SlicerPRISM/">this page</a> for the full documentation. <a class="anchor" id="lim"></a> </p>
-<h2><a class="anchor" id="autotoc_md13"></a>
+<h2><a class="anchor" id="autotoc_md16"></a>
 Limitations</h2>
 <p><a class="anchor" id="key"></a> </p>
-<h2><a class="anchor" id="autotoc_md14"></a>
+<h2><a class="anchor" id="autotoc_md17"></a>
 Key nodes and classes</h2>
 <p><a class="anchor" id="howto"></a> </p>
-<h2><a class="anchor" id="autotoc_md15"></a>
+<h2><a class="anchor" id="autotoc_md18"></a>
 How Tos</h2>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
