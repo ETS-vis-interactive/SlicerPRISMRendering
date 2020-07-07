@@ -1,8 +1,9 @@
 from Resources.CustomShader import CustomShader
 
-#------------------------------------------------------------------------------------
-# Plane intersecting shader
-#------------------------------------------------------------------------------------
+"""!@class PlaneIntersectingShader
+@brief Class containing the code for the Plane intersecting shader.
+@param CustomShader class : Parent class containing the function to access the parameters of the shader.
+""" 
 class PlaneIntersectingShader(CustomShader):
 
   shaderfParams = { 'relativePosition' : { 'displayName' : 'Relative Position', 'min' : 0.0, 'max' : 1.0, 'defaultValue' : 0.5 }}

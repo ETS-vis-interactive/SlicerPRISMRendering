@@ -7,7 +7,7 @@ import os
 import importlib.util
 
 """!@class CustomShader
-@brief class CustomShader to add new custom shaders to the module
+@brief Class containing the function to access the parameters of the shader.
 Generic Custom Shader
 """ 
 class CustomShader():
@@ -169,7 +169,7 @@ class CustomShader():
   def hasShaderParameter(cls, name, type_):
     """!@brief Function to check if a parameter is in the shader.
     @param name str : name of the parameter.
-    @param type str : type of the parameter.
+    @param type_ str : type of the parameter.
     @return bool True if the parameter is in the shader, else False.
     """
     if type_ == float :

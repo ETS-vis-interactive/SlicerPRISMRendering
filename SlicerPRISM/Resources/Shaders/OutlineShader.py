@@ -1,5 +1,9 @@
 from Resources.CustomShader import CustomShader
 
+"""!@class OutlineShader
+@brief Class containing the code for the Outline shader.
+@param CustomShader class : Parent class containing the function to access the parameters of the shader.
+""" 
 class OutlineShader(CustomShader):
   shaderfParams = { 'gradStep' : { 'displayName' : 'Gradient Step', 'min' : 0.0, 'max' : 0.02, 'defaultValue' : 0.005 }}
 

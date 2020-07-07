@@ -162,22 +162,21 @@
 <!-- Node7 -->
 <g id="node7" class="node"><title>Node7</title>
 <g id="a_node7"><a xlink:href="class_slicer_p_r_i_s_m_1_1_resources_1_1_shaders_1_1_sphere_carving_shader_1_1_sphere_carving_shader.html" target="_top" xlink:title=" ">
-<polygon fill="none" stroke="black" points="642.5,-22.5 642.5,-123.5 752.5,-123.5 752.5,-22.5 642.5,-22.5"/>
-<text text-anchor="middle" x="697.5" y="-111.5" font-family="Helvetica,sans-Serif" font-size="10.00">SphereCarvingShader</text>
-<polyline fill="none" stroke="black" points="642.5,-104.5 752.5,-104.5 "/>
-<text text-anchor="start" x="650.5" y="-92.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ shaderfParams</text>
-<text text-anchor="start" x="650.5" y="-81.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ shader4fParams</text>
-<polyline fill="none" stroke="black" points="642.5,-74.5 752.5,-74.5 "/>
-<text text-anchor="start" x="650.5" y="-62.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ __init__()</text>
-<text text-anchor="start" x="650.5" y="-51.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetDisplayName()</text>
-<text text-anchor="start" x="650.5" y="-40.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ setupShader()</text>
-<text text-anchor="start" x="650.5" y="-29.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ setPathEnds()</text>
+<polygon fill="none" stroke="black" points="642.5,-28 642.5,-118 752.5,-118 752.5,-28 642.5,-28"/>
+<text text-anchor="middle" x="697.5" y="-106" font-family="Helvetica,sans-Serif" font-size="10.00">SphereCarvingShader</text>
+<polyline fill="none" stroke="black" points="642.5,-99 752.5,-99 "/>
+<text text-anchor="start" x="650.5" y="-87" font-family="Helvetica,sans-Serif" font-size="10.00">+ shaderfParams</text>
+<text text-anchor="start" x="650.5" y="-76" font-family="Helvetica,sans-Serif" font-size="10.00">+ shader4fParams</text>
+<polyline fill="none" stroke="black" points="642.5,-69 752.5,-69 "/>
+<text text-anchor="start" x="650.5" y="-57" font-family="Helvetica,sans-Serif" font-size="10.00">+ __init__()</text>
+<text text-anchor="start" x="650.5" y="-46" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetDisplayName()</text>
+<text text-anchor="start" x="650.5" y="-35" font-family="Helvetica,sans-Serif" font-size="10.00">+ setupShader()</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node7 -->
 <g id="edge6" class="edge"><title>Node1&#45;&gt;Node7</title>
-<path fill="none" stroke="midnightblue" d="M448.024,-313.95C501.999,-268.283 573.838,-205.418 633.5,-146 640.61,-138.919 647.903,-131.202 654.902,-123.536"/>
+<path fill="none" stroke="midnightblue" d="M448.024,-313.95C501.999,-268.283 573.838,-205.418 633.5,-146 642.269,-137.267 651.316,-127.566 659.748,-118.188"/>
 <polygon fill="none" stroke="midnightblue" points="445.577,-311.435 440.194,-320.561 450.093,-316.784 445.577,-311.435"/>
 </g>
 </g>

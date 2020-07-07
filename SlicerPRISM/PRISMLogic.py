@@ -35,7 +35,7 @@ def get_function_parameters_and_values():
 log = logging.getLogger(__name__)
 
 """!@class PRISMLogic
-@brief class PRISMLogic
+@brief Class containing the functions to interact between the interface and the shader.
 @param ScriptedLoadableModuleLogic class: Uses ScriptedLoadableModuleLogic base class, available at: https://github.com/Slicer/Slicer/blob/master/Base/Python/slicer/ScriptedLoadableModuleLogic.py
 """ 
 class PRISMLogic(ScriptedLoadableModuleLogic):
@@ -128,7 +128,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
   @vtk.calldata_type(vtk.VTK_INT)
   def onEndPointsChanged(self, caller, event, call_data):
     """!@brief Callback function to get the position of the modified point.
-    Note: @vtk.calldata_type(vtk.VTK_OBJECT) function get calling instance as a vtkMRMLNode to be accesed in the function.
+    Note: vtk.calldata_type(vtk.VTK_OBJECT) function get calling instance as a vtkMRMLNode to be accesed in the function.
 
     @param caller slicer.mrmlScene: Slicer active scene.
     @param event str: Flag corresponding to the triggered event.
@@ -216,7 +216,8 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
   def setPlacingMarkups(self, paramName, btn, interaction = 1, persistence = 0):
     """!@brief Activate Slicer markups module to set one or multiple markups in the given markups fiducial list.
 
-    @param markupsFiducialNode vtkMRMLMarkupsFiducialNode : List in which adding new markups.
+    @param paramName str : Name of the parameter.
+    @param btn QObject : Button pushed to place the markup.
     @param interaction int : 0: /, 1: place, 2: view transform, 3: / ,4: Select
     @param persistence int : 0: unique, 1: peristent
     """
@@ -422,6 +423,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     """!@brief Use Slicer Volume Rendering module to initialize and setup rendering of the given volume node.
     
     @param volumeNode vtkMRMLVolumeNode : Volume node to be rendered.
+    @param multipleVolumes bool : If the rendered volume is a secondary volume.
     """
     #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     logic = slicer.modules.volumerendering.logic()

@@ -1,8 +1,9 @@
 from Resources.CustomShader import CustomShader
 
-#------------------------------------------------------------------------------------
-# Opacity peeling shader
-#------------------------------------------------------------------------------------
+"""!@class OpacityPeelingShader
+@brief Class containing the code for the Opacity Peeling shader.
+@param CustomShader class : Parent class containing the function to access the parameters of the shader.
+""" 
 class OpacityPeelingShader(CustomShader):
 
   shaderfParams = {'T_low' : { 'displayName' : 'Low Threshold', 'min' : 0.0, 'max' : 1.0, 'defaultValue' : 0.3 }, \

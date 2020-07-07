@@ -72,7 +72,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "____init_____8py.html",
-"class_slicer_p_r_i_s_m_1_1_resources_1_1_virtual_reality_helper_1_1_virtual_reality_helper.html#a4a8426c5920ccc62250ce318e2b09ead"
+"class_slicer_p_r_i_s_m_1_1_resources_1_1_virtual_reality_helper_1_1_virtual_reality_helper.html#a59c43d0b9bd4a0712e89fa2ed3c8848b"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

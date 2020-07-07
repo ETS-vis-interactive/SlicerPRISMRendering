@@ -2,9 +2,10 @@ from Resources.CustomShader import CustomShader
 import math  
 import vtk, qt, ctk, slicer
 
-#------------------------------------------------------------------------------------
-# Chroma depth shader
-#------------------------------------------------------------------------------------
+"""!@class ChromaDepthShader
+@brief Class containing the code for the Chroma Depth shader.
+@param CustomShader class : Parent class containing the function to access the parameters of the shader.
+""" 
 class ChromaDepthShader(CustomShader):
   shaderrParams = { 'depthRange' : { 'displayName' : 'Depth Range', 'defaultValue' : [0, 1]}}
   shadertfParams = { 'scalarColorMapping' : { 'displayName' : 'Scalar Color Mapping', 'defaultColors' : [[0, 1, 0, 0, 0, 0.5], [300, 0, 0, 1, 0, 0.5]], 'type' : 'color'}, \

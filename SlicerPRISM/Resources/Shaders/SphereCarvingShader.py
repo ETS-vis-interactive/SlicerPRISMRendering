@@ -1,8 +1,9 @@
 from Resources.CustomShader import CustomShader
 
-#------------------------------------------------------------------------------------
-# Sphere carving shader
-#------------------------------------------------------------------------------------
+"""!@class SphereCarvingShader
+@brief Class containing the code for the Sphere Carving shader.
+@param CustomShader class : Parent class containing the function to access the parameters of the shader.
+""" 
 class SphereCarvingShader(CustomShader):
 
   shaderfParams = { 'radius' : { 'displayName' : 'Radius', 'min' : 0.0, 'max' : 100.0, 'defaultValue' : 50.0 }}  
@@ -24,6 +25,3 @@ class SphereCarvingShader(CustomShader):
     """
     # (bool) Skip computation of current iteration step if true
     self.shaderProperty.AddFragmentShaderReplacement("//VTK::Cropping::Impl", True, replacement, False)
-
-  def setPathEnds(self,entry,target):
-    self.shaderUniforms.SetUniform3f("center", entry)

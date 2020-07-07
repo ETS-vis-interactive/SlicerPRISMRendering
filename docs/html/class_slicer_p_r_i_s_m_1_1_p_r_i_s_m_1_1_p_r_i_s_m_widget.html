@@ -252,9 +252,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa315cc715c538dea175216d53f73915e"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#aa315cc715c538dea175216d53f73915e">UpdateShaderParametersUI</a> (self)</td></tr>
 <tr class="memdesc:aa315cc715c538dea175216d53f73915e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the shader parameters on the UI.  <a href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#aa315cc715c538dea175216d53f73915e">More...</a><br /></td></tr>
 <tr class="separator:aa315cc715c538dea175216d53f73915e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac59c625f0d809c1dd0ec96e9e8312dd8"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ac59c625f0d809c1dd0ec96e9e8312dd8">addTransferFunctions</a> (self, params, paramNames, volumeID)</td></tr>
-<tr class="memdesc:ac59c625f0d809c1dd0ec96e9e8312dd8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to add transfer function widgets to the ui.  <a href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ac59c625f0d809c1dd0ec96e9e8312dd8">More...</a><br /></td></tr>
-<tr class="separator:ac59c625f0d809c1dd0ec96e9e8312dd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4755b45168ce6528b4bc40c83a3d6cef"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a4755b45168ce6528b4bc40c83a3d6cef">addTransferFunctions</a> (self, parameters, paramNames, volumeID)</td></tr>
+<tr class="memdesc:a4755b45168ce6528b4bc40c83a3d6cef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to add transfer function widgets to the ui.  <a href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a4755b45168ce6528b4bc40c83a3d6cef">More...</a><br /></td></tr>
+<tr class="separator:a4755b45168ce6528b4bc40c83a3d6cef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab0bc59985263f7fd12f04dc0f618f7e0"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ab0bc59985263f7fd12f04dc0f618f7e0">getWidgetPosition</a> (self, layout, widgetName)</td></tr>
 <tr class="memdesc:ab0bc59985263f7fd12f04dc0f618f7e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to get the widget's position in a layout.  <a href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ab0bc59985263f7fd12f04dc0f618f7e0">More...</a><br /></td></tr>
 <tr class="separator:ab0bc59985263f7fd12f04dc0f618f7e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -448,8 +448,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ac59c625f0d809c1dd0ec96e9e8312dd8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac59c625f0d809c1dd0ec96e9e8312dd8">&#9670;&nbsp;</a></span>addTransferFunctions()</h2>
+<a id="a4755b45168ce6528b4bc40c83a3d6cef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4755b45168ce6528b4bc40c83a3d6cef">&#9670;&nbsp;</a></span>addTransferFunctions()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -464,7 +464,7 @@ Public Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>params</em>, </td>
+          <td class="paramname"><em>parameters</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -489,9 +489,9 @@ Public Attributes</h2></td></tr>
 <p>Function to add transfer function widgets to the ui. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">params</td><td>params : Dictionnary of transfert functions. </td></tr>
-    <tr><td class="paramname">params</td><td>paramNames : Name of the transfert functions. </td></tr>
-    <tr><td class="paramname">params</td><td>volumeID : ID of the volume.</td></tr>
+    <tr><td class="paramname">parameters</td><td>str: Dictionnary of transfert functions. </td></tr>
+    <tr><td class="paramname">paramNames</td><td>dict[str]: Name of the transfert functions. </td></tr>
+    <tr><td class="paramname">volumeID</td><td>int: ID of the volume.</td></tr>
   </table>
   </dd>
 </dl>
@@ -501,7 +501,7 @@ Public Attributes</h2></td></tr>
 <div id="dynsection-7-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-7-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget_ac59c625f0d809c1dd0ec96e9e8312dd8_cgraph.svg" width="806" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget_a4755b45168ce6528b4bc40c83a3d6cef_cgraph.svg" width="806" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -664,10 +664,10 @@ Public Attributes</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">volumePropertyNode</td><td>vtkMRMLVolumePropertyNode : Volume property node to be associated to the widget. </td></tr>
-    <tr><td class="paramname">param</td><td>dict : Parameters to add to the widget. </td></tr>
+    <tr><td class="paramname">params</td><td>: Parameters of the widget. </td></tr>
     <tr><td class="paramname">p</td><td>str : Parameter's name. </td></tr>
-    <tr><td class="paramname">TFType</td><td>str : Type of the transfer function, can be 'color', 'scalarOpacity'. </td></tr>
-    <tr><td class="paramname">params</td><td>volumeID : ID of the volume. </td></tr>
+    <tr><td class="paramname">secondTf</td><td>bool : If the widget is one of the secondary volumes. </td></tr>
+    <tr><td class="paramname">volumeID</td><td>: ID of the volume. </td></tr>
   </table>
   </dd>
 </dl>
@@ -2309,7 +2309,8 @@ Public Attributes</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">file_</td><td>str : Path of the file being modified. </td></tr>
-    <tr><td class="paramname">className</td><td>str : Name of the class being modified. @paramdisplayName str : Display name of the class being modified. </td></tr>
+    <tr><td class="paramname">className</td><td>str : Name of the class being modified. </td></tr>
+    <tr><td class="paramname">displayName</td><td>str : Display name of the class being modified. </td></tr>
   </table>
   </dd>
 </dl>
@@ -2346,7 +2347,6 @@ Public Attributes</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">layout</td><td>qLayout : layout to reset </td></tr>
-    <tr><td class="paramname">nb</td><td>int : range of the widgets </td></tr>
   </table>
   </dd>
 </dl>
@@ -2976,7 +2976,7 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>SlicerPRISM/<a class="el" href="_p_r_i_s_m_8py.html">PRISM.py</a></li>
+<li>C:/Users/Tiphaine/Dropbox/Fac/Master/Stage/SlicerPRISM/SlicerPRISM/<a class="el" href="_p_r_i_s_m_8py.html">PRISM.py</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

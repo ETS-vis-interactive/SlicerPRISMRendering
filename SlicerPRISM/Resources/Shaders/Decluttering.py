@@ -1,8 +1,9 @@
 from Resources.CustomShader import CustomShader
 
-#------------------------------------------------------------------------------------
-# Decluttering shader
-#------------------------------------------------------------------------------------
+"""!@class ChromaDepthShader
+@brief Class containing the code for the Chroma Depth shader.
+@param CustomShader class : Parent class containing the function to access the parameters of the shader.
+""" 
 class Decluttering(CustomShader):
 
   shaderfParams = {}

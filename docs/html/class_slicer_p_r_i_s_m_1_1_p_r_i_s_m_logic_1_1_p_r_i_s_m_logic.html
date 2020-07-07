@@ -702,7 +702,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Callback function to get the position of the modified point. </p>
-<p>Note: @vtk.calldata_type(vtk.VTK_OBJECT) function get calling instance as a vtkMRMLNode to be accesed in the function.</p>
+<p>Note: vtk.calldata_type(vtk.VTK_OBJECT) function get calling instance as a vtkMRMLNode to be accesed in the function.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">caller</td><td>slicer.mrmlScene: Slicer active scene. </td></tr>
@@ -935,6 +935,7 @@ Public Attributes</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">volumeNode</td><td>vtkMRMLVolumeNode : Volume node to be rendered. </td></tr>
+    <tr><td class="paramname">multipleVolumes</td><td>bool : If the rendered volume is a secondary volume. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1074,7 +1075,8 @@ Public Attributes</h2></td></tr>
 <p>Activate Slicer markups module to set one or multiple markups in the given markups fiducial list. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">markupsFiducialNode</td><td>vtkMRMLMarkupsFiducialNode : List in which adding new markups. </td></tr>
+    <tr><td class="paramname">paramName</td><td>str : Name of the parameter. </td></tr>
+    <tr><td class="paramname">btn</td><td>QObject : Button pushed to place the markup. </td></tr>
     <tr><td class="paramname">interaction</td><td>int : 0: /, 1: place, 2: view transform, 3: / ,4: Select </td></tr>
     <tr><td class="paramname">persistence</td><td>int : 0: unique, 1: peristent </td></tr>
   </table>
@@ -1628,7 +1630,7 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>SlicerPRISM/<a class="el" href="_p_r_i_s_m_logic_8py.html">PRISMLogic.py</a></li>
+<li>C:/Users/Tiphaine/Dropbox/Fac/Master/Stage/SlicerPRISM/SlicerPRISM/<a class="el" href="_p_r_i_s_m_logic_8py.html">PRISMLogic.py</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

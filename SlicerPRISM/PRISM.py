@@ -36,7 +36,7 @@ def get_function_parameters_and_values():
 log = logging.getLogger(__name__)
 
 """!@class PRISM
-@brief class prism
+@brief Class containing the informations about the module.
 @param ScriptedLoadableModule class: Uses ScriptedLoadableModule base class, available at: https://github.com/Slicer/Slicer/blob/master/Base/Python/slicer/ScriptedLoadableModule.py
 """ 
 class PRISM(ScriptedLoadableModule):
@@ -53,7 +53,7 @@ class PRISM(ScriptedLoadableModule):
 
 
 """!@class PRISMWidget
-@brief class PRISMWidget
+@brief Class containing the functions to control the widgets of the module.
 @param ScriptedLoadableModuleWidget class: Uses ScriptedLoadableModuleWidget base class, available at: https://github.com/Slicer/Slicer/blob/master/Base/Python/slicer/ScriptedLoadableModule.py
 """
 class PRISMWidget(ScriptedLoadableModuleWidget):
@@ -401,7 +401,6 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
   def showLayout(self, layout) :
     """!@brief Function to show specific widgets of a layout.
     @param layout qLayout : layout to reset
-    @param nb int : range of the widgets
 
     """
     for i in range(layout.count()): 
@@ -1316,7 +1315,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
 
     @param file_ str : Path of the file being modified.
     @param className str : Name of the class being modified.
-    @paramdisplayName str : Display name of the class being modified.
+    @param displayName str : Display name of the class being modified.
     """
     ##log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
@@ -1544,12 +1543,16 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       return
 
     # Clear all the widgets except the combobox selector
+    print("nouveau")
     while self.ui.customShaderParametersLayout.count() != 1:
       ## Item of the combobox
       item = self.ui.customShaderParametersLayout.takeAt(self.ui.customShaderParametersLayout.count() - 1)
+      print(item)
       if item != None:
         widget = item.widget()
+        print(widget)
         if widget != None:
+          print("voila")
           widget.setParent(None)
     try :
       self.logic.endPoints.RemoveAllMarkups()
@@ -1782,14 +1785,14 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
             self.logic.optionalWidgets[self.CSName+p] = [widget]
           self.logic.optionalWidgets[self.CSName+p] += [label]
 
-  def addTransferFunctions(self, params, paramNames, volumeID):
+  def addTransferFunctions(self, parameters, paramNames, volumeID):
 
     ##log.info(get_function_name()  + str(get_function_parameters_and_values()))
     """!@brief Function to add transfer function widgets to the ui.
 
-    @param params params : Dictionnary of transfert functions.
-    @param params paramNames : Name of the transfert functions.
-    @param params volumeID : ID of the volume.
+    @param parameters str: Dictionnary of transfert functions.
+    @param paramNames dict[str]: Name of the transfert functions.
+    @param volumeID int: ID of the volume.
 
     @return Null if error.
     """
@@ -1803,21 +1806,21 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       # IF this is the principal volume
       if volumePrincipal :
         volumePropertyNode = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
-        self.createTransferFunctionWidget(volumePropertyNode, params[p], p, False, volumeID)
+        self.createTransferFunctionWidget(volumePropertyNode, parameters[p], p, False, volumeID)
       else : 
         # If this is a secondary volume
         transferFunctionID = volumeID * self.numberOfTFTypes
         # If the volume of the transfer function is already rendered create the widget
         if self.logic.secondaryVolumeRenderingDisplayNodes[volumeID] is not None: 
           volumePropertyNode = self.logic.secondaryVolumeRenderingDisplayNodes[volumeID].GetVolumePropertyNode()
-          self.createTransferFunctionWidget(volumePropertyNode, params[p], p, True, volumeID)
+          self.createTransferFunctionWidget(volumePropertyNode, parameters[p], p, True, volumeID)
         else :
           # Add the transfer functions to a list, so when the volume is rendered the widgets can be created
           if len(self.transferFunctionParams) <= transferFunctionID + i:
-            self.transferFunctionParams.append(params[p])
+            self.transferFunctionParams.append(parameters[p])
             self.transferFunctionParamsName.append(p)
           else :
-            self.transferFunctionParams[transferFunctionID + i] = params[p]
+            self.transferFunctionParams[transferFunctionID + i] = parameters[p]
             ## Name of the transfer function
             self.transferFunctionParamsName[transferFunctionID + i] = p
 
@@ -1841,10 +1844,10 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """!@brief Function to create a transfert fuction widget.
 
     @param volumePropertyNode vtkMRMLVolumePropertyNode : Volume property node to be associated to the widget.
-    @param param dict : Parameters to add to the widget.
+    @param params : Parameters of the widget.
     @param p str : Parameter's name.
-    @param TFType str : Type of the transfer function, can be 'color', 'scalarOpacity'.
-    @param params volumeID : ID of the volume.
+    @param secondTf bool : If the widget is one of the secondary volumes.
+    @param volumeID : ID of the volume.
     """
     ##log.info(get_function_name()  + str(get_function_parameters_and_values()))
     TFType = params['type']

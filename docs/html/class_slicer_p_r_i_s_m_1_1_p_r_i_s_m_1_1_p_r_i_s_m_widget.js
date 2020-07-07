@@ -3,7 +3,7 @@ var class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget =
     [ "addGUIObservers", "class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a69a2d837a10281b583a4e5f9044db193", null ],
     [ "addParamButtonClicked", "class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a1eb16a219f95634ee6a878b4926d5d2a", null ],
     [ "addParamButtonState", "class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#abb2588d12603fb3de8be8f15a3ee0fd8", null ],
-    [ "addTransferFunctions", "class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ac59c625f0d809c1dd0ec96e9e8312dd8", null ],
+    [ "addTransferFunctions", "class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a4755b45168ce6528b4bc40c83a3d6cef", null ],
     [ "appendList", "class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a050018ff82526951ddafef689bb131cf", null ],
     [ "cleanup", "class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ad437efc961d478c0fbe40e9ad2a0578a", null ],
     [ "createParametersLayout", "class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ac406a5ff5a88ee3578f24b16f74171ab", null ],

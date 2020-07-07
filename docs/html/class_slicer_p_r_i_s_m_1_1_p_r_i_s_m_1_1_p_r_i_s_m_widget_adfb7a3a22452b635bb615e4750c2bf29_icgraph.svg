@@ -249,7 +249,7 @@
 </g>
 <!-- Node15 -->
 <g id="node15" class="node"><title>Node15</title>
-<g id="a_node15"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#ac59c625f0d809c1dd0ec96e9e8312dd8" target="_top" xlink:title="Function to add transfer function widgets to the ui.">
+<g id="a_node15"><a xlink:href="class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a4755b45168ce6528b4bc40c83a3d6cef" target="_top" xlink:title="Function to add transfer function widgets to the ui.">
 <polygon fill="none" stroke="black" points="389,-114.5 389,-133.5 499,-133.5 499,-114.5 389,-114.5"/>
 <text text-anchor="middle" x="444" y="-121.5" font-family="Helvetica,sans-Serif" font-size="10.00">addTransferFunctions</text>
 </a>
