@@ -481,8 +481,9 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
       volumePropertyNode = displayNode.GetVolumePropertyNode()
       self.colorTransferFunction = volumePropertyNode.GetColor() 
       self.opacityTransferFunction = volumePropertyNode.GetScalarOpacity() 
-      self.colorTransferFunction.name = "Original" + self.colorTransferFunction.GetClassName() 
-      self.opacityTransferFunction.name = "Original" + self.opacityTransferFunction.GetClassName()
+      volumeName = volumePropertyNode.GetName()
+      self.colorTransferFunction.name = volumeName+"Original" + self.colorTransferFunction.GetClassName() 
+      self.opacityTransferFunction.name = volumeName+"Original" + self.opacityTransferFunction.GetClassName()
 
 
   def setCustomShaderType(self, shaderTypeName):

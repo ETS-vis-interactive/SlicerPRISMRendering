@@ -28,7 +28,7 @@
 <a name="desc"></a>
 
 ## Module Description
-This module is an implementation of the PRISM customizable volume rendering framework in 3D Slicer.
+This module is an implementation of the PRISM customizable volume rendering framework in 3D Slicer. Slicer version 4.11.0 is needed for this module.
 
 <a name="usec"></a>
 
@@ -272,7 +272,7 @@ This module is an implementation of the PRISM customizable volume rendering fram
 <a name="info"></a>
 ## Information for Developers
 
-See [this page](https://ets-vis-interactive.github.io/SlicerPRISM/) for the full documentation.
+See [this page](https://ets-vis-interactive.github.io/SlicerPRISM/html/index.html) for the full documentation.
 <a name="lim"></a>
 ### Limitations
 

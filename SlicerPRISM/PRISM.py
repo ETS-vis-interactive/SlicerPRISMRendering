@@ -1398,6 +1398,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     elif self.ui.volumeRenderingCheckBox.isChecked():
       self.ui.volumeRenderingCheckBox.setChecked(False)
       self.ui.customShaderCombo.currentIndex = self.ui.customShaderCombo.count -1 
+      self.ui.imageSelector.setCurrentNode(node)
   #s
   # View setup callbacks
   #
@@ -1500,9 +1501,8 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     self.UpdateShaderParametersUI()
     self.updateParameterNodeFromGUI(self.ui.customShaderCombo.currentText, self.ui.customShaderCombo)
     self.updateGUIFromParameterNode()
-    
     # If there is no selected shader, disables the buttons.
-    if i == (self.ui.customShaderCombo.currentText == "None"):
+    if (self.ui.customShaderCombo.currentText == "None"):
       self.ui.openCustomShaderButton.setEnabled(False)
       self.ui.reloadCurrentCustomShaderButton.setEnabled(False)
       self.ui.duplicateCustomShaderButton.setEnabled(False)
@@ -1558,7 +1558,8 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     lenWidgets = len(self.widgets)
     
     ## Name of the current shader, without spaces
-    self.CSName = self.ui.customShaderCombo.currentText.replace(" ", "")
+    volumeName = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode().GetName()
+    self.CSName = self.ui.customShaderCombo.currentText.replace(" ", "") + volumeName
 
     # Instanciate a slider for each floating parameter of the active shader
     ## Floating parameters
@@ -1670,8 +1671,8 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         opacityTransferFunction = vtk.vtkPiecewiseFunction()
         colorTransferFunction.RemoveAllObservers()
         opacityTransferFunction.RemoveAllObservers()
-        colorTransferFunction.name = "Original" + colorTransferFunction.GetClassName() 
-        opacityTransferFunction.name = "Original" + opacityTransferFunction.GetClassName()
+        colorTransferFunction.name = volumeName + "Original" + colorTransferFunction.GetClassName() 
+        opacityTransferFunction.name = volumeName + "Original" + opacityTransferFunction.GetClassName()
         self.appendList(opacityTransferFunction, opacityTransferFunction.name)
         self.appendList(colorTransferFunction, colorTransferFunction.name)
 
