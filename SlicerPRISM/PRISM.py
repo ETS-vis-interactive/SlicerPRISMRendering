@@ -707,13 +707,13 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param caller Caller of the function.
     @param event Event that triggered the function.
     """   
-    ##log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     if not self.logic.parameterNode:
       return
     parameterNode = self.logic.parameterNode
     if parameterNode.GetParameterCount() == 0:
       return
-    
+
     # Disables updateParameterNodeFromGUI signal 
     self.removeGUIObservers()
     for w in self.widgets:
@@ -755,13 +755,11 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     parameterNode = self.logic.parameterNode
     oldModifiedState = parameterNode.StartModify()
-
     if self.ui.imageSelector.currentNode() is None:
       return 
 
     if w not in self.widgets :
       return 
-
     widgetClassName = self.getClassName(w)
     if widgetClassName=="QPushButton" :
       parameterNode.SetParameter(w.name, "1") if w.enabled else parameterNode.SetParameter(w.name, "0")
@@ -1359,9 +1357,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     if self.ui.volumeRenderingCheckBox.isChecked() and self.ui.imageSelector.currentNode():
       self.logic.renderVolume(self.ui.imageSelector.currentNode())
       self.ui.imageSelector.currentNodeChanged.connect(lambda value, w = self.ui.imageSelector : self.onImageSelectorChanged(value, w))
-      self.ui.imageSelector.currentNodeChanged.connect(lambda value, w = self.ui.imageSelector : self.updateParameterNodeFromGUI(value, w))
       self.ui.imageSelector.nodeAdded.disconnect()
-      
       self.UpdateShaderParametersUI()    
 
   #
@@ -1376,10 +1372,11 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param widget QObject : Widget modified.
     @param index int : Index of the widget being modified.
     """
-    ##log.info(get_function_name()  + str(get_function_parameters_and_values()))
-    
+    log.info(get_function_name()  + str(get_function_parameters_and_values()))
     if not node:
       return
+    
+    self.updateParameterNodeFromGUI(node, widget)
     
     # If the selector is a parameter of a shader
     if widget != self.ui.imageSelector :
@@ -1397,8 +1394,8 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     elif self.ui.volumeRenderingCheckBox.isChecked():
       self.ui.volumeRenderingCheckBox.setChecked(False)
       self.ui.customShaderCombo.currentIndex = self.ui.customShaderCombo.count -1 
-      self.ui.imageSelector.setCurrentNode(node)
-  #s
+  
+  #
   # View setup callbacks
   #
 
@@ -1538,21 +1535,17 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """!@brief Updates the shader parameters on the UI.
 
     """
-    ##log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    log.info(get_function_name()  + str(get_function_parameters_and_values()))
     if self.logic.customShader == None:
       return
 
     # Clear all the widgets except the combobox selector
-    print("nouveau")
     while self.ui.customShaderParametersLayout.count() != 1:
       ## Item of the combobox
       item = self.ui.customShaderParametersLayout.takeAt(self.ui.customShaderParametersLayout.count() - 1)
-      print(item)
       if item != None:
         widget = item.widget()
-        print(widget)
         if widget != None:
-          print("voila")
           widget.setParent(None)
     try :
       self.logic.endPoints.RemoveAllMarkups()
