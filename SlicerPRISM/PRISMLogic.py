@@ -135,7 +135,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     @param event str: Flag corresponding to the triggered event.
     @param call_data vtkMRMLNode: Node added to the scene.
     """
-    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     #check if the point was added from the module and was set
     if (call_data == self.centerPointIndex or call_data == self.entryPointIndex or call_data == self.targetPointIndex ):
@@ -149,11 +149,8 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     @param caller slicer.mrmlScene: Slicer active scene.
     @param event str: Flag corresponding to the triggered event.
     """
-    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    log.info(get_function_name()  + str(get_function_parameters_and_values()))
     world = [0, 0, 0, 0]
-    self.centerPointIndex = -1
-    self.targetPointIndex = -1
-    self.entryPointIndex = -1
 
     if (self.pointType == 'center'):
       
@@ -172,7 +169,6 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     elif (self.pointType == 'entry'):
       pointIndex = caller.GetDisplayNode().GetActiveControlPoint()
       caller.GetNthFiducialWorldCoordinates(pointIndex, world)
-      
       if self.entryPointIndex != -1 :
         caller.SetNthFiducialWorldCoordinates(self.entryPointIndex, world)
         caller.RemoveNthControlPoint(pointIndex)
@@ -196,6 +192,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
       
       self.onCustomShaderParamChanged(world, self.pointType, "markup")
       self.currentMarkupBtn.setText('Reset ' + self.pointType)
+    self.pointType  = '' #TODO remove
 
   def deleteNodes(self):
     """!@brief Deletes the nodes in the scene.

@@ -727,6 +727,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
           w.setChecked(checked)
         elif widgetClassName=="QComboBox":
           index = int(value)
+          print("Qcombobox")
           w.setCurrentIndex(index)
         elif widgetClassName=="ctkSliderWidget":
           value = float(value)
@@ -791,6 +792,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
           val = parameterNode.GetParameter(w.name+str(i))
     elif widgetClassName == "qMRMLNodeComboBox":
       parameterNode.SetNodeReferenceID(w.name, w.currentNodeID)
+    """
     elif widgetClassName == 'vtkMRMLMarkupsFiducialNode':
       caller = value[0]
       event = value[1]
@@ -812,7 +814,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
           name = w.name + caller.GetNthFiducialLabel(index)
           caller.GetNthFiducialWorldCoordinates(index, world)
           parameterNode.SetParameter(name, ",".join("{0}".format(n) for n in world))
-
+    """
     parameterNode.EndModify(oldModifiedState)
 
       
@@ -838,10 +840,11 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
           w.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = w : self.updateParameterNodeFromGUI([o,"add observers"], w))
       elif widgetClassName == "qMRMLNodeComboBox":
         w.currentNodeChanged.connect(lambda value, w = w : self.updateParameterNodeFromGUI(value, w))
+      """
       elif widgetClassName == 'vtkMRMLMarkupsFiducialNode':
         w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.pointModified)
         w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, lambda c, e, name = w.name, w = w : self.updateParameterNodeFromGUI([c, "PointPositionDefinedEvent", name], w))
-
+      """
   def removeGUIObservers(self):
     """!@brief Function to remove observers from the GUI's widgets.
     
@@ -864,9 +867,11 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         w.RemoveAllObservers()
       elif widgetClassName == "qMRMLNodeComboBox":
         w.currentNodeChanged.disconnect(self.updateParameterNodeFromGUI)
+      """
       elif widgetClassName == 'vtkMRMLMarkupsFiducialNode':
         w.RemoveObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent)
         w.RemoveObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent)
+      """
   
   def onParameterNodeModified(self, observer, eventid):
     """!@brief Function to update the parameter node.
