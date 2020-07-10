@@ -247,6 +247,7 @@ class CustomShader():
 
     elif type_ == "bool":
       p = self.parambValues.get(paramName)
+      print(p)
       if p != None:
         self.param4fValues[paramName] = paramValue
         self.shaderUniforms.SetUniformi(paramName, int(paramValue))

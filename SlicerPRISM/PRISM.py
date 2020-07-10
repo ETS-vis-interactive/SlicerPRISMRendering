@@ -225,7 +225,6 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     + self.ui.centralWidget.findChildren(qt.QPushButton()) \
     + self.ui.centralWidget.findChildren(qt.QComboBox()) \
     + self.ui.centralWidget.findChildren(slicer.qMRMLNodeComboBox()))
-
     ## Transfer function with its parameters
     self.transferFunctionParams = []
 
@@ -792,6 +791,28 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
           val = parameterNode.GetParameter(w.name+str(i))
     elif widgetClassName == "qMRMLNodeComboBox":
       parameterNode.SetNodeReferenceID(w.name, w.currentNodeID)
+    elif widgetClassName == 'vtkMRMLMarkupsFiducialNode':
+      caller = value[0]
+      event = value[1]
+      index = value[2]
+      name = w.name + self.logic.pointType
+      world = [0, 0, 0, 0]
+      
+      if event == "PointPositionDefinedEvent" :
+        if parameterNode.GetParameter(name) == "" and (parameterNode.GetParameter(w.name) == "" or int(parameterNode.GetParameter(w.name)) != index):
+          index = caller.GetDisplayNode().GetActiveControlPoint()
+          caller.SetNthFiducialAssociatedNodeID(index, name)
+          caller.GetNthFiducialWorldCoordinates(index, world)
+          parameterNode.SetParameter(name, ",".join("{0}".format(n) for n in world))
+          parameterNode.SetParameter(w.name, str(index))
+          self.logic.pointType  = ''
+      elif event == "PointModifiedEvent" :
+        if parameterNode.GetParameter(w.name) != "" and index <= int(parameterNode.GetParameter(w.name)):
+          pointName = caller.GetNthFiducialAssociatedNodeID(index)
+          name = w.name + caller.GetNthFiducialLabel(index)
+          caller.GetNthFiducialWorldCoordinates(index, world)
+          parameterNode.SetParameter(name, ",".join("{0}".format(n) for n in world))
+
     parameterNode.EndModify(oldModifiedState)
 
       
@@ -817,6 +838,9 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
           w.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = w : self.updateParameterNodeFromGUI([o,"add observers"], w))
       elif widgetClassName == "qMRMLNodeComboBox":
         w.currentNodeChanged.connect(lambda value, w = w : self.updateParameterNodeFromGUI(value, w))
+      elif widgetClassName == 'vtkMRMLMarkupsFiducialNode':
+        w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.pointModified)
+        w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, lambda c, e, name = w.name, w = w : self.updateParameterNodeFromGUI([c, "PointPositionDefinedEvent", name], w))
 
   def removeGUIObservers(self):
     """!@brief Function to remove observers from the GUI's widgets.
@@ -840,7 +864,10 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
         w.RemoveAllObservers()
       elif widgetClassName == "qMRMLNodeComboBox":
         w.currentNodeChanged.disconnect(self.updateParameterNodeFromGUI)
-    
+      elif widgetClassName == 'vtkMRMLMarkupsFiducialNode':
+        w.RemoveObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent)
+        w.RemoveObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent)
+  
   def onParameterNodeModified(self, observer, eventid):
     """!@brief Function to update the parameter node.
 
@@ -1372,7 +1399,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     @param widget QObject : Widget modified.
     @param index int : Index of the widget being modified.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     if not node:
       return
     
@@ -1535,7 +1562,7 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
     """!@brief Updates the shader parameters on the UI.
 
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     if self.logic.customShader == None:
       return
 
@@ -1617,8 +1644,15 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
       targetPointButton.clicked.connect(lambda _, name = p, btn = targetPointButton : self.logic.setPlacingMarkups(paramName = name, btn = btn,  interaction = 1))
       targetPointButton.clicked.connect(lambda value, w = slider : self.updateParameterNodeFromGUI(value, w))
       targetPointButton.setParent(self.ui.customShaderParametersLayout)
+
       self.ui.customShaderParametersLayout.addRow(qt.QLabel(params[p]['displayName']), targetPointButton)
       self.appendList(targetPointButton, self.CSName+p)
+    
+    if params:
+      self.logic.endPoints.name = self.CSName + "markup"
+      self.logic.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.pointModified)
+      self.logic.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, lambda c, e, name = self.CSName + "markup", w = self.logic.endPoints : self.updateParameterNodeFromGUI([c, "PointPositionDefinedEvent", name], w))
+      self.appendList(self.logic.endPoints, self.logic.endPoints.name)
     
     ## Range parameter
     params = self.logic.customShader.shaderrParams
@@ -1777,6 +1811,10 @@ class PRISMWidget(ScriptedLoadableModuleWidget):
           else :
             self.logic.optionalWidgets[self.CSName+p] = [widget]
           self.logic.optionalWidgets[self.CSName+p] += [label]
+  
+  @vtk.calldata_type(vtk.VTK_INT)
+  def pointModified(self, caller, event, index):
+    self.updateParameterNodeFromGUI([caller, "PointModifiedEvent", index], self.logic.endPoints)
 
   def addTransferFunctions(self, parameters, paramNames, volumeID):
 

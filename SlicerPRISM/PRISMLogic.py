@@ -99,17 +99,18 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     @param checkBox QCheckbox : Checkbox to enable or disable the option.
     @param CSName str : Name of the current custom shader.
     """
-    if str(CSName + paramName) in self.optionalWidgets :
-      if checkBox.isChecked() :  
+    if checkBox.isChecked() :  
+      ## Boolean checking of there is a boolean option enabled/disabled in the shader
+      self.optionEnabled = 1
+      if str(CSName + paramName) in self.optionalWidgets :
         for i in self.optionalWidgets[CSName + paramName] :
           i.show()
-        ## Boolean checking of there is a boolean option enabled/disabled in the shader
-        self.optionEnabled = 1
-      else: 
-        self.optionEnabled = 0
+    else: 
+      self.optionEnabled = 0
+      if str(CSName + paramName) in self.optionalWidgets :
         for i in self.optionalWidgets[CSName +paramName] :
           i.hide()
-          self.endPoints.RemoveAllMarkups()
+      self.endPoints.RemoveAllMarkups()
 
     self.customShader.setShaderParameter(paramName, self.optionEnabled, type_)
 
@@ -167,7 +168,6 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
       
       self.onCustomShaderParamChanged(world, self.pointType, "markup")
       self.currentMarkupBtn.setText('Reset ' + self.pointType)
-      self.pointType  = ''
 
     elif (self.pointType == 'entry'):
       pointIndex = caller.GetDisplayNode().GetActiveControlPoint()
@@ -182,7 +182,6 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
       
       self.onCustomShaderParamChanged(world, self.pointType, "markup")
       self.currentMarkupBtn.setText('Reset ' + self.pointType)
-      self.pointType  = ''
 
     elif (self.pointType == 'target'):
       pointIndex = caller.GetDisplayNode().GetActiveControlPoint()
@@ -197,7 +196,6 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
       
       self.onCustomShaderParamChanged(world, self.pointType, "markup")
       self.currentMarkupBtn.setText('Reset ' + self.pointType)
-      self.pointType  = ''
 
   def deleteNodes(self):
     """!@brief Deletes the nodes in the scene.
@@ -230,6 +228,7 @@ class PRISMLogic(ScriptedLoadableModuleLogic):
     
     ## Type of the point being modified
     self.pointType = paramName
+
     
   def onCustomShaderParamChanged(self, value, paramName, type_ ):
     """!@brief Change the custom parameters in the shader.
