@@ -1,5 +1,0 @@
-<map id="addGUIObservers" name="addGUIObservers">
-<area shape="rect" id="node1" title="Function to add observers to the GUI&#39;s widgets." alt="" coords="5,5,128,32"/>
-<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#adfb7a3a22452b635bb615e4750c2bf29" title="Function to get the class name of a widget." alt="" coords="427,5,533,32"/>
-<area shape="rect" id="node3" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a9c2580701ccfac91074c348bf51d8353" title="Function to update the parameter node from gui values." alt="" coords="176,31,379,57"/>
-</map>

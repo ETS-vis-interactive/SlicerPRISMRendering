@@ -1,6 +1,0 @@
-<map id="onAddParamComboIndexChanged" name="onAddParamComboIndexChanged">
-<area shape="rect" id="node1" title="Sets the current parameter type according to the combobox input." alt="" coords="5,56,225,83"/>
-<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#adfb7a3a22452b635bb615e4750c2bf29" title="Function to get the class name of a widget." alt="" coords="273,5,380,32"/>
-<area shape="rect" id="node3" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a09c30f6796c372b242ca908731f4aa1c" title="Function to clear the widgets of a specific layout." alt="" coords="284,56,369,83"/>
-<area shape="rect" id="node4" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a7ee7b1fc1343a8a2914eb4e0d72668f5" title="Function to show specific widgets of a layout." alt="" coords="281,107,372,133"/>
-</map>

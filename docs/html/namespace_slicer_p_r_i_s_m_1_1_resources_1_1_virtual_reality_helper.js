@@ -1,4 +1,0 @@
-var namespace_slicer_p_r_i_s_m_1_1_resources_1_1_virtual_reality_helper =
-[
-    [ "VirtualRealityHelper", "class_slicer_p_r_i_s_m_1_1_resources_1_1_virtual_reality_helper_1_1_virtual_reality_helper.html", "class_slicer_p_r_i_s_m_1_1_resources_1_1_virtual_reality_helper_1_1_virtual_reality_helper" ]
-];

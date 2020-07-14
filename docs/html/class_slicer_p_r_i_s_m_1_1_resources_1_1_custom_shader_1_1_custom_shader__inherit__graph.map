@@ -1,9 +1,0 @@
-<map id="CustomShader" name="CustomShader">
-<area shape="rect" id="node1" title=" " alt="" coords="399,5,592,537"/>
-<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_resources_1_1_shaders_1_1_chroma_depth_shader_1_1_chroma_depth_shader.html" title=" " alt="" coords="5,615,148,751"/>
-<area shape="rect" id="node3" href="$class_slicer_p_r_i_s_m_1_1_resources_1_1_shaders_1_1_decluttering_1_1_decluttering.html" title=" " alt="" coords="172,585,312,780"/>
-<area shape="rect" id="node4" href="$class_slicer_p_r_i_s_m_1_1_resources_1_1_shaders_1_1_opacity_peeling_shader_1_1_opacity_peeling_shader.html" title=" " alt="" coords="336,607,487,758"/>
-<area shape="rect" id="node5" href="$class_slicer_p_r_i_s_m_1_1_resources_1_1_shaders_1_1_outline_shader_1_1_outline_shader.html" title=" " alt="" coords="511,629,651,736"/>
-<area shape="rect" id="node6" href="$class_slicer_p_r_i_s_m_1_1_resources_1_1_shaders_1_1_plane_intersecting_shader_1_1_plane_intersecting_shader.html" title=" " alt="" coords="675,615,838,751"/>
-<area shape="rect" id="node7" href="$class_slicer_p_r_i_s_m_1_1_resources_1_1_shaders_1_1_sphere_carving_shader_1_1_sphere_carving_shader.html" title=" " alt="" coords="862,622,1009,743"/>
-</map>

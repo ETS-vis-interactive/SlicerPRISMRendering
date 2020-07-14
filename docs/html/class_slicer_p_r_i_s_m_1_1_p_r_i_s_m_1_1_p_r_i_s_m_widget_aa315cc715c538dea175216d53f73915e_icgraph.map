@@ -1,5 +1,0 @@
-<map id="UpdateShaderParametersUI" name="UpdateShaderParametersUI">
-<area shape="rect" id="node1" title="Updates the shader parameters on the UI." alt="" coords="248,35,431,61"/>
-<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a5354f5739815c9b04b2e8df68991a1b7" title="Function to initialize the all user interface based on current scene." alt="" coords="67,5,138,32"/>
-<area shape="rect" id="node3" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#adaa9135573481fda408b1b56cea63670" title="Callback function when the custom shader combo box is changed." alt="" coords="5,57,200,98"/>
-</map>

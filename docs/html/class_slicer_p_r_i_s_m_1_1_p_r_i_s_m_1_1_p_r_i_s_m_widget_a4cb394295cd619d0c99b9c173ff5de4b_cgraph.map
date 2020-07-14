@@ -1,7 +1,0 @@
-<map id="updateGUIFromParameterNode" name="updateGUIFromParameterNode">
-<area shape="rect" id="node1" title="Function to update GUI from parameter node values." alt="" coords="5,79,208,105"/>
-<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a69a2d837a10281b583a4e5f9044db193" title="Function to add observers to the GUI&#39;s widgets." alt="" coords="266,28,389,55"/>
-<area shape="rect" id="node3" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#adfb7a3a22452b635bb615e4750c2bf29" title="Function to get the class name of a widget." alt="" coords="697,53,804,80"/>
-<area shape="rect" id="node5" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a16e1c85444e27fae67a4b0973d36fe67" title="Function to remove observers from the GUI&#39;s widgets." alt="" coords="256,79,399,105"/>
-<area shape="rect" id="node4" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a9c2580701ccfac91074c348bf51d8353" title="Function to update the parameter node from gui values." alt="" coords="447,28,649,55"/>
-</map>

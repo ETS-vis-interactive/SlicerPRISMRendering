@@ -1,6 +1,0 @@
-<map id="updateGUIFromParameterNode" name="updateGUIFromParameterNode">
-<area shape="rect" id="node1" title="Function to update GUI from parameter node values." alt="" coords="496,42,699,69"/>
-<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#adaa9135573481fda408b1b56cea63670" title="Callback function when the custom shader combo box is changed." alt="" coords="253,5,448,47"/>
-<area shape="rect" id="node3" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a325535c42ba7ec6ffe9b6484a0a71f85" title="Function to update the parameter node." alt="" coords="263,71,438,98"/>
-<area shape="rect" id="node4" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#aec96b9b1b3199eeba9f95e65796306c1" title="Function to set the parameter node." alt="" coords="5,71,205,98"/>
-</map>

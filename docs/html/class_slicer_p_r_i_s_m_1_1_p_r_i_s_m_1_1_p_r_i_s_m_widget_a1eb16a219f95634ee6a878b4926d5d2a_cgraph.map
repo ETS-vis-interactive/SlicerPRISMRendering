@@ -1,6 +1,0 @@
-<map id="addParamButtonClicked" name="addParamButtonClicked">
-<area shape="rect" id="node1" title="Function to get the current parameters and add them into a dictionnary." alt="" coords="5,31,168,57"/>
-<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a220c420339b770100d81a3015e0ac60f" title="Function to modify the specified dictionnary in the specified shader." alt="" coords="220,5,303,32"/>
-<area shape="rect" id="node3" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a4d4c0f2a4bf9afc519d14631ee71e1f0" title="Function to reset a specific layout." alt="" coords="216,56,307,83"/>
-<area shape="rect" id="node4" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_1_1_p_r_i_s_m_widget.html#a09c30f6796c372b242ca908731f4aa1c" title="Function to clear the widgets of a specific layout." alt="" coords="355,56,440,83"/>
-</map>

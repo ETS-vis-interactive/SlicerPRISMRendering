@@ -1,6 +1,0 @@
-<map id="getEntry" name="getEntry">
-<area shape="rect" id="node1" title="Get Entry point position." alt="" coords="213,56,284,83"/>
-<area shape="rect" id="node2" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#a9d2c16412bacf4e807ce418176c0e550" title="Callback function w hen a the left controller position has changed." alt="" coords="11,5,160,32"/>
-<area shape="rect" id="node3" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#a3634ff4fb8d67cfd0d14c6008deacc9b" title="Callback function when a the right controller position has changed." alt="" coords="6,56,165,83"/>
-<area shape="rect" id="node4" href="$class_slicer_p_r_i_s_m_1_1_p_r_i_s_m_logic_1_1_p_r_i_s_m_logic.html#af02aa10c3f36dbc9e4f6c6040fcb39b1" title="Callback function on trigger pressed event." alt="" coords="5,107,165,149"/>
-</map>
