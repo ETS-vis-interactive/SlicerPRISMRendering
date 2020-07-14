@@ -4,8 +4,8 @@
    contain the root `toctree` directive.
 
 
-Welcome to PRISMRendering's documentation!
-==========================================
+PRISMRendering
+==============
 
 .. toctree::
    :maxdepth: 4

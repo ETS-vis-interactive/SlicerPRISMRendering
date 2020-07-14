@@ -159,14 +159,275 @@
             
   <div class="section" id="module-PRISMRenderingLogic">
 <span id="prismrenderinglogic-module"></span><h1>PRISMRenderingLogic Module<a class="headerlink" href="#module-PRISMRenderingLogic" title="Permalink to this headline">¶</a></h1>
-<div class="graphviz"><object data="_images/inheritance-98beeb009bf688830c21f43fb84d5d299d3080fa.svg" type="image/svg+xml" class="inheritance graphviz">
-<p class="warning">Inheritance diagram of PRISMRenderingLogic</p></object></div>
 <div class="section" id="prismrenderinglogic-class">
 <h2>PRISMRenderingLogic Class<a class="headerlink" href="#prismrenderinglogic-class" title="Permalink to this headline">¶</a></h2>
-<dl class="py attribute">
-<dt id="PRISMRenderingLogic.PRISMRenderingLogic">
-<code class="sig-name descname">PRISMRenderingLogic</code><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#PRISMRenderingLogic.PRISMRenderingLogic" title="PRISMRenderingLogic.PRISMRenderingLogic"><code class="xref py py-class docutils literal notranslate"><span class="pre">PRISMRenderingLogic.PRISMRenderingLogic</span></code></a></p>
+<dl class="py class">
+<dt id="PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic">
+<em class="property">class </em><code class="sig-name descname">PRISMRenderingLogic</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">slicer.ScriptedLoadableModule.ScriptedLoadableModuleLogic</span></code></p>
+<dl class="py method">
+<dt id="PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.activateVR">
+<code class="sig-name descname">activateVR</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.activateVR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.addObservers">
+<code class="sig-name descname">addObservers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.addObservers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create all observers needed in the UI to ensure a correct behaviour.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.createEndPoints">
+<code class="sig-name descname">createEndPoints</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.createEndPoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create endpoints.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.delayedInitVRObserver">
+<code class="sig-name descname">delayedInitVRObserver</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.delayedInitVRObserver" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.deleteNodes">
+<code class="sig-name descname">deleteNodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.deleteNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes the nodes in the scene.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.enableOption">
+<code class="sig-name descname">enableOption</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">paramName</span></em>, <em class="sig-param"><span class="n">type_</span></em>, <em class="sig-param"><span class="n">checkBox</span></em>, <em class="sig-param"><span class="n">CSName</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.enableOption" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to add or remove parameters according to the value of the boolean.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>paramName</strong> (<em>str</em>) – Name of the parameter.</p></li>
+<li><p><strong>type</strong> (<em>str.</em>) – Type of the parameter.</p></li>
+<li><p><strong>checkBox</strong> (<em>QCheckbox</em>) – Checkbox to enable or disable the option.</p></li>
+<li><p><strong>CSName</strong> (<em>str</em>) – Name of the current custom shader.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.getEntry">
+<code class="sig-name descname">getEntry</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.getEntry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get Entry point position. If not yet placed, return (0,0,0).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Entry markups position if placed, empty array if not.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Array[double]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.getTarget">
+<code class="sig-name descname">getTarget</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.getTarget" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get Target point position. If not yet placed, return (0,0,0).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Entry markups position if placed, empty array if not.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Array[double]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.onCloseScene">
+<code class="sig-name descname">onCloseScene</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">caller</span></em>, <em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.onCloseScene" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function called when the scene is closed. Delete nodes in the scene.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.onCustomShaderParamChanged">
+<code class="sig-name descname">onCustomShaderParamChanged</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em>, <em class="sig-param"><span class="n">paramName</span></em>, <em class="sig-param"><span class="n">type_</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.onCustomShaderParamChanged" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the custom parameters in the shader.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>str</em>) – Value to be changed</p></li>
+<li><p><strong>paramName</strong> (<em>Int</em>) – Name of the parameter to be changed</p></li>
+<li><p><strong>type</strong> – (float or int), type of the parameter to be changed</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.onEndPointAdded">
+<code class="sig-name descname">onEndPointAdded</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">caller</span></em>, <em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.onEndPointAdded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callback function to get the position of the new point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>caller</strong> – Slicer.mrmlScene, Slicer active scene.</p></li>
+<li><p><strong>event</strong> (<em>str</em>) – Flag corresponding to the triggered event.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.onEndPointsChanged">
+<code class="sig-name descname">onEndPointsChanged</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">caller</span></em>, <em class="sig-param"><span class="n">event</span></em>, <em class="sig-param"><span class="n">call_data</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.onEndPointsChanged" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callback function to get the position of the modified point.
+Note: Vtk.calldata_type(vtk.VTK_OBJECT) function get calling instance as a vtkMRMLNode to be accesed in the function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>caller</strong> (<em>SlicermrmlScene.</em>) – Slicer active scene.</p></li>
+<li><p><strong>event</strong> (<em>str</em>) – Flag corresponding to the triggered event.</p></li>
+<li><p><strong>call_data</strong> – VtkMRMLNode, Node added to the scene.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.onLeftControllerMoved">
+<code class="sig-name descname">onLeftControllerMoved</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">caller</span></em>, <em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.onLeftControllerMoved" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Callback function w hen a the left controller position has changed.</dt><dd><p>Used to change “relativePosition” current shader parameter and laser position.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>caller</strong> – Caller of the function.</p></li>
+<li><p><strong>event</strong> – Event that triggered the function.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.onLeftControllerTriggerPressed">
+<code class="sig-name descname">onLeftControllerTriggerPressed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.onLeftControllerTriggerPressed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callback function on trigger pressed event.
+If a shader with “relativePosition” parameter has been selectedallows user to change this parameter based on future position compared to the position when pressed.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.onLeftControllerTriggerReleased">
+<code class="sig-name descname">onLeftControllerTriggerReleased</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.onLeftControllerTriggerReleased" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callback function on trigger released event.
+Stop changing the relativePosition shader parameter.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.onRightControllerMoved">
+<code class="sig-name descname">onRightControllerMoved</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">caller</span></em>, <em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.onRightControllerMoved" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callback function when a the right controller position has changed.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.onRightControllerTriggerPressed">
+<code class="sig-name descname">onRightControllerTriggerPressed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.onRightControllerTriggerPressed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callback function on trigger pressed event.
+If controller is near the entry point, starts modification of its position.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.onRightControllerTriggerReleased">
+<code class="sig-name descname">onRightControllerTriggerReleased</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.onRightControllerTriggerReleased" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callback function when right trigger is released. Drop entry point at current controller position.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.renderVolume">
+<code class="sig-name descname">renderVolume</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">volumeNode</span></em>, <em class="sig-param"><span class="n">multipleVolumes</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.renderVolume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use Slicer Volume Rendering module to initialize and setup rendering of the given volume node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>volumeNode</strong> (<em>VtkMRMLVolumeNode</em>) – Volume node to be rendered.</p></li>
+<li><p><strong>multipleVolumes</strong> (<em>Bool</em>) – If the rendered volume is a secondary volume.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.setCustomShaderType">
+<code class="sig-name descname">setCustomShaderType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shaderTypeName</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.setCustomShaderType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set given shader type as current active shader.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>shaderTypeName</strong> (<em>str'Sphere Carving'</em><em>, </em><em>'Opacity Peeling'. Name corresponding to the type of rendering needed.</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.setEntry">
+<code class="sig-name descname">setEntry</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">entry</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.setEntry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set Entry point position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>entry</strong> (<em>Arraydouble</em><em>]</em><em></em>) – Entry markups position.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.setPlacingMarkups">
+<code class="sig-name descname">setPlacingMarkups</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">paramName</span></em>, <em class="sig-param"><span class="n">btn</span></em>, <em class="sig-param"><span class="n">interaction</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">persistence</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.setPlacingMarkups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Activate Slicer markups module to set one or multiple markups in the given markups fiducial list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>paramName</strong> (<em>str</em>) – Name of the parameter.</p></li>
+<li><p><strong>btn</strong> (<em>QObject</em>) – Button pushed to place the markup.</p></li>
+<li><p><strong>interaction</strong> (<em>Int0: /</em><em>, </em><em>1: Place</em><em>, </em><em>2: View transform</em><em>, </em><em>3: /</em><em> ,</em><em>4: Select</em>) – </p></li>
+<li><p><strong>persistence</strong> (<em>Int0: Unique</em><em>, </em><em>1: Peristent</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.setTarget">
+<code class="sig-name descname">setTarget</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">target</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.setTarget" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set Target point position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target</strong> – Entry markups position.</p></li>
+<li><p><strong>target</strong> – Array[double].</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.setupCustomShader">
+<code class="sig-name descname">setupCustomShader</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.setupCustomShader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get or create shader property node and initialize custom shader.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.updateVolumeColorMapping">
+<code class="sig-name descname">updateVolumeColorMapping</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">volumeNode</span></em>, <em class="sig-param"><span class="n">displayNode</span></em>, <em class="sig-param"><span class="n">volumePropertyNode</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.updateVolumeColorMapping" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Given a volume, compute a default color mapping to render volume in the given display node.</dt><dd><p>If a volume property node is given to the function, uses it as color mapping.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>volumeNode</strong> (<em>vtkMRMLVolumeNode</em>) – Volume node to be rendered.</p></li>
+<li><p><strong>displayNode</strong> (<em>vtkMRMLVolumeRenderingDisplayNode</em>) – Default rendering display node. (CPU RayCast, GPU RayCast, Multi-Volume)</p></li>
+<li><p><strong>volumePropertyNode</strong> (<em>VtkMRMLVolumePropertyNode</em>) – Volume propery node that carries the color mapping wanted.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>

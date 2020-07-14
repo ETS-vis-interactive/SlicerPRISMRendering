@@ -7,9 +7,6 @@ PRISMRendering Module
 
 PRISMRendering Class
 --------------------
-.. inheritance-diagram:: PRISMRendering
-   :parts: 1
-
 .. autoclass:: PRISMRendering.PRISMRendering
    :members:
    :undoc-members:
@@ -18,9 +15,6 @@ PRISMRendering Class
 
 PRISMRenderingWidget Class
 ---------------------------
-.. inheritance-diagram:: PRISMRenderingWidget
-   :parts: 1
-
 .. autoclass:: PRISMRendering.PRISMRenderingWidget
    :members:
    :undoc-members:

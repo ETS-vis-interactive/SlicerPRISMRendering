@@ -117,9 +117,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
     self.customShader.setShaderParameter(paramName, self.optionEnabled, type_)
 
   def addObservers(self):
-    """Function to create all observers needed in the UI to ensure a correct behaviour.
-
-    """
+    """Create all observers needed in the UI to ensure a correct behaviour."""
     #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     self.pointModifiedEventTag = self.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.onEndPointsChanged)
     self.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, self.onEndPointAdded)
@@ -202,9 +200,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
     self.pointType  = '' #TODO remove
 
   def deleteNodes(self):
-    """Deletes the nodes in the scene.
-
-    """
+    """Deletes the nodes in the scene."""
     try :
       node = slicer.util.getNodesByClass("vtkMRMLScalarVolumeNode")
       slicer.mrmlScene.RemoveNode(node[0])
@@ -251,9 +247,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
     self.customShader.setShaderParameter(paramName, value, type_)
   
   def createEndPoints(self):
-    """Create endpoints.
-
-    """
+    """Create endpoints."""
     # retrieve end points in the scene or create the node
     allEndPoints = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLMarkupsFiducialNode','EndPoints')
     if allEndPoints.GetNumberOfItems() > 0:
@@ -332,9 +326,8 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
 
 
   def onRightControllerTriggerPressed(self):
-    """Callback function on trigger pressed event. If controller is near the entry point, starts modification of its position.
-
-    """
+    """Callback function on trigger pressed event.
+        If controller is near the entry point, starts modification of its position."""
     #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     if not self.getNumberOfPoints(self.endPoints) == 2:
       return
@@ -357,9 +350,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
       self.endPoints.SetNthControlPointSelected(1, True)
 
   def onRightControllerTriggerReleased(self):
-    """Callback function when right trigger is released. Drop entry point at current controller position.
-
-    """
+    """Callback function when right trigger is released. Drop entry point at current controller position."""
     #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     if self.movingEntry:
       # Unselect point to restore default red color. Check comment above.
@@ -368,9 +359,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
       self.movingEntry = False
 
   def onRightControllerMoved(self,caller,event):
-    """Callback function when a the right controller position has changed.
-
-    """
+    """Callback function when a the right controller position has changed."""
     #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     if self.vrhelper.rightControlsDisplayMarkups.GetDisplayNode().GetVisibility():
       self.vrhelper.setControlsMarkupsPositions("Right")
@@ -390,10 +379,8 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
     self.vrhelper.lastControllerPos = controllerPos
 
   def onLeftControllerTriggerPressed(self):
-    """Callback function on trigger pressed event. If a shader with "relativePosition" parameter has been selected
-        allows user to change this parameter based on future position compared to the position when pressed.
-
-    """
+    """Callback function on trigger pressed event. 
+        If a shader with "relativePosition" parameter has been selectedallows user to change this parameter based on future position compared to the position when pressed."""
     #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     if not self.customShader:
       return
@@ -404,16 +391,17 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
       self.moveRelativePosition = True
 
   def onLeftControllerTriggerReleased(self):
-    """Callback function on trigger released event. Stop changing the relativePosition shader parameter.
-
-    """
+    """Callback function on trigger released event.
+      Stop changing the relativePosition shader parameter."""
     #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     self.moveRelativePosition = False
 
   def onLeftControllerMoved(self,caller,event):
-    """Callback function w hen a the left controller position has changed. Used to change "relativePosition"
-        current shader parameter and laser position.
+    """Callback function w hen a the left controller position has changed.
+      Used to change "relativePosition" current shader parameter and laser position.
 
+    :param caller: Caller of the function.
+    :param event: Event that triggered the function.
     """
     #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     # Check if the trigger is currently being pressed
@@ -511,7 +499,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
 
 
   def setCustomShaderType(self, shaderTypeName):
-    """Set given shader type as current active shader
+    """Set given shader type as current active shader.
 
     :param shaderTypeName:  
     :type shaderTypeName: str'Sphere Carving', 'Opacity Peeling'. Name corresponding to the type of rendering needed.
@@ -521,9 +509,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
     self.setupCustomShader()
 
   def setupCustomShader(self):
-    """Get or create shader property node and initialize custom shader.
-
-    """
+    """Get or create shader property node and initialize custom shader."""
     #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     shaderPropertyName = "ShaderProperty"
     CustomShader.GetAllShaderClassNames()
@@ -540,7 +526,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
 
   def updateVolumeColorMapping(self, volumeNode, displayNode, volumePropertyNode = None):
     """Given a volume, compute a default color mapping to render volume in the given display node.
-        If a volume property node is given to the function, uses it as color mapping.
+      If a volume property node is given to the function, uses it as color mapping.
 
     :param volumeNode: Volume node to be rendered.
     :type volumeNode: vtkMRMLVolumeNode
@@ -568,7 +554,5 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
       displayNode.GetVolumePropertyNode().GetVolumeProperty().SetShade(False)
 
   def onCloseScene(self, caller, event):
-    """Function called when the scene is closed. Delete nodes in the scene.
-
-    """
+    """Function called when the scene is closed. Delete nodes in the scene."""
     self.deleteNodes()

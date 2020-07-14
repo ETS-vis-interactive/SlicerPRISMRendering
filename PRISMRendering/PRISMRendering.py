@@ -1437,7 +1437,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
   def onVolumeRenderingCheckBoxToggled(self, caller=None, event=None):
     """Callback function when the volume rendering check box is toggled. Activate or deactivate 
-    the rendering of the selected volume
+    the rendering of the selected volume.
     
     :param caller: Caller of the function.
     :param event: Event that triggered the function.
