@@ -17,11 +17,10 @@ sys.path.insert(0, os.path.abspath('../../PRISMRendering/PRISMRenderingLogic/'))
 sys.path.insert(0, os.path.abspath('../../PRISMRendering/'))
 sys.path.insert(0, os.path.abspath('../../PRISMRendering/PRISMRenderingShaders/'))
 sys.path.insert(0, os.path.abspath('..'))
-sys.path.insert(0, os.path.abspath('../'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'PRISMRendering'
+project = 'SlicerPRISMRendering'
 copyright = '2020, Tiphaine RICHARD'
 author = 'Tiphaine Richard (ETS), Simon Drouin (ETS)'
 

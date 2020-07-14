@@ -12,7 +12,7 @@ depends NA
 build_subdirectory .
 
 # homepage
-homepage https://ets-vis-interactive.github.io/SlicerPRISM/
+homepage https://ets-vis-interactive.github.io/SlicerPRISMRendering/
 
 # Firstname1 Lastname1 ([SubOrg1, ]Org1), Firstname2 Lastname2 ([SubOrg2, ]Org2)
 contributors Tiphaine Richard (ETS) Simon Drouin (ETS)
@@ -21,7 +21,7 @@ contributors Tiphaine Richard (ETS) Simon Drouin (ETS)
 category Rendering
 
 # url to icon (png, size 128x128 pixels)
-iconurl https://github.com/ETS-vis-interactive/SlicerPRISM/blob/master/docs/sources/images/logoSlicerPRISMRendering.png
+iconurl https://github.com/ETS-vis-interactive/SlicerPRISMRendering/blob/master/docs/sources/images/logoSlicerPRISMRendering.png
 
 # Give people an idea what to expect from this code
 status beta
@@ -30,7 +30,7 @@ status beta
 This module is an implementation of the PRISM customizable volume rendering framework in 3D Slicer.
 
 # Space separated list of urls
-screenshoturls https://github.com/ETS-vis-interactive/SlicerPRISM/blob/master/docs/source/images/screenshotSlicerPRISMRendering.png
+screenshoturls https://github.com/ETS-vis-interactive/SlicerPRISMRendering/blob/master/docs/source/images/screenshotSlicerPRISMRendering.png
 
 # 0 or 1: Define if the extension should be enabled after its installation.
 enabled 1
