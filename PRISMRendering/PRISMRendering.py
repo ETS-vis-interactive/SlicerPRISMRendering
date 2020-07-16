@@ -1595,10 +1595,11 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         widget = item.widget()
         if widget != None:
           widget.setParent(None)
-    try :
-      self.logic.endPoints.RemoveAllMarkups()
-    except :
-      pass
+      
+    if self.logic.endPoints.GetNumberOfControlPoints() > 0 : 
+      print("UpdateShaderParametersUI") 
+      self.logic.endPoints.RemoveAllControlPoints()
+
     lenWidgets = len(self.widgets)
     
     ## Name of the current shader, without spaces

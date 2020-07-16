@@ -107,7 +107,8 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
       if str(CSName + paramName) in self.optionalWidgets :
         for i in self.optionalWidgets[CSName +paramName] :
           i.hide()
-      self.endPoints.RemoveAllMarkups()
+
+      self.endPoints.RemoveAllControlPoints()
 
     self.customShader.setShaderParameter(paramName, self.optionEnabled, type_)
 
@@ -133,7 +134,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
     :type event: str
     :param call_data: VtkMRMLNode, Node added to the scene.
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     #check if the point was added from the module and was set
     if (call_data == self.centerPointIndex or call_data == self.entryPointIndex or call_data == self.targetPointIndex ):
@@ -149,7 +150,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
     :param event: Flag corresponding to the triggered event. 
     :type event: str
     """
-    log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     world = [0, 0, 0, 0]
 
     if (self.pointType == 'center'):
@@ -158,11 +159,12 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
       caller.GetNthFiducialWorldCoordinates(pointIndex, world)
       if self.centerPointIndex != -1 :
         caller.SetNthFiducialWorldCoordinates(self.centerPointIndex, world)
-        caller.RemoveNthControlPoint(pointIndex)
+        if self.centerPointIndex != pointIndex :
+          caller.RemoveNthControlPoint(pointIndex)
       else :
-        caller.SetNthFiducialLabel(pointIndex, self.pointType)
         self.centerPointIndex = pointIndex
       
+      caller.SetNthFiducialLabel(pointIndex, self.pointType)
       self.onCustomShaderParamChanged(world, self.pointType, "markup")
       self.currentMarkupBtn.setText('Reset ' + self.pointType)
 
@@ -171,11 +173,12 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
       caller.GetNthFiducialWorldCoordinates(pointIndex, world)
       if self.entryPointIndex != -1 :
         caller.SetNthFiducialWorldCoordinates(self.entryPointIndex, world)
-        caller.RemoveNthControlPoint(pointIndex)
+        if self.entryPointIndex != pointIndex :
+          caller.RemoveNthControlPoint(pointIndex)
       else :
-        caller.SetNthFiducialLabel(pointIndex, self.pointType)
         self.entryPointIndex = pointIndex
       
+      caller.SetNthFiducialLabel(pointIndex, self.pointType)
       self.onCustomShaderParamChanged(world, self.pointType, "markup")
       self.currentMarkupBtn.setText('Reset ' + self.pointType)
 
@@ -185,11 +188,12 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
       
       if self.targetPointIndex != -1 :
         caller.SetNthFiducialWorldCoordinates(self.targetPointIndex, world)
-        caller.RemoveNthControlPoint(pointIndex)
+        if self.targetPointIndex != pointIndex :
+          caller.RemoveNthControlPoint(pointIndex)
       else :
-        caller.SetNthFiducialLabel(pointIndex, self.pointType)
         self.targetPointIndex = pointIndex
       
+      caller.SetNthFiducialLabel(pointIndex, self.pointType)
       self.onCustomShaderParamChanged(world, self.pointType, "markup")
       self.currentMarkupBtn.setText('Reset ' + self.pointType)
     self.pointType  = '' #TODO remove
@@ -249,13 +253,13 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
       # set node used before reload in the current instance
       ## All endpoints in the scene
       self.endPoints = allEndPoints.GetItemAsObject(0)
-      self.endPoints.RemoveAllMarkups()
+      self.endPoints.RemoveAllControlPoints()
       self.endPoints.GetDisplayNode().SetGlyphScale(6.0)
     else:
       self.endPoints = slicer.mrmlScene.AddNewNodeByClass('vtkMRMLMarkupsFiducialNode')
       self.endPoints.SetName("EndPoints")
       self.endPoints.GetDisplayNode().SetGlyphScale(6.0)
-      self.endPoints.RemoveAllMarkups()
+      self.endPoints.RemoveAllControlPoints()
     allEndPoints = None
     
   def getEntry(self):

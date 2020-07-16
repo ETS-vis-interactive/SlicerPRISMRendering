@@ -25,7 +25,7 @@ class DeclutteringShader(CustomShader):
     return 'Decluttering'
 
   def setupShader(self):
-    super(Decluttering,self).setupShader()
+    super(DeclutteringShader,self).setupShader()
     shadingImplCode = """
     if (!g_skip)      
     {      
