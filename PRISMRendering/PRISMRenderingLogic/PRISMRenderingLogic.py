@@ -16,11 +16,6 @@ import logging
 
 from PRISMRenderingShaders.CustomShader import CustomShader
 
-try:
-    import colorlog
-except ImportError:
-    pass
-
 def get_function_name():
     return traceback.extract_stack(None, 2)[0][2]
 

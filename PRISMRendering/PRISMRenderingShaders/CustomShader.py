@@ -287,8 +287,8 @@ class CustomShader():
       p = self.paramrValues.get(paramName)
       if p != None:
         self.paramrValues[paramName] = paramValue
-        self.shaderUniforms.SetUniformi(paramName+ "Min", int(paramValue[0]))
-        self.shaderUniforms.SetUniformi(paramName+ "Max", int(paramValue[1]))
+        self.shaderUniforms.SetUniformf(paramName+ "Min", paramValue[0])
+        self.shaderUniforms.SetUniformf(paramName+ "Max", paramValue[1])
 
   def getShaderParameter(self, paramName, paramType):
     """Function to get the parameters of the shader.

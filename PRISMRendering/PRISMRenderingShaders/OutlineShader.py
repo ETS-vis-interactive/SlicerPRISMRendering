@@ -7,6 +7,7 @@ from PRISMRenderingShaders.CustomShader import CustomShader
 """ 
 class OutlineShader(CustomShader):
   shaderfParams = { 'gradStep' : { 'displayName' : 'Gradient Step', 'min' : 0.0, 'max' : 0.02, 'defaultValue' : 0.005 }}
+  shaderrParams = { 'step' : { 'displayName' : 'Step', 'defaultValue' : [0.000, 0.02]}}  
 
   def __init__(self, shaderPropertyNode):
     CustomShader.__init__(self,shaderPropertyNode)
@@ -44,7 +45,7 @@ class OutlineShader(CustomShader):
     }
 
     float sampleThreshold = 0.1;
-    vec2 step = vec2(0.001, 0.01);
+    vec2 step = vec2(stepMin, stepMax);
     float virtualAlpha = 0.0;
     """
     self.shaderProperty.AddFragmentShaderReplacement("//VTK::Cropping::Dec", True, croppingDecCode, False)

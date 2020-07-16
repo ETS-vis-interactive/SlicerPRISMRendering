@@ -20,6 +20,16 @@ import traceback
 from PRISMRenderingShaders.CustomShader import CustomShader
 from PRISMRenderingLogic.PRISMRenderingLogic import PRISMRenderingLogic
 
+def get_function_name():
+    return traceback.extract_stack(None, 2)[0][2]
+
+def get_function_parameters_and_values():
+    frame = inspect.currentframe().f_back
+    args, _, _, values = inspect.getargvalues(frame)
+    return ([(i, values[i]) for i in args])
+
+log = logging.getLogger(__name__)
+
 """
 class PRISMRendering Class containing the informations about the module.
 
@@ -492,9 +502,9 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
     # If point
     elif self.addParamType == "shader4fParams":
       x = self.ui.addXInput.value
-      y = self.ui.addYInput.widget().value
-      z = self.ui.addZInput.widget().value
-      w = self.ui.addWInput.widget().value
+      y = self.ui.addYInput.value
+      z = self.ui.addZInput.value
+      w = self.ui.addWInput.value
       newValue = { name : { 'displayName' : displayName, 'defaultValue' : {'x' : x, 'y' : y, 'z' : z, "w" : w }}}
 
     elif self.addParamType == "shaderbParams":
@@ -602,7 +612,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
     packageName = "PRISMRenderingShaders"
     f, filename, description = imp.find_module(packageName)
     packagePath = imp.load_module(packageName, f, filename, description).__path__[0]
-    modifiedShaderPath = packagePath+'\\PRISMRenderingShaders\\'+ modifiedShaderModule
+    modifiedShaderPath = packagePath+'\\'+ modifiedShaderModule
     currentDictStr = str(getattr(modifiedShaderClass, dictType))
     currentDict = getattr(modifiedShaderClass, dictType)
     
@@ -1321,7 +1331,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
     file_path = os.path.realpath(__file__)
     file_dir, filename = os.path.split(file_path)
     ## Directory in which the file will be located
-    file_dir = os.path.join(file_dir, 'PRISMRenderingShaders', 'PRISMRenderingShaders')
+    file_dir = os.path.join(file_dir, 'PRISMRenderingShaders')
     
     src_file = os.path.join(file_dir, old_file_name)
     dst_file = os.path.join(file_dir, new_file_name + ".py")
