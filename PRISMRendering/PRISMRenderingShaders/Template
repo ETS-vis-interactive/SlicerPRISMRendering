@@ -1,4 +1,4 @@
-from Resources.CustomShader import CustomShader
+from PRISMRenderingShaders.CustomShader import CustomShader
 
 #------------------------------------------------------------------------------------
 # TemplateName shader
