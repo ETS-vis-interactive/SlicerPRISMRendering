@@ -244,9 +244,10 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         volumeNode = slicer.util.loadVolume(volumePath)
         self.ui.imageSelector.setCurrentNode(volumeNode)
       
-    #self.addGUIObservers()
     # Update GUI 
-    
+    self.addGUIObservers()
+    if self.ui.imageSelector.currentNode() != None :
+      self.updateParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
     self.updateGUIFromParameterNode()
 
   def createParametersLayout(self) :
@@ -719,10 +720,8 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
     :param event: Event that triggered the function.
     """   
     #log.info(get_function_name()  + str(get_function_parameters_and_values()))
-    if not self.logic.parameterNode:
-      return
     parameterNode = self.logic.parameterNode
-    if parameterNode.GetParameterCount() == 0:
+    if not parameterNode or parameterNode.GetParameterCount() == 0:
       return
 
     # Disables updateParameterNodeFromGUI signal 
@@ -1421,9 +1420,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
     #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     if not node:
       return
-    
-    self.updateParameterNodeFromGUI(node, widget)
-    
+        
     # If the selector is a parameter of a shader
     if widget != self.ui.imageSelector :
       self.logic.currentVolume = index
@@ -1452,11 +1449,10 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
     :param caller: Caller of the function.
     :param event: Event that triggered the function.
     """
-    ##log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     if self.ui.volumeRenderingCheckBox.isChecked():
       if self.ui.imageSelector.currentNode():
-
         self.logic.renderVolume(self.ui.imageSelector.currentNode())
 
         # Init ROI
@@ -1597,7 +1593,6 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
           widget.setParent(None)
       
     if self.logic.endPoints.GetNumberOfControlPoints() > 0 : 
-      print("UpdateShaderParametersUI") 
       self.logic.endPoints.RemoveAllControlPoints()
 
     lenWidgets = len(self.widgets)
