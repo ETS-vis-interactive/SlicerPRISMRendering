@@ -50,7 +50,7 @@ add_module_names = False
 # a list of builtin themes.
 #
 html_theme = 'sphinx_rtd_theme'
-
+html_favicon = 'images/logoPRISMRenderingHTMLfavicon.png'
 html_logo = 'images/logoPRISMRenderingHTML.png'
 
 
