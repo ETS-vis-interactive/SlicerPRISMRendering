@@ -62,12 +62,10 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
     
     ## Type of the annotation point being added to the scene
     self.pointType = ''
-    ## Index of the center point
-    self.centerPointIndex = -1
-    ## Index of the target point
-    self.targetPointIndex = -1
-    ## Index of the entry point
-    self.entryPointIndex = -1
+    ## Name of the annotation point being added to the scene
+    self.pointName = ''
+    ## Indexes of the points added in the scene
+    self.pointIndexes = {}
     ## Markup button that has been pushed when addind an annotation point to the scene
     self.currentMarkupBtn = None
     ## Current parameter node of the scene
@@ -137,12 +135,14 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
     #log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
     #check if the point was added from the module and was set
-    if (call_data == self.centerPointIndex or call_data == self.entryPointIndex or call_data == self.targetPointIndex ):
-      name = caller.GetNthFiducialLabel(call_data)
+    type_ = caller.GetNthFiducialLabel(call_data)
+    pointName = caller.GetNthFiducialAssociatedNodeID(call_data)
+    if pointName in self.pointIndexes.keys() and self.pointIndexes[pointName] == call_data :
       world = [0, 0, 0, 0]
       caller.GetNthFiducialWorldCoordinates(call_data, world)
-      self.onCustomShaderParamChanged(world, name, "markup")
+      self.onCustomShaderParamChanged(world, type_, "markup")
     
+  
   def onEndPointAdded(self, caller, event):
     """Callback function to get the position of the new point.
 
@@ -153,50 +153,20 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
     #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     world = [0, 0, 0, 0]
 
-    if (self.pointType == 'center'):
-      
+    if self.pointType in ['center', 'target', 'entry']:
       pointIndex = caller.GetDisplayNode().GetActiveControlPoint()
       caller.GetNthFiducialWorldCoordinates(pointIndex, world)
-      if self.centerPointIndex != -1 :
-        caller.SetNthFiducialWorldCoordinates(self.centerPointIndex, world)
-        if self.centerPointIndex != pointIndex :
-          caller.RemoveNthControlPoint(pointIndex)
+      # If the point was already defined
+      if self.pointName in self.pointIndexes.keys() :
+        index = self.pointIndexes[self.pointName]
+        caller.SetNthFiducialWorldCoordinates(index, world)
+        caller.RemoveNthControlPoint(pointIndex)
       else :
-        self.centerPointIndex = pointIndex
-      
+        self.pointIndexes[self.pointName] = pointIndex
+        
       caller.SetNthFiducialLabel(pointIndex, self.pointType)
       self.onCustomShaderParamChanged(world, self.pointType, "markup")
       self.currentMarkupBtn.setText('Reset ' + self.pointType)
-
-    elif (self.pointType == 'entry'):
-      pointIndex = caller.GetDisplayNode().GetActiveControlPoint()
-      caller.GetNthFiducialWorldCoordinates(pointIndex, world)
-      if self.entryPointIndex != -1 :
-        caller.SetNthFiducialWorldCoordinates(self.entryPointIndex, world)
-        if self.entryPointIndex != pointIndex :
-          caller.RemoveNthControlPoint(pointIndex)
-      else :
-        self.entryPointIndex = pointIndex
-      
-      caller.SetNthFiducialLabel(pointIndex, self.pointType)
-      self.onCustomShaderParamChanged(world, self.pointType, "markup")
-      self.currentMarkupBtn.setText('Reset ' + self.pointType)
-
-    elif (self.pointType == 'target'):
-      pointIndex = caller.GetDisplayNode().GetActiveControlPoint()
-      caller.GetNthFiducialWorldCoordinates(pointIndex, world)
-      
-      if self.targetPointIndex != -1 :
-        caller.SetNthFiducialWorldCoordinates(self.targetPointIndex, world)
-        if self.targetPointIndex != pointIndex :
-          caller.RemoveNthControlPoint(pointIndex)
-      else :
-        self.targetPointIndex = pointIndex
-      
-      caller.SetNthFiducialLabel(pointIndex, self.pointType)
-      self.onCustomShaderParamChanged(world, self.pointType, "markup")
-      self.currentMarkupBtn.setText('Reset ' + self.pointType)
-    self.pointType  = '' #TODO remove
 
   def deleteNodes(self):
     """Deletes the nodes in the scene."""
@@ -210,9 +180,10 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
       pass
 
 
-  def setPlacingMarkups(self, paramName, btn, interaction = 1, persistence = 0):
+  def setPlacingMarkups(self, paramType, paramName, btn, interaction = 1, persistence = 0):
     """Activate Slicer markups module to set one or multiple markups in the given markups fiducial list.
 
+    :param paramType: Type of the parameter. 
     :param paramName: Name of the parameter. 
     :type paramName: str
     :param btn: Button pushed to place the markup. 
@@ -230,7 +201,8 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
     interactionNode.SetPlaceModePersistence(persistence)
     
     ## Type of the point being modified
-    self.pointType = paramName
+    self.pointType = paramType
+    self.pointName = paramName
 
     
   def onCustomShaderParamChanged(self, value, paramName, type_ ):

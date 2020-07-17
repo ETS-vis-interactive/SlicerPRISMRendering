@@ -1,4 +1,5 @@
 from PRISMRenderingShaders.CustomShader import CustomShader
+import slicer
 
 """ChromaDepthShader Class containing the code for the Chroma Depth shader.
 
@@ -27,7 +28,7 @@ class ChromaDepthShader(CustomShader):
     :return: Range of the current volume. 
     :rtype: float.
     """
-    imageSelectorNode = slicer.modules.PRISMWidget.ui.imageSelector.currentNode()
+    imageSelectorNode = slicer.modules.PRISMRenderingWidget.ui.imageSelector.currentNode()
     if imageSelectorNode != None :
       volumeNode = imageSelectorNode.GetVolumeDisplayNode().GetVolumeNode()
       dim = [0, 0, 0]
