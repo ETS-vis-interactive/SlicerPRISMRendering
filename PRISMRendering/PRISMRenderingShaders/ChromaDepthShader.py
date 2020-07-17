@@ -15,7 +15,6 @@ class ChromaDepthShader(CustomShader):
     CustomShader.__init__(self, shaderPropertyNode)
     volumeRange = self.getVolumeRange()
     if volumeRange :
-      print(volumeRange)
       self.shaderrParams['depthRange']['defaultValue'][0] = -1* volumeRange
       self.shaderrParams['depthRange']['defaultValue'][1] = volumeRange
 

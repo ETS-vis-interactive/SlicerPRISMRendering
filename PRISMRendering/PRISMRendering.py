@@ -83,7 +83,6 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
     #
     self.ui.imageSelector.setMRMLScene( slicer.mrmlScene )
     self.ui.imageSelector.currentNodeChanged.connect(lambda value, w = self.ui.imageSelector : self.onImageSelectorChanged(value, w))
-     
     
     #
     # View Setup Area
@@ -1468,9 +1467,11 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         j = TFID + i
         self.createTransferFunctionWidget(volumePropertyNode, tf, self.transferFunctionParamsName[j], True, volumeID  )
       self.updateParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
-    elif self.ui.volumeRenderingCheckBox.isChecked():
-      self.ui.volumeRenderingCheckBox.setChecked(False)
+    
+    else:
+      self.updateParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
       self.ui.customShaderCombo.currentIndex = self.ui.customShaderCombo.count -1 
+      self.ui.volumeRenderingCheckBox.setChecked(False)
   
   #
   # View setup callbacks
