@@ -247,8 +247,8 @@ class CustomShader():
       self.shaderUniforms.SetUniform4f(p, [x, y, z , w])
     
     for p in self.paramrValues.keys():
-      self.shaderUniforms.SetUniformi(p+ "Min", int(self.paramrValues[p][0]))
-      self.shaderUniforms.SetUniformi(p+ "Max", int(self.paramrValues[p][1]))
+      self.shaderUniforms.SetUniformf(p+ "Min", int(self.paramrValues[p][0]))
+      self.shaderUniforms.SetUniformf(p+ "Max", int(self.paramrValues[p][1]))
 
   def setShaderParameter(self, paramName, paramValue, paramType):
     """Function to set the parameters of the shader.
