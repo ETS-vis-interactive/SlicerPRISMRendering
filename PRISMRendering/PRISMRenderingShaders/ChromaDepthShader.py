@@ -8,8 +8,7 @@ import vtk, qt, ctk, slicer
 """ 
 class ChromaDepthShader(CustomShader):
   shaderrParams = { 'depthRange' : { 'displayName' : 'Depth Range', 'defaultValue' : [0.0, 1.0]}}
-  shadertfParams = { 'scalarColorMapping' : { 'displayName' : 'Scalar Color Mapping', 'defaultColors' : [[0, 1, 0, 0, 0, 0.5], [300, 0, 0, 1, 0, 0.5]], 'type' : 'color'}, \
-    'scalarOpacityMapping' : { 'displayName' : 'Scalar Opacity Mapping', 'defaultColors' : [], 'type' : 'scalarOpacity'}}
+  shadertfParams = { 'scalarColorMapping' : { 'displayName' : 'Scalar Color Mapping', 'defaultColors' : [[0, 1, 0, 0, 0, 0.5], [300, 0, 0, 1, 0, 0.5]], 'type' : 'color'}}
   
   def __init__(self, shaderPropertyNode):
     CustomShader.__init__(self, shaderPropertyNode)

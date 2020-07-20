@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>SlicerPRISMRendering &mdash; SlicerPRISMRendering  documentation</title>
+  <title>SlicerPRISMRendering General Documentation &mdash; SlicerPRISMRendering  documentation</title>
   
 
   
@@ -38,7 +38,7 @@
   <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="PRISMRendering Module" href="PRISMRendering.html" />
+    <link rel="next" title="Code documentation" href="code.html" />
     <link rel="prev" title="SlicerPRISMRendering" href="index.html" /> 
 </head>
 
@@ -88,13 +88,20 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">SlicerPRISMRendering</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">SlicerPRISMRendering General Documentation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#introduction-and-acknowledgements">Introduction and Acknowledgements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-description">Module Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#use-cases">Use Cases</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#tutorials">Tutorials</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#rendering-a-volume">Rendering a volume</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#applying-a-shader-to-a-volume">Applying a shader to a volume</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implemented-shaders">Implemented shaders</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#chroma-depth-perception">Chroma Depth Perception</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#opacity-peeling">Opacity Peeling</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#outline">Outline</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#plane-intersecting">Plane Intersecting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sphere-carving">Sphere Carving</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#modifying-the-roi-of-a-volume">Modifying the ROI of a volume</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#creating-a-new-shader">Creating a new shader</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#modifying-an-existing-shader">Modifying an existing shader</a></li>
@@ -106,16 +113,17 @@
 <li class="toctree-l2"><a class="reference internal" href="#similar-modules">Similar Modules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#information-for-developers">Information for Developers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#how-tos">How Tos</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#create-a-shader">Create a shader</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#limitations">Limitations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#key-nodes-and-classes">Key nodes and classes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#how-tos">How Tos</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="PRISMRendering.html">PRISMRendering Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="PRISMRenderingLogic.html">PRISMRenderingLogic Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="PRISMRenderingShaders.html">PRISMRenderingShaders Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code.html">Code documentation</a></li>
 </ul>
 
             
@@ -161,7 +169,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>SlicerPRISMRendering</li>
+      <li>SlicerPRISMRendering General Documentation</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -180,21 +188,20 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="slicerprismrendering">
-<h1>SlicerPRISMRendering<a class="headerlink" href="#slicerprismrendering" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="slicerprismrendering-general-documentation">
+<h1>SlicerPRISMRendering General Documentation<a class="headerlink" href="#slicerprismrendering-general-documentation" title="Permalink to this headline">¶</a></h1>
 <ol class="simple">
 <li><p><a class="reference external" href="#intro"> Introduction and Acknowledgements. </a></p></li>
 <li><p><a class="reference external" href="#desc"> Module Description. </a></p></li>
-<li><p><a class="reference external" href="#usec"> Use Cases. </a></p></li>
 <li><p><a class="reference external" href="#tutos"> Tutorials. </a></p></li>
 <li><p><a class="reference external" href="#panels"> Panels and their use. </a></p></li>
 <li><p><a class="reference external" href="#similar"> Similar Modules. </a></p></li>
 <li><p><a class="reference external" href="#ref"> References. </a></p></li>
 <li><p><a class="reference external" href="#info"> Information for Developers. </a></p>
 <ul class="simple">
-<li><p><a class="reference external" href="#lim"> Limitations. </a></p></li>
-<li><p><a class="reference external" href="#key"> Key nodes and classes. </a></p></li>
 <li><p><a class="reference external" href="#howto"> How Tos. </a></p></li>
+<li><p><a class="reference external" href="#key"> Key nodes and classes. </a></p></li>
+<li><p><a class="reference external" href="#lim"> Limitations. </a></p></li>
 </ul>
 </li>
 </ol>
@@ -211,10 +218,6 @@
 <div class="section" id="module-description">
 <h2>Module Description<a class="headerlink" href="#module-description" title="Permalink to this headline">¶</a></h2>
 <p>This module is an implementation of the PRISM customizable volume rendering framework in 3D Slicer. Slicer version 4.11.0 is needed for this module.</p>
-<p><a name="usec"></a></p>
-</div>
-<div class="section" id="use-cases">
-<h2>Use Cases<a class="headerlink" href="#use-cases" title="Permalink to this headline">¶</a></h2>
 <p><a name="tutos"></a></p>
 </div>
 <div class="section" id="tutorials">
@@ -224,54 +227,109 @@
 <h3>Rendering a volume<a class="headerlink" href="#rendering-a-volume" title="Permalink to this headline">¶</a></h3>
 <ol>
 <li><p>Open the “Data” section.</p>
- <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/render/1.png" width ="40%"/></li>
+ <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/render/1.png" width ="60%"/></li>
 <li><p>Select your volume in the comboBox.</p>
- <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/render/2.png" width ="40%"/>    </li>
+ <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/render/2.png" width ="60%"/>    </li>
 <li><p>Open the “View Setup” section.</p>
- <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/render/3.png" width ="40%"/></li>
+ <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/render/3.png" width ="60%"/></li>
 <li><p>Apply the volume rendering to your volume by clicking on the “Volume Rendering” checkBox.</p>
- <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/render/4.png" width ="40%"/></li>
+ <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/render/4.png" width ="60%"/></li>
 </ol>
+<p><a name="applyshader"></a></p>
 </div>
 <div class="section" id="applying-a-shader-to-a-volume">
 <h3>Applying a shader to a volume<a class="headerlink" href="#applying-a-shader-to-a-volume" title="Permalink to this headline">¶</a></h3>
 <ol>
 <li><p><a class="reference external" href="#rendering">Render the volume</a>.</p></li>
 <li><p>Open the “Custom Shader” section.</p>
- <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/applyCS/2.png" width ="40%"/></li>
+ <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/applyCS/2.png" width ="60%"/></li>
 <li><p>Select the shader of your choice in the comboBox.</p></li>
-<li><p>Adjust the different parameters.</p></li>
+<li><p>Adjust the different parameters. A detailed description on how to use each shader is located <a class="reference external" href="#allshaders">here</a>.</p></li>
 <li><p>If you are currently developping the shader you can click on the “…” button in order to reload, duplicate or open the shader :</p>
- <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/applyCS/345.png" width ="40%"/><ul class="simple">
+ <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/applyCS/345.png" width ="60%"/><ul class="simple">
 <li><p>Reload the shader by clicking on the “Reload” button. This will reload all the new functionnalities added to the file containing the shader.</p></li>
 <li><p>Duplicate the shader by clicking on the “Duplicate” button. This will create a duplicate class of the class containing the shader.</p></li>
 <li><p>Open the shader by clicking on the “Open” button. This will open the class containing the shader in your favorite editor.</p></li>
 </ul>
- <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/applyCS/6.png" width ="40%"/></li>
+ <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/applyCS/6.png" width ="60%"/></li>
 </ol>
+<p><a name="allshaders"></a></p>
+</div>
+<div class="section" id="implemented-shaders">
+<h3>Implemented shaders<a class="headerlink" href="#implemented-shaders" title="Permalink to this headline">¶</a></h3>
+<p>This section contains a detailed description on how to use each of the techniques implemented in the module, and require to perform steps 1-3 of the <a class="reference external" href="#applyshader">precedent</a> section.</p>
+<div class="section" id="chroma-depth-perception">
+<h4>Chroma Depth Perception<a class="headerlink" href="#chroma-depth-perception" title="Permalink to this headline">¶</a></h4>
+<p>This technique brings out the depth of a volume with a smooth transition between all hues.</p>
+<p>It is possible to :</p>
+<ul class="simple">
+<li><p>Adjust the range of the volume.</p></li>
+<li><p>Adjust the colors.</p></li>
+</ul>
+</div>
+<div class="section" id="opacity-peeling">
+<h4>Opacity Peeling<a class="headerlink" href="#opacity-peeling" title="Permalink to this headline">¶</a></h4>
+<p>This technique respond to the problem of occlusion of certain structures in the volume. It consists in removing the first n layers of tissue during the integration of the ray.</p>
+<p>It is possible to :</p>
+<ul class="simple">
+<li><p>Adjust the lower value of the threshold.</p></li>
+<li><p>Adjust the upper value of the threshold.</p></li>
+<li><p>Adjust the wanted layer.</p></li>
+<li><p>Enable/disable the use of a sphere to peel the volume.</p></li>
+<li><p>Specify the center of the sphere.</p></li>
+</ul>
+</div>
+<div class="section" id="outline">
+<h4>Outline<a class="headerlink" href="#outline" title="Permalink to this headline">¶</a></h4>
+<p>This shader highlights the borders of the volume and is particularly useful for visualizing complex structures such as the blood vessels of the brain. Indeed, the accentuation of the edges of the vessels makes it possible to improve the perception of the depths by ordering the order of depth of overlapping vessels.</p>
+<p>It is possible to :</p>
+<ul class="simple">
+<li><p>Adjust the step for the calculation of the gradient.</p></li>
+<li><p>Adjust the parameters allowing to modify the gradients intensities captured by the function.</p></li>
+</ul>
+</div>
+<div class="section" id="plane-intersecting">
+<h4>Plane Intersecting<a class="headerlink" href="#plane-intersecting" title="Permalink to this headline">¶</a></h4>
+<p>This technique allows to visualize the anatomy along the approach plane for surgery.</p>
+<p>It is possible to :</p>
+<ul class="simple">
+<li><p>Adjust the relative position of the plane between the two points.</p></li>
+<li><p>Modify the position of the two points.</p></li>
+<li><p>Enable/disable the use of a third plane.</p></li>
+</ul>
+</div>
+<div class="section" id="sphere-carving">
+<h4>Sphere Carving<a class="headerlink" href="#sphere-carving" title="Permalink to this headline">¶</a></h4>
+<p>This shader makes it possible to cut out spherical parts of the volume interactively, which can obstruct structures of interest with similar intensities.</p>
+<p>It is possible to :</p>
+<ul class="simple">
+<li><p>Modify the radius of the sphere.</p></li>
+<li><p>Modify the position of the center of the sphere.</p></li>
+</ul>
+</div>
 </div>
 <div class="section" id="modifying-the-roi-of-a-volume">
 <h3>Modifying the ROI of a volume<a class="headerlink" href="#modifying-the-roi-of-a-volume" title="Permalink to this headline">¶</a></h3>
 <ol>
 <li><p><a class="reference external" href="#rendering">Render the volume</a>.</p></li>
 <li><p>Enable the cropping of the volume with the ROI by clicking on the “Enable Cropping” checkBox.</p>
- <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/modifyROI/2.png" width ="40%"/>    </li>
+ <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/modifyROI/2.png" width ="60%"/>    </li>
 <li><p>Display the ROI of the volume by clicking on the “Display ROI” checkBox.</p>
- <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/modifyROI/3.png" width ="40%"/></li>
+ <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/modifyROI/3.png" width ="60%"/></li>
 <li><p>You can scale and rotate the ROI :</p>
- <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/modifyROI/45.png" width ="40%"/><ul>
+ <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/modifyROI/45.png" width ="60%"/><ul>
 <li><p>Scale the ROI :</p>
 <ol class="simple">
 <li><p>Enable the scalling of the ROI by clicking on the “Enable Rotation” checkBox.</p></li>
 <li><p>Select one of the handle of the ROI and move it towards the center or the outside of the volume to scale the ROI.</p></li>
 </ol>
-  <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/modifyROI/scale.gif" width ="40%"/>    </li>
+  <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/modifyROI/scale.gif" width ="60%"/>    </li>
 <li><p>Rotate the ROI :</p>
 <ol class="simple">
 <li><p>Enable the rotation of the ROI by clicking on the “Enable Rotation” checkBox.</p></li>
 <li><p>Select one of the side of the ROI and move it in any direction to rotate the ROI.</p></li>
 </ol>
-  <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/modifyROI/rotate.gif" width ="40%"/></li>
+  <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/modifyROI/rotate.gif" width ="60%"/></li>
 </ul>
 </li>
 </ol>
@@ -280,19 +338,19 @@
 <h3>Creating a new shader<a class="headerlink" href="#creating-a-new-shader" title="Permalink to this headline">¶</a></h3>
 <ol>
 <li><p>Open the “Modify or Create Custom Shader” section.</p>
- <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/createCS/1.png" width ="40%"/></li>
+ <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/createCS/1.png" width ="60%"/></li>
 <li><p>In the comboBox, select “Create new Custom Shader”.</p>
- <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/createCS/2.png" width ="40%"/></li>
+ <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/createCS/2.png" width ="60%"/></li>
 <li><p>Type the name of the shader that will be used as a class name.</p>
- <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/createCS/3.png" width ="40%"/></li>
+ <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/createCS/3.png" width ="60%"/></li>
 <li><p>Type the display name of the shader that will be used in the UI.</p></li>
 <li><p>Click the “Create” button.</p>
- <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/createCS/45.png" width ="40%"/></li>
+ <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/createCS/45.png" width ="60%"/></li>
 <li><p>You can either :</p>
 <ul>
 <li><p>Click on the “Edit” button and modify the python class manually.</p></li>
 <li><p>Use the <a class="reference external" href="#addcode"> Add Code </a> and <a class="reference external" href="#addparam"> Add Parameter </a> tabs to modify the python class with the UI :</p>
-  <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/createCS/6.png" width ="40%"/></li>
+  <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/createCS/6.png" width ="60%"/></li>
 </ul>
 </li>
 </ol>
@@ -301,11 +359,11 @@
 <h3>Modifying an existing shader<a class="headerlink" href="#modifying-an-existing-shader" title="Permalink to this headline">¶</a></h3>
 <ol>
 <li><p>Open “Modify or Create Custom Shader” section.</p>
- <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/modifyCS/1.png" width ="40%"/></li>
+ <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/modifyCS/1.png" width ="60%"/></li>
 <li><p>In the comboBox, select the shader to modify.</p>
- <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/modifyCS/2.png" width ="40%"/></li>
+ <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/modifyCS/2.png" width ="60%"/></li>
 <li><p>Use the <a class="reference external" href="#addcode"> Add Code </a> and <a class="reference external" href="#addparam"> Add Parameter </a> tabs to modify the python class UI :</p>
- <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/modifyCS/3.png" width ="40%"/></li>
+ <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/modifyCS/3.png" width ="60%"/></li>
 </ol>
 <p><a name="addparam"></a></p>
 </div>
@@ -313,14 +371,14 @@
 <h3>Adding a parameter to a shader from the UI<a class="headerlink" href="#adding-a-parameter-to-a-shader-from-the-ui" title="Permalink to this headline">¶</a></h3>
 <ol>
 <li><p>In the comboBox, select the type of the parameter to add to the shader.</p>
- <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/addParam/1.png" width ="40%"/></li>
+ <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/addParam/1.png" width ="60%"/></li>
 <li><p>Type the name of the parameter that will be used inside the shader.</p>
- <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/addParam/2.png" width ="40%"/></li>
+ <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/addParam/2.png" width ="60%"/></li>
 <li><p>Type the display name of the parameter that will be used in the UI.</p>
- <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/addParam/3.png" width ="40%"/></li>
+ <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/addParam/3.png" width ="60%"/></li>
 <li><p>Modify the values according to the parameter.</p></li>
 <li><p>Click the “Add Parameter” button.</p>
- <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/addParam/45.png" width ="40%"/></li>
+ <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/addParam/45.png" width ="60%"/></li>
 <li><p>Repeat steps 1-5 for each wanted parameter.</p></li>
 </ol>
 <p><a name="addcode"></a></p>
@@ -329,11 +387,11 @@
 <h3>Adding code to a shader from the UI<a class="headerlink" href="#adding-code-to-a-shader-from-the-ui" title="Permalink to this headline">¶</a></h3>
 <ol>
 <li><p>In the first comboBox, select the tag type of the code to be added to the shader.</p>
- <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/addCode/1.png" width ="40%"/></li>
+ <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/addCode/1.png" width ="60%"/></li>
 <li><p>In the second comboBox, select the tag of the code to be added to the shader.</p>
- <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/addCode/2.png" width ="40%"/></li>
+ <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/addCode/2.png" width ="60%"/></li>
 <li><p>To add the code you can either :</p>
- <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/addCode/3.png" width ="40%"/>   <ul class="simple">
+ <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISM/master/docs/source/images/tutorials/addCode/3.png" width ="60%"/>   <ul class="simple">
 <li><p>Enter the code in the text area and click on the “Modify” button.</p></li>
 <li><p>Click on the “Open File” button to enter the code directly in the python file.</p></li>
 </ul>
@@ -439,23 +497,94 @@
 </div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0193636">PRISM: An open source framework for the interactive design of GPU volume rendering shaders</a></p>
+<p><a class="reference external" href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0193636">PRISM: An open source framework for the interactive design of GPU volume rendering shaders</a>.</p>
 <p><a name="info"></a></p>
 </div>
 <div class="section" id="information-for-developers">
 <h2>Information for Developers<a class="headerlink" href="#information-for-developers" title="Permalink to this headline">¶</a></h2>
-<p>See <a class="reference external" href="https://ets-vis-interactive.github.io/SlicerPRISM/html/index.html">this page</a> for the full documentation.</p>
+<p>See <a class="reference external" href="https://githubcomets-vis-interactiveslicerprismrendering.readthedocs.io/">this page</a> for the full code documentation.</p>
+<p><a name="howto"></a></p>
+<div class="section" id="how-tos">
+<h3>How Tos<a class="headerlink" href="#how-tos" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="create-a-shader">
+<h4>Create a shader<a class="headerlink" href="#create-a-shader" title="Permalink to this headline">¶</a></h4>
+<p>Each of the volume rendering techniques is containted into one Python file and the GLSL code must be specified in the <code class="docutils literal notranslate"><span class="pre">setupShader()</span></code> method of the class.
+This code must be written as a string which is transmitted to the shader carrying out the volume rendering by using the vtk shader modification classes <a class="reference external" href="https://vtk.org/doc/nightly/html/classvtkUniforms.html">vtkUniforms</a> and <a class="reference external" href="https://vtk.org/doc/nightly/html/classvtkShaderProperty.html">vtkShaderProperty</a>. These strings replace on the fly tags in the format //VTK::SomeConcept::SomeAction in a shader template file. There is a defined list of tags that are suitable for different uses and the appropriate tag for the part of code you want to change in the shader must be specified in the Python class, as well as with the character string containing the code to replace. A more complete description of these tags can be found <a class="reference external" href="https://kitware.github.io/vtk-js/api/Rendering_OpenGL_glsl.html">here</a>. This is done in the following form:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">replacement_code</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;GLSL code&quot;&quot;&quot;</span>
+<span class="n">shader</span><span class="o">.</span><span class="n">AddFragmentShaderReplacement</span> <span class="p">(</span><span class="s2">&quot;//VTK::SomeConcept::SomeAction&quot;</span><span class="p">,</span> <span class="n">replacement_code</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Multiple tags can be used in one Python file and they should all be specified in the <code class="docutils literal notranslate"><span class="pre">setupShader()</span></code> method.</p>
+<p>All of the uniforms parameters must be specified after the class declaration. There are 7 types of paramterers that can be added to the shader and they must respect this format :</p>
+<div class="section" id="float">
+<h5>Float<a class="headerlink" href="#float" title="Permalink to this headline">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">shaderfParams</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;&lt;name&gt;&#39;</span> <span class="p">:</span> <span class="p">{</span> <span class="s1">&#39;displayName&#39;</span> <span class="p">:</span> <span class="s1">&#39;&lt;display name&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">minimum</span> <span class="n">value</span><span class="o">&gt;</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">maximum</span> <span class="n">value</span><span class="o">&gt;</span><span class="p">,</span> <span class="s1">&#39;defaultValue&#39;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">default</span> <span class="n">value</span><span class="o">&gt;</span><span class="p">},</span> \
+                  <span class="s1">&#39;&lt;name&gt;&#39;</span> <span class="p">:</span> <span class="p">{</span> <span class="o">...</span><span class="p">},</span> \
+                   <span class="o">...</span> <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="integer">
+<h5>Integer<a class="headerlink" href="#integer" title="Permalink to this headline">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">shaderiParams</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;&lt;name&gt;&#39;</span> <span class="p">:</span> <span class="p">{</span> <span class="s1">&#39;displayName&#39;</span> <span class="p">:</span> <span class="s1">&#39;&lt;display name&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">minimum</span> <span class="n">value</span><span class="o">&gt;</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">maximum</span> <span class="n">value</span><span class="o">&gt;</span><span class="p">,</span> <span class="s1">&#39;defaultValue&#39;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">default</span> <span class="n">value</span><span class="o">&gt;</span><span class="p">},</span> \
+                  <span class="s1">&#39;&lt;name&gt;&#39;</span> <span class="p">:</span> <span class="p">{</span> <span class="o">...</span><span class="p">},</span> \
+                   <span class="o">...</span> <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="point">
+<h5>Point<a class="headerlink" href="#point" title="Permalink to this headline">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">shader4fParams</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;&lt;name&gt;&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;displayName&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;display name&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;defaultValue&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">x</span> <span class="n">value</span><span class="o">&gt;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">y</span> <span class="n">value</span><span class="o">&gt;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">z</span> <span class="n">value</span><span class="o">&gt;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">w</span> <span class="n">value</span><span class="o">&gt;</span><span class="p">}},</span> \
+                   <span class="s1">&#39;&lt;name&gt;&#39;</span> <span class="p">:</span> <span class="p">{</span> <span class="o">...</span><span class="p">},</span> \
+                    <span class="o">...</span> <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="boolean">
+<h5>Boolean<a class="headerlink" href="#boolean" title="Permalink to this headline">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">shaderbParams</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;&lt;name&gt;&#39;</span> <span class="p">:</span> <span class="p">{</span> <span class="s1">&#39;displayName&#39;</span> <span class="p">:</span> <span class="s1">&#39;&lt;display name&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;defaultValue&#39;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">default</span> <span class="n">value</span><span class="o">&gt;</span><span class="p">,</span> <span class="s1">&#39;optionalWidgets&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">name</span> <span class="n">of</span> <span class="n">optional</span> <span class="n">parameter</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">...</span><span class="p">]},</span> \
+                  <span class="s1">&#39;&lt;name&gt;&#39;</span> <span class="p">:</span> <span class="p">{</span> <span class="o">...</span><span class="p">},</span> \
+                   <span class="o">...</span> <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="range">
+<h5>Range<a class="headerlink" href="#range" title="Permalink to this headline">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">shaderrParams</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;&lt;name&gt;&#39;</span> <span class="p">:</span> <span class="p">{</span> <span class="s1">&#39;displayName&#39;</span> <span class="p">:</span> <span class="s1">&#39;&lt;display name&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;defaultValue&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">minimum</span> <span class="n">value</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">maximum</span> <span class="n">value</span><span class="o">&gt;</span><span class="p">]},</span> \
+                  <span class="s1">&#39;&lt;name&gt;&#39;</span> <span class="p">:</span> <span class="p">{</span> <span class="o">...</span><span class="p">},</span> \
+                   <span class="o">...</span> <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="transfer-functions">
+<h5>Transfer functions<a class="headerlink" href="#transfer-functions" title="Permalink to this headline">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">shadertfParams</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;&lt;name&gt;&#39;</span> <span class="p">:</span> <span class="p">{</span> <span class="s1">&#39;displayName&#39;</span> <span class="p">:</span> <span class="s1">&#39;&lt;display name&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;defaultColors&#39;</span> <span class="p">:</span> <span class="p">[[</span><span class="o">&lt;</span><span class="n">First</span> <span class="n">point</span> <span class="n">x</span> <span class="n">value</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">First</span> <span class="n">point</span> <span class="n">red</span> <span class="n">value</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">First</span> <span class="n">point</span> <span class="n">green</span> <span class="n">value</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">First</span> <span class="n">point</span> <span class="n">blue</span> <span class="n">value</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">First</span> <span class="n">point</span> <span class="n">midpoint</span> <span class="n">value</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">First</span> <span class="n">point</span> <span class="n">midpoint</span> <span class="n">s</span> <span class="n">Sharpness</span> <span class="n">value</span><span class="o">&gt;</span> <span class="k">if</span> <span class="n">color</span><span class="p">;</span> <span class="o">&lt;</span><span class="n">First</span> <span class="n">point</span> <span class="n">x</span> <span class="n">value</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">First</span> <span class="n">point</span> <span class="n">opacity</span> <span class="n">value</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">First</span> <span class="n">point</span> <span class="n">midpoint</span> <span class="n">value</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">First</span> <span class="n">point</span> <span class="n">midpoint</span> <span class="n">s</span> <span class="n">sharpness</span> <span class="n">value</span><span class="o">&gt;</span> <span class="k">if</span> <span class="n">scalar</span> <span class="n">opacity</span><span class="p">],</span> <span class="o">...</span><span class="p">],</span> <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;&lt;&#39;</span><span class="n">color</span><span class="s1">&#39; or &#39;</span><span class="n">scalarOpacity</span><span class="s1">&#39;&gt;&#39;</span><span class="p">},</span> \
+                  <span class="s1">&#39;&lt;name&gt;&#39;</span> <span class="p">:</span> <span class="p">{</span> <span class="o">...</span><span class="p">},</span> \
+                   <span class="o">...</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>If the original values of the volume are to be keeped, the ‘defaultColors’ must be defined as : <code class="docutils literal notranslate"><span class="pre">'defaultColors'</span> <span class="pre">:</span> <span class="pre">[]</span> </code>.
+Each volume can only have one of each (color and opacity) transfer functions.
+This parameter controls the two transfer functions of the principal volume.</p>
+</div>
+<div class="section" id="volume">
+<h5>Volume<a class="headerlink" href="#volume" title="Permalink to this headline">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">shadervParams</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;&lt;name&gt;&#39;</span> <span class="p">:</span> <span class="p">{</span> <span class="s1">&#39;displayName&#39;</span> <span class="p">:</span> <span class="s1">&#39;&lt;display name&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;defaultVolume&#39;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="nb">id</span> <span class="n">of</span> <span class="n">the</span> <span class="n">volume</span><span class="o">&gt;</span><span class="p">,</span> <span class="s1">&#39;transferFunctions&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="o">&lt;</span><span class="n">transfer</span> <span class="n">functions</span><span class="o">&gt;</span><span class="p">}},</span> \
+                  <span class="s1">&#39;&lt;name&gt;&#39;</span> <span class="p">:</span> <span class="p">{</span> <span class="o">...</span><span class="p">},</span> \
+                   <span class="o">...</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>If mutliple volumes are needed, make sure that the ids are differents. By default, you should use 1, 2, 3, … as ids. If no transfer function are defined, the default ones of the volume will be used.</p>
 <p><a name="lim"></a></p>
+</div>
+</div>
+</div>
 <div class="section" id="limitations">
 <h3>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h3>
 <p><a name="key"></a></p>
 </div>
 <div class="section" id="key-nodes-and-classes">
 <h3>Key nodes and classes<a class="headerlink" href="#key-nodes-and-classes" title="Permalink to this headline">¶</a></h3>
-<p><a name="howto"></a></p>
-</div>
-<div class="section" id="how-tos">
-<h3>How Tos<a class="headerlink" href="#how-tos" title="Permalink to this headline">¶</a></h3>
 </div>
 </div>
 </div>
@@ -468,7 +597,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="PRISMRendering.html" class="btn btn-neutral float-right" title="PRISMRendering Module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="code.html" class="btn btn-neutral float-right" title="Code documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="index.html" class="btn btn-neutral float-left" title="SlicerPRISMRendering" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Slicer aPRISMRendering &mdash; SlicerPRISMRendering  documentation</title>
+  <title>SlicerPRISMRendering &mdash; SlicerPRISMRendering  documentation</title>
   
 
   
@@ -38,7 +38,7 @@
   <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="SlicerPRISMRendering" href="README.html" /> 
+    <link rel="next" title="SlicerPRISMRendering General Documentation" href="README.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -87,10 +87,8 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="README.html">SlicerPRISMRendering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="PRISMRendering.html">PRISMRendering Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="PRISMRenderingLogic.html">PRISMRenderingLogic Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="PRISMRenderingShaders.html">PRISMRenderingShaders Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="README.html">SlicerPRISMRendering General Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code.html">Code documentation</a></li>
 </ul>
 
             
@@ -136,7 +134,7 @@
     
       <li><a href="#">Docs</a> &raquo;</li>
         
-      <li>Slicer aPRISMRendering</li>
+      <li>SlicerPRISMRendering</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -155,18 +153,25 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="slicer-aprismrendering">
-<h1>Slicer aPRISMRendering<a class="headerlink" href="#slicer-aprismrendering" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="slicerprismrendering">
+<h1>SlicerPRISMRendering<a class="headerlink" href="#slicerprismrendering" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="README.html">SlicerPRISMRendering</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="README.html">SlicerPRISMRendering General Documentation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="README.html#introduction-and-acknowledgements">Introduction and Acknowledgements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="README.html#module-description">Module Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="README.html#use-cases">Use Cases</a></li>
 <li class="toctree-l2"><a class="reference internal" href="README.html#tutorials">Tutorials</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="README.html#rendering-a-volume">Rendering a volume</a></li>
 <li class="toctree-l3"><a class="reference internal" href="README.html#applying-a-shader-to-a-volume">Applying a shader to a volume</a></li>
+<li class="toctree-l3"><a class="reference internal" href="README.html#implemented-shaders">Implemented shaders</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="README.html#chroma-depth-perception">Chroma Depth Perception</a></li>
+<li class="toctree-l4"><a class="reference internal" href="README.html#opacity-peeling">Opacity Peeling</a></li>
+<li class="toctree-l4"><a class="reference internal" href="README.html#outline">Outline</a></li>
+<li class="toctree-l4"><a class="reference internal" href="README.html#plane-intersecting">Plane Intersecting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="README.html#sphere-carving">Sphere Carving</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="README.html#modifying-the-roi-of-a-volume">Modifying the ROI of a volume</a></li>
 <li class="toctree-l3"><a class="reference internal" href="README.html#creating-a-new-shader">Creating a new shader</a></li>
 <li class="toctree-l3"><a class="reference internal" href="README.html#modifying-an-existing-shader">Modifying an existing shader</a></li>
@@ -178,30 +183,36 @@
 <li class="toctree-l2"><a class="reference internal" href="README.html#similar-modules">Similar Modules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="README.html#references">References</a></li>
 <li class="toctree-l2"><a class="reference internal" href="README.html#information-for-developers">Information for Developers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="README.html#how-tos">How Tos</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="README.html#create-a-shader">Create a shader</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="README.html#limitations">Limitations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="README.html#key-nodes-and-classes">Key nodes and classes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="README.html#how-tos">How Tos</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="PRISMRendering.html">PRISMRendering Module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="PRISMRendering.html#prismrendering-class">PRISMRendering Class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="PRISMRendering.html#prismrenderingwidget-class">PRISMRenderingWidget Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code.html">Code documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="PRISMRendering.html">PRISMRendering Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="PRISMRendering.html#prismrendering-class">PRISMRendering Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PRISMRendering.html#prismrenderingwidget-class">PRISMRenderingWidget Class</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="PRISMRenderingLogic.html">PRISMRenderingLogic Module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="PRISMRenderingLogic.html#prismrenderinglogic-class">PRISMRenderingLogic Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PRISMRenderingLogic.html">PRISMRenderingLogic Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="PRISMRenderingLogic.html#prismrenderinglogic-class">PRISMRenderingLogic Class</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="PRISMRenderingShaders.html">PRISMRenderingShaders Module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="PRISMRenderingShaders.html#chromadepthshader-class">ChromaDepthShader Class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="PRISMRenderingShaders.html#customshader-class">CustomShader Class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="PRISMRenderingShaders.html#decluttering-class">Decluttering Class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="PRISMRenderingShaders.html#opacitypeelingshader-class">OpacityPeelingShader Class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="PRISMRenderingShaders.html#outlineshader-class">OutlineShader Class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="PRISMRenderingShaders.html#planeintersectingshader-class">PlaneIntersectingShader Class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="PRISMRenderingShaders.html#spherecarvingshader-class">SphereCarvingShader Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PRISMRenderingShaders.html">PRISMRenderingShaders Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="PRISMRenderingShaders.html#chromadepthshader-class">ChromaDepthShader Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PRISMRenderingShaders.html#customshader-class">CustomShader Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PRISMRenderingShaders.html#decluttering-class">Decluttering Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PRISMRenderingShaders.html#opacitypeelingshader-class">OpacityPeelingShader Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PRISMRenderingShaders.html#outlineshader-class">OutlineShader Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PRISMRenderingShaders.html#planeintersectingshader-class">PlaneIntersectingShader Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PRISMRenderingShaders.html#spherecarvingshader-class">SphereCarvingShader Class</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -224,7 +235,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="README.html" class="btn btn-neutral float-right" title="SlicerPRISMRendering" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="README.html" class="btn btn-neutral float-right" title="SlicerPRISMRendering General Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
     </div>

@@ -87,17 +87,20 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="README.html">SlicerPRISMRendering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="PRISMRendering.html">PRISMRendering Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="PRISMRenderingLogic.html">PRISMRenderingLogic Module</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">PRISMRenderingShaders Module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#chromadepthshader-class">ChromaDepthShader Class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#customshader-class">CustomShader Class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#decluttering-class">Decluttering Class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#opacitypeelingshader-class">OpacityPeelingShader Class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#outlineshader-class">OutlineShader Class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#planeintersectingshader-class">PlaneIntersectingShader Class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#spherecarvingshader-class">SphereCarvingShader Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="README.html">SlicerPRISMRendering General Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="code.html">Code documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="PRISMRendering.html">PRISMRendering Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PRISMRenderingLogic.html">PRISMRenderingLogic Module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">PRISMRenderingShaders Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#chromadepthshader-class">ChromaDepthShader Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#customshader-class">CustomShader Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#decluttering-class">Decluttering Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#opacitypeelingshader-class">OpacityPeelingShader Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#outlineshader-class">OutlineShader Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#planeintersectingshader-class">PlaneIntersectingShader Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#spherecarvingshader-class">SphereCarvingShader Class</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -144,6 +147,8 @@
   <ul class="wy-breadcrumbs">
     
       <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="code.html">Code documentation</a> &raquo;</li>
         
       <li>PRISMRenderingShaders Module</li>
     
@@ -397,8 +402,6 @@
 
 </dd></dl>
 
-<div class="graphviz"><object data="_images/inheritance-b14353682512c688894a68c1ddea1647d33c6aaa.svg" type="image/svg+xml" class="inheritance graphviz">
-<p class="warning">Inheritance diagram of CustomShader, DeclutteringShader, OpacityPeelingShader, OutlineShader, PlaneIntersectingShader, SphereCarvingShader, ChromaDepthShader</p></object></div>
 <div class="section" id="chromadepthshader-class">
 <h2>ChromaDepthShader Class<a class="headerlink" href="#chromadepthshader-class" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
@@ -423,14 +426,7 @@
 <dt>
 <code class="sig-name descname">getVolumeRange</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
 <dd><p>Function to get the range of the current volume.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Range of the current volume.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>float.</p>
-</dd>
-</dl>
+<p>&#64;return Range float : Range of the current volume.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -441,12 +437,12 @@
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">shaderrParams</code><em class="property"> = {'depthRange': {'defaultValue': [0, 1], 'displayName': 'Depth Range'}}</em></dt>
+<code class="sig-name descname">shaderrParams</code><em class="property"> = {'depthRange': {'defaultValue': [0.0, 1.0], 'displayName': 'Depth Range'}}</em></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt>
-<code class="sig-name descname">shadertfParams</code><em class="property"> = {'scalarColorMapping': {'defaultColors': [[0, 1, 0, 0, 0, 0.5], [300, 0, 0, 1, 0, 0.5]], 'displayName': 'Scalar Color Mapping', 'type': 'color'}, 'scalarOpacityMapping': {'defaultColors': [], 'displayName': 'Scalar Opacity Mapping', 'type': 'scalarOpacity'}}</em></dt>
+<code class="sig-name descname">shadertfParams</code><em class="property"> = {'scalarColorMapping': {'defaultColors': [[0, 1, 0, 0, 0, 0.5], [300, 0, 0, 1, 0, 0.5]], 'displayName': 'Scalar Color Mapping', 'type': 'color'}}</em></dt>
 <dd></dd></dl>
 
 </dd></dl>

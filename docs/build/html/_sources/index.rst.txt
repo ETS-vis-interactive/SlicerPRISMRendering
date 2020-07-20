@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Slicer aPRISMRendering
+SlicerPRISMRendering
 ======================
 
 .. toctree::
@@ -11,10 +11,7 @@ Slicer aPRISMRendering
    :caption: Contents:
    
    README
-   PRISMRendering
-   PRISMRenderingLogic
-   PRISMRenderingShaders
-
+   code
 
 
 Indices and tables

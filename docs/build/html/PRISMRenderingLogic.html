@@ -88,13 +88,16 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="README.html">SlicerPRISMRendering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="PRISMRendering.html">PRISMRendering Module</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">PRISMRenderingLogic Module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#prismrenderinglogic-class">PRISMRenderingLogic Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="README.html">SlicerPRISMRendering General Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="code.html">Code documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="PRISMRendering.html">PRISMRendering Module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">PRISMRenderingLogic Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prismrenderinglogic-class">PRISMRenderingLogic Class</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="PRISMRenderingShaders.html">PRISMRenderingShaders Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PRISMRenderingShaders.html">PRISMRenderingShaders Module</a></li>
+</ul>
+</li>
 </ul>
 
             
@@ -139,6 +142,8 @@
   <ul class="wy-breadcrumbs">
     
       <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="code.html">Code documentation</a> &raquo;</li>
         
       <li>PRISMRenderingLogic Module</li>
     
@@ -378,11 +383,12 @@ If controller is near the entry point, starts modification of its position.</p>
 
 <dl class="py method">
 <dt id="PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.setPlacingMarkups">
-<code class="sig-name descname">setPlacingMarkups</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">paramName</span></em>, <em class="sig-param"><span class="n">btn</span></em>, <em class="sig-param"><span class="n">interaction</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">persistence</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.setPlacingMarkups" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setPlacingMarkups</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">paramType</span></em>, <em class="sig-param"><span class="n">paramName</span></em>, <em class="sig-param"><span class="n">btn</span></em>, <em class="sig-param"><span class="n">interaction</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">persistence</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.setPlacingMarkups" title="Permalink to this definition">¶</a></dt>
 <dd><p>Activate Slicer markups module to set one or multiple markups in the given markups fiducial list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>paramType</strong> – Type of the parameter.</p></li>
 <li><p><strong>paramName</strong> (<em>str</em>) – Name of the parameter.</p></li>
 <li><p><strong>btn</strong> (<em>QObject</em>) – Button pushed to place the markup.</p></li>
 <li><p><strong>interaction</strong> (<em>Int0: /</em><em>, </em><em>1: Place</em><em>, </em><em>2: View transform</em><em>, </em><em>3: /</em><em> ,</em><em>4: Select</em>) – </p></li>
