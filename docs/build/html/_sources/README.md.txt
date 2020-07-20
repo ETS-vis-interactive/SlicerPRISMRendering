@@ -341,7 +341,7 @@ It is possible to :
 
 ## Information for Developers
 
-See [this page](https://githubcomets-vis-interactiveslicerprismrendering.readthedocs.io/) for the full code documentation.
+See [this page](https://githubcomets-vis-interactiveslicerprismrendering.readthedocs.io/en/latest/code.html) for the full code documentation.
 
 <a name="howto"></a>
 
@@ -421,6 +421,7 @@ shadervParams = { '<name>' : { 'displayName' : '<display name>', 'defaultVolume'
 ```
 
 If mutliple volumes are needed, make sure that the ids are differents. By default, you should use 1, 2, 3, ... as ids. If no transfer function are defined, the default ones of the volume will be used.
+
 
 
 <a name="lim"></a>
