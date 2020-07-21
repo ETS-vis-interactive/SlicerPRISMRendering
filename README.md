@@ -1,4 +1,4 @@
-# SlicerPRISMRenderingRendering General Documentation
+# SlicerPRISMRendering General Documentation
 
 1. [ Introduction and Acknowledgements. ](#intro)
 2. [ Module Description. ](#desc)
@@ -94,7 +94,7 @@ It is possible to :
 
     <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/images/tutorials/allShaders/chromaDepth/range.gif" width ="100%" style="margin-left: auto;margin-right: auto; display: block;/">
 
-* Adjust the colors.
+* Adjust the transfer function's points.
 
     <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/images/tutorials/allShaders/chromaDepth/colors.gif" width ="100%" style="margin-left: auto;margin-right: auto; display: block;"/>
 
