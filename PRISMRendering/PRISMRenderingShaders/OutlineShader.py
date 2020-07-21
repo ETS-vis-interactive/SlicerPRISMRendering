@@ -7,7 +7,7 @@ from PRISMRenderingShaders.CustomShader import CustomShader
 """ 
 class OutlineShader(CustomShader):
   shaderfParams = { 'gradStep' : { 'displayName' : 'Gradient Step', 'min' : 0.0, 'max' : 0.02, 'defaultValue' : 0.005 }}
-  shaderrParams = { 'step' : { 'displayName' : 'Step', 'defaultValue' : [0.000, 0.02]}}  
+  shaderrParams = { 'step' : { 'displayName' : 'Step', 'defaultValue' : [0.000, 1000]}}  
 
   def __init__(self, shaderPropertyNode):
     CustomShader.__init__(self,shaderPropertyNode)
