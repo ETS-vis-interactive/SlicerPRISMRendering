@@ -59,7 +59,8 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
     self.customShaderType = 'None'
     ## Class of the current custom shader
     self.customShader = None
-    
+    ## Types of the annotation points
+    self.pointTypes = ['center', 'target', 'entry']
     ## Type of the annotation point being added to the scene
     self.pointType = ''
     ## Name of the annotation point being added to the scene
@@ -102,12 +103,16 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
           i.show()
     else: 
       self.optionEnabled = 0
+      remove = False
       if str(CSName + paramName) in self.optionalWidgets :
         for i in self.optionalWidgets[CSName +paramName] :
+          for t in self.pointTypes :
+            if t in i.name :
+              remove = True
           i.hide()
 
-      self.endPoints.RemoveAllControlPoints()
-
+      if remove :
+        self.endPoints.RemoveAllControlPoints()
     self.customShader.setShaderParameter(paramName, self.optionEnabled, type_)
 
   def addObservers(self):
@@ -153,7 +158,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
     #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     world = [0, 0, 0, 0]
 
-    if self.pointType in ['center', 'target', 'entry']:
+    if self.pointType in self.pointTypes:
       pointIndex = caller.GetDisplayNode().GetActiveControlPoint()
       caller.GetNthFiducialWorldCoordinates(pointIndex, world)
       # If the point was already defined
