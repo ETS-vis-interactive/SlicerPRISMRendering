@@ -1570,7 +1570,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
     """
     ##log.info(get_function_name()  + str(get_function_parameters_and_values()))
 
-    self.logic.setCustomShaderType(self.ui.customShaderCombo.currentText)
+    self.logic.setCustomShaderType(self.ui.customShaderCombo.currentText, self.ui.imageSelector.currentNode())
     self.UpdateShaderParametersUI()
     self.updateParameterNodeFromGUI(self.ui.customShaderCombo.currentText, self.ui.customShaderCombo)
     self.updateGUIFromParameterNode()

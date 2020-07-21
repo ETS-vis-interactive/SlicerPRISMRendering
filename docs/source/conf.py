@@ -13,10 +13,11 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('.'))
-sys.path.insert(0, os.path.abspath('../../PRISMRendering/PRISMRenderingLogic/'))
-sys.path.insert(0, os.path.abspath('../../PRISMRendering/'))
+sys.path.insert(0, os.path.abspath('../../PRISMRendering/PRISMRenderingLogic'))
+sys.path.insert(0, os.path.abspath('../../PRISMRendering'))
 sys.path.insert(0, os.path.abspath('../../PRISMRendering/PRISMRenderingShaders/'))
 sys.path.insert(0, os.path.abspath('..'))
+sys.path.insert(0, os.path.abspath('../..'))
 
 # -- Project information -----------------------------------------------------
 master_doc = 'index'

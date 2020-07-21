@@ -88,7 +88,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="README.html">SlicerPRISMRendering General Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="README.html">SlicerPRISMRenderingRendering General Documentation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="code.html">Code documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="PRISMRendering.html">PRISMRendering Module</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">PRISMRenderingLogic Module</a><ul>
@@ -361,11 +361,14 @@ If controller is near the entry point, starts modification of its position.</p>
 
 <dl class="py method">
 <dt id="PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.setCustomShaderType">
-<code class="sig-name descname">setCustomShaderType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shaderTypeName</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.setCustomShaderType" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setCustomShaderType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shaderTypeName</span></em>, <em class="sig-param"><span class="n">volumeNode</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.setCustomShaderType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set given shader type as current active shader.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>shaderTypeName</strong> (<em>str'Sphere Carving'</em><em>, </em><em>'Opacity Peeling'. Name corresponding to the type of rendering needed.</em>) – </p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>shaderTypeName</strong> (<em>str</em>) – Name corresponding to the type of rendering needed.</p></li>
+<li><p><strong>volumeNode</strong> (<em>vtkMRMLScalarVolumeNode</em>) – Current volume.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -414,8 +417,13 @@ If controller is near the entry point, starts modification of its position.</p>
 
 <dl class="py method">
 <dt id="PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.setupCustomShader">
-<code class="sig-name descname">setupCustomShader</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.setupCustomShader" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setupCustomShader</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">volumeNode</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PRISMRenderingLogic.PRISMRenderingLogic.PRISMRenderingLogic.setupCustomShader" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get or create shader property node and initialize custom shader.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>volumeNode</strong> (<em>vtkMRMLScalarVolumeNode</em>) – Current volume.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">

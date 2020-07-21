@@ -28,7 +28,7 @@ class CustomShader():
   ## Volumes parameters of the shader 
   shadervParams = {}
 
-  def __init__(self, shaderPropertyNode):
+  def __init__(self, shaderPropertyNode, volumeNode = None):
     assert shaderPropertyNode != None, 'CustomShader: a valid shader property node must provided to the constructor'
     ## Property node of the shader
     self.shaderPropertyNode = shaderPropertyNode
@@ -69,20 +69,22 @@ class CustomShader():
     
 
   @classmethod
-  def InstanciateCustomShader(cls, shaderDisplayName, shaderPropertyNode):
+  def InstanciateCustomShader(cls, shaderDisplayName, shaderPropertyNode, volumeNode):
     """Function to instanciate a custom shader.
 
     :param shaderDisplayName: Display name of the shader. 
     :type shaderDisplayName: str
     :param shaderPropertyNode: Shader property node. 
     :type shaderPropertyNode: vtkMRMLShaderPropertyNode
+    :param volumeNode: Current volume.
+    :type volumeNode: vtkMRMLScalarVolumeNode
     """
     if shaderDisplayName == cls.GetDisplayName():
-      return CustomShader(shaderPropertyNode)
+      return CustomShader(shaderPropertyNode, volumeNode)
 
     for c in cls.allClasses:
       if c.GetDisplayName() == shaderDisplayName:
-        return c(shaderPropertyNode)
+        return c(shaderPropertyNode, volumeNode)
     return None
 
   @classmethod

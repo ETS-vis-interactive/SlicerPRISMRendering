@@ -411,7 +411,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
 
     # Set custom shader to renderer
     if multipleVolumes == False :
-      self.setupCustomShader()
+      self.setupCustomShader(volumeNode)
 
     #if multiple volumes not enabled, turn off previous rendering
     if not multipleVolumes and self.volumeRenderingDisplayNode:
@@ -469,18 +469,25 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
       self.opacityTransferFunction.name = volumeName+"Original" + self.opacityTransferFunction.GetClassName()
 
 
-  def setCustomShaderType(self, shaderTypeName):
+  def setCustomShaderType(self, shaderTypeName, volumeNode):
     """Set given shader type as current active shader.
 
-    :param shaderTypeName:  
-    :type shaderTypeName: str'Sphere Carving', 'Opacity Peeling'. Name corresponding to the type of rendering needed.
+    :param shaderTypeName: Name corresponding to the type of rendering needed.
+    :type shaderTypeName: str
+
+    :param volumeNode: Current volume.
+    :type volumeNode: vtkMRMLScalarVolumeNode
     """
     #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     self.customShaderType = shaderTypeName
-    self.setupCustomShader()
+    self.setupCustomShader(volumeNode)
 
-  def setupCustomShader(self):
-    """Get or create shader property node and initialize custom shader."""
+  def setupCustomShader(self, volumeNode):
+    """Get or create shader property node and initialize custom shader.
+    
+    :param volumeNode: Current volume.
+    :type volumeNode: vtkMRMLScalarVolumeNode
+    """
     #log.info(get_function_name()  + str(get_function_parameters_and_values()))
     shaderPropertyName = "ShaderProperty"
     CustomShader.GetAllShaderClassNames()
@@ -492,7 +499,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
     else :
       self.shaderPropertyNode = self.volumeRenderingDisplayNode.GetShaderPropertyNode()
 
-    self.customShader = CustomShader.InstanciateCustomShader(self.customShaderType, self.shaderPropertyNode)
+    self.customShader = CustomShader.InstanciateCustomShader(self.customShaderType, self.shaderPropertyNode, volumeNode)
     self.customShader.setupShader() 
 
   def updateVolumeColorMapping(self, volumeNode, displayNode, volumePropertyNode = None):

@@ -17,8 +17,8 @@ class OpacityPeelingShader(CustomShader):
   
   shader4fParams = {'center': {'displayName': 'Center', 'defaultValue': {'x': 0.0, 'y': 0.0, 'z': 0.0, 'w': 0.0}}}
 
-  def __init__(self, shaderPropertyNode):
-    CustomShader.__init__(self,shaderPropertyNode)
+  def __init__(self, shaderPropertyNode, volumeNode = None):
+    CustomShader.__init__(self, shaderPropertyNode)
 
   @classmethod
   def GetDisplayName(cls):

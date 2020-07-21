@@ -13,7 +13,7 @@ class PlaneIntersectingShader(CustomShader):
   
   shaderbParams = { 'plane' : { 'displayName' : 'Third Plane', 'defaultValue' : 0, 'optionalWidgets' : []}}
 
-  def __init__(self, shaderPropertyNode):
+  def __init__(self, shaderPropertyNode, volumeNode = None):
     CustomShader.__init__(self,shaderPropertyNode)
 
   @classmethod

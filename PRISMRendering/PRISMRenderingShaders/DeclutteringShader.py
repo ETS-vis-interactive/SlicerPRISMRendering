@@ -17,7 +17,7 @@ class DeclutteringShader(CustomShader):
   { 'scalarColorMapping2' : { 'displayName' : 'Scalar Color Mapping second', 'defaultColors' : [[0, 0, 1, 0, 0, 0.5], [300, 1, 0, 0, 0, 0.5]], 'type' : 'color'},\
    'scalarOpacityMapping2' : { 'displayName' : 'Scalar Opacity Mapping second', 'defaultColors' : [], 'type' : 'scalarOpacity'}}}}
   
-  def __init__(self, shaderPropertyNode):
+  def __init__(self, shaderPropertyNode, volumeNode = None):
     CustomShader.__init__(self,shaderPropertyNode)
 
   @classmethod

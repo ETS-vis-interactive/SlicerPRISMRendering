@@ -1,6 +1,5 @@
 from PRISMRenderingShaders.CustomShader import CustomShader
 import math  
-import vtk, qt, ctk, slicer
 
 """!@class ChromaDepthShader
 @brief Class containing the code for the Chroma Depth shader.
@@ -9,10 +8,10 @@ import vtk, qt, ctk, slicer
 class ChromaDepthShader(CustomShader):
   shaderrParams = { 'depthRange' : { 'displayName' : 'Depth Range', 'defaultValue' : [0.0, 1.0]}}
   shadertfParams = { 'scalarColorMapping' : { 'displayName' : 'Scalar Color Mapping', 'defaultColors' : [[0, 1, 0, 0, 0.5, 0], [300, 0, 0, 1, 0.5, 0]], 'type' : 'color'}}
-  shaderiParams = {}
-  def __init__(self, shaderPropertyNode):
-    CustomShader.__init__(self, shaderPropertyNode)
-    volumeRange = self.getVolumeRange()
+  
+  def __init__(self, shaderPropertyNode, volumeNode = None):
+    CustomShader.__init__(self, shaderPropertyNode, volumeNode)
+    volumeRange = self.getVolumeRange(volumeNode)
     if volumeRange :
       self.shaderrParams['depthRange']['defaultValue'][0] = -1* volumeRange
       self.shaderrParams['depthRange']['defaultValue'][1] = volumeRange
@@ -21,14 +20,16 @@ class ChromaDepthShader(CustomShader):
   def GetDisplayName(cls):
     return 'Chroma Depth Perception'
 
-  def getVolumeRange(self):
+  def getVolumeRange(self, volumeNode):
     """Function to get the range of the current volume.
-
-    @return Range float : Range of the current volume.
+    
+    :param volumeNode: Current volume.
+    :type volumeNode: vtkMRMLScalarVolumeNode
+    
+    :return Range: Range of the current volume.
+    :rtype Range: float
     """
-    imageSelectorNode = slicer.modules.PRISMRenderingWidget.ui.imageSelector.currentNode()
-    if imageSelectorNode != None :
-      volumeNode = imageSelectorNode.GetVolumeDisplayNode().GetVolumeNode()
+    if volumeNode != None :
       dim = [0, 0, 0]
       volumeNode.GetImageData().GetDimensions(dim)
       return math.sqrt(dim[0]**2 + dim[1]**2 + dim[2]**2)/2

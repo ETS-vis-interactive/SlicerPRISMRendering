@@ -13,7 +13,7 @@ class Template(CustomShader):
   shadertfParams = {}
   shadervParams = {}
   
-  def __init__(self, shaderPropertyNode):
+  def __init__(self, shaderPropertyNode, volumeNode):
     CustomShader.__init__(self,shaderPropertyNode)
 
   @classmethod

@@ -9,7 +9,7 @@ class OutlineShader(CustomShader):
   shaderfParams = { 'gradStep' : { 'displayName' : 'Gradient Step', 'min' : 0.0, 'max' : 0.02, 'defaultValue' : 0.005 }}
   shaderrParams = { 'step' : { 'displayName' : 'Step', 'defaultValue' : [0.000, 1000]}}  
 
-  def __init__(self, shaderPropertyNode):
+  def __init__(self, shaderPropertyNode, volumeNode = None):
     CustomShader.__init__(self,shaderPropertyNode)
 
   @classmethod
