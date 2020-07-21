@@ -1784,7 +1784,6 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
             v = [float(k) for k in values.split(",")]
             opacityTransferFunction.AddPoint(v[0], v[1], v[2], v[3])
             i += 1
-            #HERE
             values = self.logic.parameterNode.GetParameter(opacityTransferFunction.name+str(i))
         
         if not opacityTransferFunction.HasObserver(vtk.vtkCommand.ModifiedEvent):
@@ -1975,9 +1974,11 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       colors = params['defaultColors']
       nbColors = len(colors)
       transferFunction.RemoveAllPoints()
-      transferFunction.AdjustRange((0, colors[nbColors-1][0]))
-      for i in range(nbColors):
-        transferFunction.SetNodeValue(i, colors[i])  
+      for i in range(nbColors): 
+        if TFType == 'color':
+          transferFunction.AddRGBPoint(colors[i][0], colors[i][1], colors[i][2], colors[i][3], colors[i][4], colors[i][5])  
+        elif TFType == 'scalarOpacity':
+          transferFunction.AddPoint(colors[i][0], colors[i][1], colors[i][2], colors[i][3])  
 
     if TFType == 'color':
       widget.view().addColorTransferFunction(transferFunction)
