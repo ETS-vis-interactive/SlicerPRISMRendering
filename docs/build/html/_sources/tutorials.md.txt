@@ -48,9 +48,6 @@ This section contains a detailed description on how to use each of the technique
 
 ### Chroma Depth Perception
 
-<details><summary>Chroma Depth Perception</summary>
-
-<br>
 This technique brings out the depth of a volume with a smooth transition between all hues.
 
 You can download the sample volume by clicking <a href="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/volumes/1.mnc" download>here</a>.
@@ -68,18 +65,11 @@ It is possible to :
 <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/images/tutorials/allShaders/chromaDepth/chromaDepth.gif" width ="50%" style="margin-left: auto;
   margin-right: auto; display: block;"/>
 
-</details>
-
-<br>
-
 ### Opacity Peeling
 
-<details><summary>Opacity Peeling</summary>
-
-<br>
 This technique respond to the problem of occlusion of certain structures in the volume. It consists in removing the first n layers of tissue during the integration of the ray.
 
-You can download the sample volume by clicking <a href="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/volumes/MR-head.mnc" download>here</a>.
+You can download the sample volume by clicking <a href="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/volumes/MR-head.nrrd" download>here</a>.
 
 It is possible to :
 
@@ -102,15 +92,9 @@ It is possible to :
 * Modify the radius of the sphere.
 
     <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/images/tutorials/allShaders/opacityPeeling/sphere_radius.gif" width ="100%" style="margin-left: auto; margin-right: auto; display: block;"/>
-</details>
-
-<br>
 
 ### Outline
 
-<details><summary>Outline</summary>
-
-<br>
 This shader highlights the borders of the volume and is particularly useful for visualizing complex structures such as the blood vessels of the brain. Indeed, the accentuation of the edges of the vessels makes it possible to improve the perception of the depths by ordering the order of depth of overlapping vessels.
 
 You can download the sample volume by clicking <a href="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/volumes/1.mnc" download>here</a>.
@@ -124,18 +108,12 @@ It is possible to :
 * Adjust the parameters allowing to modify the gradients intensities captured by the function.
 
     <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/images/tutorials/allShaders/outline/step.gif" width ="100%" style="margin-left: auto; margin-right: auto; display: block;"/>
-</details>
-
-<br>
 
 ### Plane Intersecting
 
-<details><summary>Plane Intersecting</summary>
-
-<br>
 This technique allows to visualize the anatomy along the approach plane for surgery.
 
-You can download the sample volume by clicking <a href="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/volumes/MR-head.mnc" download>here</a>.
+You can download the sample volume by clicking <a href="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/volumes/MR-head.nrrd" download>here</a>.
 
 It is possible to :
 
@@ -154,18 +132,12 @@ It is possible to :
 * Enable/disable the use of a third plane.
 
     <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/images/tutorials/allShaders/planeIntersecting/thirdPlane.gif" width ="100%" style="margin-left: auto; margin-right: auto; display: block;"/>
-</details>
-
-<br>
 
 ### Sphere carving
 
-<details><summary>Sphere carving</summary>
-
-<br>
 This shader makes it possible to cut out spherical parts of the volume interactively, which can obstruct structures of interest with similar intensities.
 
-You can download the sample volume by clicking <a href="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/volumes/MR-head.mnc" download>here</a>.
+You can download the sample volume by clicking <a href="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/volumes/MR-head.nrrd" download>here</a>.
 
 It is possible to :
 
@@ -176,9 +148,6 @@ It is possible to :
 * Modify the radius of the sphere.
 
     <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/images/tutorials/allShaders/sphereCarving/radius.gif" width ="100%" style="margin-left: auto; margin-right: auto; display: block;"/>
-</details>
-
-<br>
 
 ## Modifying the ROI of a volume
 
@@ -273,8 +242,5 @@ It is possible to :
     * Enter the code in the text area and click on the "Modify" button.
     * Click on the "Open File" button to enter the code directly in the python file.
 4. Repeat steps 1-3 for each wanted code replacement.
-</details>
-
-<br>
 
 <a name="panels"></a>
