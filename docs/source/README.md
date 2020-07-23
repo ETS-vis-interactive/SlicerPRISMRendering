@@ -5,7 +5,7 @@
 
 **Author(s)/Contributor(s)**: Tiphaine RICHARD, Student Intern at École de technologie supérieure (ÉTS), Montréal, Simon Drouin, Professor at ÉTS.
 
-**License**: slicer4
+**License**: BSD
 
 **Contact**: Tiphaine RICHARD, tiphainejh@gmail.com
 
