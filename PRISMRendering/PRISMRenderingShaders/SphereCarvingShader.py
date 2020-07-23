@@ -26,3 +26,4 @@ class SphereCarvingShader(CustomShader):
     """
     # (bool) Skip computation of current iteration step if true
     self.shaderProperty.AddFragmentShaderReplacement("//VTK::Cropping::Impl", True, replacement, False)
+    #shaderreplacement

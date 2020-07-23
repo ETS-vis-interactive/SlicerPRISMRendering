@@ -18,7 +18,7 @@ shader.AddFragmentShaderReplacement ("//VTK::SomeConcept::SomeAction", replaceme
 
 Multiple tags can be used for one shader and they should all be specified in the ```setupShader()``` method.
 
-All of the uniforms variables of the shader must be specified after the class declaration. There are 7 types of variables that can be added to the shader and they must respect this format, where \<name\> is the name used in the shader and \<display name\> is the name displayed in the UI :
+The uniforms variables of the shader are defined as Python dictionnary and must be specified after the class declaration. There are 7 types of variables that can be added to the shader and they must respect this format, where \<name\> is the name used in the shader and \<display name\> is the name displayed in the UI :
 
 #### Float
 

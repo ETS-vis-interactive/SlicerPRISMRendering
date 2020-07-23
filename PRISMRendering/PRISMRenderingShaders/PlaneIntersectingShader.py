@@ -45,3 +45,4 @@ class PlaneIntersectingShader(CustomShader):
 
     """
     self.shaderProperty.AddFragmentShaderReplacement("//VTK::Cropping::Impl", True, replacement, False)
+    #shaderreplacement

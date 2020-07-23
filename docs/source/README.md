@@ -3,7 +3,7 @@
 ## Introduction and Acknowledgements
 **Title**: SlicerPRISMRendering
 
-**Author(s)/Contributor(s)**: Simon Drouin, Professor at École de technologie supérieure (ÉTS), Montréal, Tiphaine RICHARD, Student Intern at ÉTS.
+**Author(s)/Contributor(s)**: Tiphaine RICHARD, Student Intern at École de technologie supérieure (ÉTS), Montréal, Simon Drouin, Professor at ÉTS.
 
 **License**: slicer4
 

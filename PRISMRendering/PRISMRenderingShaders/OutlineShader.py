@@ -74,3 +74,4 @@ class OutlineShader(CustomShader):
     }"""
     self.shaderProperty.AddFragmentShaderReplacement("//VTK::Shading::Impl", True, shadingImplCode, False)
 
+    #shaderreplacement

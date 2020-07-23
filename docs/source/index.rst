@@ -5,6 +5,7 @@
 
 Welcome to SlicerPRISMRendering documentation!
 ==============================================
+
 .. toctree::
    :maxdepth: 6
    :caption: Contents:

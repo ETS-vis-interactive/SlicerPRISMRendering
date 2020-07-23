@@ -62,3 +62,4 @@ class ChromaDepthShader(CustomShader):
   """
     self.shaderProperty.ClearAllFragmentShaderReplacements()
     self.shaderProperty.AddFragmentShaderReplacement("//VTK::ComputeColor::Dec", True, ComputeColorReplacement,True)
+    #shaderreplacement

@@ -68,3 +68,5 @@ class OpacityPeelingShader(CustomShader):
     self.shaderProperty.ClearAllFragmentShaderReplacements()
     self.shaderProperty.AddFragmentShaderReplacement("//VTK::Cropping::Dec", True, croppingDecCode, False)
     self.shaderProperty.AddFragmentShaderReplacement("//VTK::Shading::Impl", True, shadingImplCode, False)
+    
+    #shaderreplacement
