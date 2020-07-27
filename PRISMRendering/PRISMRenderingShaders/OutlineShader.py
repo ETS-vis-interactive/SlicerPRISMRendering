@@ -7,7 +7,7 @@ from PRISMRenderingShaders.CustomShader import CustomShader
 """ 
 class OutlineShader(CustomShader):
   shaderfParams = { 'gradStep' : { 'displayName' : 'Gradient Step', 'min' : 0.0, 'max' : 0.02, 'defaultValue' : 0.005 }}
-  shaderrParams = { 'step' : { 'displayName' : 'Step', 'defaultValue' : [0.000, 1000]}}  
+  shaderrParams = { 'step' : { 'displayName' : 'Step', 'defaultValue' : [0.000, 150]}}  
 
   def __init__(self, shaderPropertyNode, volumeNode = None):
     CustomShader.__init__(self,shaderPropertyNode)
@@ -31,7 +31,7 @@ class OutlineShader(CustomShader):
       vec3 g2;
       g2.x = texture3D(volume, pos -  vec3(gradStep,0.0,0.0)).x;
       g2.y = texture3D(volume, pos -  vec3(0.0, gradStep, 0.0)).x;
-      g2.z = texture3D(volume, pos -  vec3(0.0,0.0,gradStep)).x;
+      g2.z = texture3D(volume, pos -  vec3(0.0,0.0, gradStep)).x;
       vec3 n = g2 - g1;
       float nLength = length(n);
       if(nLength > 0.0)

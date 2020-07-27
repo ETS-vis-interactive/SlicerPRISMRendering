@@ -117,7 +117,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
 
   def addObservers(self):
     """Create all observers needed in the UI to ensure a correct behaviour."""
-    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    
     self.pointModifiedEventTag = self.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.onEndPointsChanged)
     self.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, self.onEndPointAdded)
     slicer.mrmlScene.AddObserver(slicer.mrmlScene.EndCloseEvent, self.onCloseScene)  
@@ -137,7 +137,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
     :type event: str
     :param call_data: VtkMRMLNode, Node added to the scene.
     """
-    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    
 
     #check if the point was added from the module and was set
     type_ = caller.GetNthFiducialLabel(call_data)
@@ -155,7 +155,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
     :param event: Flag corresponding to the triggered event. 
     :type event: str
     """
-    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    
     world = [0, 0, 0, 0]
 
     if self.pointType in self.pointTypes:
@@ -198,7 +198,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
     :param persistence:  
     :type persistence: Int0: Unique, 1: Peristent
     """
-    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    
     ## Current markup being modified
     self.currentMarkupBtn = btn
     interactionNode = slicer.mrmlScene.GetNodeByID("vtkMRMLInteractionNodeSingleton")
@@ -219,7 +219,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
     :type paramName: Int
     :param type_: (float or int), type of the parameter to be changed
     """
-    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    
     self.customShader.setShaderParameter(paramName, value, type_)
   
   def createEndPoints(self):
@@ -245,7 +245,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
     :return: Entry markups position if placed, empty array if not. 
     :rtype: Array[double].
     """
-    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    
     entry = [0, 0, 0]
     if self.endPoints.GetNumberOfControlPoints() >= 2:
       self.endPoints.GetNthFiducialPosition(1, entry)
@@ -265,7 +265,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
     :return: Entry markups position if placed, empty array if not. 
     :rtype: Array[double].
     """
-    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    
     target = [0, 0, 0]
     if self.endPoints.GetNumberOfControlPoints() >= 1:
       self.endPoints.GetNthFiducialPosition(0, target)
@@ -280,126 +280,6 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
     self.endPoints.SetNthFiducialPositionFromArray(0, target)   
 
   #
-  # VR Related functions
-  #
-
-  def activateVR(self):
-    from PRISMRenderingShaderss.VirtualRealityHelper import VirtualRealityHelper
-    self.vrhelper = VirtualRealityHelper(self.volumeRenderingDisplayNode)
-    self.vrhelper.vr.viewWidget().RightControllerTriggerPressed.connect(self.onRightControllerTriggerPressed)
-    self.vrhelper.vr.viewWidget().RightControllerTriggerReleased.connect(self.onRightControllerTriggerReleased)
-    self.vrhelper.vr.viewWidget().LeftControllerTriggerPressed.connect(self.onLeftControllerTriggerPressed)
-    self.vrhelper.vr.viewWidget().LeftControllerTriggerReleased.connect(self.onLeftControllerTriggerReleased)
-
-    qt.QTimer.singleShot(0, lambda: Self.delayedInitVRObserver())  
-
-
-  def delayedInitVRObserver(self):
-    ltn = self.vrhelper.getLeftTransformNode()
-    self.leftTransformModifiedTag = ltn.AddObserver(slicer.vtkMRMLTransformNode.TransformModifiedEvent,self.onLeftControllerMoved)
-    rtn = self.vrhelper.getRightTransformNode()
-    self.rightTransformModifiedTag = rtn.AddObserver(slicer.vtkMRMLTransformNode.TransformModifiedEvent,self.onRightControllerMoved)
-
-
-  def onRightControllerTriggerPressed(self):
-    """Callback function on trigger pressed event.
-        If controller is near the entry point, starts modification of its position."""
-    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
-    if not self.getNumberOfPoints(self.endPoints) == 2:
-      return
-    controllerPos = self.vrhelper.getRightControllerPosition()
-    entryPos = self.getEntry()
-    diff = np.subtract(entryPos,controllerPos)
-    dist = np.linalg.norm(diff)
-    # Check distance from controller to entry point
-    if dist < 30.0:
-      # When created in Slicer, markups are selected. To change the color of the point selected by the VR controller,
-      # we need to unselect the point and change the unselected color to fit Slicer color code. This can be miss leading
-      # for developpers. The other approach would be missleading for Slicer users expecting markups to be red when inactive
-      # and green when modified.
-      self.endPoints.SetNthControlPointSelected(1, False)
-      # store previous position for motion tracking
-      self.vrhelper.lastControllerPos = controllerPos
-      self.movingEntry = True
-      self.endPoints.GetMarkupsDisplayNode().SetColor(0,1,0) # Unselected color
-    elif not self.endPoints.GetNthControlPointSelected(1):
-      self.endPoints.SetNthControlPointSelected(1, True)
-
-  def onRightControllerTriggerReleased(self):
-    """Callback function when right trigger is released. Drop entry point at current controller position."""
-    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
-    if self.movingEntry:
-      # Unselect point to restore default red color. Check comment above.
-      self.endPoints.SetNthControlPointSelected(1, True)
-      self.endPoints.GetMarkupsDisplayNode().SetColor(0,1,1)
-      self.movingEntry = False
-
-  def onRightControllerMoved(self,caller,event):
-    """Callback function when a the right controller position has changed."""
-    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
-    if self.vrhelper.rightControlsDisplayMarkups.GetDisplayNode().GetVisibility():
-      self.vrhelper.setControlsMarkupsPositions("Right")
-    if not self.getNumberOfPoints(self.endPoints) == 2:
-      return
-    controllerPos = self.vrhelper.getRightControllerPosition()
-    diff = np.subtract(controllerPos,self.vrhelper.lastControllerPos)
-    entryPos = self.getEntry()
-    newEntryPos = np.add(entryPos,diff)
-    dist = np.linalg.norm(np.subtract(entryPos,controllerPos))
-    # If controller is near, unselected the markup the change color
-    if dist < 30.0:
-      self.endPoints.SetNthControlPointSelected(1, False)
-    elif not self.movingEntry:
-      self.endPoints.SetNthControlPointSelected(1, True)
-    # Check if entry point is currently being modified by user
-    self.vrhelper.lastControllerPos = controllerPos
-
-  def onLeftControllerTriggerPressed(self):
-    """Callback function on trigger pressed event. 
-        If a shader with "relativePosition" parameter has been selectedallows user to change this parameter based on future position compared to the position when pressed."""
-    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
-    if not self.customShader:
-      return
-    if self.customShader.hasShaderParameter('relativePosition', float):
-      # Set init position to be compared with future positions
-      self.leftInitPos = self.getLeftControllerPosition()
-      self.leftInitRatio = self.customShader.getShaderParameter("relativePosition", float)
-      self.moveRelativePosition = True
-
-  def onLeftControllerTriggerReleased(self):
-    """Callback function on trigger released event.
-      Stop changing the relativePosition shader parameter."""
-    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
-    self.moveRelativePosition = False
-
-  def onLeftControllerMoved(self,caller,event):
-    """Callback function w hen a the left controller position has changed.
-      Used to change "relativePosition" current shader parameter and laser position.
-
-    :param caller: Caller of the function.
-    :param event: Event that triggered the function.
-    """
-    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
-    # Check if the trigger is currently being pressed
-    if self.moveRelativePosition:
-      # Compute distance between entry and target, then normalize
-      entry = self.getEntry()
-      target = self.getTarget()
-      diff = np.subtract(target, entry)
-      range = np.linalg.norm(diff)
-      dir = diff / range
-      # Compute current position compared to the position when the trigger has been pressed
-      curPos = self.getLeftControllerPosition()
-      motion = np.subtract(curPos,self.leftInitPos)
-      offsetRatio = np.dot( motion, dir )/range
-      # Change relative position based on the position
-      newRatio = np.clip(self.leftInitRatio + offsetRatio,0.0,1.0)
-      self.customShader.setShaderParameter("relativePosition", newRatio, float)
-    self.vrhelper.updateLaserPosition()
-    if self.vrhelper.rightControlsDisplayMarkups.GetDisplayNode().GetVisibility():
-      self.vrhelper.setControlsMarkupsPositions("Left")           
-
-  #
   # Volume Rendering functions
   #
 
@@ -411,7 +291,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
     :param multipleVolumes: If the rendered volume is a secondary volume. 
     :type multipleVolumes: Bool
     """
-    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    
     logic = slicer.modules.volumerendering.logic()
 
     # Set custom shader to renderer
@@ -483,17 +363,17 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
     :param volumeNode: Current volume.
     :type volumeNode: vtkMRMLScalarVolumeNode
     """
-    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    
     self.customShaderType = shaderTypeName
     self.setupCustomShader(volumeNode)
 
-  def setupCustomShader(self, volumeNode):
+  def setupCustomShader(self, volumeNode = None):
     """Get or create shader property node and initialize custom shader.
     
     :param volumeNode: Current volume.
     :type volumeNode: vtkMRMLScalarVolumeNode
     """
-    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    
     shaderPropertyName = "ShaderProperty"
     CustomShader.GetAllShaderClassNames()
     if self.volumeRenderingDisplayNode is None :
@@ -518,7 +398,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
     :param volumePropertyNode: Volume propery node that carries the color mapping wanted. 
     :type volumePropertyNode: VtkMRMLVolumePropertyNode
     """
-    #log.info(get_function_name()  + str(get_function_parameters_and_values()))
+    
     if not displayNode:
       return
     if volumePropertyNode:
