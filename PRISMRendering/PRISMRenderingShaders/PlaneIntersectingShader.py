@@ -7,7 +7,7 @@ from PRISMRenderingShaders.CustomShader import CustomShader
 """ 
 class PlaneIntersectingShader(CustomShader):
 
-  shaderfParams = { 'relativePosition' : { 'displayName' : 'Relative Position', 'min' : 0.0, 'max' : 1.0, 'defaultValue' : 0.5 }}
+  shaderfParams = { 'relativePosition' : { 'displayName' : 'Relative Position', 'min' : 0.0, 'max' : 1.0, 'defaultValue' : 1.0 }}
   shader4fParams = {'entry': {'displayName': 'Entry', 'defaultValue': {'x': 0.0, 'y': 0.0, 'z': 0.0, 'w': 0.0}}, \
                     'target': {'displayName': 'Target', 'defaultValue': {'x': 0.0, 'y': 0.0, 'z': 0.0, 'w': 0.0}}}
   

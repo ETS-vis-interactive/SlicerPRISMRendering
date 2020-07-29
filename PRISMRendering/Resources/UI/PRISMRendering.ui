@@ -153,7 +153,7 @@
              </size>
             </property>
             <property name="text">
-             <string>Enable Scaling</string>
+             <string>Enable Resizing</string>
             </property>
            </widget>
           </item>
@@ -254,7 +254,7 @@
          <enum>QFormLayout::DontWrapRows</enum>
         </property>
         <item row="0" column="0" colspan="2">
-         <layout class="QGridLayout" name="customShaderLayout" columnstretch="2,5,0,0,0,0,0,0,0,0">
+         <layout class="QGridLayout" name="customShaderLayout" columnstretch="2,5,0,0,0,0">
           <item row="0" column="1">
            <widget class="QComboBox" name="customShaderCombo">
             <property name="sizePolicy">

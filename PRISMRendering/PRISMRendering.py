@@ -20,6 +20,12 @@ import traceback
 from PRISMRenderingShaders.CustomShader import CustomShader
 from PRISMRenderingLogic.PRISMRenderingLogic import PRISMRenderingLogic
 
+
+## TODO Show a short description of each shader, with a clickable link in it for getting more information (you can use a ctkFittedTextBrowser for this, or at least a tooltip)
+## TODO Add basic volume rendering preset controls, such as offset slider and shading checkbox
+
+
+
 """
 class PRISMRendering Class containing the informations about the module.
 
@@ -30,7 +36,7 @@ class PRISMRendering(slicer.ScriptedLoadableModule.ScriptedLoadableModule):
   
   def __init__(self, parent):
     slicer.ScriptedLoadableModule.ScriptedLoadableModule.__init__(self, parent)
-    self.parent.title = "PRISMRendering"
+    self.parent.title = "PRISM Rendering"
     self.parent.categories = ["Rendering"]
     self.parent.dependencies = []
     self.parent.contributors = ["Tiphaine RICHARD (ETS), Simon Drouin (ETS)"]
@@ -1136,6 +1142,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
     # Modify file
     ## File containing the shader.
     fin = open(modifiedShaderPath, "rt")
+    data = fin.read()
     ## Data containted in the file of the shader.
     data = data.replace('#shaderreplacement', shaderReplacement)
     fin.close()
