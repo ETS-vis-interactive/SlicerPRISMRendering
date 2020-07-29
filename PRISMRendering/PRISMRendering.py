@@ -1242,7 +1242,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
     self.displayName = self.ui.newCustomShaderDisplayInput.text
     self.shaderDisplayName = self.ui.newCustomShaderDisplayInput.text
     ## New file created from a duplication of the template.
-    self.newCustomShaderFile = self.duplicateFile("Template", self.className)
+    self.newCustomShaderFile = self.duplicateFile("../Resources/Template", self.className)
     # If there was an error during the proccess, display it.
     if self.ui.errorMsgText != "" : 
       self.ui.errorMsg.text = self.ui.errorMsgText
@@ -1374,7 +1374,6 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
     """
     
-
     # Import shaders
     for c in self.allClasses:
       if c.__name__ == 'Template':
