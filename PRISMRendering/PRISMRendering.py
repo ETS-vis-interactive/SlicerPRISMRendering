@@ -21,11 +21,6 @@ from PRISMRenderingShaders.CustomShader import CustomShader
 from PRISMRenderingLogic.PRISMRenderingLogic import PRISMRenderingLogic
 
 
-## TODO Show a short description of each shader, with a clickable link in it for getting more information (you can use a ctkFittedTextBrowser for this, or at least a tooltip)
-## TODO Add basic volume rendering preset controls, such as offset slider and shading checkbox
-
-
-
 """
 class PRISMRendering Class containing the informations about the module.
 
@@ -101,6 +96,10 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
     #
     # Custom Shader Area
     #
+    reloadIconPath = 'Resources/UI/reload.png'
+
+    self.ui.reloadCurrentCustomShaderButton.setIcon(qt.QIcon(qt.QPixmap(reloadIconPath)))
+
     self.ui.customShaderCollapsibleButton.hide()
 
     # Custom shader combobox to select a type of custom shader
@@ -211,7 +210,10 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       if len(volumePath) != 0 :
         volumeNode = slicer.util.loadVolume(volumePath)
         self.ui.imageSelector.setCurrentNode(volumeNode)
-      
+    
+    ## Type of the shader tag being modified
+    self.modifiedShaderTagType = None
+    
     # Update GUI 
     self.addGUIObservers()
     if self.ui.imageSelector.currentNode() != None :
@@ -1121,36 +1123,36 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
     :param caller: Caller of the function.
     :param event: Event that triggered the function.
     """
-    
-
-    ## Type of the selected shader tag
-    shaderTagType = self.allShaderTagTypes.get(self.modifiedShaderTagType, "")
-    ## Selected shader tag
-    shaderTag = shaderTagType[self.modifiedShaderTag]
-
     ## Selected shader path
     modifiedShaderPath = self.getPath(CustomShader.GetClassName(self.modifiedShader).__name__)
-
-    ## Tabulations to keep the code well indented.
-    tab = "\t\t"
-    ## String that will replace the tag in the code.
-    shaderReplacement = (
-    "replacement = \"\"\"/*write your shader code here*/ \"\"\" \n " +
-    tab + "self.shaderProperty.AddFragmentShaderReplacement(\""+shaderTag+"\", True, replacement, False) \n "+
-    tab + "#shaderreplacement" )
-
-    # Modify file
-    ## File containing the shader.
-    fin = open(modifiedShaderPath, "rt")
-    data = fin.read()
-    ## Data containted in the file of the shader.
-    data = data.replace('#shaderreplacement', shaderReplacement)
-    fin.close()
-
-    fin = open(modifiedShaderPath, "wt")
-    fin.write(data)
-    fin.close()
     
+    if self.modifiedShaderTagType != None :
+      ## Type of the selected shader tag
+      shaderTagType = self.allShaderTagTypes.get(self.modifiedShaderTagType, "")
+      ## Selected shader tag
+      shaderTag = shaderTagType[self.modifiedShaderTag]
+
+
+      ## Tabulations to keep the code well indented.
+      tab = "\t\t"
+      ## String that will replace the tag in the code.
+      shaderReplacement = (
+      "replacement = \"\"\"/*write your shader code here*/ \"\"\" \n " +
+      tab + "self.shaderProperty.AddFragmentShaderReplacement(\""+shaderTag+"\", True, replacement, False) \n "+
+      tab + "#shaderreplacement" )
+
+      # Modify file
+      ## File containing the shader.
+      fin = open(modifiedShaderPath, "rt")
+      data = fin.read()
+      ## Data containted in the file of the shader.
+      data = data.replace('#shaderreplacement', shaderReplacement)
+      fin.close()
+
+      fin = open(modifiedShaderPath, "wt")
+      fin.write(data)
+      fin.close()
+      
     # Open file window
     qt.QDesktopServices.openUrl(qt.QUrl("file:///"+modifiedShaderPath, qt.QUrl.TolerantMode))
 
@@ -1206,7 +1208,6 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
     :type value: list
     """
     
-    ## Type of the shader tag being modified
     self.modifiedShaderTagType = self.ui.shaderTagsTypeCombo.currentText
     self.ui.shaderTagsCombo.show()
     self.ui.shaderTagsComboLabel.show()
@@ -1376,8 +1377,6 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
     
     # Import shaders
     for c in self.allClasses:
-      if c.__name__ == 'Template':
-        continue
       __import__('PRISMRenderingShaders.' + str(c.__name__))
     
     # Init shader
@@ -1598,7 +1597,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       slider.minimum = params[p]['min']
       slider.maximum = params[p]['max']
       f = str(params[p]['defaultValue'])
-      slider.setDecimals(f[::-1].find('.'))
+      slider.setDecimals(f[::-1].find('.')+1)
       slider.singleStep = ( (slider.maximum - slider.minimum) * 0.01 )
       slider.setObjectName(self.CSName + p)
       slider.setValue(self.logic.customShader.getShaderParameter(p, float))
