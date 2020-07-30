@@ -14,13 +14,13 @@ set(MODULE_PYTHON_SCRIPTS
   PRISMRenderingShaders/OutlineShader.py
   PRISMRenderingShaders/PlaneIntersectingShader.py
   PRISMRenderingShaders/SphereCarvingShader.py
-  # PRISMRenderingShaders/Template  TODO: template must be moved to MODULE_PYTHON_RESOURCES
   )
 
 set(MODULE_PYTHON_RESOURCES
   Resources/Icons/${MODULE_NAME}.png
   Resources/UI/PRISMRendering.ui
   Resources/shaderTags.json
+  Resources/Template
   )
 
 #-----------------------------------------------------------------------------
