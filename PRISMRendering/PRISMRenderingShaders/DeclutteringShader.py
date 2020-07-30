@@ -23,6 +23,15 @@ class DeclutteringShader(CustomShader):
   @classmethod
   def GetDisplayName(cls):
     return 'Decluttering'
+  
+  @classmethod
+  def GetBasicDescription(cls):
+    """Function to get a basic description of the current shader.
+    
+    :return: Description of the current shader.
+    :rtype: str
+    """
+    return 'Decluttering'
 
   def setupShader(self):
     super(DeclutteringShader,self).setupShader()

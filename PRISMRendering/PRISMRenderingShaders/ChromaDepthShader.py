@@ -19,6 +19,15 @@ class ChromaDepthShader(CustomShader):
   @classmethod
   def GetDisplayName(cls):
     return 'Chroma Depth Perception'
+  
+  @classmethod
+  def GetBasicDescription(cls):
+    """Function to get a basic description of the current shader.
+    
+    :return: Description of the current shader.
+    :rtype: str
+    """
+    return 'Brings out the depth of a volume with a smooth transition between all hues.'
 
   def getVolumeRange(self, volumeNode):
     """Function to get the range of the current volume.

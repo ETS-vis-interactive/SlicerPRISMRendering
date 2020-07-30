@@ -134,6 +134,15 @@ class CustomShader():
     allNames.append( cls.GetDisplayName() )
     
     return allNames
+ 
+  @classmethod
+  def GetBasicDescription(cls):
+    """Function to get a basic description of the current shader.
+    
+    :return: Description of the current shader.
+    :rtype: str
+    """
+    return 'Basic volume rendering shader.'
 
   @classmethod
   def GetDisplayName(cls):

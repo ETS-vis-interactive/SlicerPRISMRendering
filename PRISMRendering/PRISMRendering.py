@@ -1520,7 +1520,6 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
     :type i: int
     """
     
-
     self.logic.setCustomShaderType(self.ui.customShaderCombo.currentText, self.ui.imageSelector.currentNode())
     self.UpdateShaderParametersUI()
     self.updateParameterNodeFromGUI(self.ui.customShaderCombo.currentText, self.ui.customShaderCombo)
@@ -1534,6 +1533,8 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       self.ui.openCustomShaderButton.setEnabled(True)
       self.ui.reloadCurrentCustomShaderButton.setEnabled(True)
       self.ui.duplicateCustomShaderButton.setEnabled(True)
+    
+    self.ui.customShaderCollapsibleButton.setToolTip(self.logic.customShader.GetBasicDescription())
 
   def appendList(self, widget, name):
     """Function to add a widget to self.widgets without duplicate.

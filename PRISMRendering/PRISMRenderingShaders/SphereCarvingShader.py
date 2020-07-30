@@ -11,6 +11,15 @@ class SphereCarvingShader(CustomShader):
   shader4fParams = {'center': {'displayName': 'Center', 'defaultValue': {'x': 0.0, 'y': 0.0, 'z': 0.0, 'w': 0.0}}}
   def __init__(self, shaderPropertyNode, volumeNode = None):
     CustomShader.__init__(self,shaderPropertyNode)
+  
+  @classmethod
+  def GetBasicDescription(cls):
+    """Function to get a basic description of the current shader.
+    
+    :return: Description of the current shader.
+    :rtype: str
+    """
+    return 'Makes it possible to cut out spherical parts of the volume interactively, which can obstruct structures of interest with similar intensities.'
 
   @classmethod
   def GetDisplayName(cls):

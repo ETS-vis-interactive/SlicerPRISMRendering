@@ -15,7 +15,16 @@ class OutlineShader(CustomShader):
   @classmethod
   def GetDisplayName(cls):
     return 'Outline'
-
+ 
+  @classmethod
+  def GetBasicDescription(cls):
+    """Function to get a basic description of the current shader.
+    
+    :return: Description of the current shader.
+    :rtype: str
+    """
+    return 'Highlights the borders of the volume and is particularly useful for visualizing complex structures such as the blood vessels of the brain.'
+  
   def setupShader(self):
     super(OutlineShader,self).setupShader()
 

@@ -23,6 +23,15 @@ class OpacityPeelingShader(CustomShader):
   @classmethod
   def GetDisplayName(cls):
     return 'Opacity Peeling'
+  
+  @classmethod
+  def GetBasicDescription(cls):
+    """Function to get a basic description of the current shader.
+    
+    :return: Description of the current shader.
+    :rtype: str
+    """
+    return 'Responds to the problem of occlusion of certain structures in the volume. Removes the first n layers of tissue during the integration of the ray.'
 
   def setupShader(self):
     super(OpacityPeelingShader, self).setupShader()

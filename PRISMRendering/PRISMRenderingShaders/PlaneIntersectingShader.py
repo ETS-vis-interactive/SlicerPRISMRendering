@@ -15,6 +15,15 @@ class PlaneIntersectingShader(CustomShader):
 
   def __init__(self, shaderPropertyNode, volumeNode = None):
     CustomShader.__init__(self,shaderPropertyNode)
+  
+  @classmethod
+  def GetBasicDescription(cls):
+    """Function to get a basic description of the current shader.
+    
+    :return: Description of the current shader.
+    :rtype: str
+    """
+    return 'Allows to visualize the anatomy along the approach plane for surgery'
 
   @classmethod
   def GetDisplayName(cls):
