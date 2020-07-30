@@ -50,7 +50,7 @@ This section contains a detailed description on how to use each of the technique
 
 This technique brings out the depth of a volume with a smooth transition between all hues.
 
-You can download the sample volume by clicking <a href="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/volumes/1.mnc" download>here</a>.
+You can download the sample volume by clicking <a href="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRenderingDatabase/master/volumes/1.mnc" download>here</a>.
 
 It is possible to :
 
@@ -69,7 +69,7 @@ It is possible to :
 
 This technique respond to the problem of occlusion of certain structures in the volume. It consists in removing the first n layers of tissue during the integration of the ray.
 
-You can download the sample volume by clicking <a href="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/volumes/MR-head.nrrd" download>here</a>.
+You can download the sample volume by clicking <a href="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRenderingDatabase/master/volumes/MR-head.nrrd" download>here</a>.
 
 It is possible to :
 
@@ -97,7 +97,7 @@ It is possible to :
 
 This shader highlights the borders of the volume and is particularly useful for visualizing complex structures such as the blood vessels of the brain. Indeed, the accentuation of the edges of the vessels makes it possible to improve the perception of the depths by ordering the order of depth of overlapping vessels.
 
-You can download the sample volume by clicking <a href="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/volumes/1.mnc" download>here</a>.
+You can download the sample volume by clicking <a href="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRenderingDatabase/master/volumes/1.mnc" download>here</a>.
 
 It is possible to :
 
@@ -113,7 +113,7 @@ It is possible to :
 
 This technique allows to visualize the anatomy along the approach plane for surgery.
 
-You can download the sample volume by clicking <a href="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/volumes/MR-head.nrrd" download>here</a>.
+You can download the sample volume by clicking <a href="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRenderingDatabase/master/docs//MR-head.nrrd" download>here</a>.
 
 It is possible to :
 
@@ -137,7 +137,7 @@ It is possible to :
 
 This shader makes it possible to cut out spherical parts of the volume interactively, which can obstruct structures of interest with similar intensities.
 
-You can download the sample volume by clicking <a href="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/volumes/MR-head.nrrd" download>here</a>.
+You can download the sample volume by clicking <a href="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRenderingDatabase/master/volumes/MR-head.nrrd" download>here</a>.
 
 It is possible to :
 
