@@ -196,6 +196,10 @@ It is possible to :
 
 ## Modifying an existing shader
 
+Currently, the only modification that can be done to an existing shader is to add sections of code or parameters. The code contained in the Python class can be modified either by clicking on the "Open File" button in the "Modify or Create Custom Shader" section : 
+<img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/images/tutorials/modifyCS/editShader2.png" width ="60%" style="margin-left: auto; margin-right: auto; display: block;"/>
+or by clicking on the "Open" button in the "Custom Shader" section :
+<img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/images/tutorials/modifyCS/editShader1.png" width ="60%" style="margin-left: auto; margin-right: auto; display: block;"/>
 1. Open "Modify or Create Custom Shader" section.
 
     <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/images/tutorials/modifyCS/1.png" width ="60%" style="margin-left: auto; margin-right: auto; display: block;"/>

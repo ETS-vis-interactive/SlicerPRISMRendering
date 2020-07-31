@@ -7,7 +7,8 @@ import math
 """ 
 class ChromaDepthShader(CustomShader):
   shaderrParams = { 'depthRange' : { 'displayName' : 'Depth Range', 'defaultValue' : [0.0, 1.0]}}
-  shadertfParams = { 'scalarColorMapping' : { 'displayName' : 'Scalar Color Mapping', 'defaultColors' : [[0, 1, 0, 0, 0.5, 0], [300, 0, 0, 1, 0.5, 0]], 'type' : 'color'}}
+  shadertfParams = { 'scalarColorMapping' : { 'displayName' : 'Scalar Color Mapping', 'defaultColors' : [[0, 1, 0, 0, 0.5, 0], [300, 0, 0, 1, 0.5, 0]], 'type' : 'color'}, 
+  'scalarOpacityMapping' : { 'displayName' : 'Scalar Opacity Mapping', 'defaultColors' : [], 'type' : 'scalarOpacity'}}
   
   def __init__(self, shaderPropertyNode, volumeNode = None):
     CustomShader.__init__(self, shaderPropertyNode, volumeNode)
