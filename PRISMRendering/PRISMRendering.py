@@ -982,11 +982,13 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
     """   
     
     if self.ui.displayROICheckBox.isChecked():
-      self.transformDisplayNode.EditorVisibilityOn()
+      # self.transformDisplayNode.EditorVisibilityOn()
+      self.ROI.SetDisplayVisibility(1)
       self.ui.enableScalingCheckBox.show()
       self.ui.enableRotationCheckBox.show()
     else :
-      self.transformDisplayNode.EditorVisibilityOff()
+      # self.transformDisplayNode.EditorVisibilityOff()
+      self.ROI.SetDisplayVisibility(0)
       self.ui.enableScalingCheckBox.hide()
       self.ui.enableScalingCheckBox.setChecked(False)
       self.ui.enableRotationCheckBox.hide()
@@ -1460,11 +1462,11 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
           self.transformNode.SetAndObserveDisplayNodeID(self.transformDisplayNode.GetID())
 
         ## ROI of the current volume
-        self.ROI = self.logic.volumeRenderingDisplayNode.GetROINode()
-        self.ROI.SetAndObserveDisplayNodeID(self.transformDisplayNode.GetID())
-        self.ROI.SetAndObserveTransformNodeID(self.transformNode.GetID())
+        self.ROI = self.logic.volumeRenderingDisplayNode.GetMarkupsROINode()
+        #self.ROI.SetAndObserveDisplayNodeID(self.transformDisplayNode.GetID())
+        #self.ROI.SetAndObserveTransformNodeID(self.transformNode.GetID())
         self.ROI.SetDisplayVisibility(0)
-        self.resetROI()
+        #self.resetROI()
         self.ui.enableROICheckBox.show()
         self.UpdateShaderParametersUI()
         self.ui.customShaderCollapsibleButton.show()
@@ -1481,19 +1483,20 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         self.ui.displayROICheckBox.hide()
       self.ui.customShaderCollapsibleButton.hide()
       
-  def resetROI(self):
-    """Function to reset the ROI in the scene.
-
-    """
-    
-
-    ## Node of the roi
-    ROINode = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLAnnotationROINode','AnnotationROI')
-    if ROINode.GetNumberOfItems() > 0:
-      # Set node used before reload in the current instance
-      ROINodes = ROINode.GetItemAsObject(0)
-      ROINodes.ResetAnnotations()
-      ROINodes.SetName("ROI")
+  # def resetROI(self):
+  #   """Function to reset the ROI in the scene.
+  #
+  #   """
+  #
+  #
+  #   ## Node of the roi
+  #   ROINode = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLAnnotationROINode','AnnotationROI')
+  #   if ROINode.GetNumberOfItems() > 0:
+  #     # Set node used before reload in the current instance
+  #     ROINodes = ROINode.GetItemAsObject(0)
+  #     #ROINodes.ResetAnnotations()
+  #     #slicer.modules.volumerendering.logic().FitROIToVolume(self.logic.volumeRenderingDisplayNode)
+  #     ROINodes.SetName("ROI")
 
   def onDisplayControlsCheckBoxToggled(self, caller=None, event=None):
     """Callback function triggered when the display controls check box is toggled.
