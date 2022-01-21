@@ -220,6 +220,8 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       self.updateParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
     self.updateGUIFromParameterNode()
 
+    self.ui.enableScalingCheckBox.setChecked(True)
+
   def createParametersLayout(self) :
     """Function to create the parameters layout to enable adding new parameters to a file.
 
@@ -938,25 +940,30 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
     :param caller: Caller of the function.
     :param event: Event that triggered the function.
-    """   
-    
-    if self.ui.enableRotationCheckBox.isChecked():
-      self.transformDisplayNode.SetEditorRotationEnabled(True)
-    else :
-      self.transformDisplayNode.SetEditorRotationEnabled(False)
-  
+    """
+
+    allRoiDisplayNodes = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLMarkupsROIDisplayNode', 'MarkupsROIDisplay')
+    if allRoiDisplayNodes.GetNumberOfItems() > 0:
+      displayNode = allRoiDisplayNodes.GetItemAsObject(0)
+      if self.ui.enableRotationCheckBox.isChecked():
+        displayNode.RotationHandleVisibilityOn()
+      else:
+        displayNode.RotationHandleVisibilityOff()
 
   def onEnableScalingCheckBoxToggled(self, caller=None, event=None) :
     """Function to enable scaling ROI box.
 
     :param caller: Caller of the function.
     :param event: Event that triggered the function.
-    """   
-  
-    if self.ui.enableScalingCheckBox.isChecked():
-      self.transformDisplayNode.SetEditorScalingEnabled(True)
-    else :
-      self.transformDisplayNode.SetEditorScalingEnabled(False)
+    """
+
+    allRoiDisplayNodes = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLMarkupsROIDisplayNode', 'MarkupsROIDisplay')
+    if allRoiDisplayNodes.GetNumberOfItems() > 0:
+      displayNode = allRoiDisplayNodes.GetItemAsObject(0)
+      if self.ui.enableScalingCheckBox.isChecked():
+        displayNode.ScaleHandleVisibilityOn()
+      else:
+        displayNode.ScaleHandleVisibilityOff()
 
   def onEnableROICheckBoxToggled(self, caller=None, event=None):
     """Function to enable ROI cropping and show/hide ROI Display properties.
@@ -1466,7 +1473,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         #self.ROI.SetAndObserveDisplayNodeID(self.transformDisplayNode.GetID())
         #self.ROI.SetAndObserveTransformNodeID(self.transformNode.GetID())
         self.ROI.SetDisplayVisibility(0)
-        #self.resetROI()
+        self.renameROI()
         self.ui.enableROICheckBox.show()
         self.UpdateShaderParametersUI()
         self.ui.customShaderCollapsibleButton.show()
@@ -1483,20 +1490,20 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         self.ui.displayROICheckBox.hide()
       self.ui.customShaderCollapsibleButton.hide()
       
-  # def resetROI(self):
-  #   """Function to reset the ROI in the scene.
-  #
-  #   """
-  #
-  #
-  #   ## Node of the roi
-  #   ROINode = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLAnnotationROINode','AnnotationROI')
-  #   if ROINode.GetNumberOfItems() > 0:
-  #     # Set node used before reload in the current instance
-  #     ROINodes = ROINode.GetItemAsObject(0)
-  #     #ROINodes.ResetAnnotations()
-  #     #slicer.modules.volumerendering.logic().FitROIToVolume(self.logic.volumeRenderingDisplayNode)
-  #     ROINodes.SetName("ROI")
+  def renameROI(self):
+    """Function to reset the ROI in the scene.
+
+    """
+
+
+    ## Node of the roi
+    ROINodes = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLMarkupsROINode','Volume rendering ROI')
+    if ROINodes.GetNumberOfItems() > 0:
+      # Set node used before reload in the current instance
+      ROINode = ROINodes.GetItemAsObject(0)
+      #ROINodes.ResetAnnotations()
+      #slicer.modules.volumerendering.logic().FitROIToVolume(self.logic.volumeRenderingDisplayNode)
+      ROINode.SetName("ROI")
 
   def onDisplayControlsCheckBoxToggled(self, caller=None, event=None):
     """Callback function triggered when the display controls check box is toggled.
