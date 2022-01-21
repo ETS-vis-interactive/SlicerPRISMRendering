@@ -2015,7 +2015,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
     if self.logic.parameterNode and self.logic.parameterNodeObserver:
       self.logic.parameterNode.RemoveObserver(self.logic.parameterNodeObserver)
     
-    self.resetROI()
+    # self.resetROI()
     self.ui.enableROICheckBox.setChecked(False)
     self.ui.displayROICheckBox.setChecked(False)
     # try :
