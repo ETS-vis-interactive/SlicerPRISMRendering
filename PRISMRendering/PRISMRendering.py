@@ -1459,14 +1459,14 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
           self.transformDisplayNode.SetName('TransformDisplayNode')
           self.transformDisplayNode.SetEditorRotationEnabled(False)
 
-        allTransformNodes = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLTransformNode','TransformNode')
-        if allTransformNodes.GetNumberOfItems() > 0:
-          ## Transform node to apply transformations to the ROI
-          self.transformNode = allTransformNodes.GetItemAsObject(0)
-        else:
-          self.transformNode = slicer.mrmlScene.AddNewNodeByClass('vtkMRMLTransformNode')
-          self.transformNode.SetName('TransformNode')
-          self.transformNode.SetAndObserveDisplayNodeID(self.transformDisplayNode.GetID())
+        # allTransformNodes = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLTransformNode','TransformNode')
+        # if allTransformNodes.GetNumberOfItems() > 0:
+        #   ## Transform node to apply transformations to the ROI
+        #   self.transformNode = allTransformNodes.GetItemAsObject(0)
+        # else:
+        #   self.transformNode = slicer.mrmlScene.AddNewNodeByClass('vtkMRMLTransformNode')
+        #   self.transformNode.SetName('TransformNode')
+        #   self.transformNode.SetAndObserveDisplayNodeID(self.transformDisplayNode.GetID())
 
         ## ROI of the current volume
         self.ROI = self.logic.volumeRenderingDisplayNode.GetMarkupsROINode()
