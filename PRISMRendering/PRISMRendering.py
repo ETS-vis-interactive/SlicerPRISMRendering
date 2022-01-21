@@ -1450,14 +1450,14 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       if self.ui.imageSelector.currentNode():
         self.logic.renderVolume(self.ui.imageSelector.currentNode())
         # Init ROI
-        allTransformDisplayNodes = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLTransformDisplayNode','TransformDisplayNode')
-        if allTransformDisplayNodes.GetNumberOfItems() > 0:
-          ## Transforme Display node to apply transformations to the ROI
-          self.transformDisplayNode = allTransformDisplayNodes.GetItemAsObject(0)
-        else:
-          self.transformDisplayNode = slicer.mrmlScene.AddNewNodeByClass('vtkMRMLTransformDisplayNode')
-          self.transformDisplayNode.SetName('TransformDisplayNode')
-          self.transformDisplayNode.SetEditorRotationEnabled(False)
+        # allTransformDisplayNodes = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLTransformDisplayNode','TransformDisplayNode')
+        # if allTransformDisplayNodes.GetNumberOfItems() > 0:
+        #   ## Transforme Display node to apply transformations to the ROI
+        #   self.transformDisplayNode = allTransformDisplayNodes.GetItemAsObject(0)
+        # else:
+        #   self.transformDisplayNode = slicer.mrmlScene.AddNewNodeByClass('vtkMRMLTransformDisplayNode')
+        #   self.transformDisplayNode.SetName('TransformDisplayNode')
+        #   self.transformDisplayNode.SetEditorRotationEnabled(False)
 
         # allTransformNodes = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLTransformNode','TransformNode')
         # if allTransformNodes.GetNumberOfItems() > 0:
@@ -2018,8 +2018,8 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
     self.resetROI()
     self.ui.enableROICheckBox.setChecked(False)
     self.ui.displayROICheckBox.setChecked(False)
-    try :
-      slicer.mrmlScene.RemoveNode(self.transformNode)
-      slicer.mrmlScene.RemoveNode(self.transformDisplayNode)
-    except: 
-      pass
+    # try :
+    #   slicer.mrmlScene.RemoveNode(self.transformNode)
+    #   slicer.mrmlScene.RemoveNode(self.transformDisplayNode)
+    # except:
+    #   pass
