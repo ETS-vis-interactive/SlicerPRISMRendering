@@ -220,7 +220,8 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       self.updateParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
     self.updateGUIFromParameterNode()
 
-    self.ui.enableScalingCheckBox.setChecked(True)
+    #self.ui.enableScalingCheckBox.setChecked(True)
+    self.ROIdisplay = None
 
   def createParametersLayout(self) :
     """Function to create the parameters layout to enable adding new parameters to a file.
@@ -941,14 +942,11 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
     :param caller: Caller of the function.
     :param event: Event that triggered the function.
     """
-
-    allRoiDisplayNodes = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLMarkupsROIDisplayNode', 'MarkupsROIDisplay')
-    if allRoiDisplayNodes.GetNumberOfItems() > 0:
-      displayNode = allRoiDisplayNodes.GetItemAsObject(0)
-      if self.ui.enableRotationCheckBox.isChecked():
-        displayNode.RotationHandleVisibilityOn()
-      else:
-        displayNode.RotationHandleVisibilityOff()
+    
+    if self.ui.enableRotationCheckBox.isChecked():
+      self.ROIdisplay.RotationHandleVisibilityOn()
+    else:
+      self.ROIdisplay.RotationHandleVisibilityOff()
 
   def onEnableScalingCheckBoxToggled(self, caller=None, event=None) :
     """Function to enable scaling ROI box.
@@ -956,14 +954,11 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
     :param caller: Caller of the function.
     :param event: Event that triggered the function.
     """
-
-    allRoiDisplayNodes = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLMarkupsROIDisplayNode', 'MarkupsROIDisplay')
-    if allRoiDisplayNodes.GetNumberOfItems() > 0:
-      displayNode = allRoiDisplayNodes.GetItemAsObject(0)
-      if self.ui.enableScalingCheckBox.isChecked():
-        displayNode.ScaleHandleVisibilityOn()
-      else:
-        displayNode.ScaleHandleVisibilityOff()
+    
+    if self.ui.enableScalingCheckBox.isChecked():
+      self.ROIdisplay.ScaleHandleVisibilityOn()
+    else:
+      self.ROIdisplay.ScaleHandleVisibilityOff()
 
   def onEnableROICheckBoxToggled(self, caller=None, event=None):
     """Function to enable ROI cropping and show/hide ROI Display properties.
@@ -1477,6 +1472,13 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         self.ui.enableROICheckBox.show()
         self.UpdateShaderParametersUI()
         self.ui.customShaderCollapsibleButton.show()
+        
+        if self.ROIdisplay is None:
+          allRoiDisplayNodes = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLMarkupsROIDisplayNode', 'MarkupsROIDisplay')
+          if allRoiDisplayNodes.GetNumberOfItems() > 0:
+            self.ROIdisplay = allRoiDisplayNodes.GetItemAsObject(0)
+            self.ROIdisplayObserver = self.ROIdisplay.AddObserver(vtk.vtkCommand.ModifiedEvent, self.onROIdisplayChanged)
+          
     else:
       if self.logic.volumeRenderingDisplayNode:
         self.logic.volumeRenderingDisplayNode.SetVisibility(False)
@@ -1489,6 +1491,19 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         self.ui.enableROICheckBox.hide()
         self.ui.displayROICheckBox.hide()
       self.ui.customShaderCollapsibleButton.hide()
+
+  def onROIdisplayChanged(self, caller, event):
+    """Function to update the parameter node.
+
+    :param caller: Caller of the function.
+    :param event: Event that triggered the function.
+    """
+
+    if self.ui.enableScalingCheckBox.isChecked() != caller.GetScaleHandleVisibility():
+      self.ui.enableScalingCheckBox.setChecked(caller.GetScaleHandleVisibility())
+      # logging.info("lol")
+    if self.ui.enableRotationCheckBox.isChecked() != caller.GetRotationHandleVisibility():
+      self.ui.enableRotationCheckBox.setChecked(caller.GetRotationHandleVisibility())
       
   def renameROI(self):
     """Function to reset the ROI in the scene.
@@ -2014,6 +2029,9 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
     self.removeGUIObservers()
     if self.logic.parameterNode and self.logic.parameterNodeObserver:
       self.logic.parameterNode.RemoveObserver(self.logic.parameterNodeObserver)
+      
+    if self.ROIdisplay:
+      self.ROIdisplay.RemoveObserver(self.ROIdisplayObserver)
     
     # self.resetROI()
     self.ui.enableROICheckBox.setChecked(False)
