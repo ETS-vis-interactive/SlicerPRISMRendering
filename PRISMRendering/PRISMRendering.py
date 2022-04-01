@@ -220,6 +220,9 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       self.updateParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
     self.updateGUIFromParameterNode()
 
+    #self.ui.enableScalingCheckBox.setChecked(True)
+    self.ROIdisplay = None
+
   def createParametersLayout(self) :
     """Function to create the parameters layout to enable adding new parameters to a file.
 
@@ -938,25 +941,24 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
     :param caller: Caller of the function.
     :param event: Event that triggered the function.
-    """   
+    """
     
     if self.ui.enableRotationCheckBox.isChecked():
-      self.transformDisplayNode.SetEditorRotationEnabled(True)
-    else :
-      self.transformDisplayNode.SetEditorRotationEnabled(False)
-  
+      self.ROIdisplay.RotationHandleVisibilityOn()
+    else:
+      self.ROIdisplay.RotationHandleVisibilityOff()
 
   def onEnableScalingCheckBoxToggled(self, caller=None, event=None) :
     """Function to enable scaling ROI box.
 
     :param caller: Caller of the function.
     :param event: Event that triggered the function.
-    """   
-  
+    """
+    
     if self.ui.enableScalingCheckBox.isChecked():
-      self.transformDisplayNode.SetEditorScalingEnabled(True)
-    else :
-      self.transformDisplayNode.SetEditorScalingEnabled(False)
+      self.ROIdisplay.ScaleHandleVisibilityOn()
+    else:
+      self.ROIdisplay.ScaleHandleVisibilityOff()
 
   def onEnableROICheckBoxToggled(self, caller=None, event=None):
     """Function to enable ROI cropping and show/hide ROI Display properties.
@@ -982,11 +984,13 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
     """   
     
     if self.ui.displayROICheckBox.isChecked():
-      self.transformDisplayNode.EditorVisibilityOn()
+      # self.transformDisplayNode.EditorVisibilityOn()
+      self.ROI.SetDisplayVisibility(1)
       self.ui.enableScalingCheckBox.show()
       self.ui.enableRotationCheckBox.show()
     else :
-      self.transformDisplayNode.EditorVisibilityOff()
+      # self.transformDisplayNode.EditorVisibilityOff()
+      self.ROI.SetDisplayVisibility(0)
       self.ui.enableScalingCheckBox.hide()
       self.ui.enableScalingCheckBox.setChecked(False)
       self.ui.enableRotationCheckBox.hide()
@@ -1441,33 +1445,40 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       if self.ui.imageSelector.currentNode():
         self.logic.renderVolume(self.ui.imageSelector.currentNode())
         # Init ROI
-        allTransformDisplayNodes = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLTransformDisplayNode','TransformDisplayNode')
-        if allTransformDisplayNodes.GetNumberOfItems() > 0:
-          ## Transforme Display node to apply transformations to the ROI
-          self.transformDisplayNode = allTransformDisplayNodes.GetItemAsObject(0)
-        else:
-          self.transformDisplayNode = slicer.mrmlScene.AddNewNodeByClass('vtkMRMLTransformDisplayNode')
-          self.transformDisplayNode.SetName('TransformDisplayNode')
-          self.transformDisplayNode.SetEditorRotationEnabled(False)
+        # allTransformDisplayNodes = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLTransformDisplayNode','TransformDisplayNode')
+        # if allTransformDisplayNodes.GetNumberOfItems() > 0:
+        #   ## Transforme Display node to apply transformations to the ROI
+        #   self.transformDisplayNode = allTransformDisplayNodes.GetItemAsObject(0)
+        # else:
+        #   self.transformDisplayNode = slicer.mrmlScene.AddNewNodeByClass('vtkMRMLTransformDisplayNode')
+        #   self.transformDisplayNode.SetName('TransformDisplayNode')
+        #   self.transformDisplayNode.SetEditorRotationEnabled(False)
 
-        allTransformNodes = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLTransformNode','TransformNode')
-        if allTransformNodes.GetNumberOfItems() > 0:
-          ## Transform node to apply transformations to the ROI
-          self.transformNode = allTransformNodes.GetItemAsObject(0)
-        else:
-          self.transformNode = slicer.mrmlScene.AddNewNodeByClass('vtkMRMLTransformNode')
-          self.transformNode.SetName('TransformNode')
-          self.transformNode.SetAndObserveDisplayNodeID(self.transformDisplayNode.GetID())
+        # allTransformNodes = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLTransformNode','TransformNode')
+        # if allTransformNodes.GetNumberOfItems() > 0:
+        #   ## Transform node to apply transformations to the ROI
+        #   self.transformNode = allTransformNodes.GetItemAsObject(0)
+        # else:
+        #   self.transformNode = slicer.mrmlScene.AddNewNodeByClass('vtkMRMLTransformNode')
+        #   self.transformNode.SetName('TransformNode')
+        #   self.transformNode.SetAndObserveDisplayNodeID(self.transformDisplayNode.GetID())
 
         ## ROI of the current volume
-        self.ROI = self.logic.volumeRenderingDisplayNode.GetROINode()
-        self.ROI.SetAndObserveDisplayNodeID(self.transformDisplayNode.GetID())
-        self.ROI.SetAndObserveTransformNodeID(self.transformNode.GetID())
+        self.ROI = self.logic.volumeRenderingDisplayNode.GetMarkupsROINode()
+        #self.ROI.SetAndObserveDisplayNodeID(self.transformDisplayNode.GetID())
+        #self.ROI.SetAndObserveTransformNodeID(self.transformNode.GetID())
         self.ROI.SetDisplayVisibility(0)
-        self.resetROI()
+        self.renameROI()
         self.ui.enableROICheckBox.show()
         self.UpdateShaderParametersUI()
         self.ui.customShaderCollapsibleButton.show()
+        
+        if self.ROIdisplay is None:
+          allRoiDisplayNodes = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLMarkupsROIDisplayNode', 'MarkupsROIDisplay')
+          if allRoiDisplayNodes.GetNumberOfItems() > 0:
+            self.ROIdisplay = allRoiDisplayNodes.GetItemAsObject(0)
+            self.ROIdisplayObserver = self.ROIdisplay.AddObserver(vtk.vtkCommand.ModifiedEvent, self.onROIdisplayChanged)
+          
     else:
       if self.logic.volumeRenderingDisplayNode:
         self.logic.volumeRenderingDisplayNode.SetVisibility(False)
@@ -1480,20 +1491,34 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         self.ui.enableROICheckBox.hide()
         self.ui.displayROICheckBox.hide()
       self.ui.customShaderCollapsibleButton.hide()
+
+  def onROIdisplayChanged(self, caller, event):
+    """Function to update the parameter node.
+
+    :param caller: Caller of the function.
+    :param event: Event that triggered the function.
+    """
+
+    if self.ui.enableScalingCheckBox.isChecked() != caller.GetScaleHandleVisibility():
+      self.ui.enableScalingCheckBox.setChecked(caller.GetScaleHandleVisibility())
+      # logging.info("lol")
+    if self.ui.enableRotationCheckBox.isChecked() != caller.GetRotationHandleVisibility():
+      self.ui.enableRotationCheckBox.setChecked(caller.GetRotationHandleVisibility())
       
-  def resetROI(self):
+  def renameROI(self):
     """Function to reset the ROI in the scene.
 
     """
-    
+
 
     ## Node of the roi
-    ROINode = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLAnnotationROINode','AnnotationROI')
-    if ROINode.GetNumberOfItems() > 0:
+    ROINodes = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLMarkupsROINode','Volume rendering ROI')
+    if ROINodes.GetNumberOfItems() > 0:
       # Set node used before reload in the current instance
-      ROINodes = ROINode.GetItemAsObject(0)
-      ROINodes.ResetAnnotations()
-      ROINodes.SetName("ROI")
+      ROINode = ROINodes.GetItemAsObject(0)
+      #ROINodes.ResetAnnotations()
+      #slicer.modules.volumerendering.logic().FitROIToVolume(self.logic.volumeRenderingDisplayNode)
+      ROINode.SetName("ROI")
 
   def onDisplayControlsCheckBoxToggled(self, caller=None, event=None):
     """Callback function triggered when the display controls check box is toggled.
@@ -2004,12 +2029,15 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
     self.removeGUIObservers()
     if self.logic.parameterNode and self.logic.parameterNodeObserver:
       self.logic.parameterNode.RemoveObserver(self.logic.parameterNodeObserver)
+      
+    if self.ROIdisplay:
+      self.ROIdisplay.RemoveObserver(self.ROIdisplayObserver)
     
-    self.resetROI()
+    # self.resetROI()
     self.ui.enableROICheckBox.setChecked(False)
     self.ui.displayROICheckBox.setChecked(False)
-    try :
-      slicer.mrmlScene.RemoveNode(self.transformNode)
-      slicer.mrmlScene.RemoveNode(self.transformDisplayNode)
-    except: 
-      pass
+    # try :
+    #   slicer.mrmlScene.RemoveNode(self.transformNode)
+    #   slicer.mrmlScene.RemoveNode(self.transformDisplayNode)
+    # except:
+    #   pass

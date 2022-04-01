@@ -316,6 +316,12 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
     if displayNode:
       displayNode.SetVisibility(True)
       displayNode.SetNodeReferenceID("shaderProperty", self.shaderPropertyNode.GetID())
+
+      roi = displayNode.GetMarkupsROINode()
+      if roi is None:
+        logic.CreateROINode(displayNode)
+        logic.FitROIToVolume(displayNode)
+      
       if multipleVolumes :
         self.secondaryVolumeRenderingDisplayNodes[self.currentVolume] = displayNode
       else:
@@ -331,6 +337,8 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
     volumeNode.AddAndObserveDisplayNodeID(displayNode.GetID())
 
     displayNode.SetNodeReferenceID("shaderProperty", self.customShader.shaderPropertyNode.GetID())
+
+    logic.FitROIToVolume(displayNode)
 
     # Add a color preset based on volume range
     self.updateVolumeColorMapping(volumeNode, displayNode)
