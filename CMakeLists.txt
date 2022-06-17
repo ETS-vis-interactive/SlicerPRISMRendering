@@ -8,8 +8,8 @@ set(EXTENSION_HOMEPAGE "https://githubcomets-vis-interactiveslicerprismrendering
 set(EXTENSION_CATEGORY "Rendering")
 set(EXTENSION_CONTRIBUTORS "Tiphaine Richard (ETS), Simon Drouin (ETS)")
 set(EXTENSION_DESCRIPTION "This module is an implementation of the PRISM customizable volume rendering framework in 3D Slicer.")
-set(EXTENSION_ICONURL "https://github.com/ETS-vis-interactive/SlicerPRISMRendering/blob/master/PRISMRendering/Resources/Icons/PRISMRendering.png")
-set(EXTENSION_SCREENSHOTURLS "https://github.com/ETS-vis-interactive/SlicerPRISMRendering/blob/master/docs/source/images/screenshotSlicerPRISMRendering.png")
+set(EXTENSION_ICONURL "https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/PRISMRendering/Resources/Icons/PRISMRendering.png")
+set(EXTENSION_SCREENSHOTURLS "https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/images/screenshotSlicerPRISMRendering.png")
 set(EXTENSION_DEPENDS "NA") # Specified as a space separated string, a list or 'NA' if any
 
 #-----------------------------------------------------------------------------
