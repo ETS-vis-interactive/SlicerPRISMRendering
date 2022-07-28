@@ -67,7 +67,7 @@ class ChromaDepthShader(CustomShader):
       float dist = (lp - lv - depthRangeInTexCoordStart) / range;
       dist = clamp( dist, 0.0, 1.0 );
       vec4 c = texture2D(in_colorTransferFunc_0[0], vec2(dist));
-      return computeLighting(c, 0);
+      return computeLighting(c, 0, 0.0);
   }
   """
     self.shaderProperty.ClearAllFragmentShaderReplacements()
