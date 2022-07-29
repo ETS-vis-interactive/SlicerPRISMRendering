@@ -508,10 +508,10 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
     # Reload modules
     with open(shaderPath, "rt") as fp:
       ## Module containing the shader
-      shaderModule = imp.load_module(shaderPackageName+'.'+shaderName, fp, shaderPath, ('.py', 'rt', imp.PY_SOURCE))
+      shaderModule = importlib.import_module(shaderPackageName+'.'+shaderName)
     
     with open(modulePath, "rt") as fp:
-      customShaderModule = imp.load_module(submodulePackageName+'.'+submoduleName, fp, modulePath, ('.py', 'rt', imp.PY_SOURCE))
+      customShaderModule = importlib.import_module(submodulePackageName+'.'+submoduleName)
 
     # Update globals
     ## All of the shader modules
@@ -1177,10 +1177,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
     submoduleNames = ['PRISMRenderingLogic']
     
     for submoduleName in submoduleNames :
-      modulePath = os.path.join(self.prismPath(), packageName, submoduleName  + '.py').replace("\\", "/")
-
-      with open(modulePath, "rt") as fp:
-        imp.load_module(packageName+'.'+submoduleName, fp, modulePath, ('.py', 'rt', imp.PY_SOURCE))
+      importlib.import_module(packageName+'.'+submoduleName)
 
     logging.debug("Reloading Shaders")
     try :
@@ -1194,7 +1191,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       for shaderName in shaderNames :
         shaderPath = self.getPath(shaderName)
         with open(shaderPath, "rt") as fp:
-          imp.load_module(shaderPackageName+'.'+shaderName, fp, shaderPath, ('.py', 'rt', imp.PY_SOURCE))
+          importlib.import_module(shaderPackageName+'.'+shaderName)
     except:
       pass
 
@@ -1202,9 +1199,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
     packageNames=['PRISMRendering']
     
     for packageName in packageNames :
-      path = os.path.join(self.prismPath(), packageName + '.py').replace("\\", "/")
-      with open(path, "rt") as fp:
-        imp.load_module(packageName, fp, self.prismPath(), ('.py', 'rt', imp.PY_SOURCE))
+        importlib.import_module(packageName)
 
     globals()['PRISMRendering'] = slicer.util.reloadScriptedModule('PRISMRendering')
 
