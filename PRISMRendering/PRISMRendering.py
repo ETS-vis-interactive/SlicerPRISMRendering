@@ -1179,9 +1179,6 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
     for submoduleName in submoduleNames :
       modulePath = os.path.join(self.prismPath(), packageName, submoduleName  + '.py').replace("\\", "/")
 
-      with open(modulePath, "rt") as fp:
-        imp.load_module(packageName+'.'+submoduleName, fp, modulePath, ('.py', 'rt', imp.PY_SOURCE))
-
     logging.debug("Reloading Shaders")
     try :
       shaderNames = []
