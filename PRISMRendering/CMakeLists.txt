@@ -9,7 +9,6 @@ set(MODULE_PYTHON_SCRIPTS
   PRISMRenderingShaders/__init__.py
   PRISMRenderingShaders/ChromaDepthShader.py
   PRISMRenderingShaders/CustomShader.py
-  PRISMRenderingShaders/DeclutteringShader.py
   PRISMRenderingShaders/OpacityPeelingShader.py
   PRISMRenderingShaders/OutlineShader.py
   PRISMRenderingShaders/PlaneIntersectingShader.py
