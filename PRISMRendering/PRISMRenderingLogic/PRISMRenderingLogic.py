@@ -201,6 +201,12 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
     
     ## Current markup being modified
     self.currentMarkupBtn = btn
+
+    # Getting the "EndPoints" node (always first MarkupsFiducial created)
+    node = slicer.mrmlScene.GetNodeByID("vtkMRMLMarkupsFiducialNode1")
+    # Setting the active node of markup list
+    slicer.modules.markups.logic().SetActiveList(node)
+
     interactionNode = slicer.mrmlScene.GetNodeByID("vtkMRMLInteractionNodeSingleton")
     interactionNode.SetCurrentInteractionMode(interaction)
     interactionNode.SetPlaceModePersistence(persistence)
