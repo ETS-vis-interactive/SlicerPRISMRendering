@@ -7,7 +7,7 @@ from PRISMRenderingShaders.CustomShader import CustomShader
 """ 
 class OutlineShader(CustomShader):
   shaderfParams = { 'gradStep' : { 'displayName' : 'Gradient Step', 'min' : 0.0, 'max' : 0.02, 'defaultValue' : 0.005 }}
-  shaderrParams = { 'step' : { 'displayName' : 'Step', 'defaultValue' : [0.000, 150]}}  
+  shaderrParams = { 'step' : { 'displayName' : 'Step', 'defaultValue' : [0.0, 1.0]}}
 
   def __init__(self, shaderPropertyNode, volumeNode = None):
     CustomShader.__init__(self,shaderPropertyNode)
@@ -53,7 +53,7 @@ class OutlineShader(CustomShader):
       return ret;
     }
 
-    float sampleThreshold = 0.1;
+    float sampleThreshold = 0.05;
     vec2 step = vec2(stepMin, stepMax);
     float virtualAlpha = 0.0;
     """
@@ -72,9 +72,9 @@ class OutlineShader(CustomShader):
         vec4 n = ComputeGradient(in_volume[0], g_dataPos, gradStep);
         if(n.a > 0.0)
         {
-          float factor = n.a * (1.0 - abs(dot(normalize(g_dirStep), n.rgb)));
-          float alpha = smoothstep(step.x, step.y , factor);
-          g_srcColor = vec4(1.0, 1.0, 1.0, alpha);
+          float factor = (n.a / gradStep) * (1.0 - abs(dot(normalize(g_dirStep), n.rgb)));
+          float alpha = smoothstep(step.x, step.y, factor);
+          g_srcColor = vec4(1.0, 1.0, 1.0, alpha); // important alpha
         }
       }
       virtualAlpha += (1-virtualAlpha) * inAlpha;
