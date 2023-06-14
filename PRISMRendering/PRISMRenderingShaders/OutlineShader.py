@@ -6,8 +6,9 @@ from PRISMRenderingShaders.CustomShader import CustomShader
 :type CustomShader: class.
 """ 
 class OutlineShader(CustomShader):
-  shaderfParams = { 'gradStep' : { 'displayName' : 'Gradient Step', 'min' : 0.0, 'max' : 0.02, 'defaultValue' : 0.005 }}
-  shaderrParams = { 'step' : { 'displayName' : 'Step', 'defaultValue' : [0.0, 1.0]}}
+  shaderfParams = { 'gradStep' : { 'displayName' : 'Gradient Step', 'min' : 0.001, 'max' : 0.02, 'defaultValue' : 0.001 }, 'threshold' : { 'displayName' : 'Threshold','min' : 0.01, 'max' : 0.25 ,'defaultValue' : 0.05}, 'VAT' : { 'displayName' : 'Virtual Alpha lower than ','min' : 0.5, 'max' : 0.99 ,'defaultValue' : 0.85}}
+  shaderrParams = { 'step' : { 'displayName' : 'Step (low values for dense volumes)', 'defaultValue' : [0.0, 1]}}
+  #shadervatParams = { 'Virtual Alpha Threshold' : { 'displayName' : 'Virtual Alpha < ','min' : 0.5, 'max' : 0.99 ,'defaultValue' : 0.85}}
 
   def __init__(self, shaderPropertyNode, volumeNode = None):
     CustomShader.__init__(self,shaderPropertyNode)
@@ -41,7 +42,7 @@ class OutlineShader(CustomShader):
       g2.x = texture3D(volume, pos -  vec3(gradStep,0.0,0.0)).x;
       g2.y = texture3D(volume, pos -  vec3(0.0, gradStep, 0.0)).x;
       g2.z = texture3D(volume, pos -  vec3(0.0,0.0, gradStep)).x;
-      vec3 n = g2 - g1;
+      vec3 n = (g2 - g1) / (2.0 * gradStep);
       float nLength = length(n);
       if(nLength > 0.0)
           n = normalize(n);
@@ -53,7 +54,7 @@ class OutlineShader(CustomShader):
       return ret;
     }
 
-    float sampleThreshold = 0.05;
+    float sampleThreshold = threshold;
     vec2 step = vec2(stepMin, stepMax);
     float virtualAlpha = 0.0;
     """
@@ -67,12 +68,12 @@ class OutlineShader(CustomShader):
       scalar = vec4(scalar.r);
       g_srcColor = vec4(0.0);
       float inAlpha = computeOpacity(scalar);
-      if(inAlpha > sampleThreshold && virtualAlpha < .95)
+      if(inAlpha > sampleThreshold && virtualAlpha < VAT)
       {
         vec4 n = ComputeGradient(in_volume[0], g_dataPos, gradStep);
         if(n.a > 0.0)
         {
-          float factor = (n.a / gradStep) * (1.0 - abs(dot(normalize(g_dirStep), n.rgb)));
+          float factor = computeOpacity(n) * (1.0 - abs(dot(normalize(g_dirStep), n.rgb)));
           float alpha = smoothstep(step.x, step.y, factor);
           g_srcColor = vec4(1.0, 1.0, 1.0, alpha); // important alpha
         }
