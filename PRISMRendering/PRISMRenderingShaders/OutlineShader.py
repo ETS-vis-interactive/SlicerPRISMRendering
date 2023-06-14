@@ -6,7 +6,7 @@ from PRISMRenderingShaders.CustomShader import CustomShader
 :type CustomShader: class.
 """ 
 class OutlineShader(CustomShader):
-  shaderfParams = { 'gradStep' : { 'displayName' : 'Gradient Step', 'min' : 0.001, 'max' : 0.02, 'defaultValue' : 0.001 }, 'threshold' : { 'displayName' : 'Threshold','min' : 0.05, 'max' : 0.25 ,'defaultValue' : 0.05}, 'VAT' : { 'displayName' : 'Virtual Alpha lower than ','min' : 0.5, 'max' : 0.99 ,'defaultValue' : 0.85}, 'multiplicator' : { 'displayName' : 'Alpha Multiplicator (only for dense volumes) ','min' : 1, 'max' : 200 ,'defaultValue' : 1}}
+  shaderfParams = { 'gradStep' : { 'displayName' : 'Gradient Step', 'min' : 0.001, 'max' : 0.02, 'defaultValue' : 0.001 }, 'threshold' : { 'displayName' : 'Threshold','min' : 0.05, 'max' : 0.25 ,'defaultValue' : 0.05}, 'VAT' : { 'displayName' : 'Virtual Alpha lower than ','min' : 0.5, 'max' : 0.99 ,'defaultValue' : 0.85}, 'multiplicator' : { 'displayName' : 'Alpha Multiplicator (for dense volumes) ','min' : 1, 'max' : 200 ,'defaultValue' : 1}}
   shaderrParams = { 'step' : { 'displayName' : 'Step (low values for dense volumes)', 'defaultValue' : [0.0, 1000]}}
   #shadervatParams = { 'Virtual Alpha Threshold' : { 'displayName' : 'Virtual Alpha < ','min' : 0.5, 'max' : 0.99 ,'defaultValue' : 0.85}}
 
