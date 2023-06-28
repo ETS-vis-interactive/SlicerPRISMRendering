@@ -1,25 +1,30 @@
 from PRISMRenderingShaders.CustomShader import CustomShader
+from PRISMRenderingParams import *
 
 """OpacityPeelingShader Class containing the code for the Opacity Peeling shader.
 
 :param CustomShader:  Parent class containing the function to access the parameters of the shader. 
 :type CustomShader: class.
 """ 
+
+
 class OpacityPeelingShader(CustomShader):
 
-  shaderfParams = {'T_low' : { 'displayName' : 'Low Threshold', 'min' : 0.0, 'max' : 1.0, 'defaultValue' : 0.3 }, \
-                   'T_high' : { 'displayName' : 'High Threshold', 'min' : 0.01, 'max' : 1.0, 'defaultValue' : 0.8 }, \
-                   'radius' : { 'displayName' : 'Sphere Radius', 'min' : 0.0, 'max' : 150.0, 'defaultValue' : 75.0 }}
-                   
-  shaderiParams = {'wantedLayer' : { 'displayName' : 'Wanted Layer', 'min' : 1.0, 'max' : 20.0, 'defaultValue' : 1.0 }}
+  TLowParam = FloatParam("T_low", "Low Threshold", 0.3, 0.0, 1.0)
+  THighParam = FloatParam("T_high", "High Threshold", 0.8, 0.01, 1.0)
+  radiusParam = FloatParam("radius", "Sphere Radius", 75.0, 0.0, 150.0)
 
-  shaderbParams = { 'sphere' : { 'displayName' : 'Sphere Carving', 'defaultValue' : 0, 'optionalWidgets' : ['center', 'radius']}}
-  
-  shader4fParams = {'center': {'displayName': 'Center', 'defaultValue': {'x': 0.0, 'y': 0.0, 'z': 0.0, 'w': 0.0}}}
+  wantedLayerParam = IntParam("wantedLayer", "Wanted Layer", 1, 1, 20)
 
-  def __init__(self, shaderPropertyNode, volumeNode = None):
+  sphereParam = BoolParam("sphere", "Sphere Carving", 0, ['center', 'radius'])
+
+  centerParam = FourFParam("center", "Center", {'x': 0.0, 'y': 0.0, 'z': 0.0, 'w': 0.0})
+
+  param_list = [TLowParam, THighParam, radiusParam, wantedLayerParam, sphereParam, centerParam]
+
+  def __init__(self, shaderPropertyNode, volumeNode = None, paramlist = param_list):
     CustomShader.__init__(self, shaderPropertyNode)
-
+    self.param_list = paramlist
   @classmethod
   def GetDisplayName(cls):
     return 'Opacity Peeling'
@@ -34,6 +39,7 @@ class OpacityPeelingShader(CustomShader):
     return 'Responds to the problem of occlusion of certain structures in the volume. Removes the first n layers of tissue during the integration of the ray.'
 
   def setupShader(self):
+
     super(OpacityPeelingShader, self).setupShader()
     self.setAllUniforms()
     self.shaderProperty.ClearAllFragmentShaderReplacements()
@@ -79,3 +85,4 @@ class OpacityPeelingShader(CustomShader):
     self.shaderProperty.AddFragmentShaderReplacement("//VTK::Shading::Impl", True, shadingImplCode, False)
     
     #shaderreplacement
+

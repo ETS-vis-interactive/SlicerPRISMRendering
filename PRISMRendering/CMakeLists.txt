@@ -13,13 +13,19 @@ set(MODULE_PYTHON_SCRIPTS
   PRISMRenderingShaders/OutlineShader.py
   PRISMRenderingShaders/PlaneIntersectingShader.py
   PRISMRenderingShaders/SphereCarvingShader.py
+  PRISMRenderingParams/__init__.py
+  PRISMRenderingParams/FloatParam.py
+  PRISMRenderingParams/IntParam.py
+  PRISMRenderingParams/Param.py
+  PRISMRenderingParams/BoolParam.py
+  PRISMRenderingParams/TransferFunctionParam.py
+  PRISMRenderingParams/RangeParam.py
+  PRISMRenderingParams/FourFParam.py
   )
 
 set(MODULE_PYTHON_RESOURCES
   Resources/Icons/${MODULE_NAME}.png
-  Resources/UI/PRISMRendering.ui
-  Resources/shaderTags.json
-  Resources/Template
+  Resources/UI/${MODULE_NAME}.ui
   )
 
 #-----------------------------------------------------------------------------
