@@ -12,6 +12,7 @@ class FourFParam(Param):
     else:
       self.defaultValue = {'x': defaultValue[0], 'y': defaultValue[1], 'z': defaultValue[2], 'w': defaultValue[3]}
     self.value = self.defaultValue
+    self.widget = None
 
   def SetupGUI(self, widgetClass):
     targetPointButton = qt.QPushButton("Initialize " + self.display_name)
@@ -20,6 +21,7 @@ class FourFParam(Param):
     targetPointButton.clicked.connect(lambda : widgetClass.logic.setPlacingMarkups(self.name,"markup" + self.name,  targetPointButton,  interaction = 1))
     targetPointButton.clicked.connect(lambda value, w = targetPointButton : widgetClass.updateParameterNodeFromGUI(value, w))
     targetPointButton.setParent(widgetClass.ui.customShaderParametersLayout)
+    self.widget = targetPointButton
     return targetPointButton, self.name
 
   def setValue(self, value):
@@ -40,3 +42,22 @@ class FourFParam(Param):
     z = self.value['z']
     w = self.value['w']
     CustomShader.shaderUniforms.SetUniform4f(self.name, [x, y, z, w])
+
+  def updateGUIFromParameterNode(self, widgetClass, caller = None, event = None):
+    parameterNode = widgetClass.logic.parameterNode
+    value = parameterNode.GetParameter(self.widget.name)
+    if value != '' :
+      enabled = (int(value) != 0)
+      self.widget.setEnabled(enabled)
+    
+  def removeGUIObservers(self):
+    self.widget.clicked.disconnect(self.updateParameterNodeFromGUI)
+    
+  def updateParameterNodeFromGUI(self, widgetClass, value):
+      parameterNode = widgetClass.logic.parameterNode
+      if widgetClass.ui.imageSelector.currentNode() is None:
+        return 
+      parameterNode.SetParameter(self.widget.name, "1") if self.widget.enabled else parameterNode.SetParameter(self.widget.name, "0")
+
+  def addGUIObservers(self, widgetClass):
+    self.widget.clicked.connect(lambda value, w = self.widget : self.updateParameterNodeFromGUI(widgetClass, value))

@@ -437,9 +437,10 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         return 
 
       if w not in self.widgets :
-        w.updateParameterNodeFromGUI(self, value)
-      if isinstance(w, Param):
         return
+      
+      if isinstance(w, Param):
+        w.updateParameterNodeFromGUI(self, value)
       else :
         self.updateWidgetParameterNodeFromGUI(value, w)
 

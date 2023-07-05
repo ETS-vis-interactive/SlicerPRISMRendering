@@ -10,6 +10,7 @@ class BoolParam(Param):
     self.defaultValue = defaultValue
     self.value = defaultValue
     self.optionalWidgets = optionalWidgets
+    self.widget = None
 
   def SetupGUI(self, widgetClass):
       addOptionCheckBox = qt.QCheckBox(self.display_name)
@@ -18,6 +19,7 @@ class BoolParam(Param):
       addOptionCheckBox.toggled.connect(lambda _,cbx = addOptionCheckBox, CSName = widgetClass.CSName : widgetClass.logic.enableOption(self, checkBox = cbx, CSName = CSName))     
       addOptionCheckBox.toggled.connect(lambda value, w = addOptionCheckBox : widgetClass.updateParameterNodeFromGUI(value, w))
       addOptionCheckBox.setParent(widgetClass.ui.customShaderParametersLayout)
+      self.widget = addOptionCheckBox
 
       return addOptionCheckBox, self.name
   
@@ -29,3 +31,24 @@ class BoolParam(Param):
 
   def setUniform(self, CustomShader):
     CustomShader.shaderUniforms.SetUniformi(self.name, self.value)
+
+  def updateGUIFromParameterNode(self, widgetClass, caller = None, event = None):
+    parameterNode = widgetClass.logic.parameterNode
+
+    value = parameterNode.GetParameter(self.widget.name)
+    if value != '' :
+      checked = (int(value) != 0)
+      self.widget.setChecked(checked)
+    
+  def removeGUIObservers(self):
+    self.widget.toggled.disconnect(self.updateParameterNodeFromGUI)
+
+  def updateParameterNodeFromGUI(self, widgetClass, value):
+      parameterNode = widgetClass.logic.parameterNode
+      if widgetClass.ui.imageSelector.currentNode() is None:
+        return 
+      parameterNode.SetParameter(self.widget.name, "1") if self.widget.checked else parameterNode.SetParameter(self.widget.name, "0")
+      
+  def addGUIObservers(self, widgetClass):
+    self.widget.toggled.connect(lambda value, w = self.widget : self.updateParameterNodeFromGUI(widgetClass, value))
+    

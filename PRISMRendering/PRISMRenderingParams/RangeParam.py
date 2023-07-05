@@ -10,6 +10,7 @@ class RangeParam(Param):
     self.range = range
     self.min = range[0]
     self.max = range[1]
+    self.widget = None
 
   def SetupGUI(self, widgetClass):
     label = qt.QLabel(self.display_name)
@@ -24,6 +25,8 @@ class RangeParam(Param):
     slider.setParent(widgetClass.ui.customShaderParametersLayout)
     slider.valuesChanged.connect(lambda min, max : widgetClass.logic.onCustomShaderParamChanged([min, max], self) )
     slider.valuesChanged.connect(lambda value1, value2, w = slider : widgetClass.updateParameterNodeFromGUI([value1, value2], w))
+    self.widget = slider
+    self.label = label
 
     return slider, label, self.name
   
@@ -49,4 +52,21 @@ class RangeParam(Param):
   def setUniform(self, CustomShader):
     CustomShader.shaderUniforms.SetUniformf(self.name + "Min", self.min)
     CustomShader.shaderUniforms.SetUniformf(self.name + "Max", self.max)
+
+  def updateGUIFromParameterNode(self, widgetClass, caller = None, event = None):
+    parameterNode = widgetClass.logic.parameterNode
+    value = parameterNode.GetParameter(self.widget.name)
+    if value != '' :
+      value = float(value)
+      self.widget.setValue(value)
+    
+  def removeGUIObservers(self):
+    self.widget.valuesChanged.disconnect(self.updateParameterNodeFromGUI)
+
+  def updateParameterNodeFromGUI(self, widgetClass, value):
+      parameterNode = widgetClass.logic.parameterNode 
+      parameterNode.SetParameter(self.widget.name, str(self.widget.minimumValue) + ',' + str(self.widget.maximumValue))
+      
+  def addGUIObservers(self, widgetClass):
+    self.widget.valuesChanged.connect(lambda value1, value2, w = self.widget : self.updateParameterNodeFromGUI(widgetClass, [value1, value2]))
 
