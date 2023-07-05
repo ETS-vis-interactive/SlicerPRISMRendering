@@ -356,8 +356,12 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
       if checkBox.isChecked() :
         self.customShader.setShaderParameter(param, 1)
         if str(CSName + paramName) in self.optionalWidgets :
-          for i in self.optionalWidgets[CSName + paramName] :
-            i.show()
+          for p in self.optionalWidgets[CSName + paramName] :
+            p.widget.show()
+            try :
+              p.label.show()
+            except :
+              pass
             # for t in self.pointTypes :
             #   if t in i.name:
             #    pointListNode = slicer.util.getNode("vtkMRMLMarkupsFiducialNode1")
@@ -366,8 +370,12 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
       else: 
         self.customShader.setShaderParameter(param, 0)
         if str(CSName + paramName) in self.optionalWidgets :
-          for i in self.optionalWidgets[CSName + paramName] :
-            i.hide()
+          for p in self.optionalWidgets[CSName + paramName] :
+            p.widget.hide()
+            try :
+              p.label.hide()
+            except :
+              pass
             # for t in self.pointTypes :
             #   if t in i.name:
             #    pointListNode = slicer.util.getNode("vtkMRMLMarkupsFiducialNode1")

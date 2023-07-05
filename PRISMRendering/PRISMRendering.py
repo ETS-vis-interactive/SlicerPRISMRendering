@@ -571,24 +571,23 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
                   else:
                     hideWidget = True
                   break
+            p.SetupGUI(self)
             try :
-              widget, label, name = p.SetupGUI(self)
-              self.ui.customShaderParametersLayout.addRow(label, widget)
+              self.ui.customShaderParametersLayout.addRow(p.label, p.widget)
               if Optional :
-                self.logic.optionalWidgets[self.CSName + bool_param.name] += [widget, label]
+                self.logic.optionalWidgets[self.CSName + bool_param.name] += [p]
                 if hideWidget :
-                  widget.hide()
-                  label.hide()
-              self.appendList(widget,self.CSName + p.name)
+                  p.widget.hide()
+                  p.label.hide()
+              self.appendList(p,self.CSName + p.name)
             except :
-              widget, name = p.SetupGUI(self)
-              self.ui.customShaderParametersLayout.addRow(widget)
+              self.ui.customShaderParametersLayout.addRow(p.widget)
               if Optional :
-                self.logic.optionalWidgets[self.CSName + bool_param.name] += [widget]
+                self.logic.optionalWidgets[self.CSName + bool_param.name] += [p]
                 if hideWidget :
-                  widget.hide()
-              self.appendList(widget,self.CSName + p.name)
-
+                  p.widget.hide()
+              self.appendList(p,self.CSName + p.name)
+              
       if any(isinstance(item, FourFParam) for item in param_list):
         self.logic.endPoints.name = self.CSName + "markup"
         self.logic.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.pointModified)
