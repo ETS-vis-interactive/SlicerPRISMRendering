@@ -142,7 +142,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
           self.ui.imageSelector.setCurrentNode(volumeNode)
     
         # Update GUI 
-      self.addGUIObservers()
+      self.addAllGUIObservers()
       if self.ui.imageSelector.currentNode() != None :
         self.updateParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
       self.updateGUIFromParameterNode()
@@ -161,112 +161,63 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
           return
 
         # Disables updateParameterNodeFromGUI signal 
-        self.removeGUIObservers()
+        self.removeAllGUIObservers()
         for w in self.widgets:
-          widgetClassName = self.getClassName(w)
-          value = parameterNode.GetParameter(w.name)
-          if value != '' :
-            if widgetClassName=="QPushButton":
-              enabled = (int(value) != 0)
-              w.setEnabled(enabled)
-            elif widgetClassName=="QCheckBox":
-              checked = (int(value) != 0)
-              w.setChecked(checked)
-            elif widgetClassName=="QComboBox":
-              index = int(value)
-              w.setCurrentIndex(index)
-            elif widgetClassName=="ctkSliderWidget":
-              value = float(value)
-              w.setValue(value)
-            elif widgetClassName=="ctkRangeWidget":
-              values = value.split(',')     
-              w.minimumValue = float(values[0])
-              w.maximumValue = float(values[1])
-            elif widgetClassName == "vtkColorTransferFunction" or widgetClassName == "vtkPiecewiseFunction":
-              for i in range(w.GetSize()):
-                values = self.logic.parameterNode.GetParameter(w.name+str(i))
-                if values != "" :
-                  w.SetNodeValue(i, [float(k) for k in values.split(",")])
-            elif widgetClassName == 'vtkMRMLMarkupsFiducialNode':     
-              params = parameterNode.GetParameterNames()
-              markups = []
-              for p in params:
-                if w.name in p :
-                  markups.append(p)
-              endPoints = self.logic.endPoints
-              endPoints.RemoveAllControlPoints()
-              volumeName = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode().GetName()
-              for m in markups :
-                values = parameterNode.GetParameter(m)
-                #If point was defined
-                values = [float(k) for k in values.split(",")]
-                if len(values) > 1 :
-                  type_ = m.replace(w.name, '')
-                  values.pop()
-                  index = endPoints.AddFiducialFromArray(values, type_)
-                  endPoints.SetNthFiducialAssociatedNodeID(index, m)
-                  CSName = w.name.replace(volumeName+'markup'+type_, '')
-                  visible = self.CSName+"markup" == CSName 
-                  self.logic.pointIndexes[m] = index
-                  world = [0,0,0,0]
-                  endPoints.GetNthFiducialWorldCoordinates(index, world)  
-                  self.logic.onCustomShaderParamChangedMarkup(world, type_)
-                  endPoints.SetNthFiducialVisibility(index, visible)
-          elif widgetClassName == "qMRMLNodeComboBox":
-            w.setCurrentNodeID(parameterNode.GetNodeReferenceID(w.name))
+         if isinstance(w, Param):
+           return
+         else:
+           self.updateWidgetGUIFromParameterNode(w, caller, event)
+        self.addAllGUIObservers()
 
-        self.addGUIObservers()
-
-    def addGUIObservers(self):
-      """Function to add observers to the GUI's widgets.
+    def addGUIObservers(self, w):
+      """Function to add observers to the GUI's widget.
 
       """   
-      for w in self.widgets:
-        widgetClassName = self.getClassName(w)
-        if widgetClassName=="QPushButton" :
-          w.clicked.connect(lambda value, w = w : self.updateParameterNodeFromGUI(value, w))
-        elif widgetClassName == "QCheckBox":
-          w.toggled.connect(lambda value, w = w : self.updateParameterNodeFromGUI(value, w))
-        elif widgetClassName == "QComboBox":
-          w.currentIndexChanged.connect(lambda value, w = w : self.updateParameterNodeFromGUI(value, w))
-        elif widgetClassName == "ctkSliderWidget":
-          w.valueChanged.connect(lambda value, w = w : self.updateParameterNodeFromGUI(value, w))
-        elif widgetClassName == "ctkRangeWidget":
-          w.valuesChanged.connect(lambda value1, value2, w = w : self.updateParameterNodeFromGUI([value2, value2], w))
-        elif widgetClassName == "vtkColorTransferFunction" or widgetClassName == "vtkPiecewiseFunction":
-          if not w.HasObserver(vtk.vtkCommand.ModifiedEvent):
-            w.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = w : self.updateParameterNodeFromGUI([o,"add observers"], w))
-        elif widgetClassName == "qMRMLNodeComboBox":
-          w.currentNodeChanged.connect(lambda value, w = w : self.updateParameterNodeFromGUI(value, w))
-        elif widgetClassName == 'vtkMRMLMarkupsFiducialNode':
-          self.logic.pointModifiedEventTag = w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.logic.onEndPointsChanged)
-          w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, self.logic.onEndPointAdded)
-          w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.pointModified)
-          w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, lambda c, e, name = w.name, w = w : self.updateParameterNodeFromGUI([c, "PointPositionDefinedEvent", name], w))
+      widgetClassName = self.getClassName(w)
+      if widgetClassName=="QPushButton" :
+        w.clicked.connect(lambda value, w = w : self.updateParameterNodeFromGUI(value, w))
+      elif widgetClassName == "QCheckBox":
+        w.toggled.connect(lambda value, w = w : self.updateParameterNodeFromGUI(value, w))
+      elif widgetClassName == "QComboBox":
+        w.currentIndexChanged.connect(lambda value, w = w : self.updateParameterNodeFromGUI(value, w))
+      elif widgetClassName == "ctkSliderWidget":
+        w.valueChanged.connect(lambda value, w = w : self.updateParameterNodeFromGUI(value, w))
+      elif widgetClassName == "ctkRangeWidget":
+        w.valuesChanged.connect(lambda value1, value2, w = w : self.updateParameterNodeFromGUI([value2, value2], w))
+      elif widgetClassName == "vtkColorTransferFunction" or widgetClassName == "vtkPiecewiseFunction":
+        if not w.HasObserver(vtk.vtkCommand.ModifiedEvent):
+          w.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = w : self.updateParameterNodeFromGUI([o,"add observers"], w))
+      elif widgetClassName == "qMRMLNodeComboBox":
+        w.currentNodeChanged.connect(lambda value, w = w : self.updateParameterNodeFromGUI(value, w))
+      elif widgetClassName == 'vtkMRMLMarkupsFiducialNode':
+        self.logic.pointModifiedEventTag = w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.logic.onEndPointsChanged)
+        w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, self.logic.onEndPointAdded)
+        w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.pointModified)
+        w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, lambda c, e, name = w.name, w = w : self.updateParameterNodeFromGUI([c, "PointPositionDefinedEvent", name], w))
 
-    def removeGUIObservers(self):
-      """Function to remove observers from the GUI's widgets.
+    def removeGUIObservers(self, w):
+      """Function to remove observers from the GUI's widget.
 
       """  
-      for w in self.widgets:
-        widgetClassName = self.getClassName(w)
-        if widgetClassName=="QPushButton" :
-          w.clicked.disconnect(self.updateParameterNodeFromGUI) 
-        elif widgetClassName == "QCheckBox":
-          w.toggled.disconnect(self.updateParameterNodeFromGUI) 
-        elif widgetClassName == "QComboBox":
-          w.currentIndexChanged.disconnect(self.updateParameterNodeFromGUI)
-        elif widgetClassName == "ctkSliderWidget":
-          w.valueChanged.disconnect(self.updateParameterNodeFromGUI)
-        elif widgetClassName == "ctkRangeWidget":
-          w.valuesChanged.disconnect(self.updateParameterNodeFromGUI)
-        elif widgetClassName == "vtkColorTransferFunction" or widgetClassName == "vtkPiecewiseFunction":
-          w.RemoveAllObservers()
-        elif widgetClassName == "qMRMLNodeComboBox":
-          w.currentNodeChanged.disconnect(self.updateParameterNodeFromGUI)
-        elif widgetClassName == 'vtkMRMLMarkupsFiducialNode':
-          w.RemoveObservers(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent)
-          w.RemoveObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent)
+      
+      widgetClassName = self.getClassName(w)
+      if widgetClassName=="QPushButton" :
+        w.clicked.disconnect(self.updateParameterNodeFromGUI) 
+      elif widgetClassName == "QCheckBox":
+        w.toggled.disconnect(self.updateParameterNodeFromGUI) 
+      elif widgetClassName == "QComboBox":
+        w.currentIndexChanged.disconnect(self.updateParameterNodeFromGUI)
+      elif widgetClassName == "ctkSliderWidget":
+        w.valueChanged.disconnect(self.updateParameterNodeFromGUI)
+      elif widgetClassName == "ctkRangeWidget":
+        w.valuesChanged.disconnect(self.updateParameterNodeFromGUI)
+      elif widgetClassName == "vtkColorTransferFunction" or widgetClassName == "vtkPiecewiseFunction":
+        w.RemoveAllObservers()
+      elif widgetClassName == "qMRMLNodeComboBox":
+        w.currentNodeChanged.disconnect(self.updateParameterNodeFromGUI)
+      elif widgetClassName == 'vtkMRMLMarkupsFiducialNode':
+        w.RemoveObservers(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent)
+        w.RemoveObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent)
     
     def onImageSelectorChanged(self, node, widget, index=0):
       """Callback function when the volume node has been changed in the dedicated combobox.
@@ -481,75 +432,16 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       """   
       parameterNode = self.logic.parameterNode
       oldModifiedState = parameterNode.StartModify()
+
       if self.ui.imageSelector.currentNode() is None:
         return 
 
       if w not in self.widgets :
-        return 
-      widgetClassName = self.getClassName(w)
-      if widgetClassName=="QPushButton" :
-        parameterNode.SetParameter(w.name, "1") if w.enabled else parameterNode.SetParameter(w.name, "0")
-      elif widgetClassName == "QCheckBox":
-        parameterNode.SetParameter(w.name, "1") if w.checked else parameterNode.SetParameter(w.name, "0")
-      elif widgetClassName == "QComboBox":
-        parameterNode.SetParameter(w.name, str(w.currentIndex))
-      elif widgetClassName == "ctkSliderWidget":
-        parameterNode.SetParameter(w.name, str(w.value))
-      elif widgetClassName == "ctkRangeWidget":
-        parameterNode.SetParameter(w.name, str(w.minimumValue) + ',' + str(w.maximumValue))
-      elif widgetClassName == "vtkColorTransferFunction" or widgetClassName == "vtkPiecewiseFunction":
-        parameterNode.SetParameter(w.name, "transferFunction")
-        nbPoints = w.GetSize()
-        if widgetClassName == "vtkColorTransferFunction" :
-          values = [0,0,0,0,0,0]
-        else :
-          values = [0,0,0,0]
-        if nbPoints > 0:
-          for i in range(nbPoints):
-            w.GetNodeValue(i, values)
-            parameterNode.SetParameter(w.name+str(i), ",".join("{0}".format(n) for n in values))
-
-          # If points are deleted, remove them from the parameter node
-          i+=1
-          val = parameterNode.GetParameter(w.name+str(i))
-          while val != '':
-            parameterNode.UnsetParameter(w.name+str(i))
-            i+=1
-            val = parameterNode.GetParameter(w.name+str(i))
-      elif widgetClassName == "qMRMLNodeComboBox":
-        parameterNode.SetNodeReferenceID(w.name, w.currentNodeID)
-
-      elif widgetClassName == 'vtkMRMLMarkupsFiducialNode':
-        caller = value[0]
-        event = value[1]
-        index = value[2]
-        name = w.name + self.logic.pointType
-        world = [0, 0, 0, 0]
-        if event == "PointPositionDefinedEvent" :
-          index = caller.GetDisplayNode().GetActiveControlPoint()
-          # Initialise point
-          if parameterNode.GetParameter(name) == "":
-            index = caller.GetDisplayNode().GetActiveControlPoint()
-            caller.SetNthFiducialAssociatedNodeID(index, name)
-            caller.GetNthFiducialWorldCoordinates(index, world)
-            parameterNode.SetParameter(name, ",".join("{0}".format(n) for n in world))
-            parameterNode.SetParameter(w.name, str(index))
-            self.logic.pointIndexes[name] = index
-
-          # Reset point
-          elif self.logic.pointName != '' :
-            name = self.logic.pointName
-            index = self.logic.pointIndexes[name] 
-            caller.GetNthFiducialWorldCoordinates(index, world)
-            parameterNode.SetParameter(name, ",".join("{0}".format(n) for n in world))
-            self.logic.pointName = ''
-
-        if event == "PointModifiedEvent" :
-          if parameterNode.GetParameter(w.name) != "" and index <= int(parameterNode.GetParameter(w.name)):
-            pointName = caller.GetNthControlPointAssociatedNodeID(index)
-            if parameterNode.GetParameter(pointName) != "":
-              caller.GetNthFiducialWorldCoordinates(index, world)
-              parameterNode.SetParameter(pointName, ",".join("{0}".format(n) for n in world))
+        w.updateParameterNodeFromGUI(self, value)
+      if isinstance(w, Param):
+        return
+      else :
+        self.updateWidgetParameterNodeFromGUI(value, w)
 
       parameterNode.EndModify(oldModifiedState)
 
@@ -928,8 +820,151 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
     def pointModified(self, caller, event, index):
       self.updateParameterNodeFromGUI([caller, "PointModifiedEvent", index], self.logic.endPoints)
 
-    
+    def addAllGUIObservers(self):
+      for w in self.widgets:
+        if isinstance(w, Param):
+          w.addGUIObservers(self)
+        else:
+          self.addGUIObservers(w)
 
+    def removeAllGUIObservers(self):
+      for w in self.widgets:
+          if isinstance(w, Param):
+            w.removeGUIObservers()
+          else:
+            self.removeGUIObservers(w)
+
+    def updateWidgetGUIFromParameterNode(self, w, caller=None, event=None):
+        """Function to update GUI from parameter node values
+
+        :param caller: Caller of the function.
+        :param event: Event that triggered the function.
+        """   
+        parameterNode = self.logic.parameterNode
+
+        # Disables updateParameterNodeFromGUI signal 
+        widgetClassName = self.getClassName(w)
+        value = parameterNode.GetParameter(w.name)
+        if value != '' :
+          if widgetClassName=="QPushButton":
+            enabled = (int(value) != 0)
+            w.setEnabled(enabled)
+          elif widgetClassName=="QCheckBox":
+            checked = (int(value) != 0)
+            w.setChecked(checked)
+          elif widgetClassName=="QComboBox":
+            index = int(value)
+            w.setCurrentIndex(index)
+          elif widgetClassName=="ctkSliderWidget":
+            value = float(value)
+            w.setValue(value)
+          elif widgetClassName=="ctkRangeWidget":
+            values = value.split(',')     
+            w.minimumValue = float(values[0])
+            w.maximumValue = float(values[1])
+          elif widgetClassName == "vtkColorTransferFunction" or widgetClassName == "vtkPiecewiseFunction":
+            for i in range(w.GetSize()):
+              values = self.logic.parameterNode.GetParameter(w.name+str(i))
+              if values != "" :
+                w.SetNodeValue(i, [float(k) for k in values.split(",")])
+          elif widgetClassName == 'vtkMRMLMarkupsFiducialNode':     
+            params = parameterNode.GetParameterNames()
+            markups = []
+            for p in params:
+              if w.name in p :
+                markups.append(p)
+            endPoints = self.logic.endPoints
+            endPoints.RemoveAllControlPoints()
+            volumeName = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode().GetName()
+            for m in markups :
+              values = parameterNode.GetParameter(m)
+              #If point was defined
+              values = [float(k) for k in values.split(",")]
+              if len(values) > 1 :
+                type_ = m.replace(w.name, '')
+                values.pop()
+                index = endPoints.AddFiducialFromArray(values, type_)
+                endPoints.SetNthFiducialAssociatedNodeID(index, m)
+                CSName = w.name.replace(volumeName+'markup'+type_, '')
+                visible = self.CSName+"markup" == CSName 
+                self.logic.pointIndexes[m] = index
+                world = [0,0,0,0]
+                endPoints.GetNthFiducialWorldCoordinates(index, world)  
+                self.logic.onCustomShaderParamChangedMarkup(world, type_)
+                endPoints.SetNthFiducialVisibility(index, visible)
+        elif widgetClassName == "qMRMLNodeComboBox":
+          w.setCurrentNodeID(parameterNode.GetNodeReferenceID(w.name))
+
+    def updateWidgetParameterNodeFromGUI(self, value, w):
+      """Function to update the parameter node from gui values.
+
+      :param value: Value of the widget.  
+      :type value: float
+      :param w: Widget being modified.  
+      :type w: QObject
+      """
+      parameterNode = self.logic.parameterNode
+  
+      widgetClassName = self.getClassName(w)
+      if widgetClassName=="QPushButton" :
+        parameterNode.SetParameter(w.name, "1") if w.enabled else parameterNode.SetParameter(w.name, "0")
+      elif widgetClassName == "QCheckBox":
+        parameterNode.SetParameter(w.name, "1") if w.checked else parameterNode.SetParameter(w.name, "0")
+      elif widgetClassName == "QComboBox":
+        parameterNode.SetParameter(w.name, str(w.currentIndex))
+      elif widgetClassName == "ctkSliderWidget":
+        parameterNode.SetParameter(w.name, str(w.value))
+      elif widgetClassName == "ctkRangeWidget":
+        parameterNode.SetParameter(w.name, str(w.minimumValue) + ',' + str(w.maximumValue))
+      elif widgetClassName == "vtkColorTransferFunction" or widgetClassName == "vtkPiecewiseFunction":
+        parameterNode.SetParameter(w.name, "transferFunction")
+        nbPoints = w.GetSize()
+        if widgetClassName == "vtkColorTransferFunction" :
+          values = [0,0,0,0,0,0]
+        else :
+          values = [0,0,0,0]
+        if nbPoints > 0:
+          for i in range(nbPoints):
+            w.GetNodeValue(i, values)
+            parameterNode.SetParameter(w.name+str(i), ",".join("{0}".format(n) for n in values))
+          # If points are deleted, remove them from the parameter node
+          i+=1
+          val = parameterNode.GetParameter(w.name+str(i))
+          while val != '':
+            parameterNode.UnsetParameter(w.name+str(i))
+            i+=1
+            val = parameterNode.GetParameter(w.name+str(i))
+      elif widgetClassName == "qMRMLNodeComboBox":
+        parameterNode.SetNodeReferenceID(w.name, w.currentNodeID)
+      elif widgetClassName == 'vtkMRMLMarkupsFiducialNode':
+        caller = value[0]
+        event = value[1]
+        index = value[2]
+        name = w.name + self.logic.pointType
+        world = [0, 0, 0, 0]
+        if event == "PointPositionDefinedEvent" :
+          index = caller.GetDisplayNode().GetActiveControlPoint()
+          # Initialise point
+          if parameterNode.GetParameter(name) == "":
+            index = caller.GetDisplayNode().GetActiveControlPoint()
+            caller.SetNthFiducialAssociatedNodeID(index, name)
+            caller.GetNthFiducialWorldCoordinates(index, world)
+            parameterNode.SetParameter(name, ",".join("{0}".format(n) for n in world))
+            parameterNode.SetParameter(w.name, str(index))
+            self.logic.pointIndexes[name] = index
+          # Reset point
+          elif self.logic.pointName != '' :
+            name = self.logic.pointName
+            index = self.logic.pointIndexes[name] 
+            caller.GetNthFiducialWorldCoordinates(index, world)
+            parameterNode.SetParameter(name, ",".join("{0}".format(n) for n in world))
+            self.logic.pointName = ''
+        if event == "PointModifiedEvent" :
+          if parameterNode.GetParameter(w.name) != "" and index <= int(parameterNode.GetParameter(w.name)):
+            pointName = caller.GetNthControlPointAssociatedNodeID(index)
+            if parameterNode.GetParameter(pointName) != "":
+              caller.GetNthFiducialWorldCoordinates(index, world)
+              parameterNode.SetParameter(pointName, ",".join("{0}".format(n) for n in world))
 
 
 
