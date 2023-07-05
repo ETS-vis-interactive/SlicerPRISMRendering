@@ -566,6 +566,8 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
                   bool_param = i
                   if self.logic.optionalWidgets.get(self.CSName + bool_param.name) == None:
                     self.logic.optionalWidgets[self.CSName + bool_param.name] = []
+                  elif len(self.logic.optionalWidgets[self.CSName + bool_param.name]) == len(bool_param.optionalWidgets) : #To avoid duplicates & reset after next GUI Setup
+                    self.logic.optionalWidgets[self.CSName + bool_param.name] = []
                   if i.value == True:
                     hideWidget = False
                   else:
