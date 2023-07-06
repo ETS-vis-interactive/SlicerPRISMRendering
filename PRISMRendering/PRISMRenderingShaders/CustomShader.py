@@ -8,6 +8,8 @@ import importlib.util
 import math
 
 from PRISMRenderingParams import *
+from PRISMRenderingPoints import *
+
 
 """CustomShader Class containing the function to access the parameters of the shader.
 Generic Custom Shader
@@ -27,6 +29,8 @@ class CustomShader():
         self.allClasses = []
 
         self.param_list = []
+
+        self.customShaderPoints = CustomShaderPoints(self)
     
     def setAllUniforms(self):
       for p in self.param_list:       
@@ -116,14 +120,8 @@ class CustomShader():
       Param.setUniform(self)
 
     def setShaderParameterMarkup(self, paramName, value):
-      existed = False
       for i in self.param_list:
         if i.name == paramName:
           i.setValue(value)
           i.setUniform(self)
-          existed = True
           break
-      if not existed:
-        MarkupParam = FourFParam(paramName, paramName, value)
-        self.param_list.append(MarkupParam)
-        MarkupParam.setUniform(self)
