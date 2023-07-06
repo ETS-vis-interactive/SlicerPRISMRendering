@@ -282,11 +282,11 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
      :type event: str
      """
 
-     world = [0, 0, 0, 0]
+     world = [0, 0, 0]
 
      if self.pointType in self.pointTypes:
        pointIndex = caller.GetDisplayNode().GetActiveControlPoint()
-       caller.GetNthFiducialWorldCoordinates(pointIndex, world)
+       caller.GetNthControlPointPositionWorld(pointIndex, world)
        # If the point was already defined
        if self.pointName in self.pointIndexes.keys() :
          index = self.pointIndexes[self.pointName]
@@ -336,8 +336,8 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
       type_ = caller.GetNthControlPointLabel(call_data)
       pointName = caller.GetNthControlPointAssociatedNodeID(call_data)
       if pointName in self.pointIndexes.keys() and self.pointIndexes[pointName] == call_data :
-        world = [0, 0, 0, 0]
-        caller.GetNthFiducialWorldCoordinates(call_data, world)
+        world = [0, 0, 0]
+        caller.GetNthControlPointPositionWorld(call_data, world)
         self.onCustomShaderParamChangedMarkup(world, type_)
     
     def enableOption(self, param, checkBox, CSName) :

@@ -31,7 +31,10 @@ class FourFParam(Param):
       self.value['x'] = value[0]
       self.value['y'] = value[1]
       self.value['z'] = value[2]
-      self.value['w'] = value[3]
+      try:
+        self.value['w'] = value[3]
+      except:
+        self.value['w'] = 0
 
   def toList(self):
     return [self.value['x'], self.value['y'], self.value['z'], self.value['w']]
