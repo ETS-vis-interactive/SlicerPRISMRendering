@@ -281,16 +281,14 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
      :param event: Flag corresponding to the triggered event. 
      :type event: str
      """
-
+     world = [0, 0, 0]
      if self.pointType in self.pointTypes:
        pointIndex = caller.GetDisplayNode().GetActiveControlPoint()
-       world = [0, 0, 0]
        caller.GetNthControlPointPositionWorld(pointIndex, world)
        # If the point was already defined
        if self.pointName in self.pointIndexes.keys() :
          index = self.pointIndexes[self.pointName]
-         world = [0, 0, 0, 0]
-         caller.SetNthFiducialWorldCoordinates(index, world)
+         caller.SetNthControlPointPositionWorld(index, world)
          caller.RemoveNthControlPoint(pointIndex)
        else :
          self.pointIndexes[self.pointName] = pointIndex
