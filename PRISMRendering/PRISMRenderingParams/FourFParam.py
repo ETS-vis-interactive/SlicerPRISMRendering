@@ -21,7 +21,7 @@ class FourFParam(Param):
     targetPointButton = qt.QPushButton("Initialize " + self.display_name)
     targetPointButton.setToolTip( "Place a markup" )
     targetPointButton.setObjectName(widgetClass.CSName + self.name)
-    targetPointButton.clicked.connect(lambda : widgetClass.logic.customShader.customShaderPoints.setPlacingMarkups(self.name,"markup" + self.name,  targetPointButton,  interaction = 1))
+    targetPointButton.clicked.connect(lambda : widgetClass.logic.customShader[widgetClass.logic.shaderIndex].customShaderPoints.setPlacingMarkups(self.name,"markup" + self.name,  targetPointButton,  interaction = 1))
     targetPointButton.clicked.connect(lambda value, w = targetPointButton : widgetClass.updateParameterNodeFromGUI(value, w))
     targetPointButton.setParent(widgetClass.ui.customShaderParametersLayout)
     self.widget = targetPointButton

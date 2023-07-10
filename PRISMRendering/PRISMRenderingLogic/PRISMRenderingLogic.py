@@ -48,9 +48,11 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
         ## Type of the current custom shader
         self.customShaderType = 'None'
         ## Class of the current custom shader
-        self.customShader = None
+        self.customShader = []
         ## Number of volumes in the shader
         self.numberOfVolumes = 0
+
+        self.shaderIndex = 0
         
         self.parameterNode = None
 
@@ -114,7 +116,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
         logic.UpdateDisplayNodeFromVolumeNode(displayNode, volumeNode)
         volumeNode.AddAndObserveDisplayNodeID(displayNode.GetID())
 
-        displayNode.SetNodeReferenceID("shaderProperty", self.customShader.shaderPropertyNode.GetID())
+        displayNode.SetNodeReferenceID("shaderProperty", self.customShader[self.shaderIndex].shaderPropertyNode.GetID())
 
         logic.FitROIToVolume(displayNode)
 
@@ -145,19 +147,24 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
       :param volumeNode: Current volume.
       :type volumeNode: vtkMRMLScalarVolumeNode
       """
+      CSExists = self.checkIfCSExists()
+      if CSExists == -1:
+        shaderPropertyName = "ShaderProperty"
+        CustomShader.GetAllShaderClassNames()
+        if self.volumeRenderingDisplayNode is None :
+          ## Property node of the current shader
+          self.shaderPropertyNode = slicer.vtkMRMLShaderPropertyNode()
+          self.shaderPropertyNode.SetName(shaderPropertyName)
+          slicer.mrmlScene.AddNode(self.shaderPropertyNode)
+        else :
+          self.shaderPropertyNode = self.volumeRenderingDisplayNode.GetShaderPropertyNode()
 
-      shaderPropertyName = "ShaderProperty"
-      CustomShader.GetAllShaderClassNames()
-      if self.volumeRenderingDisplayNode is None :
-        ## Property node of the current shader
-        self.shaderPropertyNode = slicer.vtkMRMLShaderPropertyNode()
-        self.shaderPropertyNode.SetName(shaderPropertyName)
-        slicer.mrmlScene.AddNode(self.shaderPropertyNode)
+        self.customShader.append(CustomShader.InstanciateCustomShader(self.customShaderType, self.shaderPropertyNode, volumeNode))
+        self.customShader[len(self.customShader)-1].setupShader()
+        self.shaderIndex = len(self.customShader)-1
       else :
-        self.shaderPropertyNode = self.volumeRenderingDisplayNode.GetShaderPropertyNode()
-
-      self.customShader = CustomShader.InstanciateCustomShader(self.customShaderType, self.shaderPropertyNode, volumeNode)
-      self.customShader.setupShader() 
+        self.shaderIndex = CSExists
+        self.customShader[self.shaderIndex].setupShader()
 
     def setCustomShaderType(self, shaderTypeName, volumeNode):
       """Set given shader type as current active shader.
@@ -211,7 +218,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
       :param type_: (float or int), type of the parameter to be changed
       """
       
-      self.customShader.setShaderParameter(Param, value)
+      self.customShader[self.shaderIndex].setShaderParameter(Param, value)
 
     def addObservers(self):
       slicer.mrmlScene.AddObserver(slicer.mrmlScene.EndCloseEvent, self.onCloseScene)  
@@ -226,7 +233,8 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
         node = slicer.util.getNodesByClass("vtkMRMLScalarVolumeNode")
         slicer.mrmlScene.RemoveNode(node[0])
         slicer.mrmlScene.RemoveNode(self.shaderPropertyNode)
-        slicer.mrmlScene.RemoveNode(self.customShader.customShaderPoints.endPoints)
+        for i in range(len(self.customShader)) :
+          slicer.mrmlScene.RemoveNode(self.customShader[i].customShaderPoints.endPoints)
         CustomShader.clear()
       except:
         pass
@@ -245,7 +253,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
       """
       paramName = param.name
       if checkBox.isChecked() :
-        self.customShader.setShaderParameter(param, 1)
+        self.customShader[self.shaderIndex].setShaderParameter(param, 1)
         if str(CSName + paramName) in self.optionalWidgets :
           for p in self.optionalWidgets[CSName + paramName] :
             p.widget.show()
@@ -259,7 +267,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
             #    pointListDisplayNode = pointListNode.GetDisplayNode()
             #    pointListDisplayNode.SetVisibility(True)
       else: 
-        self.customShader.setShaderParameter(param, 0)
+        self.customShader[self.shaderIndex].setShaderParameter(param, 0)
         if str(CSName + paramName) in self.optionalWidgets :
           for p in self.optionalWidgets[CSName + paramName] :
             p.widget.hide()
@@ -272,3 +280,14 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
             #    pointListNode = slicer.util.getNode("vtkMRMLMarkupsFiducialNode1")
             #    pointListDisplayNode = pointListNode.GetDisplayNode()
             #    pointListDisplayNode.SetVisibility(False)
+
+    def checkIfCSExists(self) :
+      """Check if a custom shader exists.
+
+      :param CSName: Name of the current custom shader. 
+      :type CSName: str
+      """
+      for i, CS in enumerate(self.customShader) :
+        if CS.GetDisplayName() == self.customShaderType :
+          return i
+      return -1

@@ -360,7 +360,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         self.ui.openCustomShaderButton.setEnabled(True)
         self.ui.reloadCurrentCustomShaderButton.setEnabled(True)
 
-      self.ui.customShaderCollapsibleButton.setToolTip(self.logic.customShader.GetBasicDescription())
+      self.ui.customShaderCollapsibleButton.setToolTip(self.logic.customShader[self.logic.shaderIndex].GetBasicDescription())
 
     def updateGUIFromParameterNode(self, caller=None, event=None):
       """Function to update GUI from parameter node values
@@ -483,7 +483,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
       """
 
-      if self.logic.customShader == None:
+      if self.logic.customShader[self.logic.shaderIndex] == None:
         return
 
       # Clear all the widgets except the combobox selector
@@ -495,8 +495,8 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
           if widget != None:
             widget.setParent(None)
 
-      if self.logic.customShader.customShaderPoints.endPoints.GetNumberOfControlPoints() > 0 : 
-        self.logic.customShader.customShaderPoints.endPoints.RemoveAllControlPoints()
+      if self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.GetNumberOfControlPoints() > 0 : 
+        self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.RemoveAllControlPoints()
 
       lenWidgets = len(self.widgets)
 
@@ -504,12 +504,12 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       volumeName = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode().GetName()
       self.CSName = self.ui.customShaderCombo.currentText.replace(" ", "") + volumeName
 
-      param_list = self.logic.customShader.param_list
+      param_list = self.logic.customShader[self.logic.shaderIndex].param_list
       for p in param_list:
           if not isinstance(p, TransferFunctionParam):
             hideWidget = False
             Optional = False
-            for i in self.logic.customShader.param_list:
+            for i in self.logic.customShader[self.logic.shaderIndex].param_list:
               if isinstance(i,  BoolParam):
                 if p.name in i.optionalWidgets:
                   Optional  = True
@@ -541,14 +541,14 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
               self.appendList(p,self.CSName + p.name)
               
       if any(isinstance(item, FourFParam) for item in param_list):
-        self.logic.customShader.customShaderPoints.endPoints.name = self.CSName + "markup"
-        self.logic.customShader.customShaderPoints.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.pointModified)
-        self.logic.customShader.customShaderPoints.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, lambda c, e, name = self.CSName + "markup", w = self.logic.customShader.customShaderPoints.endPoints : self.updateParameterNodeFromGUI([c, "PointPositionDefinedEvent", name], w))
-        self.appendList(self.logic.customShader.customShaderPoints.endPoints, self.logic.customShader.customShaderPoints.endPoints.name)
+        self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.name = self.CSName + "markup"
+        self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.pointModified)
+        self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, lambda c, e, name = self.CSName + "markup", w = self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints : self.updateParameterNodeFromGUI([c, "PointPositionDefinedEvent", name], w))
+        self.appendList(self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints, self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.name)
     
 
         ## Transfer function of the first volume
-      params = [p for p in self.logic.customShader.param_list if isinstance(p, TransferFunctionParam)]
+      params = [p for p in self.logic.customShader[self.logic.shaderIndex].param_list if isinstance(p, TransferFunctionParam)]
       if len(params) > self.numberOfTFTypes:
         logging.error("Too many transfer function have been defined.")
 
@@ -770,7 +770,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
     @vtk.calldata_type(vtk.VTK_INT)
     def pointModified(self, caller, event, index):
-      self.updateParameterNodeFromGUI([caller, "PointModifiedEvent", index], self.logic.customShader.customShaderPoints.endPoints)
+      self.updateParameterNodeFromGUI([caller, "PointModifiedEvent", index], self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints)
 
     def addAllGUIObservers(self):
       for w in self.widgets:
@@ -807,8 +807,8 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       elif widgetClassName == "qMRMLNodeComboBox":
         w.currentNodeChanged.connect(lambda value, w = w : self.updateParameterNodeFromGUI(value, w))
       elif widgetClassName == 'vtkMRMLMarkupsFiducialNode':
-        self.logic.customShader.customShaderPoints.pointModifiedEventTag = w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.logic.customShader.customShaderPoints.onEndPointsChanged)
-        w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, self.logic.customShader.customShaderPoints.onEndPointAdded)
+        self.logic.customShader[self.logic.shaderIndex].customShaderPoints.pointModifiedEventTag = w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.logic.customShader[self.logic.shaderIndex].customShaderPoints.onEndPointsChanged)
+        w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, self.logic.customShader[self.logic.shaderIndex].customShaderPoints.onEndPointAdded)
         w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.pointModified)
         w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, lambda c, e, name = w.name, w = w : self.updateParameterNodeFromGUI([c, "PointPositionDefinedEvent", name], w))
 
@@ -875,7 +875,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
             for p in params:
               if w.name in p :
                 markups.append(p)
-            endPoints = self.logic.customShader.customShaderPoints.endPoints
+            endPoints = self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints
             endPoints.RemoveAllControlPoints()
             volumeName = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode().GetName()
             for m in markups :
@@ -889,10 +889,10 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
                 endPoints.SetNthControlPointAssociatedNodeID(index, m)
                 CSName = w.name.replace(volumeName+'markup'+type_, '')
                 visible = self.CSName+"markup" == CSName 
-                self.logic.customShader.customShaderPoints.pointIndexes[m] = index
+                self.logic.customShader[self.logic.shaderIndex].customShaderPoints.pointIndexes[m] = index
                 world = [0,0,0]
                 endPoints.GetNthControlPointPositionWorld(index, world)  
-                self.logic.customShader.customShaderPoints.onCustomShaderParamChangedMarkup(world, type_)
+                self.logic.customShader[self.logic.shaderIndex].customShaderPoints.onCustomShaderParamChangedMarkup(world, type_)
                 endPoints.SetNthFiducialVisibility(index, visible)
         elif widgetClassName == "qMRMLNodeComboBox":
           w.setCurrentNodeID(parameterNode.GetNodeReferenceID(w.name))
@@ -942,7 +942,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         caller = value[0]
         event = value[1]
         index = value[2]
-        name = w.name + self.logic.customShader.customShaderPoints.pointType
+        name = w.name + self.logic.customShader[self.logic.shaderIndex].customShaderPoints.pointType
         world = [0, 0, 0]
         if event == "PointPositionDefinedEvent" :
           index = caller.GetDisplayNode().GetActiveControlPoint()
@@ -953,14 +953,14 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
             caller.GetNthControlPointPositionWorld(index, world)
             parameterNode.SetParameter(name, ",".join("{0}".format(n) for n in world))
             parameterNode.SetParameter(w.name, str(index))
-            self.logic.customShader.customShaderPoints.pointIndexes[name] = index
+            self.logic.customShader[self.logic.shaderIndex].customShaderPoints.pointIndexes[name] = index
           # Reset point
-          elif self.logic.customShader.customShaderPoints.pointName != '' :
-            name = self.logic.customShader.customShaderPoints.pointName
-            index = self.logic.customShader.customShaderPoints.pointIndexes[name] 
+          elif self.logic.customShader[self.logic.shaderIndex].customShaderPoints.pointName != '' :
+            name = self.logic.customShader[self.logic.shaderIndex].customShaderPoints.pointName
+            index = self.logic.customShader[self.logic.shaderIndex].customShaderPoints.pointIndexes[name] 
             caller.GetNthControlPointPositionWorld(index, world)
             parameterNode.SetParameter(name, ",".join("{0}".format(n) for n in world))
-            self.logic.customShader.customShaderPoints.pointName = ''
+            self.logic.customShader[self.logic.shaderIndex].customShaderPoints.pointName = ''
         if event == "PointModifiedEvent" :
           if parameterNode.GetParameter(w.name) != "" and index <= int(parameterNode.GetParameter(w.name)):
             pointName = caller.GetNthControlPointAssociatedNodeID(index)
