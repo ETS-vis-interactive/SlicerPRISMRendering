@@ -18,6 +18,7 @@ class CustomShaderPoints():
     def createEndPoints(self):
       """Create endpoints."""
       # retrieve end points in the scene or create the node
+      print(self.customShader.GetDisplayName())
       allEndPoints = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLMarkupsFiducialNode','EndPoints')
       if allEndPoints.GetNumberOfItems() > 0:
         # set node used before reload in the current instance
@@ -60,7 +61,7 @@ class CustomShaderPoints():
       self.pointName = paramName
 
       # Getting the "EndPoints" node (always first MarkupsFiducial created)
-      node = slicer.mrmlScene.GetNodeByID("vtkMRMLMarkupsFiducialNode1")
+      node = slicer.mrmlScene.GetNodeById("vtkMRMLMarkupsFiducialNode1")
       # Setting the active node of markup list
       slicer.modules.markups.logic().SetActiveList(node)
 

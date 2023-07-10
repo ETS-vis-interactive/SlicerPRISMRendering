@@ -164,6 +164,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
         self.shaderIndex = len(self.customShader)-1
       else :
         self.shaderIndex = CSExists
+        self.customShader[self.shaderIndex].shaderPropertyNode = self.shaderPropertyNode
         self.customShader[self.shaderIndex].setupShader()
 
     def setCustomShaderType(self, shaderTypeName, volumeNode):

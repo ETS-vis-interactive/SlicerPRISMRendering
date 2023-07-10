@@ -495,8 +495,8 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
           if widget != None:
             widget.setParent(None)
 
-      if self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.GetNumberOfControlPoints() > 0 : 
-        self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.RemoveAllControlPoints()
+      # if self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.GetNumberOfControlPoints() > 0 : 
+        # self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.RemoveAllControlPoints()
 
       lenWidgets = len(self.widgets)
 
@@ -876,7 +876,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
               if w.name in p :
                 markups.append(p)
             endPoints = self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints
-            endPoints.RemoveAllControlPoints()
+            # endPoints.RemoveAllControlPoints()
             volumeName = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode().GetName()
             for m in markups :
               values = parameterNode.GetParameter(m)
