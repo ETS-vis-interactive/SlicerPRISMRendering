@@ -91,8 +91,8 @@ class CustomShaderPoints():
          caller.RemoveNthControlPoint(pointIndex)
        else :
          self.pointIndexes[self.pointName] = pointIndex
+         caller.SetNthControlPointLabel(pointIndex, self.pointType)
 
-       caller.SetNthControlPointLabel(pointIndex, self.pointType)
        self.onCustomShaderParamChangedMarkup(world, self.pointType)
        self.currentMarkupBtn.setText('Reset ' + self.pointType)
 
