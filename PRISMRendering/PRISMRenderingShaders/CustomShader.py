@@ -17,7 +17,8 @@ Generic Custom Shader
 
 class CustomShader():
    
-    def __init__(self, shaderPropertyNode, volumeNode = None):
+    def __init__(self, shaderPropertyNode, id, volumeNode = None):
+        
         assert shaderPropertyNode != None, 'CustomShader: a valid shader property node must provided to the constructor'
         ## Property node of the shader
         self.shaderPropertyNode = shaderPropertyNode
@@ -30,7 +31,7 @@ class CustomShader():
 
         self.param_list = []
 
-        self.customShaderPoints = CustomShaderPoints(self)
+        self.customShaderPoints = CustomShaderPoints(self, id)
     
     def setAllUniforms(self):
       for p in self.param_list:       
@@ -42,13 +43,13 @@ class CustomShader():
       self.setAllUniforms()
 
     @classmethod
-    def InstanciateCustomShader(cls, shaderDisplayName, shaderPropertyNode, volumeNode):
+    def InstanciateCustomShader(cls, shaderDisplayName, shaderPropertyNode, id, volumeNode):
         if shaderDisplayName == cls.GetDisplayName():
-          return CustomShader(shaderPropertyNode, volumeNode)
+          return CustomShader(shaderPropertyNode, id,  volumeNode)
 
         for c in cls.allClasses:
           if c.GetDisplayName() == shaderDisplayName:
-            return c(shaderPropertyNode, volumeNode)
+            return c(shaderPropertyNode, id, volumeNode)
         return None
 
     @classmethod
