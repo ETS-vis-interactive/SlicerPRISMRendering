@@ -347,7 +347,10 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       :param i: Index of the element. 
       :type i: int
       """
-
+      # Getting the "EndPoints" node
+      node = slicer.mrmlScene.GetNodeByID("vtkMRMLMarkupsFiducialNode" + str(self.logic.customShader[self.logic.shaderIndex].customShaderPoints.id))
+      # Setting the active node of markup list
+      slicer.modules.markups.logic().SetActiveList(node)
       self.logic.setCustomShaderType(self.ui.customShaderCombo.currentText, self.ui.imageSelector.currentNode())
       self.UpdateShaderParametersUI()
       self.updateParameterNodeFromGUI(self.ui.customShaderCombo.currentText, self.ui.customShaderCombo)
@@ -497,8 +500,6 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
       # if self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.GetNumberOfControlPoints() > 0 : 
         # self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.RemoveAllControlPoints()
-
-      lenWidgets = len(self.widgets)
 
       ## Name of the current shader, without spaces
       volumeName = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode().GetName()
