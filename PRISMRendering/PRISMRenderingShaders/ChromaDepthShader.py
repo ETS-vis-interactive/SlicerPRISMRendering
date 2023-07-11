@@ -17,9 +17,9 @@ class ChromaDepthShader(CustomShader):
   
   param_list = [depthRangeParam, sCOParam, sOPParam]
 
-  def __init__(self, shaderPropertyNode, volumeNode = None, paramlist = param_list):
+  def __init__(self, shaderPropertyNode, id, volumeNode = None, paramlist = param_list):
 
-    CustomShader.__init__(self, shaderPropertyNode, volumeNode)
+    CustomShader.__init__(self, shaderPropertyNode, id, volumeNode)
     self.param_list = paramlist
     volumeRange = self.getVolumeRange(volumeNode)
     if volumeRange :

@@ -8,6 +8,8 @@ import importlib.util
 import math
 
 from PRISMRenderingParams import *
+from PRISMRenderingPoints import *
+
 
 """CustomShader Class containing the function to access the parameters of the shader.
 Generic Custom Shader
@@ -15,7 +17,8 @@ Generic Custom Shader
 
 class CustomShader():
    
-    def __init__(self, shaderPropertyNode, volumeNode = None):
+    def __init__(self, shaderPropertyNode, id, volumeNode = None):
+        
         assert shaderPropertyNode != None, 'CustomShader: a valid shader property node must provided to the constructor'
         ## Property node of the shader
         self.shaderPropertyNode = shaderPropertyNode
@@ -27,6 +30,8 @@ class CustomShader():
         self.allClasses = []
 
         self.param_list = []
+
+        self.customShaderPoints = CustomShaderPoints(self, id)
     
     def setAllUniforms(self):
       for p in self.param_list:       
@@ -38,13 +43,13 @@ class CustomShader():
       self.setAllUniforms()
 
     @classmethod
-    def InstanciateCustomShader(cls, shaderDisplayName, shaderPropertyNode, volumeNode):
+    def InstanciateCustomShader(cls, shaderDisplayName, shaderPropertyNode, id, volumeNode):
         if shaderDisplayName == cls.GetDisplayName():
-          return CustomShader(shaderPropertyNode, volumeNode)
+          return CustomShader(shaderPropertyNode, id,  volumeNode)
 
         for c in cls.allClasses:
           if c.GetDisplayName() == shaderDisplayName:
-            return c(shaderPropertyNode, volumeNode)
+            return c(shaderPropertyNode, id, volumeNode)
         return None
 
     @classmethod
@@ -116,14 +121,8 @@ class CustomShader():
       Param.setUniform(self)
 
     def setShaderParameterMarkup(self, paramName, value):
-      existed = False
       for i in self.param_list:
         if i.name == paramName:
           i.setValue(value)
           i.setUniform(self)
-          existed = True
           break
-      if not existed:
-        MarkupParam = FourFParam(paramName, paramName, value)
-        self.param_list.append(MarkupParam)
-        MarkupParam.setUniform(self)

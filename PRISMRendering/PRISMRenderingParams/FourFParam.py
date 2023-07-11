@@ -10,7 +10,10 @@ class FourFParam(Param):
     if isinstance(defaultValue, dict):
       self.defaultValue = defaultValue
     else:
-      self.defaultValue = {'x': defaultValue[0], 'y': defaultValue[1], 'z': defaultValue[2], 'w': defaultValue[3]}
+      try :
+        self.defaultValue = {'x': defaultValue[0], 'y': defaultValue[1], 'z': defaultValue[2], 'w': defaultValue[3]}
+      except:
+        self.defaultValue = {'x': defaultValue[0], 'y': defaultValue[1], 'z': defaultValue[2], 'w': 0}
     self.value = self.defaultValue
     self.widget = None
 
@@ -18,7 +21,7 @@ class FourFParam(Param):
     targetPointButton = qt.QPushButton("Initialize " + self.display_name)
     targetPointButton.setToolTip( "Place a markup" )
     targetPointButton.setObjectName(widgetClass.CSName + self.name)
-    targetPointButton.clicked.connect(lambda : widgetClass.logic.setPlacingMarkups(self.name,"markup" + self.name,  targetPointButton,  interaction = 1))
+    targetPointButton.clicked.connect(lambda : widgetClass.logic.customShader[widgetClass.logic.shaderIndex].customShaderPoints.setPlacingMarkups(self.name,"markup" + self.name,  targetPointButton,  interaction = 1))
     targetPointButton.clicked.connect(lambda value, w = targetPointButton : widgetClass.updateParameterNodeFromGUI(value, w))
     targetPointButton.setParent(widgetClass.ui.customShaderParametersLayout)
     self.widget = targetPointButton

@@ -39,13 +39,6 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
         ## Index of the current volume
         self.currentVolume = 0
 
-        self.currentMarkupBtn = None
-
-        self.pointTypes = ['center', 'target', 'entry']
-        self.pointType = ''
-        self.pointName = ''
-        self.pointIndexes = {}
-
         self.optionalWidgets = {}
         # hide volume rendering display node possibly loaded with the scene
         renderingDisplayNodes = slicer.util.getNodesByClass("vtkMRMLVolumeRenderingDisplayNode")
@@ -55,9 +48,11 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
         ## Type of the current custom shader
         self.customShaderType = 'None'
         ## Class of the current custom shader
-        self.customShader = None
+        self.customShader = []
         ## Number of volumes in the shader
         self.numberOfVolumes = 0
+
+        self.shaderIndex = 0
         
         self.parameterNode = None
 
@@ -66,25 +61,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
         ## Opacity transfer function of the principal volume
         self.opacityTransferFunction = vtk.vtkPiecewiseFunction()
 
-        self.createEndPoints()
-        self.addObservers()
-
-    def createEndPoints(self):
-      """Create endpoints."""
-      # retrieve end points in the scene or create the node
-      allEndPoints = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLMarkupsFiducialNode','EndPoints')
-      if allEndPoints.GetNumberOfItems() > 0:
-        # set node used before reload in the current instance
-        ## All endpoints in the scene
-        self.endPoints = allEndPoints.GetItemAsObject(0)
-        self.endPoints.RemoveAllControlPoints()
-        self.endPoints.GetDisplayNode().SetGlyphScale(6.0)
-      else:
-        self.endPoints = slicer.mrmlScene.AddNewNodeByClass('vtkMRMLMarkupsFiducialNode')
-        self.endPoints.SetName("EndPoints")
-        self.endPoints.GetDisplayNode().SetGlyphScale(6.0)
-        self.endPoints.RemoveAllControlPoints()
-      allEndPoints = None  
+        self.addObservers() 
  
     def renderVolume(self, volumeNode, multipleVolumes = False):
         """Use Slicer Volume Rendering module to initialize and setup rendering of the given volume node.
@@ -139,7 +116,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
         logic.UpdateDisplayNodeFromVolumeNode(displayNode, volumeNode)
         volumeNode.AddAndObserveDisplayNodeID(displayNode.GetID())
 
-        displayNode.SetNodeReferenceID("shaderProperty", self.customShader.shaderPropertyNode.GetID())
+        displayNode.SetNodeReferenceID("shaderProperty", self.customShader[self.shaderIndex].shaderPropertyNode.GetID())
 
         logic.FitROIToVolume(displayNode)
 
@@ -170,19 +147,25 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
       :param volumeNode: Current volume.
       :type volumeNode: vtkMRMLScalarVolumeNode
       """
+      CSExists = self.checkIfCSExists()
+      if CSExists == -1:
+        shaderPropertyName = "ShaderProperty"
+        CustomShader.GetAllShaderClassNames()
+        if self.volumeRenderingDisplayNode is None :
+          ## Property node of the current shader
+          self.shaderPropertyNode = slicer.vtkMRMLShaderPropertyNode()
+          self.shaderPropertyNode.SetName(shaderPropertyName)
+          slicer.mrmlScene.AddNode(self.shaderPropertyNode)
+        else :
+          self.shaderPropertyNode = self.volumeRenderingDisplayNode.GetShaderPropertyNode()
 
-      shaderPropertyName = "ShaderProperty"
-      CustomShader.GetAllShaderClassNames()
-      if self.volumeRenderingDisplayNode is None :
-        ## Property node of the current shader
-        self.shaderPropertyNode = slicer.vtkMRMLShaderPropertyNode()
-        self.shaderPropertyNode.SetName(shaderPropertyName)
-        slicer.mrmlScene.AddNode(self.shaderPropertyNode)
+        self.customShader.append(CustomShader.InstanciateCustomShader(self.customShaderType, self.shaderPropertyNode, self.shaderIndex + 2, volumeNode))
+        self.customShader[len(self.customShader)-1].setupShader()
+        self.shaderIndex = len(self.customShader)-1
       else :
-        self.shaderPropertyNode = self.volumeRenderingDisplayNode.GetShaderPropertyNode()
-
-      self.customShader = CustomShader.InstanciateCustomShader(self.customShaderType, self.shaderPropertyNode, volumeNode)
-      self.customShader.setupShader() 
+        self.shaderIndex = CSExists
+        self.customShader[self.shaderIndex].shaderPropertyNode = self.shaderPropertyNode
+        self.customShader[self.shaderIndex].setupShader()
 
     def setCustomShaderType(self, shaderTypeName, volumeNode):
       """Set given shader type as current active shader.
@@ -236,70 +219,9 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
       :param type_: (float or int), type of the parameter to be changed
       """
       
-      self.customShader.setShaderParameter(Param, value)
-
-    def onCustomShaderParamChangedMarkup(self, value, paramName):
-      """Change the custom parameters in the shader.
-
-      :param value: Value to be changed 
-      :type value: str
-      :param paramName: Name of the parameter to be changed 
-      :type paramName: Int
-      :param type_: (float or int), type of the parameter to be changed
-      """
-
-      self.customShader.setShaderParameterMarkup(paramName, value)
-
-    def setPlacingMarkups(self, paramType, paramName, btn, interaction = 1, persistence = 0):
-      """Activate Slicer markups module to set one or multiple markups in the given markups fiducial list.
-
-      :param btn: Button pushed to place the markup. 
-      :type btn: QObject
-      :param interaction:  
-      :type interaction: Int0: /, 1: Place, 2: View transform, 3: / ,4: Select
-      :param persistence:  
-      :type persistence: Int0: Unique, 1: Peristent
-      """
-    
-      self.currentMarkupBtn = btn
-      self.pointType = paramType
-      self.pointName = paramName
-
-      # Getting the "EndPoints" node (always first MarkupsFiducial created)
-      node = slicer.mrmlScene.GetNodeByID("vtkMRMLMarkupsFiducialNode1")
-      # Setting the active node of markup list
-      slicer.modules.markups.logic().SetActiveList(node)
-
-      interactionNode = slicer.mrmlScene.GetNodeByID("vtkMRMLInteractionNodeSingleton")
-      interactionNode.SetCurrentInteractionMode(interaction)
-      interactionNode.SetPlaceModePersistence(persistence)
-
-    def onEndPointAdded(self, caller, event):
-     """Callback function to get the position of the new point.
-
-     :param caller: Slicer.mrmlScene, Slicer active scene.
-     :param event: Flag corresponding to the triggered event. 
-     :type event: str
-     """
-     world = [0, 0, 0]
-     if self.pointType in self.pointTypes:
-       pointIndex = caller.GetDisplayNode().GetActiveControlPoint()
-       caller.GetNthControlPointPositionWorld(pointIndex, world)
-       # If the point was already defined
-       if self.pointName in self.pointIndexes.keys() :
-         index = self.pointIndexes[self.pointName]
-         caller.SetNthControlPointPositionWorld(index, world)
-         caller.RemoveNthControlPoint(pointIndex)
-       else :
-         self.pointIndexes[self.pointName] = pointIndex
-
-       caller.SetNthControlPointLabel(pointIndex, self.pointType)
-       self.onCustomShaderParamChangedMarkup(world, self.pointType)
-       self.currentMarkupBtn.setText('Reset ' + self.pointType)
+      self.customShader[self.shaderIndex].setShaderParameter(Param, value)
 
     def addObservers(self):
-      self.pointModifiedEventTag = self.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.onEndPointsChanged)
-      self.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, self.onEndPointAdded)
       slicer.mrmlScene.AddObserver(slicer.mrmlScene.EndCloseEvent, self.onCloseScene)  
 
     def onCloseScene(self, caller, event):
@@ -312,31 +234,11 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
         node = slicer.util.getNodesByClass("vtkMRMLScalarVolumeNode")
         slicer.mrmlScene.RemoveNode(node[0])
         slicer.mrmlScene.RemoveNode(self.shaderPropertyNode)
-        slicer.mrmlScene.RemoveNode(self.endPoints)
+        for i in range(len(self.customShader)) :
+          slicer.mrmlScene.RemoveNode(self.customShader[i].customShaderPoints.endPoints)
         CustomShader.clear()
       except:
         pass
-
-    @vtk.calldata_type(vtk.VTK_INT)
-    def onEndPointsChanged(self, caller, event, call_data):
-      """Callback function to get the position of the modified point.
-      Note: Vtk.calldata_type(vtk.VTK_OBJECT) function get calling instance as a vtkMRMLNode to be accesed in the function.
-   
-      :param caller: Slicer active scene.
-      :type caller: SlicermrmlScene.
-      :param event: Flag corresponding to the triggered event. 
-      :type event: str
-      :param call_data: VtkMRMLNode, Node added to the scene.
-      """
-      
-   
-      #check if the point was added from the module and was set
-      type_ = caller.GetNthControlPointLabel(call_data)
-      pointName = caller.GetNthControlPointAssociatedNodeID(call_data)
-      if pointName in self.pointIndexes.keys() and self.pointIndexes[pointName] == call_data :
-        world = [0, 0, 0]
-        caller.GetNthControlPointPositionWorld(call_data, world)
-        self.onCustomShaderParamChangedMarkup(world, type_)
     
     def enableOption(self, param, checkBox, CSName) :
       """Function to add or remove parameters according to the value of the boolean.
@@ -352,7 +254,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
       """
       paramName = param.name
       if checkBox.isChecked() :
-        self.customShader.setShaderParameter(param, 1)
+        self.customShader[self.shaderIndex].setShaderParameter(param, 1)
         if str(CSName + paramName) in self.optionalWidgets :
           for p in self.optionalWidgets[CSName + paramName] :
             p.widget.show()
@@ -366,7 +268,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
             #    pointListDisplayNode = pointListNode.GetDisplayNode()
             #    pointListDisplayNode.SetVisibility(True)
       else: 
-        self.customShader.setShaderParameter(param, 0)
+        self.customShader[self.shaderIndex].setShaderParameter(param, 0)
         if str(CSName + paramName) in self.optionalWidgets :
           for p in self.optionalWidgets[CSName + paramName] :
             p.widget.hide()
@@ -379,3 +281,14 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
             #    pointListNode = slicer.util.getNode("vtkMRMLMarkupsFiducialNode1")
             #    pointListDisplayNode = pointListNode.GetDisplayNode()
             #    pointListDisplayNode.SetVisibility(False)
+
+    def checkIfCSExists(self) :
+      """Check if a custom shader exists.
+
+      :param CSName: Name of the current custom shader. 
+      :type CSName: str
+      """
+      for i, CS in enumerate(self.customShader) :
+        if CS.GetDisplayName() == self.customShaderType :
+          return i
+      return -1

@@ -14,8 +14,8 @@ class SphereCarvingShader(CustomShader):
 
   param_list = [radiusParam, centerParam]
   
-  def __init__(self, shaderPropertyNode, volumeNode = None, paramlist = param_list):
-    CustomShader.__init__(self,shaderPropertyNode)
+  def __init__(self, shaderPropertyNode, id, volumeNode = None, paramlist = param_list):
+    CustomShader.__init__(self,shaderPropertyNode, id, volumeNode)
     self.param_list = paramlist
   
   @classmethod
