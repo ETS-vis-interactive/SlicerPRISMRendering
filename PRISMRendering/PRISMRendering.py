@@ -348,13 +348,12 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       :type i: int
       """
       # Getting the "EndPoints" node
-      node = slicer.mrmlScene.GetNodeByID("vtkMRMLMarkupsFiducialNode" + str(self.logic.customShader[self.logic.shaderIndex].customShaderPoints.id))
-      # Setting the active node of markup list
-      slicer.modules.markups.logic().SetActiveList(node)
+      self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
       self.logic.setCustomShaderType(self.ui.customShaderCombo.currentText, self.ui.imageSelector.currentNode())
       self.UpdateShaderParametersUI()
       self.updateParameterNodeFromGUI(self.ui.customShaderCombo.currentText, self.ui.customShaderCombo)
       self.updateGUIFromParameterNode()
+      self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(1)
       # If there is no selected shader, disables the buttons.
       if (self.ui.customShaderCombo.currentText == "None"):
         self.ui.openCustomShaderButton.setEnabled(False)
