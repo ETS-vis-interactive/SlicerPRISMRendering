@@ -1,19 +1,27 @@
 import vtk, qt, ctk, slicer
+from PRISMRenderingParams import *
 
 class CustomShaderPoints():
     def __init__(self, CustomShader):
 
         self.currentMarkupBtn = None
 
-        self.pointTypes = ['center', 'target', 'entry']
         self.pointType = ''
         self.pointName = ''
         self.pointIndexes = {}
 
         self.customShader = CustomShader
+        
+        self.createPointTypes()
 
         self.createEndPoints()
         self.addObservers()
+
+    def createPointTypes(self):
+      self.pointTypes = []
+      for p in self.customShader.param_list:
+        if isinstance(p, FourFParam):
+          self.pointTypes.append(p.name)
 
     def createEndPoints(self):
       """Create endpoints."""
