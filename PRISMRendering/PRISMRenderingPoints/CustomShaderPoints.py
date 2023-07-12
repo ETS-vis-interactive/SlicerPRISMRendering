@@ -22,7 +22,7 @@ class CustomShaderPoints():
       # retrieve end points in the scene or create the node
       name = "EndPoints" + self.customShader.GetDisplayName()
       name = name.replace(" ", "")
-      print(name)
+      # print(name)
       allEndPoints = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLMarkupsFiducialNode', name)
       if allEndPoints.GetNumberOfItems() > 0:
         # set node used before reload in the current instance

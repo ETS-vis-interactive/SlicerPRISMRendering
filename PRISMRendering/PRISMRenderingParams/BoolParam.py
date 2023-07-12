@@ -19,6 +19,8 @@ class BoolParam(Param):
       addOptionCheckBox.toggled.connect(lambda _,cbx = addOptionCheckBox, CSName = widgetClass.CSName : widgetClass.logic.enableOption(self, checkBox = cbx, CSName = CSName))     
       addOptionCheckBox.toggled.connect(lambda value, w = addOptionCheckBox : widgetClass.updateParameterNodeFromGUI(value, w))
       addOptionCheckBox.setParent(widgetClass.ui.customShaderParametersLayout)
+      if self.value == 1:
+        addOptionCheckBox.setChecked(True)
       self.widget = addOptionCheckBox
 
       return addOptionCheckBox, self.name

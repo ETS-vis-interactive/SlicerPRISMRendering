@@ -262,11 +262,9 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
               p.label.show()
             except :
               pass
-            # for t in self.pointTypes :
-            #   if t in i.name:
-            #    pointListNode = slicer.util.getNode("vtkMRMLMarkupsFiducialNode1")
-            #    pointListDisplayNode = pointListNode.GetDisplayNode()
-            #    pointListDisplayNode.SetVisibility(True)
+            for t in self.customShader[self.shaderIndex].customShaderPoints.pointTypes :
+              if t in p.name:
+               self.customShader[self.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(1)
       else: 
         self.customShader[self.shaderIndex].setShaderParameter(param, 0)
         if str(CSName + paramName) in self.optionalWidgets :
@@ -276,11 +274,9 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
               p.label.hide()
             except :
               pass
-            # for t in self.pointTypes :
-            #   if t in i.name:
-            #    pointListNode = slicer.util.getNode("vtkMRMLMarkupsFiducialNode1")
-            #    pointListDisplayNode = pointListNode.GetDisplayNode()
-            #    pointListDisplayNode.SetVisibility(False)
+            for t in self.customShader[self.shaderIndex].customShaderPoints.pointTypes :
+              if t in p.name:
+                self.customShader[self.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
 
     def checkIfCSExists(self) :
       """Check if a custom shader exists.
