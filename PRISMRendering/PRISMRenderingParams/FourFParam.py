@@ -18,7 +18,10 @@ class FourFParam(Param):
     self.widget = None
 
   def SetupGUI(self, widgetClass):
-    targetPointButton = qt.QPushButton("Initialize " + self.display_name)
+    if widgetClass.logic.customShader[widgetClass.logic.shaderIndex].customShaderPoints.pointIndexes.get("markup" + self.name) is None:
+      targetPointButton = qt.QPushButton("Initialize " + self.display_name)
+    else:
+      targetPointButton = qt.QPushButton("Reset " + self.display_name)
     targetPointButton.setToolTip( "Place a markup" )
     targetPointButton.setObjectName(widgetClass.CSName + self.name)
     targetPointButton.clicked.connect(lambda : widgetClass.logic.customShader[widgetClass.logic.shaderIndex].customShaderPoints.setPlacingMarkups(self.name,"markup" + self.name,  targetPointButton,  interaction = 1))
