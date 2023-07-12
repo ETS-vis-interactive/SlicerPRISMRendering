@@ -1,11 +1,9 @@
 import vtk, qt, ctk, slicer
 
 class CustomShaderPoints():
-    def __init__(self, CustomShader, id):
+    def __init__(self, CustomShader):
 
         self.currentMarkupBtn = None
-
-        self.id = id
 
         self.pointTypes = ['center', 'target', 'entry']
         self.pointType = ''
@@ -35,6 +33,9 @@ class CustomShaderPoints():
         self.endPoints.SetName(name)
         self.endPoints.GetDisplayNode().SetGlyphScale(6.0)
         self.endPoints.RemoveAllControlPoints()
+
+      self.node_id = self.endPoints.GetID()
+
       allEndPoints = None
 
     def onCustomShaderParamChangedMarkup(self, value, paramName):
@@ -65,7 +66,7 @@ class CustomShaderPoints():
       self.pointName = paramName
 
       # Getting the "EndPoints" node (always first MarkupsFiducial created)
-      node = slicer.mrmlScene.GetNodeByID("vtkMRMLMarkupsFiducialNode" + str(self.id))
+      node = slicer.mrmlScene.GetNodeByID(self.node_id)
       # Setting the active node of markup list
       slicer.modules.markups.logic().SetActiveList(node)
 
