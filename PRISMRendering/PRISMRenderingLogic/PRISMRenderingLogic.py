@@ -262,9 +262,12 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
               p.label.show()
             except :
               pass
-            for t in self.customShader[self.shaderIndex].customShaderPoints.pointTypes :
-              if t in p.name:
-               self.customShader[self.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(1)
+            try : # if there are Optional Points
+              for t in self.customShader[self.shaderIndex].customShaderPoints.pointTypes :
+                if t in p.name:
+                  self.customShader[self.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(1)
+            except :
+              pass
       else: 
         self.customShader[self.shaderIndex].setShaderParameter(param, 0)
         if str(CSName + paramName) in self.optionalWidgets :
@@ -274,9 +277,12 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
               p.label.hide()
             except :
               pass
-            for t in self.customShader[self.shaderIndex].customShaderPoints.pointTypes :
-              if t in p.name:
-                self.customShader[self.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
+            try : # if there are Optional Points
+              for t in self.customShader[self.shaderIndex].customShaderPoints.pointTypes :
+                if t in p.name:
+                  self.customShader[self.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
+            except :
+              pass
 
     def checkIfCSExists(self) :
       """Check if a custom shader exists.

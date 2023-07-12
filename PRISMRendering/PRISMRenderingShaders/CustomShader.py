@@ -30,8 +30,6 @@ class CustomShader():
         self.allClasses = []
 
         self.param_list = []
-
-        self.customShaderPoints = CustomShaderPoints(self)
     
     def setAllUniforms(self):
       for p in self.param_list:       
@@ -126,3 +124,10 @@ class CustomShader():
           i.setValue(value)
           i.setUniform(self)
           break
+
+    def createMarkupsNodeIfNecessary(self):
+       for p in self.param_list:
+          if isinstance(p, FourFParam):
+             self.customShaderPoints = CustomShaderPoints(self)
+             break
+       

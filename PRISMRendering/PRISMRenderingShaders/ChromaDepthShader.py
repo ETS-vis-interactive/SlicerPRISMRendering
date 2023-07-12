@@ -24,6 +24,7 @@ class ChromaDepthShader(CustomShader):
     volumeRange = self.getVolumeRange(volumeNode)
     if volumeRange :
       self.param_list[0].setRange([-1 * volumeRange, volumeRange])
+    self.createMarkupsNodeIfNecessary()
 
   @classmethod
   def GetDisplayName(cls):

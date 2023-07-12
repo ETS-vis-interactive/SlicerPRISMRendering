@@ -347,13 +347,18 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       :param i: Index of the element. 
       :type i: int
       """
-      # Getting the "EndPoints" node
-      self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
+      try: # if the old shader has points
+        self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
+      except:
+        pass
       self.logic.setCustomShaderType(self.ui.customShaderCombo.currentText, self.ui.imageSelector.currentNode())
       self.UpdateShaderParametersUI()
       self.updateParameterNodeFromGUI(self.ui.customShaderCombo.currentText, self.ui.customShaderCombo)
       self.updateGUIFromParameterNode()
-      self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(1)
+      try: # if the new shader has points
+        self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(1)
+      except:
+        pass
       # If there is no selected shader, disables the buttons.
       if (self.ui.customShaderCombo.currentText == "None"):
         self.ui.openCustomShaderButton.setEnabled(False)
