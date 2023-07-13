@@ -11,9 +11,8 @@ class EchoVolumeShader(CustomShader):
   depthColoringRange = RangeParam('depthColoringRange', 'Depth Coloring Range', [-24, 23])
   brightnessScale = FloatParam('brightnessScale', 'Brightness Scale', 120.0, 0.0, 200.0)
   saturationScale = FloatParam('saturationScale', 'Saturation Scale', 120.0, 0.0, 200.0)
-  volumeRenderingVisible = BoolParam('volumeRenderingVisible', 'Volume Rendering Visible', True)
 
-  param_list = [threshold, edgeSmoothing, depthRange, depthDarkening, depthColoringRange, brightnessScale, saturationScale, volumeRenderingVisible]
+  param_list = [threshold, edgeSmoothing, depthRange, depthDarkening, depthColoringRange, brightnessScale, saturationScale]
 
   def __init__(self, shaderPropertyNode, volumeNode = None, paramlist = param_list):
     CustomShader.__init__(self, shaderPropertyNode, volumeNode)
