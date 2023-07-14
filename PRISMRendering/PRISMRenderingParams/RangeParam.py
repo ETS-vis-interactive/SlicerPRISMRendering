@@ -5,11 +5,14 @@ import vtk, qt, ctk, slicer
 
 class RangeParam(Param):
   
-  def __init__(self, name, display_name, range):
+  def __init__(self, name, display_name, range, default_value = None):
     Param.__init__(self, name, display_name)
     self.range = range
-    self.min = range[0]
-    self.max = range[1]
+    if default_value == None:
+      self.min = range[0]
+      self.max = range[1]
+    else:
+      self.setValue(default_value)
     self.widget = None
 
   def SetupGUI(self, widgetClass):
@@ -17,9 +20,9 @@ class RangeParam(Param):
     label.setMinimumWidth(80)
     slider = ctk.ctkRangeWidget()
     slider.minimum = self.range[0]
-    slider.minimumValue = self.range[0]
+    slider.minimumValue = self.min
     slider.maximum = self.range[1]
-    slider.maximumValue = self.range[1]
+    slider.maximumValue = self.max
     slider.singleStep = ( (slider.maximum - slider.minimum) * 0.01 )
     slider.setObjectName(widgetClass.CSName + self.name)
     slider.setParent(widgetClass.ui.customShaderParametersLayout)
