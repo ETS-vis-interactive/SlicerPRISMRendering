@@ -27,6 +27,8 @@ class CustomShader():
         ## Uniforms of the shader
         self.shaderUniforms = self.shaderPropertyNode.GetFragmentUniforms()
 
+        self.volumeNode = volumeNode
+
         self.allClasses = []
 
         self.param_list = []

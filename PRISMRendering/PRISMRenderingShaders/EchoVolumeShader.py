@@ -1,12 +1,13 @@
 from PRISMRenderingShaders.CustomShader import CustomShader
 from PRISMRenderingParams import *
 import vtk, qt, ctk, slicer
+import logging
 
 class EchoVolumeShader(CustomShader):
 
   threshold = FloatParam('threshold', 'Threshold', 20.0, 0.0, 100.0)
   edgeSmoothing = FloatParam('edgeSmoothing', 'Edge Smoothing', 5.0, 0.0, 10.0)
-  depthRange = RangeParam('depthRange', 'Depth Range', [-120.0, 10.0])
+  depthRange = RangeParam('depthRange', 'Depth Range', [-150.0, 150.0])
   depthDarkening = IntParam('depthDarkening', 'Depth Darkening', 30, 0, 100)
   depthColoringRange = RangeParam('depthColoringRange', 'Depth Coloring Range', [-24, 23])
   brightnessScale = FloatParam('brightnessScale', 'Brightness Scale', 120.0, 0.0, 200.0)
@@ -37,6 +38,67 @@ class EchoVolumeShader(CustomShader):
     super(EchoVolumeShader, self).setupShader()
     self.setAllUniforms()
     self.shaderProperty.ClearAllFragmentShaderReplacements()
+
+    volumeRenderingDisplayNode = self._setupVolumeRenderingDisplayNode(self.volumeNode)
+
+    if not volumeRenderingDisplayNode:
+      return
+
+    # retrieve scalar opacity transfer function
+    volPropNode = volumeRenderingDisplayNode.GetVolumePropertyNode()
+    if not volPropNode:
+      volPropNode = slicer.mrmlScene.AddNewNodeByClass("vtkMRMLVolumePropertyNode")
+      volumeRenderingDisplayNode.SetAndObserveVolumePropertyNodeID(volPropNode.GetID())
+    disableModify = volPropNode.StartModify()
+
+    # Set up lighting/material
+    volPropNode.GetVolumeProperty().ShadeOn()
+    #volPropNode.GetVolumeProperty().SetAmbient(0.5)
+    #volPropNode.GetVolumeProperty().SetDiffuse(0.5)
+    #volPropNode.GetVolumeProperty().SetSpecular(0.5)
+    volPropNode.GetVolumeProperty().SetAmbient(0.1)
+    volPropNode.GetVolumeProperty().SetDiffuse(0.9)
+    volPropNode.GetVolumeProperty().SetSpecular(0.2)
+    volPropNode.GetVolumeProperty().SetSpecularPower(10)
+
+    slicer.mrmlScene.GetFirstNodeByClass("vtkMRMLViewNode").SetVolumeRenderingSurfaceSmoothing(True)
+
+    # compute parameters of the piecewise opacity function
+    #volRange = self.getCurrentVolumeNode().GetImageData().GetScalarRange()
+    volRange = [0,255] # set fixed range so that absolute threshold value does not change as we switch volumes
+
+    eps = 1e-3  # to make sure rampeStart<rampEnd
+    volRangeWidth = ( volRange[1] - volRange[0] )
+    edgeSmoothing = max(eps, self.edgeSmoothing.value)
+
+    rampCenter = volRange[0] + self.threshold.value * 0.01 * volRangeWidth
+    rampStart = rampCenter - edgeSmoothing * 0.01 * volRangeWidth
+    rampEnd = rampCenter + edgeSmoothing * 0.01 * volRangeWidth
+
+    # build opacity function
+    scalarOpacity = vtk.vtkPiecewiseFunction()
+    scalarOpacity.AddPoint(min(volRange[0],rampStart),0.0)
+    scalarOpacity.AddPoint(rampStart,0.0)
+    scalarOpacity.AddPoint(rampCenter,0.2)
+    scalarOpacity.AddPoint(rampCenter+eps,0.8)
+    scalarOpacity.AddPoint(rampEnd,0.95)
+    scalarOpacity.AddPoint(max(volRange[1],rampEnd),0.95)
+
+    # build color transfer function
+    darkBrown = [84.0/255.0, 51.0/255.0, 42.0/255.0]
+    green = [0.5, 1.0, 0.5]
+    colorTransferFunction = vtk.vtkColorTransferFunction()
+    colorTransferFunction.AddRGBPoint(min(volRange[0],rampStart), 0.0, 0.0, 0.0)
+    colorTransferFunction.AddRGBPoint((rampStart+rampCenter)/2.0, *darkBrown)
+    colorTransferFunction.AddRGBPoint(rampCenter, *green)
+    colorTransferFunction.AddRGBPoint(rampEnd, *green)
+    colorTransferFunction.AddRGBPoint(max(volRange[1],rampEnd), *green)
+    
+    volPropNode.GetVolumeProperty().GetScalarOpacity().DeepCopy(scalarOpacity)
+    volPropNode.GetVolumeProperty().GetRGBTransferFunction().DeepCopy(colorTransferFunction) 
+
+    volPropNode.EndModify(disableModify)
+    volPropNode.Modified()
 
     ComputeColorReplacementCommon = """
 
@@ -111,3 +173,89 @@ vec4 computeColor(vec4 scalar, float opacity)
 
     #shaderreplacement
 
+  def inputVolumeNode(self):
+    return self._setupVolumeRenderingDisplayNode(self.volumeNode)
+  
+  def hasImageData(self, volumeNode):
+    if not volumeNode:
+      logging.debug('hasImageData failed: no volume node')
+      return False
+    if volumeNode.GetImageData() is None:
+      logging.debug('hasImageData failed: no image data in volume node')
+      return False
+    return True
+
+  def _setupVolumeRenderingDisplayNode(self, volumeNode):
+    """Sets up volume rendering display node and associated property and ROI nodes.
+    If the nodes already exist and valid then nothing is changed.
+    :param volumeNode: input volume node
+    :return: volume rendering display node
+    """
+    
+    # Make sure the volume node has image data
+    if self.hasImageData(volumeNode) == False:
+      return None
+
+    # Make sure the volume node has a volume rendering display node
+    volRenLogic = slicer.modules.volumerendering.logic()
+    volumeRenderingDisplayNode = volRenLogic.GetFirstVolumeRenderingDisplayNode(volumeNode)
+    if not volumeRenderingDisplayNode:
+      volumeRenderingDisplayNode = volRenLogic.CreateDefaultVolumeRenderingNodes(volumeNode)
+
+    # Make sure GPU volume rendering is used
+    if not volumeRenderingDisplayNode.IsA("vtkMRMLGPURayCastVolumeRenderingDisplayNode"):
+      gpuVolumeRenderingDisplayNode = slicer.mrmlScene.AddNewNodeByClass("vtkMRMLGPURayCastVolumeRenderingDisplayNode")
+      roiNode = volumeRenderingDisplayNode.GetROINodeID()
+      gpuVolumeRenderingDisplayNode.SetAndObserveROINodeID(roiNode)
+      gpuVolumeRenderingDisplayNode.SetAndObserveVolumePropertyNodeID(volumeRenderingDisplayNode.GetVolumePropertyNodeID())
+      gpuVolumeRenderingDisplayNode.SetAndObserveShaderPropertyNodeID(volumeRenderingDisplayNode.GetShaderPropertyNodeID())
+      gpuVolumeRenderingDisplayNode.SetCroppingEnabled(volumeRenderingDisplayNode.GetCroppingEnabled())
+      gpuVolumeRenderingDisplayNode.SetThreshold(volumeRenderingDisplayNode.GetThreshold())
+      gpuVolumeRenderingDisplayNode.SetWindowLevel(volumeRenderingDisplayNode.GetWindowLevel())
+      gpuVolumeRenderingDisplayNode.SetFollowVolumeDisplayNode(volumeRenderingDisplayNode.GetFollowVolumeDisplayNode())
+      gpuVolumeRenderingDisplayNode.SetIgnoreVolumeDisplayNodeThreshold(volumeRenderingDisplayNode.GetIgnoreVolumeDisplayNodeThreshold())
+      gpuVolumeRenderingDisplayNode.SetUseSingleVolumeProperty(volumeRenderingDisplayNode.GetUseSingleVolumeProperty())
+      slicer.modules.volumerendering.logic().UpdateDisplayNodeFromVolumeNode(gpuVolumeRenderingDisplayNode, volumeNode)
+      slicer.mrmlScene.RemoveNode(volumeRenderingDisplayNode)
+      volumeRenderingDisplayNode = gpuVolumeRenderingDisplayNode
+
+    # Keep only first volume rendering display node, delete all the others
+    displayNodes = []
+    for displayNodeIndex in range(volumeNode.GetNumberOfDisplayNodes()):
+      displayNodes.append(volumeNode.GetNthDisplayNode(displayNodeIndex))
+    alreadyAdded = False
+    for displayNode in displayNodes:
+      if not displayNode.IsA("vtkMRMLVolumeRenderingDisplayNode"):
+        continue
+      if displayNode == volumeRenderingDisplayNode:
+        alreadyAdded = True
+        continue
+      slicer.mrmlScene.RemoveNode(displayNode)
+
+    # Make sure markups ROI node is used (if Slicer is recent enough)
+    if vtk.vtkVersion().GetVTKMajorVersion() >= 9:
+      if not volumeRenderingDisplayNode.GetMarkupsROINode():
+        markupsRoiNode = slicer.mrmlScene.AddNewNodeByClass('vtkMRMLMarkupsROINode', volumeNode.GetName()+' ROI')
+        markupsRoiNode.CreateDefaultDisplayNodes()
+        markupsRoiNode.GetDisplayNode().SetVisibility(False)
+        markupsRoiNode.GetDisplayNode().SetPropertiesLabelVisibility(False)
+        markupsRoiNode.GetDisplayNode().SetRotationHandleVisibility(True)
+        markupsRoiNode.GetDisplayNode().SetTranslationHandleVisibility(True)
+        annotationRoiNode = volumeRenderingDisplayNode.GetROINode()
+        volumeRenderingDisplayNode.SetAndObserveROINodeID(markupsRoiNode.GetID())
+        if annotationRoiNode:
+          roiCenter = [0.0, 0.0, 0.0]
+          roiRadius = [1.0, 1.0, 1.0]
+          annotationRoiNode.GetXYZ(roiCenter)
+          annotationRoiNode.GetRadiusXYZ(roiRadius)
+          markupsRoiNode.SetXYZ(roiCenter)
+          markupsRoiNode.SetRadiusXYZ(roiRadius)
+          slicer.mrmlScene.RemoveNode(annotationRoiNode)
+        else:
+          slicer.modules.volumerendering.logic().FitROIToVolume(volumeRenderingDisplayNode)
+
+    shaderPropertyNode = volumeRenderingDisplayNode.GetOrCreateShaderPropertyNode(slicer.mrmlScene)
+    sp = shaderPropertyNode.GetShaderProperty()
+    sp.ClearAllShaderReplacements()
+
+    return volumeRenderingDisplayNode
