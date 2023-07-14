@@ -18,9 +18,18 @@ class EchoVolumeShader(CustomShader):
   def __init__(self, shaderPropertyNode, volumeNode = None, paramlist = param_list):
     CustomShader.__init__(self, shaderPropertyNode, volumeNode)
     self.param_list = paramlist
-    self.createMarkupsNodeIfNecessary()
-  @classmethod
 
+    self.update_param_list = [self.threshold, self.edgeSmoothing]
+
+    for p in self.param_list:
+      if p in self.update_param_list:
+        p.addCustomShaderUpdater(self)
+    
+    self.createMarkupsNodeIfNecessary()
+
+    self.volumeRenderingDisplayNode = self._setupVolumeRenderingDisplayNode(self.volumeNode)
+
+  @classmethod
   def GetDisplayName(cls):
     return 'Echo Volume Renderer'
   
@@ -39,66 +48,7 @@ class EchoVolumeShader(CustomShader):
     self.setAllUniforms()
     self.shaderProperty.ClearAllFragmentShaderReplacements()
 
-    volumeRenderingDisplayNode = self._setupVolumeRenderingDisplayNode(self.volumeNode)
-
-    if not volumeRenderingDisplayNode:
-      return
-
-    # retrieve scalar opacity transfer function
-    volPropNode = volumeRenderingDisplayNode.GetVolumePropertyNode()
-    if not volPropNode:
-      volPropNode = slicer.mrmlScene.AddNewNodeByClass("vtkMRMLVolumePropertyNode")
-      volumeRenderingDisplayNode.SetAndObserveVolumePropertyNodeID(volPropNode.GetID())
-    disableModify = volPropNode.StartModify()
-
-    # Set up lighting/material
-    volPropNode.GetVolumeProperty().ShadeOn()
-    #volPropNode.GetVolumeProperty().SetAmbient(0.5)
-    #volPropNode.GetVolumeProperty().SetDiffuse(0.5)
-    #volPropNode.GetVolumeProperty().SetSpecular(0.5)
-    volPropNode.GetVolumeProperty().SetAmbient(0.1)
-    volPropNode.GetVolumeProperty().SetDiffuse(0.9)
-    volPropNode.GetVolumeProperty().SetSpecular(0.2)
-    volPropNode.GetVolumeProperty().SetSpecularPower(10)
-
-    slicer.mrmlScene.GetFirstNodeByClass("vtkMRMLViewNode").SetVolumeRenderingSurfaceSmoothing(True)
-
-    # compute parameters of the piecewise opacity function
-    #volRange = self.getCurrentVolumeNode().GetImageData().GetScalarRange()
-    volRange = [0,255] # set fixed range so that absolute threshold value does not change as we switch volumes
-
-    eps = 1e-3  # to make sure rampeStart<rampEnd
-    volRangeWidth = ( volRange[1] - volRange[0] )
-    edgeSmoothing = max(eps, self.edgeSmoothing.value)
-
-    rampCenter = volRange[0] + self.threshold.value * 0.01 * volRangeWidth
-    rampStart = rampCenter - edgeSmoothing * 0.01 * volRangeWidth
-    rampEnd = rampCenter + edgeSmoothing * 0.01 * volRangeWidth
-
-    # build opacity function
-    scalarOpacity = vtk.vtkPiecewiseFunction()
-    scalarOpacity.AddPoint(min(volRange[0],rampStart),0.0)
-    scalarOpacity.AddPoint(rampStart,0.0)
-    scalarOpacity.AddPoint(rampCenter,0.2)
-    scalarOpacity.AddPoint(rampCenter+eps,0.8)
-    scalarOpacity.AddPoint(rampEnd,0.95)
-    scalarOpacity.AddPoint(max(volRange[1],rampEnd),0.95)
-
-    # build color transfer function
-    darkBrown = [84.0/255.0, 51.0/255.0, 42.0/255.0]
-    green = [0.5, 1.0, 0.5]
-    colorTransferFunction = vtk.vtkColorTransferFunction()
-    colorTransferFunction.AddRGBPoint(min(volRange[0],rampStart), 0.0, 0.0, 0.0)
-    colorTransferFunction.AddRGBPoint((rampStart+rampCenter)/2.0, *darkBrown)
-    colorTransferFunction.AddRGBPoint(rampCenter, *green)
-    colorTransferFunction.AddRGBPoint(rampEnd, *green)
-    colorTransferFunction.AddRGBPoint(max(volRange[1],rampEnd), *green)
-    
-    volPropNode.GetVolumeProperty().GetScalarOpacity().DeepCopy(scalarOpacity)
-    volPropNode.GetVolumeProperty().GetRGBTransferFunction().DeepCopy(colorTransferFunction) 
-
-    volPropNode.EndModify(disableModify)
-    volPropNode.Modified()
+    self.updateVolumeProperty()
 
     ComputeColorReplacementCommon = """
 
@@ -172,7 +122,67 @@ vec4 computeColor(vec4 scalar, float opacity)
     sp.AddShaderReplacement(vtk.vtkShader.Fragment, "//VTK::ComputeColor::Dec", True, computeColorReplacement, True)
 
     #shaderreplacement
+  def updateVolumeProperty(self):
 
+    if not self.volumeRenderingDisplayNode:
+      return
+
+    # retrieve scalar opacity transfer function
+    volPropNode = self.volumeRenderingDisplayNode.GetVolumePropertyNode()
+    if not volPropNode:
+      volPropNode = slicer.mrmlScene.AddNewNodeByClass("vtkMRMLVolumePropertyNode")
+      self.volumeRenderingDisplayNode.SetAndObserveVolumePropertyNodeID(volPropNode.GetID())
+    disableModify = volPropNode.StartModify()
+
+    # Set up lighting/material
+    volPropNode.GetVolumeProperty().ShadeOn()
+    #volPropNode.GetVolumeProperty().SetAmbient(0.5)
+    #volPropNode.GetVolumeProperty().SetDiffuse(0.5)
+    #volPropNode.GetVolumeProperty().SetSpecular(0.5)
+    volPropNode.GetVolumeProperty().SetAmbient(0.1)
+    volPropNode.GetVolumeProperty().SetDiffuse(0.9)
+    volPropNode.GetVolumeProperty().SetSpecular(0.2)
+    volPropNode.GetVolumeProperty().SetSpecularPower(10)
+
+    slicer.mrmlScene.GetFirstNodeByClass("vtkMRMLViewNode").SetVolumeRenderingSurfaceSmoothing(True)
+
+    # compute parameters of the piecewise opacity function
+    #volRange = self.getCurrentVolumeNode().GetImageData().GetScalarRange()
+    volRange = [0,255] # set fixed range so that absolute threshold value does not change as we switch volumes
+
+    eps = 1e-3  # to make sure rampeStart<rampEnd
+    volRangeWidth = ( volRange[1] - volRange[0] )
+    edgeSmoothing = max(eps, self.edgeSmoothing.value)
+
+    rampCenter = volRange[0] + self.threshold.value * 0.01 * volRangeWidth
+    rampStart = rampCenter - edgeSmoothing * 0.01 * volRangeWidth
+    rampEnd = rampCenter + edgeSmoothing * 0.01 * volRangeWidth
+
+    # build opacity function
+    scalarOpacity = vtk.vtkPiecewiseFunction()
+    scalarOpacity.AddPoint(min(volRange[0],rampStart),0.0)
+    scalarOpacity.AddPoint(rampStart,0.0)
+    scalarOpacity.AddPoint(rampCenter,0.2)
+    scalarOpacity.AddPoint(rampCenter+eps,0.8)
+    scalarOpacity.AddPoint(rampEnd,0.95)
+    scalarOpacity.AddPoint(max(volRange[1],rampEnd),0.95)
+
+    # build color transfer function
+    darkBrown = [84.0/255.0, 51.0/255.0, 42.0/255.0]
+    green = [0.5, 1.0, 0.5]
+    colorTransferFunction = vtk.vtkColorTransferFunction()
+    colorTransferFunction.AddRGBPoint(min(volRange[0],rampStart), 0.0, 0.0, 0.0)
+    colorTransferFunction.AddRGBPoint((rampStart+rampCenter)/2.0, *darkBrown)
+    colorTransferFunction.AddRGBPoint(rampCenter, *green)
+    colorTransferFunction.AddRGBPoint(rampEnd, *green)
+    colorTransferFunction.AddRGBPoint(max(volRange[1],rampEnd), *green)
+    
+    volPropNode.GetVolumeProperty().GetScalarOpacity().DeepCopy(scalarOpacity)
+    volPropNode.GetVolumeProperty().GetRGBTransferFunction().DeepCopy(colorTransferFunction) 
+
+    volPropNode.EndModify(disableModify)
+    volPropNode.Modified()
+  
   def inputVolumeNode(self):
     return self._setupVolumeRenderingDisplayNode(self.volumeNode)
   
@@ -259,3 +269,6 @@ vec4 computeColor(vec4 scalar, float opacity)
     sp.ClearAllShaderReplacements()
 
     return volumeRenderingDisplayNode
+
+  def onParamUpdater(self):
+    self.updateVolumeProperty()
