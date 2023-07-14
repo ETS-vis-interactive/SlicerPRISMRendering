@@ -121,6 +121,7 @@ vec4 computeColor(vec4 scalar, float opacity)
     computeColorReplacement = ComputeColorReplacementVTK9 if vtk.vtkVersion().GetVTKMajorVersion() >= 9 else ComputeColorReplacementVTK8
     sp.AddShaderReplacement(vtk.vtkShader.Fragment, "//VTK::ComputeColor::Dec", True, computeColorReplacement, True)
 
+    self.onParamUpdater()
     #shaderreplacement
   def updateVolumeProperty(self):
 

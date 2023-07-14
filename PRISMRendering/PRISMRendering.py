@@ -164,7 +164,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         self.removeAllGUIObservers()
         for w in self.widgets:
          if isinstance(w, Param):
-           return
+           w.updateGUIfromParameterNode(self, caller, event)
          else:
            self.updateWidgetGUIFromParameterNode(w, caller, event)
         self.addAllGUIObservers()
