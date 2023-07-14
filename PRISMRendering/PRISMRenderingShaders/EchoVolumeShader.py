@@ -6,7 +6,7 @@ import logging
 class EchoVolumeShader(CustomShader):
 
   threshold = FloatParam('threshold', 'Threshold', 20.0, 0.0, 100.0)
-  edgeSmoothing = FloatParam('edgeSmoothing', 'Edge Smoothing', 5.0, 0.0, 10.0)
+  edgeSmoothing = FloatParam('edgeSmoothing', 'Edge Smoothing', 5.0, 0.0, 20.0)
   depthRange = RangeParam('depthRange', 'Depth Range', [-150.0, 150.0], [-120.0, 10.0])
   depthDarkening = IntParam('depthDarkening', 'Depth Darkening', 30, 0, 100)
   depthColoringRange = RangeParam('depthColoringRange', 'Depth Coloring Range', [-50, 50], [-24, 23])

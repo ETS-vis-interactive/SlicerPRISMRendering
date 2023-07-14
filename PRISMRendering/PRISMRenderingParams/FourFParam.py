@@ -46,6 +46,7 @@ class FourFParam(Param):
     return [self.value['x'], self.value['y'], self.value['z'], self.value['w']]
   
   def setUniform(self, CustomShader):
+    super(FourFParam, self).setUniform(CustomShader)
     x = self.value['x']
     y = self.value['y']
     z = self.value['z']

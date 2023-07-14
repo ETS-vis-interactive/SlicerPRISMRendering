@@ -43,9 +43,8 @@ class FloatParam(Param):
       self.value = value
 
   def setUniform(self, CustomShader):
+    super(FloatParam, self).setUniform(CustomShader)
     CustomShader.shaderUniforms.SetUniformf(self.name, self.value)
-    if self.isShaderUpdater:
-      self.customShader.onParamUpdater()
 
 
   def updateGUIFromParameterNode(self, widgetClass, caller = None, event = None):

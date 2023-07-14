@@ -53,6 +53,7 @@ class RangeParam(Param):
     self.max = range[1]
 
   def setUniform(self, CustomShader):
+    super(RangeParam, self).setUniform(CustomShader)
     CustomShader.shaderUniforms.SetUniformf(self.name + "Min", self.min)
     CustomShader.shaderUniforms.SetUniformf(self.name + "Max", self.max)
 
