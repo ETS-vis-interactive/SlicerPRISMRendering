@@ -41,6 +41,7 @@ class IntParam(Param):
       self.value = int(value)
 
   def setUniform(self, CustomShader):
+    super(IntParam, self).setUniform(CustomShader)
     CustomShader.shaderUniforms.SetUniformi(self.name, self.value)
 
   def updateGUIFromParameterNode(self, widgetClass, caller = None, event = None):
