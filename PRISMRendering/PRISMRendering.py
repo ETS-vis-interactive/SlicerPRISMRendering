@@ -164,7 +164,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         self.removeAllGUIObservers()
         for w in self.widgets:
          if isinstance(w, Param):
-           return
+           w.updateGUIfromParameterNode(self, caller, event)
          else:
            self.updateWidgetGUIFromParameterNode(w, caller, event)
         self.addAllGUIObservers()
@@ -508,7 +508,6 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       ## Name of the current shader, without spaces
       volumeName = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode().GetName()
       self.CSName = self.ui.customShaderCombo.currentText.replace(" ", "") + volumeName
-
       param_list = self.logic.customShader[self.logic.shaderIndex].param_list
       for p in param_list:
           if not isinstance(p, TransferFunctionParam):

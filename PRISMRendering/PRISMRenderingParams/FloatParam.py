@@ -43,7 +43,9 @@ class FloatParam(Param):
       self.value = value
 
   def setUniform(self, CustomShader):
+    super(FloatParam, self).setUniform(CustomShader)
     CustomShader.shaderUniforms.SetUniformf(self.name, self.value)
+
 
   def updateGUIFromParameterNode(self, widgetClass, caller = None, event = None):
     parameterNode = widgetClass.logic.parameterNode
@@ -62,4 +64,4 @@ class FloatParam(Param):
       parameterNode.SetParameter(self.widget.name, str(self.widget.value))
       
   def addGUIObservers(self, widgetClass):
-    self.widget.valueChanged.connect(lambda value, : self.updateParameterNodeFromGUI(widgetClass, value))    
+    self.widget.valueChanged.connect(lambda value, : self.updateParameterNodeFromGUI(widgetClass, value))

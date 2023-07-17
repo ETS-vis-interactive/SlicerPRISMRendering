@@ -32,6 +32,7 @@ class BoolParam(Param):
       self.value = 0
 
   def setUniform(self, CustomShader):
+    super(BoolParam, self).setUniform(CustomShader)
     CustomShader.shaderUniforms.SetUniformi(self.name, self.value)
 
   def updateGUIFromParameterNode(self, widgetClass, caller = None, event = None):
