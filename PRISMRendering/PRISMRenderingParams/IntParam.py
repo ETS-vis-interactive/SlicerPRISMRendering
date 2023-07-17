@@ -61,4 +61,4 @@ class IntParam(Param):
       parameterNode.SetParameter(self.widget.name, str(self.widget.value))
       
   def addGUIObservers(self, widgetClass):
-    self.widget.valueChanged.connect(lambda value, : self.updateParameterNodeFromGUI(widgetClass, value))    
+    self.widget.valueChanged.connect(lambda : self.updateParameterNodeFromGUI(widgetClass))    

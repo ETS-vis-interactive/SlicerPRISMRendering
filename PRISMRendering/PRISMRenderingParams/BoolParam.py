@@ -53,5 +53,5 @@ class BoolParam(Param):
       parameterNode.SetParameter(self.widget.name, "1") if self.widget.checked else parameterNode.SetParameter(self.widget.name, "0")
       
   def addGUIObservers(self, widgetClass):
-    self.widget.toggled.connect(lambda value, w = self.widget : self.updateParameterNodeFromGUI(widgetClass, value))
+    self.widget.toggled.connect(lambda : self.updateParameterNodeFromGUI(widgetClass))
     

@@ -70,4 +70,4 @@ class FourFParam(Param):
       parameterNode.SetParameter(self.widget.name, "1") if self.widget.enabled else parameterNode.SetParameter(self.widget.name, "0")
 
   def addGUIObservers(self, widgetClass):
-    self.widget.clicked.connect(lambda value, w = self.widget : self.updateParameterNodeFromGUI(widgetClass, value))
+    self.widget.clicked.connect(lambda : self.updateParameterNodeFromGUI(widgetClass))
