@@ -65,9 +65,12 @@ class FourFParam(Param):
     
   def updateParameterNodeFromGUI(self, widgetClass):
       parameterNode = widgetClass.logic.parameterNode
+      oldModifiedState = parameterNode.StartModify()
+      
       if widgetClass.ui.imageSelector.currentNode() is None:
         return 
       parameterNode.SetParameter(self.widget.name, "1") if self.widget.enabled else parameterNode.SetParameter(self.widget.name, "0")
-
+      parameterNode.EndModify(oldModifiedState)
+      
   def addGUIObservers(self, widgetClass):
     self.widget.clicked.connect(lambda : self.updateParameterNodeFromGUI(widgetClass))

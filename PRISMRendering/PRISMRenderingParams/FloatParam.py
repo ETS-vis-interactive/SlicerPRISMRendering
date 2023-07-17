@@ -58,10 +58,13 @@ class FloatParam(Param):
     self.widget.valueChanged.disconnect(self.updateParameterNodeFromGUI)
 
   def updateParameterNodeFromGUI(self, widgetClass):
+      
       parameterNode = widgetClass.logic.parameterNode
+      oldModifiedState = parameterNode.StartModify()
       if widgetClass.ui.imageSelector.currentNode() is None:
         return 
       parameterNode.SetParameter(self.widget.name, str(self.widget.value))
-      
+      parameterNode.EndModify(oldModifiedState)
+
   def addGUIObservers(self, widgetClass):
     self.widget.valueChanged.connect(lambda : self.updateParameterNodeFromGUI(widgetClass))

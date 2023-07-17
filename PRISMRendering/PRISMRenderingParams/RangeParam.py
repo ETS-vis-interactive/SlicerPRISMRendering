@@ -68,9 +68,12 @@ class RangeParam(Param):
     self.widget.valuesChanged.disconnect(self.updateParameterNodeFromGUI)
 
   def updateParameterNodeFromGUI(self, widgetClass):
-      parameterNode = widgetClass.logic.parameterNode 
-      parameterNode.SetParameter(self.widget.name, str(self.widget.minimumValue) + ',' + str(self.widget.maximumValue))
       
+      parameterNode = widgetClass.logic.parameterNode
+      oldModifiedState = parameterNode.StartModify()
+      parameterNode.SetParameter(self.widget.name, str(self.widget.minimumValue) + ',' + str(self.widget.maximumValue))
+      parameterNode.EndModify(oldModifiedState)
+
   def addGUIObservers(self, widgetClass):
     self.widget.valuesChanged.connect(lambda : self.updateParameterNodeFromGUI(widgetClass))
 

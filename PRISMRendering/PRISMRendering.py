@@ -387,9 +387,6 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       :param w: Widget being modified.  
       :type w: QObject
       """   
-      parameterNode = self.logic.parameterNode
-      oldModifiedState = parameterNode.StartModify()
-
       if self.ui.imageSelector.currentNode() is None:
         return 
 
@@ -397,11 +394,10 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         return
       
       if isinstance(w, Param):
-        w.updateParameterNodeFromGUI(self, value)
+        w.updateParameterNodeFromGUI(self)
       else :
         self.updateWidgetParameterNodeFromGUI(value, w)
 
-      parameterNode.EndModify(oldModifiedState)
 
     def onApplyButton(self):
         """
@@ -910,7 +906,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       :type w: QObject
       """
       parameterNode = self.logic.parameterNode
-  
+      oldModifiedState = parameterNode.StartModify()
       widgetClassName = self.getClassName(w)
       if widgetClassName=="QPushButton" :
         parameterNode.SetParameter(w.name, "1") if w.enabled else parameterNode.SetParameter(w.name, "0")
@@ -971,6 +967,8 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
             if parameterNode.GetParameter(pointName) != "":
               caller.GetNthControlPointPositionWorld(index, world)
               parameterNode.SetParameter(pointName, ",".join("{0}".format(n) for n in world))
+
+      parameterNode.EndModify(oldModifiedState)
 
 
 
