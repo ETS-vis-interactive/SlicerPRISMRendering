@@ -17,7 +17,7 @@ class BoolParam(Param):
       addOptionCheckBox.setObjectName(widgetClass.CSName + self.name)
       addOptionCheckBox.toggled.connect(lambda value : widgetClass.logic.onCustomShaderParamChanged(value, self) )
       addOptionCheckBox.toggled.connect(lambda _,cbx = addOptionCheckBox, CSName = widgetClass.CSName : widgetClass.logic.enableOption(self, checkBox = cbx, CSName = CSName))     
-      addOptionCheckBox.toggled.connect(lambda value, w = addOptionCheckBox : widgetClass.updateParameterNodeFromGUI(value, w))
+      addOptionCheckBox.toggled.connect(lambda : self.updateParameterNodeFromGUI(widgetClass))
       addOptionCheckBox.setParent(widgetClass.ui.customShaderParametersLayout)
       if self.value == 1:
         addOptionCheckBox.setChecked(True)
@@ -46,7 +46,7 @@ class BoolParam(Param):
   def removeGUIObservers(self):
     self.widget.toggled.disconnect(self.updateParameterNodeFromGUI)
 
-  def updateParameterNodeFromGUI(self, widgetClass, value):
+  def updateParameterNodeFromGUI(self, widgetClass):
       parameterNode = widgetClass.logic.parameterNode
       if widgetClass.ui.imageSelector.currentNode() is None:
         return 

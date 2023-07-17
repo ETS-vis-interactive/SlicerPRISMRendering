@@ -27,7 +27,7 @@ class RangeParam(Param):
     slider.setObjectName(widgetClass.CSName + self.name)
     slider.setParent(widgetClass.ui.customShaderParametersLayout)
     slider.valuesChanged.connect(lambda min, max : widgetClass.logic.onCustomShaderParamChanged([min, max], self) )
-    slider.valuesChanged.connect(lambda value1, value2, w = slider : widgetClass.updateParameterNodeFromGUI([value1, value2], w))
+    slider.valuesChanged.connect(lambda : self.updateParameterNodeFromGUI(widgetClass))
     self.widget = slider
     self.label = label
 
@@ -67,7 +67,7 @@ class RangeParam(Param):
   def removeGUIObservers(self):
     self.widget.valuesChanged.disconnect(self.updateParameterNodeFromGUI)
 
-  def updateParameterNodeFromGUI(self, widgetClass, value):
+  def updateParameterNodeFromGUI(self, widgetClass):
       parameterNode = widgetClass.logic.parameterNode 
       parameterNode.SetParameter(self.widget.name, str(self.widget.minimumValue) + ',' + str(self.widget.maximumValue))
       

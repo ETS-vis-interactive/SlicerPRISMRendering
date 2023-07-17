@@ -25,7 +25,7 @@ class FourFParam(Param):
     targetPointButton.setToolTip( "Place a markup" )
     targetPointButton.setObjectName(widgetClass.CSName + self.name)
     targetPointButton.clicked.connect(lambda : widgetClass.logic.customShader[widgetClass.logic.shaderIndex].customShaderPoints.setPlacingMarkups(self.name,"markup" + self.name,  targetPointButton,  interaction = 1))
-    targetPointButton.clicked.connect(lambda value, w = targetPointButton : widgetClass.updateParameterNodeFromGUI(value, w))
+    targetPointButton.clicked.connect(lambda : self.updateParameterNodeFromGUI(widgetClass))
     targetPointButton.setParent(widgetClass.ui.customShaderParametersLayout)
     self.widget = targetPointButton
     return targetPointButton, self.name
@@ -63,7 +63,7 @@ class FourFParam(Param):
   def removeGUIObservers(self):
     self.widget.clicked.disconnect(self.updateParameterNodeFromGUI)
     
-  def updateParameterNodeFromGUI(self, widgetClass, value):
+  def updateParameterNodeFromGUI(self, widgetClass):
       parameterNode = widgetClass.logic.parameterNode
       if widgetClass.ui.imageSelector.currentNode() is None:
         return 
