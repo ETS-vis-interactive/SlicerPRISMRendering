@@ -25,7 +25,7 @@ class IntParam(Param):
     slider.setDecimals(0)
     slider.setValue( self.value )
     slider.valueChanged.connect(lambda value : widgetClass.logic.onCustomShaderParamChanged(value, self) )
-    slider.valueChanged.connect(lambda value, w = slider : widgetClass.updateParameterNodeFromGUI(value, w))
+    slider.valueChanged.connect(lambda : self.updateParameterNodeFromGUI(widgetClass))
     slider.setParent( widgetClass.ui.customShaderParametersLayout )
     self.widget = slider
     self.label = label
@@ -54,11 +54,15 @@ class IntParam(Param):
   def removeGUIObservers(self):
     self.widget.valueChanged.disconnect(self.updateParameterNodeFromGUI)
 
-  def updateParameterNodeFromGUI(self, widgetClass, value):
+  def updateParameterNodeFromGUI(self, widgetClass):
+      
       parameterNode = widgetClass.logic.parameterNode
+      oldModifiedState = parameterNode.StartModify()
+      
       if widgetClass.ui.imageSelector.currentNode() is None:
         return 
       parameterNode.SetParameter(self.widget.name, str(self.widget.value))
+      parameterNode.EndModify(oldModifiedState)
       
   def addGUIObservers(self, widgetClass):
-    self.widget.valueChanged.connect(lambda value, : self.updateParameterNodeFromGUI(widgetClass, value))    
+    self.widget.valueChanged.connect(lambda : self.updateParameterNodeFromGUI(widgetClass))    
