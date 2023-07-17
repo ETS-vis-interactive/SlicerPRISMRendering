@@ -444,8 +444,8 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
       # Set and observe new parameter node
       self.logic.parameterNode = self.logic.getParameterNode()
-      # if self.logic.parameterNode:
-      #  self.logic.parameterNodeObserver = self.logic.parameterNode.AddObserver(vtk.vtkCommand.ModifiedEvent, self.onParameterNodeModified)
+      if self.logic.parameterNode:
+       self.logic.parameterNodeObserver = self.logic.parameterNode.AddObserver(vtk.vtkCommand.ModifiedEvent, self.onParameterNodeModified)
 
     def appendList(self, widget, name):
       """Function to add a widget to self.widgets without duplicate.
