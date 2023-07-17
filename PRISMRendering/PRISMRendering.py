@@ -145,29 +145,9 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       self.addAllGUIObservers()
       if self.ui.imageSelector.currentNode() != None :
         self.updateParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
-      self.updateGUIFromParameterNode()
 
       #self.ui.enableScalingCheckBox.setChecked(True)
       self.ROIdisplay = None
-
-    def updateGUIFromParameterNode(self, caller=None, event=None):
-        """Function to update GUI from parameter node values
-
-        :param caller: Caller of the function.
-        :param event: Event that triggered the function.
-        """   
-        parameterNode = self.logic.parameterNode
-        if not parameterNode or parameterNode.GetParameterCount() == 0:
-          return
-
-        # Disables updateParameterNodeFromGUI signal 
-        self.removeAllGUIObservers()
-        for w in self.widgets:
-         if isinstance(w, Param):
-           w.updateGUIFromParameterNode(self, caller, event)
-         else:
-           self.updateWidgetGUIFromParameterNode(w, caller, event)
-        self.addAllGUIObservers()
     
     def onImageSelectorChanged(self, node, widget, index=0):
       """Callback function when the volume node has been changed in the dedicated combobox.
@@ -354,7 +334,6 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       self.logic.setCustomShaderType(self.ui.customShaderCombo.currentText, self.ui.imageSelector.currentNode())
       self.UpdateShaderParametersUI()
       self.updateParameterNodeFromGUI(self.ui.customShaderCombo.currentText, self.ui.customShaderCombo)
-      self.updateGUIFromParameterNode()
       try: # if the new shader has points
         self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(1)
       except:
@@ -444,8 +423,6 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
       # Set and observe new parameter node
       self.logic.parameterNode = self.logic.getParameterNode()
-      if self.logic.parameterNode:
-       self.logic.parameterNodeObserver = self.logic.parameterNode.AddObserver(vtk.vtkCommand.ModifiedEvent, self.onParameterNodeModified)
 
     def appendList(self, widget, name):
       """Function to add a widget to self.widgets without duplicate.
