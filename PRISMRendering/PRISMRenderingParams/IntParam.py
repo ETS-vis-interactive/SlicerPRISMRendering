@@ -29,6 +29,8 @@ class IntParam(Param):
     slider.setParent( widgetClass.ui.customShaderParametersLayout )
     self.widget = slider
     self.label = label
+
+    self.updateGUIFromParameterNode(widgetClass)
     
     return slider, label, self.name
   
@@ -48,7 +50,9 @@ class IntParam(Param):
     parameterNode = widgetClass.logic.parameterNode
     value = parameterNode.GetParameter(self.widget.name)
     if value != '' :
-      value = float(value)
+      value = int(value)
+      self.setValue(value)
+      self.setUniform(widgetClass.logic.CustomShader[widgetClass.logic.shaderIndex])
       self.widget.setValue(value)
     
   def removeGUIObservers(self):
