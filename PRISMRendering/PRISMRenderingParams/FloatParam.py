@@ -31,7 +31,7 @@ class FloatParam(Param):
 
     self.widget = slider
     self.label = label
-
+    self.updateGUIFromParameterNode(widgetClass)
     return slider, label, self.name
   
   def setValue(self, value):
@@ -52,6 +52,8 @@ class FloatParam(Param):
     value = parameterNode.GetParameter(self.widget.name)
     if value != '' :
       value = float(value)
+      self.setValue(value)
+      self.setUniform(widgetClass.logic.CustomShader[widgetClass.logic.shaderIndex])
       self.widget.setValue(value)
     
   def removeGUIObservers(self):

@@ -30,7 +30,7 @@ class RangeParam(Param):
     slider.valuesChanged.connect(lambda : self.updateParameterNodeFromGUI(widgetClass))
     self.widget = slider
     self.label = label
-
+    self.updateGUIFromParameterNode(widgetClass)
     return slider, label, self.name
   
   def setValue(self, value):
@@ -62,6 +62,8 @@ class RangeParam(Param):
     value = parameterNode.GetParameter(self.widget.name)
     if value != '' :
       value = float(value)
+      self.setValue(value)
+      self.setUniform(widgetClass.logic.CustomShader[widgetClass.logic.shaderIndex])
       self.widget.setValue(value)
     
   def removeGUIObservers(self):
