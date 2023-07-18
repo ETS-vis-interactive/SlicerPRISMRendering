@@ -145,12 +145,12 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       self.addAllGUIObservers()
       if self.ui.imageSelector.currentNode() != None :
         self.updateParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
-      self.updateGUIFromParameterNode()
+      self.updateBaseGUIFromParameterNode()
 
       #self.ui.enableScalingCheckBox.setChecked(True)
       self.ROIdisplay = None
 
-    def updateGUIFromParameterNode(self, caller=None, event=None):
+    def updateBaseGUIFromParameterNode(self, caller=None, event=None):
         """Function to update GUI from parameter node values
 
         :param caller: Caller of the function.
@@ -352,7 +352,6 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       self.logic.setCustomShaderType(self.ui.customShaderCombo.currentText, self.ui.imageSelector.currentNode())
       self.UpdateShaderParametersUI()
       self.updateParameterNodeFromGUI(self.ui.customShaderCombo.currentText, self.ui.customShaderCombo)
-      # self.updateGUIFromParameterNode()
       try: # if the new shader has points
         self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(1)
       except:
@@ -706,15 +705,6 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
       if secondTf :
         self.secondColorTransferFunctionWidget[volumeID][TFType] = widget
-
-    def onParameterNodeModified(self, caller, event):
-      """Function to update the parameter node.
-
-      :param caller: Caller of the function.
-      :param event: Event that triggered the function.
-      """   
-
-      self.updateGUIFromParameterNode()
 
     def getClassName(self, widget): 
       """Function to get the class name of a widget.
