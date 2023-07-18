@@ -164,7 +164,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         self.removeAllGUIObservers()
         for w in self.widgets:
          if isinstance(w, Param):
-           w.updateGUIfromParameterNode(self, caller, event)
+           w.updateGUIFromParameterNode(self, caller, event)
          else:
            self.updateWidgetGUIFromParameterNode(w, caller, event)
         self.addAllGUIObservers()
@@ -368,16 +368,6 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         self.ui.reloadCurrentCustomShaderButton.setEnabled(True)
 
       self.ui.customShaderCollapsibleButton.setToolTip(self.logic.customShader[self.logic.shaderIndex].GetBasicDescription())
-
-    def updateGUIFromParameterNode(self, caller=None, event=None):
-      """Function to update GUI from parameter node values
-
-      :param caller: Caller of the function.
-      :param event: Event that triggered the function.
-      """   
-      parameterNode = self.logic.parameterNode
-      if not parameterNode or parameterNode.GetParameterCount() == 0:
-        return
 
     def updateParameterNodeFromGUI(self, value, w):
       """Function to update the parameter node from gui values.
