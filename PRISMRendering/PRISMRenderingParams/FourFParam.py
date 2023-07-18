@@ -28,6 +28,7 @@ class FourFParam(Param):
     targetPointButton.clicked.connect(lambda : self.updateParameterNodeFromGUI(widgetClass))
     targetPointButton.setParent(widgetClass.ui.customShaderParametersLayout)
     self.widget = targetPointButton
+    self.updateGUIFromParameterNode(widgetClass)
     return targetPointButton, self.name
 
   def setValue(self, value):

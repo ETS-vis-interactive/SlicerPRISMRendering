@@ -31,7 +31,7 @@ class FloatParam(Param):
 
     self.widget = slider
     self.label = label
-
+    self.updateGUIFromParameterNode(widgetClass)
     return slider, label, self.name
   
   def setValue(self, value):
