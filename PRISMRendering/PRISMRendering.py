@@ -145,6 +145,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       self.addAllGUIObservers()
       if self.ui.imageSelector.currentNode() != None :
         self.updateParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
+
       self.updateBaseGUIFromParameterNode()
 
       #self.ui.enableScalingCheckBox.setChecked(True)
@@ -166,6 +167,9 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
          if not isinstance(w, Param):
            self.updateWidgetGUIFromParameterNode(w, caller, event)
         self.addAllGUIObservers()
+
+      #self.ui.enableScalingCheckBox.setChecked(True)
+      self.ROIdisplay = None
     
     def onImageSelectorChanged(self, node, widget, index=0):
       """Callback function when the volume node has been changed in the dedicated combobox.
@@ -376,9 +380,6 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       """   
       if self.ui.imageSelector.currentNode() is None:
         return 
-
-      if w not in self.widgets :
-        return
       
       if isinstance(w, Param):
         w.updateParameterNodeFromGUI(self)
@@ -518,21 +519,17 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
                 if hideWidget :
                   p.widget.hide()
                   p.label.hide()
-              self.appendList(p,self.CSName + p.name)
             except :
               self.ui.customShaderParametersLayout.addRow(p.widget)
               if Optional :
                 self.logic.optionalWidgets[self.CSName + bool_param.name] += [p]
                 if hideWidget :
                   p.widget.hide()
-              self.appendList(p,self.CSName + p.name)
               
       if any(isinstance(item, FourFParam) for item in param_list):
         self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.name = self.CSName + "markup"
         self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.pointModified)
         self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, lambda c, e, name = self.CSName + "markup", w = self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints : self.updateParameterNodeFromGUI([c, "PointPositionDefinedEvent", name], w))
-        self.appendList(self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints, self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.name)
-    
 
         ## Transfer function of the first volume
       params = [p for p in self.logic.customShader[self.logic.shaderIndex].param_list if isinstance(p, TransferFunctionParam)]
@@ -563,8 +560,6 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
           opacityTransferFunction.RemoveAllObservers()
           colorTransferFunction.name = volumeName + "Original" + colorTransferFunction.GetClassName() 
           opacityTransferFunction.name = volumeName + "Original" + opacityTransferFunction.GetClassName()
-          self.appendList(opacityTransferFunction, opacityTransferFunction.name)
-          self.appendList(colorTransferFunction, colorTransferFunction.name)
 
           # Keep the original transfert functions
           if self.logic.colorTransferFunction.GetSize() > 0 :
@@ -699,7 +694,6 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
       widget.view().setAxesToChartBounds()
       widget.setFixedHeight(100)
-      self.appendList(transferFunction, transferFunction.name)
 
       self.ui.customShaderParametersLayout.addRow(label, widget)
 
@@ -752,16 +746,10 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
     def addAllGUIObservers(self):
       for w in self.widgets:
-        if isinstance(w, Param):
-          w.addGUIObservers(self)
-        else:
           self.addGUIObservers(w)
 
     def removeAllGUIObservers(self):
       for w in self.widgets:
-          if isinstance(w, Param):
-            w.removeGUIObservers()
-          else:
             self.removeGUIObservers(w)
 
     def addGUIObservers(self, w):
