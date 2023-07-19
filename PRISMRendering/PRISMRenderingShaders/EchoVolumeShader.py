@@ -47,10 +47,6 @@ class EchoVolumeShader(CustomShader):
   def setupShader(self):
 
     super(EchoVolumeShader, self).setupShader()
-    self.setAllUniforms()
-    self.shaderProperty.ClearAllFragmentShaderReplacements()
-
-    self.updateVolumeProperty()
 
     ComputeColorReplacementCommon = """
 
@@ -123,6 +119,8 @@ vec4 computeColor(vec4 scalar, float opacity)
     computeColorReplacement = ComputeColorReplacementVTK9 if vtk.vtkVersion().GetVTKMajorVersion() >= 9 else ComputeColorReplacementVTK8
     sp.AddShaderReplacement(vtk.vtkShader.Fragment, "//VTK::ComputeColor::Dec", True, computeColorReplacement, True)
     #shaderreplacement
+    self.updateVolumeProperty()
+    
   def updateVolumeProperty(self):
 
     if not self.volumeRenderingDisplayNode:
