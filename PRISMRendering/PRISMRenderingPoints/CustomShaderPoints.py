@@ -109,6 +109,10 @@ class CustomShaderPoints():
       self.pointModifiedEventTag = self.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.onEndPointsChanged)
       self.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, self.onEndPointAdded)
 
+    def removeObservers(self):
+      self.endPoints.RemoveObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent)
+      self.endPoints.RemoveObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent)
+
     @vtk.calldata_type(vtk.VTK_INT)
     def onEndPointsChanged(self, caller, event, call_data):
       """Callback function to get the position of the modified point.
