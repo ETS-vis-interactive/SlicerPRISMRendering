@@ -160,11 +160,13 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
           self.shaderPropertyNode = self.volumeRenderingDisplayNode.GetShaderPropertyNode()
 
         self.customShader.append(CustomShader.InstanciateCustomShader(self.customShaderType, self.shaderPropertyNode, volumeNode))
+        self.resetVolumeProperty()
         self.shaderIndex = len(self.customShader)-1
         self.customShader[self.shaderIndex].setupShader()
         self.updateEndPointsGUIFromParameterNode()
         
       else :
+        self.resetVolumeProperty()
         self.shaderIndex = CSExists
         self.customShader[self.shaderIndex].shaderPropertyNode = self.shaderPropertyNode
         self.customShader[self.shaderIndex].setupShader()
@@ -334,3 +336,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
           endPoints.SetNthFiducialVisibility(index, visible)
 
       # self.customShader[self.shaderIndex].customShaderPoints.addObservers()
+
+    def resetVolumeProperty(self):
+      """Reset the volume property to the default one."""
+      self.customShader[self.shaderIndex].resetVolumeProperty()
