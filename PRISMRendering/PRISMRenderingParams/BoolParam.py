@@ -42,7 +42,7 @@ class BoolParam(Param):
     if value != '' :
       checked = (int(value) != 0)
       self.setValue(checked)
-      self.setUniform(widgetClass.logic.CustomShader[widgetClass.logic.shaderIndex])
+      self.setUniform(widgetClass.logic.customShader[widgetClass.logic.shaderIndex])
       self.widget.setChecked(checked)
     
   def removeGUIObservers(self):

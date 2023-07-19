@@ -160,8 +160,10 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
           self.shaderPropertyNode = self.volumeRenderingDisplayNode.GetShaderPropertyNode()
 
         self.customShader.append(CustomShader.InstanciateCustomShader(self.customShaderType, self.shaderPropertyNode, volumeNode))
-        self.customShader[len(self.customShader)-1].setupShader()
         self.shaderIndex = len(self.customShader)-1
+        self.customShader[self.shaderIndex].setupShader()
+        self.updateEndPointsGUIFromParameterNode()
+        
       else :
         self.shaderIndex = CSExists
         self.customShader[self.shaderIndex].shaderPropertyNode = self.shaderPropertyNode
@@ -294,3 +296,41 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
         if CS.GetDisplayName() == self.customShaderType :
           return i
       return -1
+    
+    def updateEndPointsGUIFromParameterNode(self):
+
+      try:
+        endPoints = self.customShader[self.shaderIndex].customShaderPoints.endPoints
+      except:
+        return
+      
+      # self.customShader[self.shaderIndex].customShaderPoints.removeObservers()
+
+      parameterNode = self.parameterNode
+      if not parameterNode or parameterNode.GetParameterCount() == 0:
+        return
+
+      params = parameterNode.GetParameterNames()
+      markups = []
+      for p in params:
+        if endPoints.GetName() in p :
+          markups.append(p)
+      volumeName = self.volumeRenderingDisplayNode.GetVolumePropertyNode().GetName()
+      for m in markups :
+        values = parameterNode.GetParameter(m)
+        #If point was defined
+        values = [float(k) for k in values.split(",")]
+        if len(values) > 1 :
+          type_ = m.replace(endPoints.GetName(), '')
+          values.pop()
+          index = endPoints.AddFiducialFromArray(values, type_)
+          endPoints.SetNthFiducialAssociatedNodeID(index, m)
+          CSName = endPoints.name.replace(volumeName+'markup'+type_, '')
+          visible = self.CSName+"markup" == CSName 
+          self.pointIndexes[m] = index
+          world = [0, 0, 0, 0]
+          endPoints.GetNthFiducialWorldCoordinates(index, world)
+          self.onCustomShaderParamChanged(world, type_, "markup")
+          endPoints.SetNthFiducialVisibility(index, visible)
+
+      # self.customShader[self.shaderIndex].customShaderPoints.addObservers()

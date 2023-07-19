@@ -63,7 +63,7 @@ class RangeParam(Param):
     if value != '' :
       value = float(value)
       self.setValue(value)
-      self.setUniform(widgetClass.logic.CustomShader[widgetClass.logic.shaderIndex])
+      self.setUniform(widgetClass.logic.customShader[widgetClass.logic.shaderIndex])
       self.widget.setValue(value)
     
   def removeGUIObservers(self):
