@@ -265,7 +265,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
             try : # if there are Optional Points
               for t in self.customShader[self.shaderIndex].customShaderPoints.pointTypes :
                 if t in p.name:
-                  self.customShader[self.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(1)
+                  self.customShader[self.shaderIndex].customShaderPoints.endPoints.SetNthControlPointVisibility(self.customShader[self.shaderIndex].customShaderPoints.pointIndexes["markup" + t], 1)
             except :
               pass
       else: 
@@ -280,7 +280,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
             try : # if there are Optional Points
               for t in self.customShader[self.shaderIndex].customShaderPoints.pointTypes :
                 if t in p.name:
-                  self.customShader[self.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
+                  self.customShader[self.shaderIndex].customShaderPoints.endPoints.SetNthControlPointVisibility(self.customShader[self.shaderIndex].customShaderPoints.pointIndexes["markup" + t], 0)
             except :
               pass
 
