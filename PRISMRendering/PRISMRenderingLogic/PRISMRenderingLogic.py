@@ -160,6 +160,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
           self.shaderPropertyNode = self.volumeRenderingDisplayNode.GetShaderPropertyNode()
 
         self.customShader.append(CustomShader.InstanciateCustomShader(self.customShaderType, self.shaderPropertyNode, volumeNode))
+        self.resetVolumeProperty()
         self.shaderIndex = len(self.customShader)-1
         self.customShader[self.shaderIndex].setupShader()
         try :
@@ -168,6 +169,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
           pass
         
       else :
+        self.resetVolumeProperty()
         self.shaderIndex = CSExists
         self.customShader[self.shaderIndex].shaderPropertyNode = self.shaderPropertyNode
         self.customShader[self.shaderIndex].setupShader()
@@ -270,7 +272,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
             try : # if there are Optional Points
               for t in self.customShader[self.shaderIndex].customShaderPoints.pointTypes :
                 if t in p.name:
-                  self.customShader[self.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(1)
+                  self.customShader[self.shaderIndex].customShaderPoints.endPoints.SetNthControlPointVisibility(self.customShader[self.shaderIndex].customShaderPoints.pointIndexes["markup" + t], 1)
             except :
               pass
       else: 
@@ -285,7 +287,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
             try : # if there are Optional Points
               for t in self.customShader[self.shaderIndex].customShaderPoints.pointTypes :
                 if t in p.name:
-                  self.customShader[self.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
+                  self.customShader[self.shaderIndex].customShaderPoints.endPoints.SetNthControlPointVisibility(self.customShader[self.shaderIndex].customShaderPoints.pointIndexes["markup" + t], 0)
             except :
               pass
 
@@ -299,4 +301,3 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
         if CS.GetDisplayName() == self.customShaderType :
           return i
       return -1
-    

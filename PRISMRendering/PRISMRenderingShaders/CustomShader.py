@@ -132,4 +132,7 @@ class CustomShader():
           if isinstance(p, FourFParam):
              self.customShaderPoints = CustomShaderPoints(self)
              break
+          
+    def resetVolumeProperty(self):
+       return
        

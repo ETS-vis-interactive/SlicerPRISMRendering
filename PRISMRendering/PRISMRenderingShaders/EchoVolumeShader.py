@@ -29,6 +29,8 @@ class EchoVolumeShader(CustomShader):
 
     self.volumeRenderingDisplayNode = self._setupVolumeRenderingDisplayNode(self.volumeNode)
 
+    self.getBaseVolumeProperty()
+
   @classmethod
   def GetDisplayName(cls):
     return 'Echo Volume Renderer'
@@ -45,10 +47,6 @@ class EchoVolumeShader(CustomShader):
   def setupShader(self):
 
     super(EchoVolumeShader, self).setupShader()
-    self.setAllUniforms()
-    self.shaderProperty.ClearAllFragmentShaderReplacements()
-
-    self.updateVolumeProperty()
 
     ComputeColorReplacementCommon = """
 
@@ -120,9 +118,9 @@ vec4 computeColor(vec4 scalar, float opacity)
     sp.ClearAllShaderReplacements()
     computeColorReplacement = ComputeColorReplacementVTK9 if vtk.vtkVersion().GetVTKMajorVersion() >= 9 else ComputeColorReplacementVTK8
     sp.AddShaderReplacement(vtk.vtkShader.Fragment, "//VTK::ComputeColor::Dec", True, computeColorReplacement, True)
-
-    self.onParamUpdater()
     #shaderreplacement
+    self.updateVolumeProperty()
+    
   def updateVolumeProperty(self):
 
     if not self.volumeRenderingDisplayNode:
@@ -178,12 +176,41 @@ vec4 computeColor(vec4 scalar, float opacity)
     colorTransferFunction.AddRGBPoint(rampEnd, *green)
     colorTransferFunction.AddRGBPoint(max(volRange[1],rampEnd), *green)
     
-    volPropNode.GetVolumeProperty().GetScalarOpacity().DeepCopy(scalarOpacity)
-    volPropNode.GetVolumeProperty().GetRGBTransferFunction().DeepCopy(colorTransferFunction) 
+    volPropNode.GetVolumeProperty().SetScalarOpacity(scalarOpacity)
+    volPropNode.GetVolumeProperty().SetColor(colorTransferFunction) 
 
     volPropNode.EndModify(disableModify)
     volPropNode.Modified()
   
+  def getBaseVolumeProperty(self):
+
+    volPropNode = self.volumeRenderingDisplayNode.GetVolumePropertyNode()
+
+    self.ambient = volPropNode.GetVolumeProperty().GetAmbient()
+    self.diffuse = volPropNode.GetVolumeProperty().GetDiffuse()
+    self.specular = volPropNode.GetVolumeProperty().GetSpecular()
+    self.specularPower = volPropNode.GetVolumeProperty().GetSpecularPower()
+
+  def resetVolumeProperty(self):
+
+    volPropNode = self.volumeRenderingDisplayNode.GetVolumePropertyNode()
+
+    disableModify = volPropNode.StartModify()
+
+    volPropNode.GetVolumeProperty().ShadeOff()
+
+    slicer.mrmlScene.GetFirstNodeByClass("vtkMRMLViewNode").SetVolumeRenderingSurfaceSmoothing(False)
+
+    volPropNode.GetVolumeProperty().SetAmbient(self.ambient)
+    volPropNode.GetVolumeProperty().SetDiffuse(self.diffuse)
+    volPropNode.GetVolumeProperty().SetSpecular(self.specular)
+    volPropNode.GetVolumeProperty().SetSpecularPower(self.specularPower)
+    volPropNode.GetVolumeProperty().GetScalarOpacity().DeepCopy(vtk.vtkPiecewiseFunction())
+    volPropNode.GetVolumeProperty().GetRGBTransferFunction().DeepCopy(vtk.vtkColorTransferFunction()) 
+
+    volPropNode.EndModify(disableModify)
+    volPropNode.Modified()
+    
   def inputVolumeNode(self):
     return self._setupVolumeRenderingDisplayNode(self.volumeNode)
   
