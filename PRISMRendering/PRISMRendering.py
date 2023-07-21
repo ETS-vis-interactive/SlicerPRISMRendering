@@ -144,7 +144,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         # Update GUI 
       self.addAllGUIObservers()
       if self.ui.imageSelector.currentNode() != None :
-        self.updateParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
+        self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
       self.updateBaseGUIFromParameterNode()
 
       #self.ui.enableScalingCheckBox.setChecked(True)
@@ -194,10 +194,10 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         for i, tf in enumerate(self.transferFunctionParams[TFID:TFID+self.numberOfTFTypes]):
           j = TFID + i
           self.createTransferFunctionWidget(volumePropertyNode, tf, self.transferFunctionParamsName[j], True, volumeID  )
-        self.updateParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
+        self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
 
       else:
-        self.updateParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
+        self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
         self.ui.customShaderCombo.currentIndex = self.ui.customShaderCombo.count -1 
         self.ui.volumeRenderingCheckBox.setChecked(False)
   
@@ -351,7 +351,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         pass
       self.logic.setCustomShaderType(self.ui.customShaderCombo.currentText, self.ui.imageSelector.currentNode())
       self.UpdateShaderParametersUI()
-      self.updateParameterNodeFromGUI(self.ui.customShaderCombo.currentText, self.ui.customShaderCombo)
+      self.updateWidgetParameterNodeFromGUI(self.ui.customShaderCombo.currentText, self.ui.customShaderCombo)
       try: # if the new shader has points
         self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(1)
       except:
@@ -518,21 +518,19 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
                 if hideWidget :
                   p.widget.hide()
                   p.label.hide()
-              self.appendList(p,self.CSName + p.name)
             except :
               self.ui.customShaderParametersLayout.addRow(p.widget)
               if Optional :
                 self.logic.optionalWidgets[self.CSName + bool_param.name] += [p]
                 if hideWidget :
                   p.widget.hide()
-              self.appendList(p,self.CSName + p.name)
               
       if any(isinstance(item, FourFParam) for item in param_list):
         self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.name = self.CSName + "markup"
         self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.pointModified)
-        self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, lambda c, e, name = self.CSName + "markup", w = self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints : self.updateParameterNodeFromGUI([c, "PointPositionDefinedEvent", name], w))
-        self.appendList(self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints, self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.name)
-    
+        self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, 
+        lambda c, e, name = self.CSName + "markup": 
+        self.logic.customShader[self.logic.shaderIndex].customShaderPoints.updateParameterNodeFromGUI(self.logic, [c, "PointPositionDefinedEvent", name]))
 
         ## Transfer function of the first volume
       params = [p for p in self.logic.customShader[self.logic.shaderIndex].param_list if isinstance(p, TransferFunctionParam)]
@@ -569,7 +567,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
           # Keep the original transfert functions
           if self.logic.colorTransferFunction.GetSize() > 0 :
             colorTransferFunction.DeepCopy(self.logic.colorTransferFunction)
-            self.updateParameterNodeFromGUI(colorTransferFunction, colorTransferFunction)
+            self.updateWidgetParameterNodeFromGUI(colorTransferFunction, colorTransferFunction)
           else :
             values = self.logic.parameterNode.GetParameter(colorTransferFunction.name+str(0))
             i = 0
@@ -580,12 +578,12 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
               values = self.logic.parameterNode.GetParameter(colorTransferFunction.name+str(i))
 
           if not colorTransferFunction.HasObserver(vtk.vtkCommand.ModifiedEvent):
-            colorTransferFunction.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = colorTransferFunction : self.updateParameterNodeFromGUI([o,e], w))
+            colorTransferFunction.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = colorTransferFunction : self.updateWidgetParameterNodeFromGUI([o,e], w))
           volumePropertyNode.SetColor(colorTransferFunction)
 
           if self.logic.opacityTransferFunction.GetSize() > 0 :
             opacityTransferFunction.DeepCopy(self.logic.opacityTransferFunction)
-            self.updateParameterNodeFromGUI(opacityTransferFunction, opacityTransferFunction)
+            self.updateWidgetParameterNodeFromGUI(opacityTransferFunction, opacityTransferFunction)
           else :
             values = self.logic.parameterNode.GetParameter(opacityTransferFunction.name+str(0))
             i = 0
@@ -596,7 +594,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
               values = self.logic.parameterNode.GetParameter(opacityTransferFunction.name+str(i))
 
           if not opacityTransferFunction.HasObserver(vtk.vtkCommand.ModifiedEvent):
-            opacityTransferFunction.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = opacityTransferFunction : self.updateParameterNodeFromGUI([o,e], w))
+            opacityTransferFunction.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = opacityTransferFunction : self.updateWidgetParameterNodeFromGUI([o,e], w))
           volumePropertyNode.SetScalarOpacity(opacityTransferFunction)
 
     def addTransferFunctions(self, params, volumeID):
@@ -679,7 +677,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       widget = ctk.ctkVTKScalarsToColorsWidget()
       widget.setObjectName(self.CSName + transferFunction.GetClassName() + param.name + "Widget")
       transferFunction.name = self.CSName + transferFunction.GetClassName() + param.name
-      transferFunction.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = transferFunction : self.updateParameterNodeFromGUI([o,"add widget"], w))
+      transferFunction.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = transferFunction : self.updateWidgetParameterNodeFromGUI([o,"add widget"], w))
 
       # Change the points to the ones specified in the shader
       if param.default_colors != [] :
@@ -699,7 +697,6 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
       widget.view().setAxesToChartBounds()
       widget.setFixedHeight(100)
-      self.appendList(transferFunction, transferFunction.name)
 
       self.ui.customShaderParametersLayout.addRow(label, widget)
 
@@ -748,7 +745,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
     @vtk.calldata_type(vtk.VTK_INT)
     def pointModified(self, caller, event, index):
-      self.updateParameterNodeFromGUI([caller, "PointModifiedEvent", index], self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints)
+      self.updateWidgetParameterNodeFromGUI([caller, "PointModifiedEvent", index], self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints)
 
     def addAllGUIObservers(self):
       for w in self.widgets:
@@ -770,25 +767,25 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       """   
       widgetClassName = self.getClassName(w)
       if widgetClassName=="QPushButton" :
-        w.clicked.connect(lambda value, w = w : self.updateParameterNodeFromGUI(value, w))
+        w.clicked.connect(lambda value, w = w : self.updateWidgetParameterNodeFromGUI(value, w))
       elif widgetClassName == "QCheckBox":
-        w.toggled.connect(lambda value, w = w : self.updateParameterNodeFromGUI(value, w))
+        w.toggled.connect(lambda value, w = w : self.updateWidgetParameterNodeFromGUI(value, w))
       elif widgetClassName == "QComboBox":
-        w.currentIndexChanged.connect(lambda value, w = w : self.updateParameterNodeFromGUI(value, w))
+        w.currentIndexChanged.connect(lambda value, w = w : self.updateWidgetParameterNodeFromGUI(value, w))
       elif widgetClassName == "ctkSliderWidget":
-        w.valueChanged.connect(lambda value, w = w : self.updateParameterNodeFromGUI(value, w))
+        w.valueChanged.connect(lambda value, w = w : self.updateWidgetParameterNodeFromGUI(value, w))
       elif widgetClassName == "ctkRangeWidget":
-        w.valuesChanged.connect(lambda value1, value2, w = w : self.updateParameterNodeFromGUI([value2, value2], w))
+        w.valuesChanged.connect(lambda value1, value2, w = w : self.updateWidgetParameterNodeFromGUI([value2, value2], w))
       elif widgetClassName == "vtkColorTransferFunction" or widgetClassName == "vtkPiecewiseFunction":
         if not w.HasObserver(vtk.vtkCommand.ModifiedEvent):
-          w.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = w : self.updateParameterNodeFromGUI([o,"add observers"], w))
+          w.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = w : self.updateWidgetParameterNodeFromGUI([o,"add observers"], w))
       elif widgetClassName == "qMRMLNodeComboBox":
-        w.currentNodeChanged.connect(lambda value, w = w : self.updateParameterNodeFromGUI(value, w))
+        w.currentNodeChanged.connect(lambda value, w = w : self.updateWidgetParameterNodeFromGUI(value, w))
       elif widgetClassName == 'vtkMRMLMarkupsFiducialNode':
         self.logic.customShader[self.logic.shaderIndex].customShaderPoints.pointModifiedEventTag = w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.logic.customShader[self.logic.shaderIndex].customShaderPoints.onEndPointsChanged)
         w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, self.logic.customShader[self.logic.shaderIndex].customShaderPoints.onEndPointAdded)
         w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.pointModified)
-        w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, lambda c, e, name = w.name, w = w : self.updateParameterNodeFromGUI([c, "PointPositionDefinedEvent", name], w))
+        w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, lambda c, e, name = w.name, w = w : self.updateWidgetParameterNodeFromGUI([c, "PointPositionDefinedEvent", name], w))
 
     def removeGUIObservers(self, w):
       """Function to remove observers from the GUI's widget.
@@ -797,19 +794,19 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       
       widgetClassName = self.getClassName(w)
       if widgetClassName=="QPushButton" :
-        w.clicked.disconnect(self.updateParameterNodeFromGUI) 
+        w.clicked.disconnect(self.updateWidgetParameterNodeFromGUI) 
       elif widgetClassName == "QCheckBox":
-        w.toggled.disconnect(self.updateParameterNodeFromGUI) 
+        w.toggled.disconnect(self.updateWidgetParameterNodeFromGUI) 
       elif widgetClassName == "QComboBox":
-        w.currentIndexChanged.disconnect(self.updateParameterNodeFromGUI)
+        w.currentIndexChanged.disconnect(self.updateWidgetParameterNodeFromGUI)
       elif widgetClassName == "ctkSliderWidget":
-        w.valueChanged.disconnect(self.updateParameterNodeFromGUI)
+        w.valueChanged.disconnect(self.updateWidgetParameterNodeFromGUI)
       elif widgetClassName == "ctkRangeWidget":
-        w.valuesChanged.disconnect(self.updateParameterNodeFromGUI)
+        w.valuesChanged.disconnect(self.updateWidgetParameterNodeFromGUI)
       elif widgetClassName == "vtkColorTransferFunction" or widgetClassName == "vtkPiecewiseFunction":
         w.RemoveAllObservers()
       elif widgetClassName == "qMRMLNodeComboBox":
-        w.currentNodeChanged.disconnect(self.updateParameterNodeFromGUI)
+        w.currentNodeChanged.disconnect(self.updateWidgetParameterNodeFromGUI)
       elif widgetClassName == 'vtkMRMLMarkupsFiducialNode':
         w.RemoveObservers(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent)
         w.RemoveObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent)
