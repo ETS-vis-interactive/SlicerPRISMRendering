@@ -160,7 +160,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
           self.shaderPropertyNode = self.volumeRenderingDisplayNode.GetShaderPropertyNode()
 
         self.customShader.append(CustomShader.InstanciateCustomShader(self.customShaderType, self.shaderPropertyNode, volumeNode))
-        self.resetVolumeProperty()
+        self.customShader[self.shaderIndex].resetVolumeProperty()
         self.shaderIndex = len(self.customShader)-1
         self.customShader[self.shaderIndex].setupShader()
         try :
@@ -169,7 +169,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
           pass
         
       else :
-        self.resetVolumeProperty()
+        self.customShader[self.shaderIndex].resetVolumeProperty()
         self.shaderIndex = CSExists
         self.customShader[self.shaderIndex].shaderPropertyNode = self.shaderPropertyNode
         self.customShader[self.shaderIndex].setupShader()
