@@ -133,3 +133,68 @@ class CustomShaderPoints():
         world = [0, 0, 0]
         caller.GetNthControlPointPositionWorld(call_data, world)
         self.onCustomShaderParamChangedMarkup(world, type_)
+
+    def updateParameterNodeFromGUI(self, logic, value):
+      parameterNode = logic.parameterNode
+      oldModifiedState = parameterNode.StartModify()
+      caller = value[0]
+      event = value[1]
+      index = value[2]
+      name = self.endPoints.name + logic.customShader[logic.shaderIndex].customShaderPoints.pointType
+      world = [0, 0, 0]
+      if event == "PointPositionDefinedEvent" :
+        index = caller.GetDisplayNode().GetActiveControlPoint()
+        # Initialise point
+        if parameterNode.GetParameter(name) == "":
+          index = caller.GetDisplayNode().GetActiveControlPoint()
+          caller.SetNthControlPointAssociatedNodeID(index, name)
+          caller.GetNthControlPointPositionWorld(index, world)
+          parameterNode.SetParameter(name, ",".join("{0}".format(n) for n in world))
+          parameterNode.SetParameter(self.endPoints.name, str(index))
+          logic.customShader[logic.shaderIndex].customShaderPoints.pointIndexes[name] = index
+        # Reset point
+        elif logic.customShader[logic.shaderIndex].customShaderPoints.pointName != '' :
+          name = logic.customShader[logic.shaderIndex].customShaderPoints.pointName
+          index = logic.customShader[logic.shaderIndex].customShaderPoints.pointIndexes[name] 
+          caller.GetNthControlPointPositionWorld(index, world)
+          parameterNode.SetParameter(name, ",".join("{0}".format(n) for n in world))
+          logic.customShader[logic.shaderIndex].customShaderPoints.pointName = ''
+      if event == "PointModifiedEvent" :
+        if parameterNode.GetParameter(self.endPoints.name) != "" and index <= int(parameterNode.GetParameter(self.endPoints.name)):
+          pointName = caller.GetNthControlPointAssociatedNodeID(index)
+          if parameterNode.GetParameter(pointName) != "":
+            caller.GetNthControlPointPositionWorld(index, world)
+            parameterNode.SetParameter(pointName, ",".join("{0}".format(n) for n in world))
+      parameterNode.EndModify(oldModifiedState)
+
+    def updateGUIFromParameterNode(self, logic):
+      # self.customShader[self.shaderIndex].customShaderPoints.removeObservers()
+
+      parameterNode = logic.parameterNode
+      if not parameterNode or parameterNode.GetParameterCount() == 0:
+        return
+
+      params = parameterNode.GetParameterNames()
+      markups = []
+      for p in params:
+        if self.endPoints.name in p :
+          markups.append(p)
+      volumeName = self.volumeRenderingDisplayNode.GetVolumePropertyNode().GetName()
+      for m in markups :
+        values = parameterNode.GetParameter(m)
+        #If point was defined
+        values = [float(k) for k in values.split(",")]
+        if len(values) > 1 :
+          type_ = m.replace(self.endPoints.name, '')
+          values.pop()
+          index = self.endPoints.AddFiducialFromArray(values, type_)
+          self.endPoints.SetNthFiducialAssociatedNodeID(index, m)
+          CSName = self.endPoints.name.replace(volumeName+'markup'+type_, '')
+          visible = self.CSName+"markup" == CSName 
+          self.pointIndexes[m] = index
+          world = [0, 0, 0, 0]
+          self.endPoints.GetNthFiducialWorldCoordinates(index, world)
+          self.onCustomShaderParamChanged(world, type_, "markup")
+          self.endPoints.SetNthFiducialVisibility(index, visible)
+
+      # self.customShader[self.shaderIndex].customShaderPoints.addObservers()
