@@ -352,6 +352,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       self.logic.setCustomShaderType(self.ui.customShaderCombo.currentText, self.ui.imageSelector.currentNode())
       self.UpdateShaderParametersUI()
       self.updateWidgetParameterNodeFromGUI(self.ui.customShaderCombo.currentText, self.ui.customShaderCombo)
+      self.logic.customShader[self.logic.shaderIndex].setupShader()
       try: # if the new shader has points
         self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(1)
       except:

@@ -135,4 +135,7 @@ class CustomShader():
           
     def resetVolumeProperty(self):
        return
+    
+    def onParamUpdater(self):
+      return
        

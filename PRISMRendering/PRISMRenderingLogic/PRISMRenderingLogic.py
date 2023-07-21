@@ -162,7 +162,6 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
         self.customShader.append(CustomShader.InstanciateCustomShader(self.customShaderType, self.shaderPropertyNode, volumeNode))
         self.customShader[self.shaderIndex].resetVolumeProperty()
         self.shaderIndex = len(self.customShader)-1
-        self.customShader[self.shaderIndex].setupShader()
         try :
           self.customShader[self.shaderIndex].customShaderPoints.updateGUIFromParameterNode(self)
         except :
@@ -172,7 +171,6 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
         self.customShader[self.shaderIndex].resetVolumeProperty()
         self.shaderIndex = CSExists
         self.customShader[self.shaderIndex].shaderPropertyNode = self.shaderPropertyNode
-        self.customShader[self.shaderIndex].setupShader()
 
     def setCustomShaderType(self, shaderTypeName, volumeNode):
       """Set given shader type as current active shader.
