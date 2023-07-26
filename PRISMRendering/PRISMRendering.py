@@ -309,24 +309,25 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       
       if self.ui.sampleDataCheckBox.isChecked():
         self.storedParamsValues = []
-        for p in self.logic.customShader[self.logic.shaderIndex].param_list:
-            self.storedParamsValues.append(p.getValue())
-            # add code to setValue of the parameters to the sample data values, for the moment it will be the default values
-            p.setValue(p.defaultValue)
         self.storedVolumeID = self.ui.imageSelector.currentNodeID
         self.logic.customShader[self.logic.shaderIndex].downloadSampleData(self.ui.imageSelector)
-        self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
-        self.logic.renderVolume(self.ui.imageSelector.currentNode())
-        self.logic.customShader[self.logic.shaderIndex].setupShader()
+        if self.logic.customShader[self.logic.shaderIndex].sampleDataDownloaded:
+          for p in self.logic.customShader[self.logic.shaderIndex].param_list:
+              self.storedParamsValues.append(p.getValue())
+              # add code to setValue of the parameters to the sample data values, for the moment it will be the default values
+              p.setValue(p.defaultValue)
+          self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
+          self.logic.renderVolume(self.ui.imageSelector.currentNode())
+          self.logic.customShader[self.logic.shaderIndex].setupShader()
       else:
-        for i, p in enumerate(self.logic.customShader[self.logic.shaderIndex].param_list):
-          p.setValue(self.storedParamsValues[i])
-        self.storedParamsValues = []
-        self.ui.imageSelector.setCurrentNodeID(self.storedVolumeID)
-        self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
-        self.logic.renderVolume(self.ui.imageSelector.currentNode())
-        self.logic.customShader[self.logic.shaderIndex].setupShader()
-          # add code to restore old volume and hide sample data one
+        if self.logic.customShader[self.logic.shaderIndex].sampleDataDownloaded:
+          for i, p in enumerate(self.logic.customShader[self.logic.shaderIndex].param_list):
+            p.setValue(self.storedParamsValues[i])
+          self.storedParamsValues = []
+          self.ui.imageSelector.setCurrentNodeID(self.storedVolumeID)
+          self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
+          self.logic.renderVolume(self.ui.imageSelector.currentNode())
+          self.logic.customShader[self.logic.shaderIndex].setupShader()
 
     def onEnableRotationCheckBoxToggled(self, caller=None, event=None) :
       """Function to enable rotating ROI box.
