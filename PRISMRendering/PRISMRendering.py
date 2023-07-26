@@ -39,6 +39,56 @@ class PRISMRendering(slicer.ScriptedLoadableModule.ScriptedLoadableModule):
 
         # Additional initialization step after application startup is complete
 
+    # Additional initialization step after application startup is complete
+        slicer.app.connect("startupCompleted()", registerSampleData)
+
+
+
+def registerSampleData():
+  """
+  Add data sets to Sample Data module.
+  """
+  # It is always recommended to provide sample data for users to make it easy to try the module,
+  # but if no sample data is available then this method (and associated startupCompeted signal connection) can be removed.
+
+  import SampleData
+  iconsPath = os.path.join(os.path.dirname(__file__), 'Resources/Icons')
+
+  # To ensure that the source code repository remains small (can be downloaded and installed quickly)
+  # it is recommended to store data sets that are larger than a few MB in a Github release.
+
+  # TemplateKey1
+  SampleData.SampleDataLogic.registerCustomSampleDataSource(
+    # Category and sample name displayed in Sample Data module
+    category='TemplateKey',
+    sampleName='TemplateKey1',
+    # Thumbnail should have size of approximately 260x280 pixels and stored in Resources/Icons folder.
+    # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
+    thumbnailFileName=os.path.join(iconsPath, 'TemplateKey1.png'),
+    # Download URL and target file name
+    uris="https://github.com/Slicer/SlicerTestingData/releases/download/SHA256/998cb522173839c78657f4bc0ea907cea09fd04e44601f17c82ea27927937b95",
+    fileNames='TemplateKey1.nrrd',
+    # Checksum to ensure file integrity. Can be computed by this command:
+    #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
+    checksums = 'SHA256:998cb522173839c78657f4bc0ea907cea09fd04e44601f17c82ea27927937b95',
+    # This node name will be used when the data set is loaded
+    nodeNames='TemplateKey1'
+  )
+
+  # TemplateKey2
+  SampleData.SampleDataLogic.registerCustomSampleDataSource(
+    # Category and sample name displayed in Sample Data module
+    category='TemplateKey',
+    sampleName='TemplateKey2',
+    thumbnailFileName=os.path.join(iconsPath, 'TemplateKey2.png'),
+    # Download URL and target file name
+    uris="https://github.com/Slicer/SlicerTestingData/releases/download/SHA256/1a64f3f422eb3d1c9b093d1a18da354b13bcf307907c66317e2463ee530b7a97",
+    fileNames='TemplateKey2.nrrd',
+    checksums = 'SHA256:1a64f3f422eb3d1c9b093d1a18da354b13bcf307907c66317e2463ee530b7a97',
+    # This node name will be used when the data set is loaded
+    nodeNames='TemplateKey2'
+  )
+
 class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleWidget):
     """Uses ScriptedLoadableModuleWidget base class, available at:
     https://github.com/Slicer/Slicer/blob/main/Base/Python/slicer/ScriptedLoadableModule.py
@@ -80,11 +130,13 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       self.ui.displayROICheckBox.setSizePolicy(sp)
 
       self.ui.volumeRenderingCheckBox.toggled.connect(self.onVolumeRenderingCheckBoxToggled)
+      self.ui.sampleDataCheckBox.toggled.connect(self.onSampleDataCheckBoxToggled)
       self.ui.enableROICheckBox.toggled.connect(self.onEnableROICheckBoxToggled)
       self.ui.displayROICheckBox.toggled.connect(self.onDisplayROICheckBoxToggled)
       self.ui.enableScalingCheckBox.toggled.connect(self.onEnableScalingCheckBoxToggled)
       self.ui.enableRotationCheckBox.toggled.connect(self.onEnableRotationCheckBoxToggled)
 
+      self.ui.sampleDataCheckBox.hide()
       self.ui.enableROICheckBox.hide()
       self.ui.displayROICheckBox.hide()
       self.ui.enableScalingCheckBox.hide()
@@ -149,7 +201,8 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
       #self.ui.enableScalingCheckBox.setChecked(True)
       self.ROIdisplay = None
-
+      self.storedParamsValues = [] # To store the parameters' values of the shader while displaying sample data
+    
     def updateBaseGUIFromParameterNode(self, caller=None, event=None):
         """Function to update GUI from parameter node values
 
@@ -200,7 +253,21 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
         self.ui.customShaderCombo.currentIndex = self.ui.customShaderCombo.count -1 
         self.ui.volumeRenderingCheckBox.setChecked(False)
-  
+    
+    def onSampleDataCheckBoxToggled(self, caller=None, event=None):
+      if self.ui.sampleDataCheckBox.isChecked():
+        self.storedParamsValues = []
+        for p in self.logic.customShader[self.logic.shaderIndex].param_list:
+          self.storedParamsValues.append(p.value)
+          # add code to setValue of the parameters to the sample data values, for the moment, it will be the default values
+          p.setValue(p.defaultValue)
+          # add code to store old volume and show sample data one
+
+      else:
+        for i, p in enumerate(self.logic.customShader[self.logic.shaderIndex].param_list):
+          p.setValue(self.storedParamsValues[i])
+      return
+
     def onEnableRotationCheckBoxToggled(self, caller=None, event=None) :
       """Function to enable rotating ROI box.
       :param caller: Caller of the function.
@@ -296,6 +363,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
           #self.ROI.SetAndObserveTransformNodeID(self.transformNode.GetID())
           self.ROI.SetDisplayVisibility(0)
           self.renameROI()
+          self.ui.sampleDataCheckBox.show()
           self.ui.enableROICheckBox.show()
           self.UpdateShaderParametersUI()
           self.ui.customShaderCollapsibleButton.show()
@@ -315,6 +383,8 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
                 self.logic.secondaryVolumeRenderingDisplayNodes[i].SetVisibility(False)
           self.ui.enableROICheckBox.setChecked(False)
           self.ui.displayROICheckBox.setChecked(False)
+          self.ui.sampleDataCheckBox.setChecked(False)
+          self.ui.sampleDataCheckBox.hide()
           self.ui.enableROICheckBox.hide()
           self.ui.displayROICheckBox.hide()
         self.ui.customShaderCollapsibleButton.hide()
