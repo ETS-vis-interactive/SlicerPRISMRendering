@@ -23,7 +23,7 @@ class ChromaDepthShader(CustomShader):
     self.param_list = paramlist
     volumeRange = self.getVolumeRange(volumeNode)
     if volumeRange :
-      self.param_list[0].setRange([int(-1 * volumeRange), int(volumeRange)])
+      self.param_list[0].setRange([(-1 * volumeRange), (volumeRange)])
     self.createMarkupsNodeIfNecessary()
 
   @classmethod
