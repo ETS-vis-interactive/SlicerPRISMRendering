@@ -17,6 +17,7 @@ from inspect import signature
 import inspect
 import traceback
 import SampleData
+import hashlib
 
 from PRISMRenderingShaders.CustomShader import *
 from PRISMRenderingParams import *
@@ -59,19 +60,19 @@ def registerSampleData():
   # TemplateKey1
   SampleData.SampleDataLogic.registerCustomSampleDataSource(
     # Category and sample name displayed in Sample Data module
-    category='TemplateKey',
-    sampleName='TemplateKey1',
+    category='PRISMSampleData',
+    sampleName='SphereCarvingSampleData',
     # Thumbnail should have size of approximately 260x280 pixels and stored in Resources/Icons folder.
     # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
-    thumbnailFileName=os.path.join(iconsPath, 'TemplateKey1.png'),
+    thumbnailFileName=os.path.join(iconsPath, 'SphereCarving.png'),
     # Download URL and target file name
-    uris="https://github.com/Slicer/SlicerTestingData/releases/download/SHA256/998cb522173839c78657f4bc0ea907cea09fd04e44601f17c82ea27927937b95",
-    fileNames='TemplateKey1.nrrd',
+    uris="https://github.com/IbisNeuronav/PRISMDatabase/blob/master/1-carving-sphere/0.mnc",
+    fileNames='0.mnc',
     # Checksum to ensure file integrity. Can be computed by this command:
     #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
-    checksums = 'SHA256:998cb522173839c78657f4bc0ea907cea09fd04e44601f17c82ea27927937b95',
+    checksums = 'SHA256:4802487c31c1dcd24434cb370906e1002d515c3abed1ce00385b2307f1370c13',
     # This node name will be used when the data set is loaded
-    nodeNames='TemplateKey1'
+    nodeNames='SphereCarvingSampleData'
   )
 
   # TemplateKey2
@@ -423,7 +424,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       :param i: Index of the element. 
       :type i: int
       """
-      # self.ui.sampleDataCheckBox.setChecked(False)
+      self.ui.sampleDataCheckBox.setChecked(False)
       try: # if the old shader has points
         self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
       except:
