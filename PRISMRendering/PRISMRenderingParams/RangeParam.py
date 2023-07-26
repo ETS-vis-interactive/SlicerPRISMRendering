@@ -47,6 +47,9 @@ class RangeParam(Param):
     else:
       self.max = value[1]
 
+  def getValue(self):
+    return [self.min, self.max]
+
   def setRange(self, range):
     self.range = range
     self.min = range[0]

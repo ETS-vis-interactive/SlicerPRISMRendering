@@ -42,6 +42,9 @@ class FloatParam(Param):
     else:
       self.value = value
 
+  def getValue(self):
+    return self.value
+
   def setUniform(self, CustomShader):
     super(FloatParam, self).setUniform(CustomShader)
     CustomShader.shaderUniforms.SetUniformf(self.name, self.value)

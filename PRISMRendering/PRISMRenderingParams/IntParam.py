@@ -42,6 +42,9 @@ class IntParam(Param):
     else:
       self.value = int(value)
 
+  def getValue(self):
+    return self.value
+
   def setUniform(self, CustomShader):
     super(IntParam, self).setUniform(CustomShader)
     CustomShader.shaderUniforms.SetUniformi(self.name, self.value)

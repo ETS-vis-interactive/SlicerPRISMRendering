@@ -31,6 +31,9 @@ class BoolParam(Param):
     else:
       self.value = 0
 
+  def getValue(self):
+    return self.value
+
   def setUniform(self, CustomShader):
     super(BoolParam, self).setUniform(CustomShader)
     CustomShader.shaderUniforms.SetUniformi(self.name, self.value)

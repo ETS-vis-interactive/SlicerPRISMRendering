@@ -261,7 +261,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       if self.ui.sampleDataCheckBox.isChecked():
         self.storedParamsValues = []
         for p in self.logic.customShader[self.logic.shaderIndex].param_list:
-          self.storedParamsValues.append(p.value)
+          self.storedParamsValues.append(p.getValue())
           # add code to setValue of the parameters to the sample data values, for the moment, it will be the default values
           p.setValue(p.defaultValue)
           # add code to store old volume and show sample data one
