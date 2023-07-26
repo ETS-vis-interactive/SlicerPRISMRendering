@@ -79,7 +79,7 @@ def registerSampleData():
   SampleData.SampleDataLogic.registerCustomSampleDataSource(
     # Category and sample name displayed in Sample Data module
     category='TemplateKey',
-    sampleName='TemplateKey2',
+    sampleName='NoneSampleData',
     thumbnailFileName=os.path.join(iconsPath, 'TemplateKey2.png'),
     # Download URL and target file name
     uris="https://github.com/Slicer/SlicerTestingData/releases/download/SHA256/1a64f3f422eb3d1c9b093d1a18da354b13bcf307907c66317e2463ee530b7a97",
@@ -87,6 +87,57 @@ def registerSampleData():
     checksums = 'SHA256:1a64f3f422eb3d1c9b093d1a18da354b13bcf307907c66317e2463ee530b7a97',
     # This node name will be used when the data set is loaded
     nodeNames='TemplateKey2'
+  )
+
+  SampleData.SampleDataLogic.registerCustomSampleDataSource(
+    # Category and sample name displayed in Sample Data module
+    category='PRISMSampleData',
+    sampleName='SphereCarvingSampleData',
+    # Thumbnail should have size of approximately 260x280 pixels and stored in Resources/Icons folder.
+    # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
+    thumbnailFileName=os.path.join(iconsPath, 'SphereCarving.png'),
+    # Download URL and target file name
+    uris="https://github.com/IbisNeuronav/PRISMDatabase/blob/master/1-carving-sphere/0.mnc",
+    fileNames='0.mnc',
+    # Checksum to ensure file integrity. Can be computed by this command:
+    #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
+    checksums = 'SHA256:4802487c31c1dcd24434cb370906e1002d515c3abed1ce00385b2307f1370c13',
+    # This node name will be used when the data set is loaded
+    nodeNames='SphereCarvingSampleData'
+  )
+
+  SampleData.SampleDataLogic.registerCustomSampleDataSource(
+    # Category and sample name displayed in Sample Data module
+    category='PRISMSampleData',
+    sampleName='OpacityPeelingSampleData',
+    # Thumbnail should have size of approximately 260x280 pixels and stored in Resources/Icons folder.
+    # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
+    thumbnailFileName=os.path.join(iconsPath, 'OpacityPeeling.png'),
+    # Download URL and target file name
+    uris="https://github.com/IbisNeuronav/PRISMDatabase/blob/master/2-opacity-peeling/0.mnc",
+    fileNames='0.mnc',
+    # Checksum to ensure file integrity. Can be computed by this command:
+    #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
+    checksums = 'SHA256:4802487c31c1dcd24434cb370906e1002d515c3abed1ce00385b2307f1370c13',
+    # This node name will be used when the data set is loaded
+    nodeNames='OpacityPeelingSampleData'
+  )
+
+  SampleData.SampleDataLogic.registerCustomSampleDataSource(
+    # Category and sample name displayed in Sample Data module
+    category='PRISMSampleData',
+    sampleName='ChromaDepthPerceptionSampleData',
+    # Thumbnail should have size of approximately 260x280 pixels and stored in Resources/Icons folder.
+    # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
+    thumbnailFileName=os.path.join(iconsPath, 'ChromaDepthPerception.png'),
+    # Download URL and target file name
+    uris="https://github.com/IbisNeuronav/PRISMDatabase/blob/master/4-chroma-depth/1.mnc",
+    fileNames='0.mnc',
+    # Checksum to ensure file integrity. Can be computed by this command:
+    #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
+    checksums = 'SHA256:4278daf18bd75542d68305d56630e78379ca8cbe295e9cf4fa52bb318445858b',
+    # This node name will be used when the data set is loaded
+    nodeNames='ChromaDepthPerceptionSampleData'
   )
 
 class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleWidget):
@@ -203,7 +254,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       self.ROIdisplay = None
 
       self.storedParamsValues = [] # To store the parameters' values of the shader while displaying sample data
-      self.storedVolume = None # To store the volume while displaying sample data
+      self.storedVolumeID = None # To store the volume while displaying sample data
     
     def updateBaseGUIFromParameterNode(self, caller=None, event=None):
         """Function to update GUI from parameter node values
@@ -259,10 +310,9 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       if self.ui.sampleDataCheckBox.isChecked():
         self.storedParamsValues = []
         for p in self.logic.customShader[self.logic.shaderIndex].param_list:
-          self.storedParamsValues.append(p.getValue())
-          # add code to setValue of the parameters to the sample data values, for the moment, it will be the default values
-          p.setValue(p.defaultValue)
-          # add code to store old volume and show sample data one
+            self.storedParamsValues.append(p.getValue())
+            # add code to setValue of the parameters to the sample data values, for the moment it will be the default values
+            p.setValue(p.defaultValue)
         self.storedVolumeID = self.ui.imageSelector.currentNodeID
         self.logic.customShader[self.logic.shaderIndex].downloadSampleData(self.ui.imageSelector)
         self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
@@ -271,6 +321,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       else:
         for i, p in enumerate(self.logic.customShader[self.logic.shaderIndex].param_list):
           p.setValue(self.storedParamsValues[i])
+        self.storedParamsValues = []
         self.ui.imageSelector.setCurrentNodeID(self.storedVolumeID)
         self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
         self.logic.renderVolume(self.ui.imageSelector.currentNode())
@@ -761,8 +812,8 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       transferFunction.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = transferFunction : self.updateWidgetParameterNodeFromGUI([o,"add widget"], w))
 
       # Change the points to the ones specified in the shader
-      if param.default_colors != [] :
-        colors = param.default_colors
+      if param.defaultValue != [] :
+        colors = param.defaultValue
         nbColors = len(colors)
         transferFunction.RemoveAllPoints()
         for i in range(nbColors): 

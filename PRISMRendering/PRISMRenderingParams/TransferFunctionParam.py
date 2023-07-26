@@ -5,7 +5,7 @@ import vtk, qt, ctk, slicer
 
 class TransferFunctionParam(Param):
 
-  def __init__(self, name, display_name, type, default_colors = []):
+  def __init__(self, name, display_name, type, defaultValue = []):
     Param.__init__(self, name, display_name)
     self.type = type
-    self.default_colors = default_colors
+    self.defaultValue = defaultValue

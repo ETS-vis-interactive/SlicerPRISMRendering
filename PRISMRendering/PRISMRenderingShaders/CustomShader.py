@@ -39,9 +39,12 @@ class CustomShader():
 
     def downloadSampleData(self, imageSelector):
        if not self.sampleDataDownloaded:
+        try:
+          volumeNode = SampleData.downloadSample(self.GetDisplayName().replace(" ", "") + "SampleData")
+        except:
+           print("This shader does not have a sample data. Please load your own data.")
+           return
         self.sampleDataDownloaded = True
-        volumeNode = SampleData.downloadSample('TemplateKey2')
-        print(volumeNode.GetClassName())
         imageSelector.setCurrentNode(volumeNode)
         self.sampleDataNodeID = imageSelector.currentNodeID
        else:
