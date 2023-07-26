@@ -201,7 +201,9 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
       #self.ui.enableScalingCheckBox.setChecked(True)
       self.ROIdisplay = None
+
       self.storedParamsValues = [] # To store the parameters' values of the shader while displaying sample data
+      self.storedVolume = None # To store the volume while displaying sample data
     
     def updateBaseGUIFromParameterNode(self, caller=None, event=None):
         """Function to update GUI from parameter node values
@@ -255,6 +257,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         self.ui.volumeRenderingCheckBox.setChecked(False)
     
     def onSampleDataCheckBoxToggled(self, caller=None, event=None):
+      import SampleData
       if self.ui.sampleDataCheckBox.isChecked():
         self.storedParamsValues = []
         for p in self.logic.customShader[self.logic.shaderIndex].param_list:
@@ -262,11 +265,20 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
           # add code to setValue of the parameters to the sample data values, for the moment, it will be the default values
           p.setValue(p.defaultValue)
           # add code to store old volume and show sample data one
-
+        self.storedVolume = self.ui.imageSelector.currentNode()
+        volumeNode = slicer.util.loadVolume(SampleData.downloadSample('TemplateKey1'))
+        print(4)
+        self.ui.imageSelector.setCurrentNode(volumeNode)
+        print(3)
+        self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
+        print(2)
+        self.logic.renderVolume(self.ui.imageSelector.currentNode())
+        print(1)
+        self.setupShader()
       else:
         for i, p in enumerate(self.logic.customShader[self.logic.shaderIndex].param_list):
           p.setValue(self.storedParamsValues[i])
-      return
+          # add code to restore old volume and hide sample data one
 
     def onEnableRotationCheckBoxToggled(self, caller=None, event=None) :
       """Function to enable rotating ROI box.
@@ -415,18 +427,8 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       :param i: Index of the element. 
       :type i: int
       """
-      try: # if the old shader has points
-        self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
-      except:
-        pass
-      self.logic.setCustomShaderType(self.ui.customShaderCombo.currentText, self.ui.imageSelector.currentNode())
-      self.UpdateShaderParametersUI()
+      self.setupShader()
       self.updateWidgetParameterNodeFromGUI(self.ui.customShaderCombo.currentText, self.ui.customShaderCombo)
-      self.logic.customShader[self.logic.shaderIndex].setupShader()
-      try: # if the new shader has points
-        self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(1)
-      except:
-        pass
       # If there is no selected shader, disables the buttons.
       if (self.ui.customShaderCombo.currentText == "None"):
         self.ui.openCustomShaderButton.setEnabled(False)
@@ -436,6 +438,19 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         self.ui.reloadCurrentCustomShaderButton.setEnabled(True)
 
       self.ui.customShaderCollapsibleButton.setToolTip(self.logic.customShader[self.logic.shaderIndex].GetBasicDescription())
+
+    def setupShader(self):
+      try: # if the old shader has points
+        self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
+      except:
+        pass
+      self.logic.setCustomShaderType(self.ui.customShaderCombo.currentText, self.ui.imageSelector.currentNode())
+      self.UpdateShaderParametersUI()
+      self.logic.customShader[self.logic.shaderIndex].setupShader()
+      try: # if the new shader has points
+        self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(1)
+      except:
+        pass
 
     def updateParameterNodeFromGUI(self, value, w):
       """Function to update the parameter node from gui values.

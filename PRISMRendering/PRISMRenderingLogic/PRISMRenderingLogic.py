@@ -71,7 +71,6 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
         :param multipleVolumes: If the rendered volume is a secondary volume. 
         :type multipleVolumes: Bool
         """
-    
         logic = slicer.modules.volumerendering.logic()
 
         # Set custom shader to renderer
@@ -171,6 +170,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
         self.customShader[self.shaderIndex].resetVolumeProperty()
         self.shaderIndex = CSExists
         self.customShader[self.shaderIndex].shaderPropertyNode = self.shaderPropertyNode
+        self.customShader[self.shaderIndex].volumeNode = volumeNode
 
     def setCustomShaderType(self, shaderTypeName, volumeNode):
       """Set given shader type as current active shader.
