@@ -131,19 +131,6 @@
        <layout class="QVBoxLayout" name="viewSetupCollapsibleButtonLayout">
         <item>
          <layout class="QGridLayout" name="viewSetupCollapsibleButtonLayout_2">
-          <item row="1" column="3">
-           <widget class="QCheckBox" name="enableRotationCheckBox">
-            <property name="maximumSize">
-             <size>
-              <width>220</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Enable Rotation</string>
-            </property>
-           </widget>
-          </item>
           <item row="1" column="2">
            <widget class="QCheckBox" name="enableScalingCheckBox">
             <property name="maximumSize">
@@ -157,8 +144,21 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="3">
-           <widget class="QCheckBox" name="displayROICheckBox">
+          <item row="1" column="3">
+           <widget class="QCheckBox" name="enableRotationCheckBox">
+            <property name="maximumSize">
+             <size>
+              <width>220</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Enable Rotation</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="volumeRenderingCheckBox">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -172,11 +172,11 @@
              </size>
             </property>
             <property name="text">
-             <string>Display ROI</string>
+             <string>Volume Rendering</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="2">
+          <item row="0" column="3">
            <widget class="QCheckBox" name="enableROICheckBox">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -195,8 +195,18 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
-           <widget class="QCheckBox" name="volumeRenderingCheckBox">
+          <item row="0" column="2">
+           <widget class="QCheckBox" name="sampleDataCheckBox">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>Sample Data</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="displayROICheckBox">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -210,7 +220,7 @@
              </size>
             </property>
             <property name="text">
-             <string>Volume Rendering</string>
+             <string>Display ROI</string>
             </property>
            </widget>
           </item>

@@ -18,3 +18,9 @@ class Param:
   def addCustomShaderUpdater(self, customShader):
     self.isShaderUpdater = True
     self.customShader = customShader
+
+  def setValue(self, value):
+    pass
+
+  def getValue(self):
+    return None

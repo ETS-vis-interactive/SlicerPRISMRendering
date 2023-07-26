@@ -6,6 +6,7 @@ import inspect
 import os
 import importlib.util
 import math
+import SampleData
 
 from PRISMRenderingParams import *
 from PRISMRenderingPoints import *
@@ -32,7 +33,25 @@ class CustomShader():
         self.allClasses = []
 
         self.param_list = []
-    
+
+        self.sampleDataDownloaded = False
+        self.sampleDataNodeID = None
+
+    def downloadSampleData(self, imageSelector):
+       if not self.sampleDataDownloaded:
+        try:
+          volumeNode = SampleData.downloadSample(self.GetDisplayName().replace(" ", "") + "SampleData")
+        except:
+           print("This shader does not have a sample data. Please load your own data.")
+           return
+        print(volumeNode.GetClassName())
+        self.sampleDataDownloaded = True
+        imageSelector.setCurrentNode(volumeNode)
+        self.sampleDataNodeID = imageSelector.currentNodeID
+       else:
+        imageSelector.setCurrentNodeID(self.sampleDataNodeID)
+          
+
     def setAllUniforms(self):
       for p in self.param_list:       
         p.setUniform(self)

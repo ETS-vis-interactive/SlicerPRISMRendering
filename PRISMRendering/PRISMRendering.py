@@ -16,6 +16,8 @@ from distutils.util import strtobool
 from inspect import signature 
 import inspect
 import traceback
+import SampleData
+import hashlib
 
 from PRISMRenderingShaders.CustomShader import *
 from PRISMRenderingParams import *
@@ -38,6 +40,105 @@ class PRISMRendering(slicer.ScriptedLoadableModule.ScriptedLoadableModule):
         self.parent.acknowledgementText = """This file was developped by Tiphaine RICHARD at Ecole de Technologie Superieure (Montreal, Canada)"""
 
         # Additional initialization step after application startup is complete
+
+    # Additional initialization step after application startup is complete
+        slicer.app.connect("startupCompleted()", registerSampleData)
+
+
+
+def registerSampleData():
+  """
+  Add data sets to Sample Data module.
+  """
+  # It is always recommended to provide sample data for users to make it easy to try the module,
+  # but if no sample data is available then this method (and associated startupCompeted signal connection) can be removed.
+  iconsPath = os.path.join(os.path.dirname(__file__), 'Resources/Icons')
+
+  # To ensure that the source code repository remains small (can be downloaded and installed quickly)
+  # it is recommended to store data sets that are larger than a few MB in a Github release.
+
+  # TemplateKey1
+  SampleData.SampleDataLogic.registerCustomSampleDataSource(
+    # Category and sample name displayed in Sample Data module
+    category='PRISMSampleData',
+    sampleName='SphereCarvingSampleData',
+    # Thumbnail should have size of approximately 260x280 pixels and stored in Resources/Icons folder.
+    # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
+    thumbnailFileName=os.path.join(iconsPath, 'SphereCarving.png'),
+    # Download URL and target file name
+    uris="https://cmll2.github.io/PRISMDatabase/1-carving-sphere/0.mnc",
+    fileNames='SphereCarvingSampleData.mnc',
+    # Checksum to ensure file integrity. Can be computed by this command:
+    #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
+    checksums = 'SHA256:4802487c31c1dcd24434cb370906e1002d515c3abed1ce00385b2307f1370c13',
+    # This node name will be used when the data set is loaded
+    nodeNames='SphereCarvingSampleData'
+  )
+
+  # TemplateKey2
+  SampleData.SampleDataLogic.registerCustomSampleDataSource(
+    # Category and sample name displayed in Sample Data module
+    category='PRISMSampleData',
+    sampleName='NoneSampleData',
+    thumbnailFileName=os.path.join(iconsPath, 'None.png'),
+    # Download URL and target file name
+    uris="https://github.com/Slicer/SlicerTestingData/releases/download/SHA256/1a64f3f422eb3d1c9b093d1a18da354b13bcf307907c66317e2463ee530b7a97",
+    fileNames='NoneSampleData.nrrd',
+    checksums = 'SHA256:1a64f3f422eb3d1c9b093d1a18da354b13bcf307907c66317e2463ee530b7a97',
+    # This node name will be used when the data set is loaded
+    nodeNames='NoneSampleData'
+  )
+
+  SampleData.SampleDataLogic.registerCustomSampleDataSource(
+    # Category and sample name displayed in Sample Data module
+    category='PRISMSampleData',
+    sampleName='OutlineSampleData',
+    # Thumbnail should have size of approximately 260x280 pixels and stored in Resources/Icons folder.
+    # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
+    thumbnailFileName=os.path.join(iconsPath, 'Outline.png'),
+    # Download URL and target file name
+    uris="https://cmll2.github.io/PRISMDatabase/5-edges/0.mnc",
+    fileNames='OutlineSampleData.mnc',
+    # Checksum to ensure file integrity. Can be computed by this command:
+    #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
+    checksums = 'SHA256:4278daf18bd75542d68305d56630e78379ca8cbe295e9cf4fa52bb318445858b',
+    # This node name will be used when the data set is loaded
+    nodeNames='OutlineSampleData'
+  )
+
+  SampleData.SampleDataLogic.registerCustomSampleDataSource(
+    # Category and sample name displayed in Sample Data module
+    category='PRISMSampleData',
+    sampleName='OpacityPeelingSampleData',
+    # Thumbnail should have size of approximately 260x280 pixels and stored in Resources/Icons folder.
+    # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
+    thumbnailFileName=os.path.join(iconsPath, 'OpacityPeeling.png'),
+    # Download URL and target file name
+    uris="https://cmll2.github.io/PRISMDatabase/2-opacity-peeling/0.mnc",
+    fileNames='OpacityPeelingSampleData.mnc',
+    # Checksum to ensure file integrity. Can be computed by this command:
+    #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
+    checksums = 'SHA256:4802487c31c1dcd24434cb370906e1002d515c3abed1ce00385b2307f1370c13',
+    # This node name will be used when the data set is loaded
+    nodeNames='OpacityPeelingSampleData'
+  )
+
+  SampleData.SampleDataLogic.registerCustomSampleDataSource(
+    # Category and sample name displayed in Sample Data module
+    category='PRISMSampleData',
+    sampleName='ChromaDepthPerceptionSampleData',
+    # Thumbnail should have size of approximately 260x280 pixels and stored in Resources/Icons folder.
+    # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
+    thumbnailFileName=os.path.join(iconsPath, 'ChromaDepthPerception.png'),
+    # Download URL and target file name
+    uris="https://cmll2.github.io/PRISMDatabase/4-chroma-depth/1.mnc",
+    fileNames='ChromaDepthPerceptionSampleData.mnc',
+    # Checksum to ensure file integrity. Can be computed by this command:
+    #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
+    checksums = 'SHA256:4278daf18bd75542d68305d56630e78379ca8cbe295e9cf4fa52bb318445858b',
+    # This node name will be used when the data set is loaded
+    nodeNames='ChromaDepthPerceptionSampleData'
+  )
 
 class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleWidget):
     """Uses ScriptedLoadableModuleWidget base class, available at:
@@ -80,11 +181,13 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       self.ui.displayROICheckBox.setSizePolicy(sp)
 
       self.ui.volumeRenderingCheckBox.toggled.connect(self.onVolumeRenderingCheckBoxToggled)
+      self.ui.sampleDataCheckBox.toggled.connect(self.onSampleDataCheckBoxToggled)
       self.ui.enableROICheckBox.toggled.connect(self.onEnableROICheckBoxToggled)
       self.ui.displayROICheckBox.toggled.connect(self.onDisplayROICheckBoxToggled)
       self.ui.enableScalingCheckBox.toggled.connect(self.onEnableScalingCheckBoxToggled)
       self.ui.enableRotationCheckBox.toggled.connect(self.onEnableRotationCheckBoxToggled)
 
+      self.ui.sampleDataCheckBox.hide()
       self.ui.enableROICheckBox.hide()
       self.ui.displayROICheckBox.hide()
       self.ui.enableScalingCheckBox.hide()
@@ -150,6 +253,9 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       #self.ui.enableScalingCheckBox.setChecked(True)
       self.ROIdisplay = None
 
+      self.storedParamsValues = [] # To store the parameters' values of the shader while displaying sample data
+      self.storedVolumeID = None # To store the volume while displaying sample data
+    
     def updateBaseGUIFromParameterNode(self, caller=None, event=None):
         """Function to update GUI from parameter node values
 
@@ -198,9 +304,31 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
       else:
         self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
-        self.ui.customShaderCombo.currentIndex = self.ui.customShaderCombo.count -1 
-        self.ui.volumeRenderingCheckBox.setChecked(False)
-  
+    
+    def onSampleDataCheckBoxToggled(self, caller=None, event=None):
+      
+      if self.ui.sampleDataCheckBox.isChecked():
+        self.storedParamsValues = []
+        self.storedVolumeID = self.ui.imageSelector.currentNodeID
+        self.logic.customShader[self.logic.shaderIndex].downloadSampleData(self.ui.imageSelector)
+        if self.logic.customShader[self.logic.shaderIndex].sampleDataDownloaded:
+          for p in self.logic.customShader[self.logic.shaderIndex].param_list:
+              self.storedParamsValues.append(p.getValue())
+              # add code to setValue of the parameters to the sample data values, for the moment it will be the default values
+              p.setValue(p.defaultValue)
+          self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
+          self.logic.renderVolume(self.ui.imageSelector.currentNode())
+          self.logic.customShader[self.logic.shaderIndex].setupShader()
+      else:
+        if self.logic.customShader[self.logic.shaderIndex].sampleDataDownloaded:
+          for i, p in enumerate(self.logic.customShader[self.logic.shaderIndex].param_list):
+            p.setValue(self.storedParamsValues[i])
+          self.storedParamsValues = []
+          self.ui.imageSelector.setCurrentNodeID(self.storedVolumeID)
+          self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
+          self.logic.renderVolume(self.ui.imageSelector.currentNode())
+          self.logic.customShader[self.logic.shaderIndex].setupShader()
+
     def onEnableRotationCheckBoxToggled(self, caller=None, event=None) :
       """Function to enable rotating ROI box.
       :param caller: Caller of the function.
@@ -296,6 +424,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
           #self.ROI.SetAndObserveTransformNodeID(self.transformNode.GetID())
           self.ROI.SetDisplayVisibility(0)
           self.renameROI()
+          self.ui.sampleDataCheckBox.show()
           self.ui.enableROICheckBox.show()
           self.UpdateShaderParametersUI()
           self.ui.customShaderCollapsibleButton.show()
@@ -315,6 +444,8 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
                 self.logic.secondaryVolumeRenderingDisplayNodes[i].SetVisibility(False)
           self.ui.enableROICheckBox.setChecked(False)
           self.ui.displayROICheckBox.setChecked(False)
+          self.ui.sampleDataCheckBox.setChecked(False)
+          self.ui.sampleDataCheckBox.hide()
           self.ui.enableROICheckBox.hide()
           self.ui.displayROICheckBox.hide()
         self.ui.customShaderCollapsibleButton.hide()
@@ -345,6 +476,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       :param i: Index of the element. 
       :type i: int
       """
+      self.ui.sampleDataCheckBox.setChecked(False)
       try: # if the old shader has points
         self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
       except:
@@ -681,8 +813,8 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       transferFunction.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = transferFunction : self.updateWidgetParameterNodeFromGUI([o,"add widget"], w))
 
       # Change the points to the ones specified in the shader
-      if param.default_colors != [] :
-        colors = param.default_colors
+      if param.defaultValue != [] :
+        colors = param.defaultValue
         nbColors = len(colors)
         transferFunction.RemoveAllPoints()
         for i in range(nbColors): 
