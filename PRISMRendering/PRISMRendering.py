@@ -199,6 +199,8 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
       self.updateBaseGUIFromParameterNode()
 
+      print(self.ui.imageSelector.currentNode().GetClassName())
+
       #self.ui.enableScalingCheckBox.setChecked(True)
       self.ROIdisplay = None
 
@@ -253,8 +255,6 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
       else:
         self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
-        self.ui.customShaderCombo.currentIndex = self.ui.customShaderCombo.count -1 
-        self.ui.volumeRenderingCheckBox.setChecked(False)
     
     def onSampleDataCheckBoxToggled(self, caller=None, event=None):
       import SampleData
@@ -266,14 +266,10 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
           p.setValue(p.defaultValue)
           # add code to store old volume and show sample data one
         self.storedVolume = self.ui.imageSelector.currentNode()
-        volumeNode = slicer.util.loadVolume(SampleData.downloadSample('TemplateKey1'))
-        print(4)
+        volumeNode = SampleData.downloadSample('TemplateKey1')
         self.ui.imageSelector.setCurrentNode(volumeNode)
-        print(3)
         self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
-        print(2)
         self.logic.renderVolume(self.ui.imageSelector.currentNode())
-        print(1)
         self.setupShader()
       else:
         for i, p in enumerate(self.logic.customShader[self.logic.shaderIndex].param_list):
