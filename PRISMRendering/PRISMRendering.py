@@ -66,11 +66,11 @@ def registerSampleData():
     # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
     thumbnailFileName=os.path.join(iconsPath, 'SphereCarving.png'),
     # Download URL and target file name
-    uris="https://github.com/IbisNeuronav/PRISMDatabase/blob/master/1-carving-sphere/0.mnc",
-    fileNames='0.mnc',
+    uris="https://github.com/cmll2/SlicerNewPRISMRendering/blob/main/SphereCarving.nrrd",
+    fileNames='SphereCarving.nrrd',
     # Checksum to ensure file integrity. Can be computed by this command:
     #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
-    checksums = 'SHA256:4802487c31c1dcd24434cb370906e1002d515c3abed1ce00385b2307f1370c13',
+    checksums = 'SHA256:4b6a24827ce6967e746a049fe19bdd108d5db004df06c447efc33e207d579741',
     # This node name will be used when the data set is loaded
     nodeNames='SphereCarvingSampleData'
   )
@@ -78,15 +78,15 @@ def registerSampleData():
   # TemplateKey2
   SampleData.SampleDataLogic.registerCustomSampleDataSource(
     # Category and sample name displayed in Sample Data module
-    category='TemplateKey',
+    category='PRISMSampleData',
     sampleName='NoneSampleData',
-    thumbnailFileName=os.path.join(iconsPath, 'TemplateKey2.png'),
+    thumbnailFileName=os.path.join(iconsPath, 'None.png'),
     # Download URL and target file name
     uris="https://github.com/Slicer/SlicerTestingData/releases/download/SHA256/1a64f3f422eb3d1c9b093d1a18da354b13bcf307907c66317e2463ee530b7a97",
     fileNames='TemplateKey2.nrrd',
     checksums = 'SHA256:1a64f3f422eb3d1c9b093d1a18da354b13bcf307907c66317e2463ee530b7a97',
     # This node name will be used when the data set is loaded
-    nodeNames='TemplateKey2'
+    nodeNames='NoneSampleData'
   )
 
   SampleData.SampleDataLogic.registerCustomSampleDataSource(

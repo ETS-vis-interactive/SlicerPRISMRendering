@@ -69,7 +69,6 @@ class RangeParam(Param):
     parameterNode = widgetClass.logic.parameterNode
     value = parameterNode.GetParameter(self.widget.name)
     if value != '' :
-      value = float(value)
       self.setValue(value)
       self.setUniform(widgetClass.logic.customShader[widgetClass.logic.shaderIndex])
       self.widget.setValue(value)
