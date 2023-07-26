@@ -30,7 +30,8 @@ class BoolParam(Param):
       self.value = int(value)
     else:
       self.value = 0
-
+    self.widget.setChecked(self.value)
+    
   def getValue(self):
     return self.value
 

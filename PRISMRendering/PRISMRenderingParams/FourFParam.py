@@ -42,6 +42,10 @@ class FourFParam(Param):
         self.value['w'] = value[3]
       except:
         self.value['w'] = 0
+    pass
+
+  def getValue(self):
+    return self.value
 
   def toList(self):
     return [self.value['x'], self.value['y'], self.value['z'], self.value['w']]

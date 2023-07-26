@@ -16,6 +16,7 @@ from distutils.util import strtobool
 from inspect import signature 
 import inspect
 import traceback
+import SampleData
 
 from PRISMRenderingShaders.CustomShader import *
 from PRISMRenderingParams import *
@@ -50,8 +51,6 @@ def registerSampleData():
   """
   # It is always recommended to provide sample data for users to make it easy to try the module,
   # but if no sample data is available then this method (and associated startupCompeted signal connection) can be removed.
-
-  import SampleData
   iconsPath = os.path.join(os.path.dirname(__file__), 'Resources/Icons')
 
   # To ensure that the source code repository remains small (can be downloaded and installed quickly)
@@ -199,8 +198,6 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
       self.updateBaseGUIFromParameterNode()
 
-      print(self.ui.imageSelector.currentNode().GetClassName())
-
       #self.ui.enableScalingCheckBox.setChecked(True)
       self.ROIdisplay = None
 
@@ -257,7 +254,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
     
     def onSampleDataCheckBoxToggled(self, caller=None, event=None):
-      import SampleData
+      
       if self.ui.sampleDataCheckBox.isChecked():
         self.storedParamsValues = []
         for p in self.logic.customShader[self.logic.shaderIndex].param_list:
@@ -265,15 +262,18 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
           # add code to setValue of the parameters to the sample data values, for the moment, it will be the default values
           p.setValue(p.defaultValue)
           # add code to store old volume and show sample data one
-        self.storedVolume = self.ui.imageSelector.currentNode()
-        volumeNode = SampleData.downloadSample('TemplateKey1')
-        self.ui.imageSelector.setCurrentNode(volumeNode)
+        self.storedVolumeID = self.ui.imageSelector.currentNodeID
+        self.logic.customShader[self.logic.shaderIndex].downloadSampleData(self.ui.imageSelector)
         self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
         self.logic.renderVolume(self.ui.imageSelector.currentNode())
-        self.setupShader()
+        self.logic.customShader[self.logic.shaderIndex].setupShader()
       else:
         for i, p in enumerate(self.logic.customShader[self.logic.shaderIndex].param_list):
           p.setValue(self.storedParamsValues[i])
+        self.ui.imageSelector.setCurrentNodeID(self.storedVolumeID)
+        self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
+        self.logic.renderVolume(self.ui.imageSelector.currentNode())
+        self.logic.customShader[self.logic.shaderIndex].setupShader()
           # add code to restore old volume and hide sample data one
 
     def onEnableRotationCheckBoxToggled(self, caller=None, event=None) :
@@ -423,8 +423,19 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       :param i: Index of the element. 
       :type i: int
       """
-      self.setupShader()
+      # self.ui.sampleDataCheckBox.setChecked(False)
+      try: # if the old shader has points
+        self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
+      except:
+        pass
+      self.logic.setCustomShaderType(self.ui.customShaderCombo.currentText, self.ui.imageSelector.currentNode())
+      self.UpdateShaderParametersUI()
       self.updateWidgetParameterNodeFromGUI(self.ui.customShaderCombo.currentText, self.ui.customShaderCombo)
+      self.logic.customShader[self.logic.shaderIndex].setupShader()
+      try: # if the new shader has points
+        self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(1)
+      except:
+        pass
       # If there is no selected shader, disables the buttons.
       if (self.ui.customShaderCombo.currentText == "None"):
         self.ui.openCustomShaderButton.setEnabled(False)
@@ -434,19 +445,6 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         self.ui.reloadCurrentCustomShaderButton.setEnabled(True)
 
       self.ui.customShaderCollapsibleButton.setToolTip(self.logic.customShader[self.logic.shaderIndex].GetBasicDescription())
-
-    def setupShader(self):
-      try: # if the old shader has points
-        self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
-      except:
-        pass
-      self.logic.setCustomShaderType(self.ui.customShaderCombo.currentText, self.ui.imageSelector.currentNode())
-      self.UpdateShaderParametersUI()
-      self.logic.customShader[self.logic.shaderIndex].setupShader()
-      try: # if the new shader has points
-        self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(1)
-      except:
-        pass
 
     def updateParameterNodeFromGUI(self, value, w):
       """Function to update the parameter node from gui values.

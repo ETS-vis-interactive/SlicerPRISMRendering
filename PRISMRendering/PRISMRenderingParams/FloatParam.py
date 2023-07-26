@@ -41,7 +41,8 @@ class FloatParam(Param):
       value = self.maxValue
     else:
       self.value = value
-
+    self.widget.setValue(self.value)
+    
   def getValue(self):
     return self.value
 

@@ -11,8 +11,11 @@ class RangeParam(Param):
     if default_value == None:
       self.min = range[0]
       self.max = range[1]
+      self.defaultValue = [self.min, self.max]
     else:
-      self.setValue(default_value)
+      self.min = default_value[0]
+      self.max = default_value[1]
+      self.defaultValue = [self.min, self.max]
     self.widget = None
 
   def SetupGUI(self, widgetClass):
@@ -46,6 +49,8 @@ class RangeParam(Param):
       self.max = self.range[1]
     else:
       self.max = value[1]
+    self.widget.minimumValue = self.min
+    self.widget.maximumValue = self.max
 
   def getValue(self):
     return [self.min, self.max]
