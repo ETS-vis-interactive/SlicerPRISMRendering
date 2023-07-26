@@ -42,10 +42,10 @@ class CustomShader():
        if not self.sampleDataDownloaded:
         try:
           volumeNode = SampleData.downloadSample(self.GetDisplayName().replace(" ", "") + "SampleData")
+          print(volumeNode.GetClassName())
         except:
            print("This shader does not have a sample data. Please load your own data.")
            return
-        volumeNode = slicer.util.loadVolume(volumeNode)
         self.sampleDataDownloaded = True
         imageSelector.setCurrentNode(volumeNode)
         self.sampleDataNodeID = imageSelector.currentNodeID

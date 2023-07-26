@@ -66,8 +66,8 @@ def registerSampleData():
     # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
     thumbnailFileName=os.path.join(iconsPath, 'SphereCarving.png'),
     # Download URL and target file name
-    uris="https://github.com/cmll2/SlicerNewPRISMRendering/blob/main/SphereCarving.nrrd",
-    fileNames='SphereCarving.nrrd',
+    uris="https://github.com/IbisNeuronav/PRISMDatabase/tree/master/1-carving-sphere",
+    fileNames='0.mnc',
     # Checksum to ensure file integrity. Can be computed by this command:
     #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
     checksums = 'SHA256:4b6a24827ce6967e746a049fe19bdd108d5db004df06c447efc33e207d579741',
@@ -92,7 +92,7 @@ def registerSampleData():
   SampleData.SampleDataLogic.registerCustomSampleDataSource(
     # Category and sample name displayed in Sample Data module
     category='PRISMSampleData',
-    sampleName='SphereCarvingSampleData',
+    sampleName='SphesreCarvingSampleData',
     # Thumbnail should have size of approximately 260x280 pixels and stored in Resources/Icons folder.
     # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
     thumbnailFileName=os.path.join(iconsPath, 'SphereCarving.png'),
