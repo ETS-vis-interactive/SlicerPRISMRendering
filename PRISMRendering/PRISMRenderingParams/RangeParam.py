@@ -76,8 +76,8 @@ class RangeParam(Param):
     if value != '' :
       self.setValue(value)
       self.setUniform(widgetClass.logic.customShader[widgetClass.logic.shaderIndex])
-      self.widget.minimumValue(self.min)
-      self.widget.maximumValue(self.max)
+      self.widget.minimumValue = self.min
+      self.widget.maximumValue = self.max
     
   def removeGUIObservers(self):
     self.widget.valuesChanged.disconnect(self.updateParameterNodeFromGUI)
