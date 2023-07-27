@@ -47,7 +47,6 @@ class BoolParam(Param):
       checked = (int(value) != 0)
       self.setValue(checked)
       self.setUniform(widgetClass.logic.customShader[widgetClass.logic.shaderIndex])
-      self.widget.setChecked(checked)
     
   def removeGUIObservers(self):
     self.widget.toggled.disconnect(self.updateParameterNodeFromGUI)

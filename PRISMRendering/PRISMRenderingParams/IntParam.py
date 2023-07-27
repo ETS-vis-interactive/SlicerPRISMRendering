@@ -57,7 +57,6 @@ class IntParam(Param):
       value = int(value)
       self.setValue(value)
       self.setUniform(widgetClass.logic.customShader[widgetClass.logic.shaderIndex])
-      self.widget.setValue(value)
     
   def removeGUIObservers(self):
     self.widget.valueChanged.disconnect(self.updateParameterNodeFromGUI)
