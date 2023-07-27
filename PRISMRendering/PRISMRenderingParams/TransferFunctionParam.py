@@ -14,17 +14,10 @@ class TransferFunctionParam(Param):
     self.label = None
     self.transferFunction = None
 
-  def setValue(self, value):
+  def setValue(self, value, updateGUI = False):
     self.value = value
-    # if self.transferFunction is not None:
-    #   colors = self.value
-    #   nbColors = len(colors)
-    #   self.transferFunction.RemoveAllPoints()
-    #   for i in range(nbColors): 
-    #     if self.type == 'color':
-    #       self.transferFunction.AddRGBPoint(colors[i][0], colors[i][1], colors[i][2], colors[i][3], colors[i][4], colors[i][5])  
-    #     elif self.type == 'scalarOpacity':
-    #      self.transferFunction.AddPoint(colors[i][0], colors[i][1], colors[i][2], colors[i][3])  
+    if updateGUI:
+      self.updateGUIFromValue()
 
   def addTransferFunction(self, widgetClass, volumeID, TFIndex):
        """Function to add transfer function widgets to the ui.
@@ -114,7 +107,20 @@ class TransferFunctionParam(Param):
             self.transferFunction.AddRGBPoint(colors[i][0], colors[i][1], colors[i][2], colors[i][3], colors[i][4], colors[i][5])  
           elif TFType == 'scalarOpacity':
            self.transferFunction.AddPoint(colors[i][0], colors[i][1], colors[i][2], colors[i][3])  
-
+      else:
+        newValues = []
+        nbPoints = self.transferFunction.GetSize()
+        if widgetClass.getClassName(self.transferFunction) == "vtkColorTransferFunction":
+          values = [0,0,0,0,0,0]
+        else :
+          values = [0,0,0,0]
+        if nbPoints > 0:
+          for i in range(nbPoints):
+            self.transferFunction.GetNodeValue(i, values)
+            temp = values[:]
+            newValues.append(temp)
+            self.defaultValue = newValues
+            self.value = self.defaultValue
       if TFType == 'color':
         self.widget.view().addColorTransferFunction(self.transferFunction)
       elif TFType == 'scalarOpacity':
@@ -166,3 +172,18 @@ class TransferFunctionParam(Param):
         self.transferFunction.SetNodeValue(i, [float(k) for k in values.split(",")])
     if newValues != []:
       self.setValue(newValues)
+
+  def updateGUIFromValue(self):
+    if self.transferFunction is not None:
+      colors = self.value
+      nbColors = len(colors)
+      self.transferFunction.RemoveAllPoints()
+      for i in range(nbColors): 
+        if self.type == 'color':
+          self.transferFunction.AddRGBPoint(colors[i][0], colors[i][1], colors[i][2], colors[i][3], colors[i][4], colors[i][5])  
+        elif self.type == 'scalarOpacity':
+         self.transferFunction.AddPoint(colors[i][0], colors[i][1], colors[i][2], colors[i][3])  
+
+  def getValue(self):
+    return self.value
+                         
