@@ -107,7 +107,6 @@ class TransferFunctionParam(Param):
       # Change the points to the ones specified in the shader
       if self.value != [] :
         colors = self.value
-        print(colors)
         nbColors = len(colors)
         self.transferFunction.RemoveAllPoints()
         for i in range(nbColors): 
@@ -155,6 +154,7 @@ class TransferFunctionParam(Param):
         i+=1
         val = parameterNode.GetParameter(self.widget.name+str(i))
     parameterNode.EndModify(oldModifiedState)
+    self.setValue(newValues)
 
   def updateGUIFromParameterNode(self, widgetClass):
     parameterNode = widgetClass.logic.parameterNode
