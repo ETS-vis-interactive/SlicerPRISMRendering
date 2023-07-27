@@ -34,6 +34,7 @@ class CustomShader():
 
         self.param_list = []
 
+        # For sample data logic
         self.sampleDataDownloaded = False
         self.sampleDataNodeID = None
 

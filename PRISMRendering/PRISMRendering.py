@@ -285,7 +285,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
         for i, tf in enumerate(self.transferFunctionParams[TFID:TFID+self.numberOfTFTypes]):
           j = TFID + i
-          self.createTransferFunctionWidget(volumePropertyNode, tf, self.transferFunctionParamsName[j], True, volumeID  )
+          tf.createTransferFunctionWidget(self, volumePropertyNode, True, volumeID  )
         self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
 
       else:
@@ -668,7 +668,8 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         if self.logic.volumeRenderingDisplayNode is None :
           return
 
-        self.addTransferFunctions(params, 0)
+        for i, p in enumerate(params):
+          p.addTransferFunction(self, 0, i)
 
       else :
 
@@ -799,8 +800,8 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       transferFunction.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = transferFunction : self.updateWidgetParameterNodeFromGUI([o,"add widget"], w))
 
       # Change the points to the ones specified in the shader
-      if param.defaultValue != [] :
-        colors = param.defaultValue
+      if param.value != [] :
+        colors = param.value
         nbColors = len(colors)
         transferFunction.RemoveAllPoints()
         for i in range(nbColors): 
