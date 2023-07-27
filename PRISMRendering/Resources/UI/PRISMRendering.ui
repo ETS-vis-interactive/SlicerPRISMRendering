@@ -367,6 +367,13 @@
         </item>
        </layout>
       </item>
+      <item>
+       <widget class="QPushButton" name="resetParametersButton">
+        <property name="text">
+         <string>Reset parameters to default values</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>

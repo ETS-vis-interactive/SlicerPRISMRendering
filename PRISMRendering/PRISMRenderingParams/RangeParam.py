@@ -61,9 +61,11 @@ class RangeParam(Param):
     return [self.min, self.max]
 
   def setRange(self, range):
+    if self.defaultValue == self.range:
+      self.min = range[0]
+      self.max = range[1]
+      self.defaultValue = range
     self.range = range
-    self.min = range[0]
-    self.max = range[1]
 
   def setUniform(self, CustomShader):
     super(RangeParam, self).setUniform(CustomShader)
@@ -91,5 +93,8 @@ class RangeParam(Param):
     self.widget.valuesChanged.connect(lambda : self.updateParameterNodeFromGUI(widgetClass))
 
   def updateGUIFromValue(self):
+    max = float(self.max)
     self.widget.minimumValue = self.min
-    self.widget.maximumValue = self.max
+
+    # because of the way the connection works, we need to save the max while the slider changes the min value so when it communicates back the old max we kept the new max value.
+    self.widget.maximumValue = max

@@ -193,6 +193,9 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       self.ui.openCustomShaderButton.hide()
       self.ui.toolCustomShaderButton.clicked.connect(self.onToolCustomShaderButton)
 
+      #hide the reset button because no params at the beginning
+      self.ui.resetParametersButton.hide()
+      self.ui.resetParametersButton.clicked.connect(self.onResetParametersButtonClicked)
       # Populate combobox with every types of shader available
 
       for shaderType in allShaderTypes:
@@ -314,6 +317,11 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
           self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
           self.logic.renderVolume(self.ui.imageSelector.currentNode())
           self.logic.customShader[self.logic.shaderIndex].setupShader()
+
+    def onResetParametersButtonClicked(self, caller=None, event=None):
+
+      for p in self.logic.customShader[self.logic.shaderIndex].param_list:
+        p.setValue(p.defaultValue, True)
 
     def onEnableRotationCheckBoxToggled(self, caller=None, event=None) :
       """Function to enable rotating ROI box.
@@ -462,6 +470,14 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       :param i: Index of the element. 
       :type i: int
       """
+
+      # Show the reset button if the shader has parameters
+
+      if self.ui.customShaderCombo.currentText == "None":
+        self.ui.resetParametersButton.hide()
+      else:
+        self.ui.resetParametersButton.show()
+
       self.ui.sampleDataCheckBox.setChecked(False)
       try: # if the old shader has points
         self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
