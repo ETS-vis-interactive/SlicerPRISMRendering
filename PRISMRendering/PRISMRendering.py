@@ -75,20 +75,6 @@ def registerSampleData():
     nodeNames='SphereCarvingSampleData'
   )
 
-  # TemplateKey2
-  SampleData.SampleDataLogic.registerCustomSampleDataSource(
-    # Category and sample name displayed in Sample Data module
-    category='PRISMSampleData',
-    sampleName='NoneSampleData',
-    thumbnailFileName=os.path.join(iconsPath, 'None.png'),
-    # Download URL and target file name
-    uris="https://github.com/Slicer/SlicerTestingData/releases/download/SHA256/1a64f3f422eb3d1c9b093d1a18da354b13bcf307907c66317e2463ee530b7a97",
-    fileNames='NoneSampleData.nrrd',
-    checksums = 'SHA256:1a64f3f422eb3d1c9b093d1a18da354b13bcf307907c66317e2463ee530b7a97',
-    # This node name will be used when the data set is loaded
-    nodeNames='NoneSampleData'
-  )
-
   SampleData.SampleDataLogic.registerCustomSampleDataSource(
     # Category and sample name displayed in Sample Data module
     category='PRISMSampleData',
