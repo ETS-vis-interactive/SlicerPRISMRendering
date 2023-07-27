@@ -19,7 +19,7 @@ class Param:
     self.isShaderUpdater = True
     self.customShader = customShader
 
-  def setValue(self, value):
+  def setValue(self, value, updateGUI = False):
     pass
 
   def getValue(self):

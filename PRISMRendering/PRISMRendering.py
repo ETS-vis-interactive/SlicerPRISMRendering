@@ -301,14 +301,14 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
           for p in self.logic.customShader[self.logic.shaderIndex].param_list:
               self.storedParamsValues.append(p.getValue())
               # add code to setValue of the parameters to the sample data values, for the moment it will be the default values
-              p.setValue(p.defaultValue)
+              p.setValue(p.defaultValue, True)
           self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
           self.logic.renderVolume(self.ui.imageSelector.currentNode())
           self.logic.customShader[self.logic.shaderIndex].setupShader()
       else:
         if self.logic.customShader[self.logic.shaderIndex].sampleDataDownloaded:
           for i, p in enumerate(self.logic.customShader[self.logic.shaderIndex].param_list):
-            p.setValue(self.storedParamsValues[i])
+            p.setValue(self.storedParamsValues[i], True)
           self.storedParamsValues = []
           self.ui.imageSelector.setCurrentNodeID(self.storedVolumeID)
           self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)

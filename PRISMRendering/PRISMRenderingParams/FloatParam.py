@@ -34,14 +34,15 @@ class FloatParam(Param):
     self.updateGUIFromParameterNode(widgetClass)
     return slider, label, self.name
   
-  def setValue(self, value):
+  def setValue(self, value, updateGUI = False):
     if value < self.minValue:
       value = self.minValue
     elif value > self.maxValue:
       value = self.maxValue
     else:
       self.value = value
-    self.widget.setValue(self.value)
+    if updateGUI:
+      self.updateGUIFromValue()
     
   def getValue(self):
     return self.value
@@ -73,3 +74,6 @@ class FloatParam(Param):
 
   def addGUIObservers(self, widgetClass):
     self.widget.valueChanged.connect(lambda : self.updateParameterNodeFromGUI(widgetClass))
+
+  def updateGUIFromValue(self):
+    self.widget.setValue(self.value)

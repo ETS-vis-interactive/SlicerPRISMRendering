@@ -25,12 +25,13 @@ class BoolParam(Param):
 
       return addOptionCheckBox, self.name
   
-  def setValue(self, value):
+  def setValue(self, value, updateGUI = False):
     if int(value) == 0 or value == 1:
       self.value = int(value)
     else:
       self.value = 0
-    self.widget.setChecked(self.value)
+    if updateGUI:
+      self.updateGUIFromValue()
     
   def getValue(self):
     return self.value
@@ -61,4 +62,7 @@ class BoolParam(Param):
 
   def addGUIObservers(self, widgetClass):
     self.widget.toggled.connect(lambda : self.updateParameterNodeFromGUI(widgetClass))
+
+  def updateGUIFromValue(self):
+    self.widget.setChecked(self.value)
     
