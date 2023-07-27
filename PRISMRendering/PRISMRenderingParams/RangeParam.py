@@ -36,7 +36,7 @@ class RangeParam(Param):
     self.updateGUIFromParameterNode(widgetClass)
     return slider, label, self.name
   
-  def setValue(self, value):
+  def setValue(self, value, updateGUI = False):
     if isinstance(value, str):
       parts = value.split(',')
       value = [float(parts[0]), float(parts[1])]
@@ -54,8 +54,8 @@ class RangeParam(Param):
       self.max = self.range[1]
     else:
       self.max = value[1]
-    self.widget.minimumValue = self.min
-    self.widget.maximumValue = self.max
+    if updateGUI:
+      self.updateGUIFromValue()
 
   def getValue(self):
     return [self.min, self.max]
@@ -76,8 +76,6 @@ class RangeParam(Param):
     if value != '' :
       self.setValue(value)
       self.setUniform(widgetClass.logic.customShader[widgetClass.logic.shaderIndex])
-      self.widget.minimumValue = self.min
-      self.widget.maximumValue = self.max
     
   def removeGUIObservers(self):
     self.widget.valuesChanged.disconnect(self.updateParameterNodeFromGUI)
@@ -92,3 +90,6 @@ class RangeParam(Param):
   def addGUIObservers(self, widgetClass):
     self.widget.valuesChanged.connect(lambda : self.updateParameterNodeFromGUI(widgetClass))
 
+  def updateGUIFromValue(self):
+    self.widget.minimumValue = self.min
+    self.widget.maximumValue = self.max

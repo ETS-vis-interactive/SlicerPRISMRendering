@@ -34,14 +34,15 @@ class IntParam(Param):
     
     return slider, label, self.name
   
-  def setValue(self, value):
+  def setValue(self, value, updateGUI = False):
     if value < self.minValue:
       self.value = self.minValue
     elif value > self.maxValue:
       self.value = self.maxValue
     else:
       self.value = int(value)
-    self.widget.setValue(self.value)
+    if updateGUI:
+      self.updateGUIFromValue()
   
   def getValue(self):
     return self.value
@@ -57,7 +58,6 @@ class IntParam(Param):
       value = int(value)
       self.setValue(value)
       self.setUniform(widgetClass.logic.customShader[widgetClass.logic.shaderIndex])
-      self.widget.setValue(value)
     
   def removeGUIObservers(self):
     self.widget.valueChanged.disconnect(self.updateParameterNodeFromGUI)
@@ -73,4 +73,7 @@ class IntParam(Param):
       parameterNode.EndModify(oldModifiedState)
       
   def addGUIObservers(self, widgetClass):
-    self.widget.valueChanged.connect(lambda : self.updateParameterNodeFromGUI(widgetClass))    
+    self.widget.valueChanged.connect(lambda : self.updateParameterNodeFromGUI(widgetClass))
+
+  def updateGUIFromValue(self):
+    self.widget.setValue(self.value)
