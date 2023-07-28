@@ -15,7 +15,7 @@ class EchoVolumeShader(CustomShader):
 
   param_list = [threshold, edgeSmoothing, depthRange, depthDarkening, depthColoringRange, brightnessScale, saturationScale]
 
-  def __init__(self, shaderPropertyNode, volumeNode = None, paramlist = param_list):
+  def __init__(self, shaderPropertyNode, volumeNode = None, logic = None, paramlist = param_list):
     CustomShader.__init__(self, shaderPropertyNode, volumeNode)
     self.param_list = paramlist
 
@@ -25,7 +25,7 @@ class EchoVolumeShader(CustomShader):
       if p in self.update_param_list:
         p.addCustomShaderUpdater(self)
     
-    self.createMarkupsNodeIfNecessary()
+    self.createMarkupsNodeIfNecessary(logic)
 
     self.volumeRenderingDisplayNode = self._setupVolumeRenderingDisplayNode(self.volumeNode)
 

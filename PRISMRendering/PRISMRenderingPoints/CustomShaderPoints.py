@@ -2,7 +2,7 @@ import vtk, qt, ctk, slicer
 from PRISMRenderingParams import *
 
 class CustomShaderPoints():
-    def __init__(self, CustomShader):
+    def __init__(self, customShader, logic):
 
         self.currentMarkupBtn = None
 
@@ -10,7 +10,9 @@ class CustomShaderPoints():
         self.pointName = ''
         self.pointIndexes = {}
 
-        self.customShader = CustomShader
+        self.logic = logic
+
+        self.customShader = customShader
         
         self.createPointTypes()
 
@@ -28,19 +30,12 @@ class CustomShaderPoints():
       # retrieve end points in the scene or create the node
       name = "EndPoints" + self.customShader.GetDisplayName()
       name = name.replace(" ", "")
-      # print(name)
       allEndPoints = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLMarkupsFiducialNode', name)
-      if allEndPoints.GetNumberOfItems() > 0:
-        # set node used before reload in the current instance
-        ## All endpoints in the scene
-        self.endPoints = allEndPoints.GetItemAsObject(0)
-        self.endPoints.RemoveAllControlPoints()
-        self.endPoints.GetDisplayNode().SetGlyphScale(6.0)
-      else:
-        self.endPoints = slicer.mrmlScene.AddNewNodeByClass('vtkMRMLMarkupsFiducialNode')
-        self.endPoints.SetName(name)
-        self.endPoints.GetDisplayNode().SetGlyphScale(6.0)
-        self.endPoints.RemoveAllControlPoints()
+      slicer.mrmlScene.RemoveNode(allEndPoints.GetItemAsObject(0))
+      self.endPoints = slicer.mrmlScene.AddNewNodeByClass('vtkMRMLMarkupsFiducialNode')
+      self.endPoints.SetName(name)
+      self.endPoints.GetDisplayNode().SetGlyphScale(6.0)
+      self.endPoints.RemoveAllControlPoints()
 
       self.node_id = self.endPoints.GetID()
 
@@ -106,8 +101,13 @@ class CustomShaderPoints():
        self.currentMarkupBtn.setText('Reset ' + self.pointType)
 
     def addObservers(self):
-      self.pointModifiedEventTag = self.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.onEndPointsChanged)
+      endPointsname = self.customShader.GetDisplayName().replace(" ", "") + self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode().GetName() + "markup"
       self.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, self.onEndPointAdded)
+      self.endPoints.name = endPointsname
+      self.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.pointModified)
+      self.pointModifiedEventTag = self.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.onEndPointsChanged)
+      self.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, 
+      lambda c, e, name = endPointsname: self.updateParameterNodeFromGUI([c, "PointPositionDefinedEvent", name]))
 
     def removeObservers(self):
       self.endPoints.RemoveObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent)
@@ -128,19 +128,17 @@ class CustomShaderPoints():
    
       #check if the point was added from the module and was set
       type_ = caller.GetNthControlPointLabel(call_data)
-      pointName = caller.GetNthControlPointAssociatedNodeID(call_data)
-      if pointName in self.pointIndexes.keys() and self.pointIndexes[pointName] == call_data :
-        world = [0, 0, 0]
-        caller.GetNthControlPointPositionWorld(call_data, world)
-        self.onCustomShaderParamChangedMarkup(world, type_)
+      world = [0, 0, 0]
+      caller.GetNthControlPointPositionWorld(call_data, world)
+      self.onCustomShaderParamChangedMarkup(world, type_)
 
-    def updateParameterNodeFromGUI(self, logic, value):
-      parameterNode = logic.parameterNode
+    def updateParameterNodeFromGUI(self, value):
+      parameterNode = self.logic.parameterNode
       oldModifiedState = parameterNode.StartModify()
       caller = value[0]
       event = value[1]
       index = value[2]
-      name = self.endPoints.name + logic.customShader[logic.shaderIndex].customShaderPoints.pointType
+      name = self.endPoints.name + self.pointType
       world = [0, 0, 0]
       if event == "PointPositionDefinedEvent" :
         index = caller.GetDisplayNode().GetActiveControlPoint()
@@ -151,14 +149,15 @@ class CustomShaderPoints():
           caller.GetNthControlPointPositionWorld(index, world)
           parameterNode.SetParameter(name, ",".join("{0}".format(n) for n in world))
           parameterNode.SetParameter(self.endPoints.name, str(index))
-          logic.customShader[logic.shaderIndex].customShaderPoints.pointIndexes[name] = index
+          self.pointIndexes[name] = index
         # Reset point
-        elif logic.customShader[logic.shaderIndex].customShaderPoints.pointName != '' :
-          name = logic.customShader[logic.shaderIndex].customShaderPoints.pointName
-          index = logic.customShader[logic.shaderIndex].customShaderPoints.pointIndexes[name] 
+        elif self.pointName != '' :
+          name = self.pointName
+          index = self.pointIndexes[name]
           caller.GetNthControlPointPositionWorld(index, world)
           parameterNode.SetParameter(name, ",".join("{0}".format(n) for n in world))
-          logic.customShader[logic.shaderIndex].customShaderPoints.pointName = ''
+          self.pointName = ''
+
       if event == "PointModifiedEvent" :
         if parameterNode.GetParameter(self.endPoints.name) != "" and index <= int(parameterNode.GetParameter(self.endPoints.name)):
           pointName = caller.GetNthControlPointAssociatedNodeID(index)
@@ -166,6 +165,10 @@ class CustomShaderPoints():
             caller.GetNthControlPointPositionWorld(index, world)
             parameterNode.SetParameter(pointName, ",".join("{0}".format(n) for n in world))
       parameterNode.EndModify(oldModifiedState)
+
+    @vtk.calldata_type(vtk.VTK_INT)
+    def pointModified(self, caller, event, index):
+      self.updateParameterNodeFromGUI([caller, "PointModifiedEvent", index])
 
     def updateGUIFromParameterNode(self, logic):
       # self.customShader[self.shaderIndex].customShaderPoints.removeObservers()

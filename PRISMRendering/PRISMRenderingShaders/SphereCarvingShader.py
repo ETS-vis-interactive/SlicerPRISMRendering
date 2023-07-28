@@ -14,10 +14,10 @@ class SphereCarvingShader(CustomShader):
 
   param_list = [radiusParam, centerParam]
   
-  def __init__(self, shaderPropertyNode, volumeNode = None, paramlist = param_list):
+  def __init__(self, shaderPropertyNode, volumeNode = None, logic = None, paramlist = param_list):
     CustomShader.__init__(self,shaderPropertyNode, volumeNode)
     self.param_list = paramlist
-    self.createMarkupsNodeIfNecessary()
+    self.createMarkupsNodeIfNecessary(logic)
   
   @classmethod
   def GetBasicDescription(cls):

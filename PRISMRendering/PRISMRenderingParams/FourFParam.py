@@ -31,7 +31,7 @@ class FourFParam(Param):
     self.updateGUIFromParameterNode(widgetClass)
     return targetPointButton, self.name
 
-  def setValue(self, value):
+  def setValue(self, value, updateGUI = False):
     if isinstance(value, dict):
       self.value = value
     else:

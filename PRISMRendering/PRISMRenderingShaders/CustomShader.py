@@ -18,7 +18,7 @@ Generic Custom Shader
 
 class CustomShader():
    
-    def __init__(self, shaderPropertyNode, volumeNode = None):
+    def __init__(self, shaderPropertyNode, volumeNode = None, logic = None):
         
         assert shaderPropertyNode != None, 'CustomShader: a valid shader property node must provided to the constructor'
         ## Property node of the shader
@@ -34,6 +34,7 @@ class CustomShader():
 
         self.param_list = []
 
+        self.logic = logic
         # For sample data logic
         self.sampleDataDownloaded = False
         self.sampleDataNodeID = None
@@ -63,13 +64,13 @@ class CustomShader():
       self.setAllUniforms()
 
     @classmethod
-    def InstanciateCustomShader(cls, shaderDisplayName, shaderPropertyNode, volumeNode):
+    def InstanciateCustomShader(cls, shaderDisplayName, shaderPropertyNode, volumeNode, logic):
         if shaderDisplayName == cls.GetDisplayName():
-          return CustomShader(shaderPropertyNode, volumeNode)
+          return CustomShader(shaderPropertyNode, volumeNode, logic)
 
         for c in cls.allClasses:
           if c.GetDisplayName() == shaderDisplayName:
-            return c(shaderPropertyNode, volumeNode)
+            return c(shaderPropertyNode, volumeNode, logic)
         return None
 
     @classmethod
@@ -147,10 +148,10 @@ class CustomShader():
           i.setUniform(self)
           break
 
-    def createMarkupsNodeIfNecessary(self):
+    def createMarkupsNodeIfNecessary(self, logic):
        for p in self.param_list:
           if isinstance(p, FourFParam):
-             self.customShaderPoints = CustomShaderPoints(self)
+             self.customShaderPoints = CustomShaderPoints(self, logic)
              break
           
     def resetVolumeProperty(self):

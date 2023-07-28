@@ -659,13 +659,6 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
                 self.logic.optionalWidgets[self.CSName + bool_param.name] += [p]
                 if hideWidget :
                   p.widget.hide()
-              
-      if any(isinstance(item, FourFParam) for item in param_list):
-        self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.name = self.CSName + "markup"
-        self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.pointModified)
-        self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, 
-        lambda c, e, name = self.CSName + "markup": 
-        self.logic.customShader[self.logic.shaderIndex].customShaderPoints.updateParameterNodeFromGUI(self.logic, [c, "PointPositionDefinedEvent", name]))
 
         ## Transfer function of the first volume
       params = [p for p in self.logic.customShader[self.logic.shaderIndex].param_list if isinstance(p, TransferFunctionParam)]

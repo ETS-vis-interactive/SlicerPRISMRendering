@@ -159,7 +159,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
           self.shaderPropertyNode = self.volumeRenderingDisplayNode.GetShaderPropertyNode()
         if self.customShader != [] :
           self.customShader[self.shaderIndex].resetVolumeProperty()
-        self.customShader.append(CustomShader.InstanciateCustomShader(self.customShaderType, self.shaderPropertyNode, volumeNode))
+        self.customShader.append(CustomShader.InstanciateCustomShader(self.customShaderType, self.shaderPropertyNode, volumeNode, self))
         self.shaderIndex = len(self.customShader)-1
         try :
           self.customShader[self.shaderIndex].customShaderPoints.updateGUIFromParameterNode(self)
