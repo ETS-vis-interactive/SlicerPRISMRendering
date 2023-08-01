@@ -46,7 +46,6 @@ class CustomShader():
         except:
            print("This shader does not have a sample data. Please load your own data.")
            return
-        print(volumeNode.GetClassName())
         self.sampleDataDownloaded = True
         imageSelector.setCurrentNode(volumeNode)
         self.sampleDataNodeID = imageSelector.currentNodeID
