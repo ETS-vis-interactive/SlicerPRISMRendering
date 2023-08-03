@@ -106,7 +106,6 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
           else:
             self.volumeRenderingDisplayNode = displayNode
           return
-
         # if not, create a renderer
         # Slicer default command to create renderer and add node to scene
         displayNode = logic.CreateDefaultVolumeRenderingNodes(volumeNode)

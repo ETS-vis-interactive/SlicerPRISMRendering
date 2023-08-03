@@ -22,6 +22,7 @@ import hashlib
 from PRISMRenderingShaders.CustomShader import *
 from PRISMRenderingParams import *
 from PRISMRenderingLogic import *
+
 class PRISMRendering(slicer.ScriptedLoadableModule.ScriptedLoadableModule):
     """Uses ScriptedLoadableModule base class, available at:
     https://github.com/Slicer/Slicer/blob/main/Base/Python/slicer/ScriptedLoadableModule.py
@@ -43,8 +44,6 @@ class PRISMRendering(slicer.ScriptedLoadableModule.ScriptedLoadableModule):
 
     # Additional initialization step after application startup is complete
         slicer.app.connect("startupCompleted()", registerSampleData)
-
-
 
 def registerSampleData():
   """
@@ -225,7 +224,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
       self.setAndObserveParameterNode()
     
-      slicer.mrmlScene.AddNode(self.logic.parameterNode)
+      #slicer.mrmlScene.AddNode(self.logic.parameterNode)
       if self.logic.parameterNode.GetParameterCount() != 0:
         volumePath = self.logic.parameterNode.GetParameter("volumePath")
         # Set volume node
@@ -305,6 +304,10 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
               self.storedParamsValues.append(p.getValue())
               # add code to setValue of the parameters to the sample data values, for the moment it will be the default values
               p.setValue(p.defaultValue, True)
+          try :
+            self.logic.customShader[self.logic.shaderIndex].customShaderPoints.UpdateGUIFromValues(self.logic)
+          except:
+            pass
           self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
           self.logic.renderVolume(self.ui.imageSelector.currentNode())
           self.logic.customShader[self.logic.shaderIndex].setupShader()
@@ -313,6 +316,10 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
           for i, p in enumerate(self.logic.customShader[self.logic.shaderIndex].param_list):
             p.setValue(self.storedParamsValues[i], True)
           self.storedParamsValues = []
+          try :
+            self.logic.customShader[self.logic.shaderIndex].customShaderPoints.UpdateGUIFromValues(self.logic)
+          except:
+            pass
           self.ui.imageSelector.setCurrentNodeID(self.storedVolumeID)
           self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
           self.logic.renderVolume(self.ui.imageSelector.currentNode())
@@ -322,6 +329,10 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
       for p in self.logic.customShader[self.logic.shaderIndex].param_list:
         p.setValue(p.defaultValue, True)
+      try :
+        self.logic.customShader[self.logic.shaderIndex].customShaderPoints.UpdateGUIFromValues(self.logic)
+      except:
+        pass
 
     def onEnableRotationCheckBoxToggled(self, caller=None, event=None) :
       """Function to enable rotating ROI box.
@@ -570,9 +581,9 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
       """
       # Remove observer to old parameter node
-      if self.logic.parameterNode and self.logic.parameterNodeObserver:
-        self.logic.parameterNode.RemoveObserver(self.logic.parameterNodeObserver)
-        self.logic.parameterNodeObserver = None
+      # if self.logic.parameterNode and self.logic.parameterNodeObserver:
+      #   self.logic.parameterNode.RemoveObserver(self.logic.parameterNodeObserver)
+      #   self.logic.parameterNodeObserver = None
 
       # Set and observe new parameter node
       self.logic.parameterNode = self.logic.getParameterNode()

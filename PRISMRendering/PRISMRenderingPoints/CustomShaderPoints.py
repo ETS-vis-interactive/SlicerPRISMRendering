@@ -198,6 +198,20 @@ class CustomShaderPoints():
           world = [0, 0, 0, 0]
           self.endPoints.GetNthFiducialWorldCoordinates(index, world)
           self.onCustomShaderParamChanged(world, type_, "markup")
-          self.endPoints.SetNthFiducialVisibility(index, visible)
+          self.endPoints.SetNthControlPointVisibility(index, visible)
 
       # self.customShader[self.shaderIndex].customShaderPoints.addObservers()
+      
+    def UpdateGUIFromValues(self, logic):
+    
+      # NOT WORKING, FEELS LIKE THE OBSERVERS DON'T TAKE THE CHANGES IN ACCOUNT
+      # It's supposed to update the point position from the parameter values, for example if you reset to default values, 
+      # but it is probably useless as points are defined by the user
+
+      params = [p for p in logic.customShader[logic.shaderIndex].param_list if isinstance(p, FourFParam)]
+      for p in params :
+        if 'markup' + p.name in self.pointIndexes :
+        #If point was defined
+          index = self.pointIndexes['markup' + p.name]
+          values = p.toList()
+          self.endPoints.SetNthControlPointPositionWorld(index, values[:3])
