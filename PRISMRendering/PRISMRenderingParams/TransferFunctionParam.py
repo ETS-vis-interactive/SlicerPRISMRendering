@@ -38,14 +38,14 @@ class TransferFunctionParam(Param):
 
        # IF this is the principal volume
        if volumePrincipal :
-         volumePropertyNode = widgetClass.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
+         volumePropertyNode = widgetClass.logic.volumes[widgetClass.logic.volumeIndex].volumeRenderingDisplayNode.GetVolumePropertyNode()
          self.createTransferFunctionWidget(widgetClass, volumePropertyNode, False, volumeID)
        else : 
          # If this is a secondary volume
          transferFunctionID = volumeID * widgetClass.numberOfTFTypes
          # If the volume of the transfer function is already rendered create the widget
-         if widgetClass.logic.secondaryVolumeRenderingDisplayNodes[volumeID] is not None: 
-           volumePropertyNode = widgetClass.logic.secondaryVolumeRenderingDisplayNodes[volumeID].GetVolumePropertyNode()
+         if widgetClass.logic.volumes[widgetClass.logic.volumeIndex].secondaryVolumeRenderingDisplayNodes[volumeID] is not None: 
+           volumePropertyNode = widgetClass.logic.volumes[widgetClass.logic.volumeIndex].secondaryVolumeRenderingDisplayNodes[volumeID].GetVolumePropertyNode()
            self.createTransferFunctionWidget(widgetClass, volumePropertyNode, True, volumeID)
          else :
            # Add the transfer functions to a list, so when the volume is rendered the widgets can be created

@@ -28,7 +28,7 @@ class CustomShaderPoints():
     def createEndPoints(self):
       """Create endpoints."""
       # retrieve end points in the scene or create the node
-      name = "EndPoints" + self.customShader.GetDisplayName()
+      name = "EndPoints" + self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode.GetVolumePropertyNode().GetName() + self.customShader.GetDisplayName()
       name = name.replace(" ", "")
       allEndPoints = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLMarkupsFiducialNode', name)
       slicer.mrmlScene.RemoveNode(allEndPoints.GetItemAsObject(0))
@@ -101,7 +101,7 @@ class CustomShaderPoints():
        self.currentMarkupBtn.setText('Reset ' + self.pointType)
 
     def addObservers(self):
-      endPointsname = self.customShader.GetDisplayName().replace(" ", "") + self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode().GetName() + "markup"
+      endPointsname = self.customShader.GetDisplayName().replace(" ", "") + self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode.GetVolumePropertyNode().GetName() + "markup"
       self.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, self.onEndPointAdded)
       self.endPoints.name = endPointsname
       self.endPoints.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.pointModified)

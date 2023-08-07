@@ -24,7 +24,7 @@ class IntParam(Param):
     slider.setObjectName(widgetClass.CSName + self.name )
     slider.setDecimals(0)
     slider.setValue( self.value )
-    slider.valueChanged.connect(lambda value : widgetClass.logic.onCustomShaderParamChanged(value, self) )
+    slider.valueChanged.connect(lambda value : widgetClass.logic.volumes[widgetClass.logic.volumeIndex].onCustomShaderParamChanged(value, self) )
     slider.valueChanged.connect(lambda : self.updateParameterNodeFromGUI(widgetClass))
     slider.setParent( widgetClass.ui.customShaderParametersLayout )
     self.widget = slider
@@ -57,7 +57,7 @@ class IntParam(Param):
     if value != '' :
       value = int(value)
       self.setValue(value)
-      self.setUniform(widgetClass.logic.customShader[widgetClass.logic.shaderIndex])
+      self.setUniform(widgetClass.logic.volumes[widgetClass.logic.volumeIndex].customShader[widgetClass.logic.volumes[widgetClass.logic.volumeIndex].shaderIndex])
     
   def removeGUIObservers(self):
     self.widget.valueChanged.disconnect(self.updateParameterNodeFromGUI)

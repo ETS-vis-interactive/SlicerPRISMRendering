@@ -25,7 +25,7 @@ class FloatParam(Param):
     slider.singleStep = ( (slider.maximum - slider.minimum) * 0.01 )
     slider.setObjectName( widgetClass.CSName + self.name )
     slider.setValue( self.value )
-    slider.valueChanged.connect(lambda value : widgetClass.logic.onCustomShaderParamChanged(value, self) )
+    slider.valueChanged.connect(lambda value : widgetClass.logic.volumes[widgetClass.logic.volumeIndex].onCustomShaderParamChanged(value, self) )
     slider.valueChanged.connect(lambda : self.updateParameterNodeFromGUI(widgetClass))
     slider.setParent( widgetClass.ui.customShaderParametersLayout )
 
@@ -58,7 +58,7 @@ class FloatParam(Param):
     if value != '' :
       value = float(value)
       self.setValue(value)
-      self.setUniform(widgetClass.logic.customShader[widgetClass.logic.shaderIndex])
+      self.setUniform(widgetClass.logic.volumes[widgetClass.logic.volumeIndex].customShader[widgetClass.logic.volumes[widgetClass.logic.volumeIndex].shaderIndex])
     
   def removeGUIObservers(self):
     self.widget.valueChanged.disconnect(self.updateParameterNodeFromGUI)

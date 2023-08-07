@@ -18,6 +18,9 @@ Generic Custom Shader
 
 class CustomShader():
    
+    sampleDataDownloaded = False
+    sampleDataNodeID = None
+
     def __init__(self, shaderPropertyNode, volumeNode = None, logic = None):
         
         assert shaderPropertyNode != None, 'CustomShader: a valid shader property node must provided to the constructor'
@@ -36,8 +39,6 @@ class CustomShader():
 
         self.logic = logic
         # For sample data logic
-        self.sampleDataDownloaded = False
-        self.sampleDataNodeID = None
 
     def downloadSampleData(self, imageSelector):
        if not self.sampleDataDownloaded:
@@ -46,9 +47,9 @@ class CustomShader():
         except:
            print("This shader does not have a sample data. Please load your own data.")
            return
-        self.sampleDataDownloaded = True
+        CustomShader.sampleDataDownloaded = True
         imageSelector.setCurrentNode(volumeNode)
-        self.sampleDataNodeID = imageSelector.currentNodeID
+        CustomShader.sampleDataNodeID = imageSelector.currentNodeID
        else:
         imageSelector.setCurrentNodeID(self.sampleDataNodeID)
           
