@@ -102,8 +102,8 @@ class CustomShader():
                         if inspect.isclass(obj) and issubclass(obj, cls) and obj != cls:
                             cls.allClasses.append(obj)
                             allNames.append(obj.GetDisplayName())   
-        allNames.append(cls.GetDisplayName())
-        cls.allClasses.append(None)
+        allNames.insert(0, cls.GetDisplayName())
+        cls.allClasses.insert(0, CustomShader)
         return allNames
 
     def clear(self):

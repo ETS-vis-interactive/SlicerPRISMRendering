@@ -166,7 +166,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       self.ui.displayROICheckBox.setSizePolicy(sp)
 
       self.ui.volumeRenderingCheckBox.toggled.connect(self.onVolumeRenderingCheckBoxToggled)
-      self.ui.sampleDataButton.clicked.connect(self.onsampleDataButtonClicked)
+      self.ui.sampleDataButton.clicked.connect(self.onSampleDataButtonClicked)
       self.ui.enableROICheckBox.toggled.connect(self.onEnableROICheckBoxToggled)
       self.ui.displayROICheckBox.toggled.connect(self.onDisplayROICheckBoxToggled)
       self.ui.enableScalingCheckBox.toggled.connect(self.onEnableScalingCheckBoxToggled)
@@ -199,7 +199,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
       for shaderType in allShaderTypes:
         self.ui.customShaderCombo.addItem(shaderType)
-      self.ui.customShaderCombo.setCurrentIndex(len(allShaderTypes)-1)
+      self.ui.customShaderCombo.setCurrentIndex(0)
       self.ui.customShaderCombo.currentIndexChanged.connect(self.onCustomShaderComboIndexChanged)
 
       ## Error message (the created shader has the name of an existing shader)
@@ -307,7 +307,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       # else:
       self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
     
-    def onsampleDataButtonClicked(self, caller=None, event=None):
+    def onSampleDataButtonClicked(self, caller=None, event=None):
       
       shaderName = self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].GetDisplayName()
       self.storedVolumeID = self.ui.imageSelector.currentNodeID

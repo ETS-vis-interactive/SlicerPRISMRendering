@@ -25,7 +25,7 @@ class PRISMRenderingVolume():
         self.setCustomShaderType('None')
         
         #To retrieve the shader's UI while coming back to the volume
-        self.comboBoxIndex = 6
+        self.comboBoxIndex = 0
 
     def renderVolume(self):
         """Use Slicer Volume Rendering module to initialize and setup rendering of the given volume node.
