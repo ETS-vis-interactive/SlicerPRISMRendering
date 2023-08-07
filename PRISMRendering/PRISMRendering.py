@@ -276,6 +276,10 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       if not node:
         return
 
+      self.ui.sampleDataCheckBox.toggled.disconnect(self.onSampleDataCheckBoxToggled)
+      self.ui.sampleDataCheckBox.setChecked(False)
+      self.ui.sampleDataCheckBox.toggled.connect(self.onSampleDataCheckBoxToggled)
+
       try: # if the old shader has points
         self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
       except:
