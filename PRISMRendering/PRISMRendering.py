@@ -166,13 +166,13 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       self.ui.displayROICheckBox.setSizePolicy(sp)
 
       self.ui.volumeRenderingCheckBox.toggled.connect(self.onVolumeRenderingCheckBoxToggled)
-      self.ui.sampleDataCheckBox.toggled.connect(self.onSampleDataCheckBoxToggled)
+      self.ui.sampleDataButton.clicked.connect(self.onsampleDataButtonClicked)
       self.ui.enableROICheckBox.toggled.connect(self.onEnableROICheckBoxToggled)
       self.ui.displayROICheckBox.toggled.connect(self.onDisplayROICheckBoxToggled)
       self.ui.enableScalingCheckBox.toggled.connect(self.onEnableScalingCheckBoxToggled)
       self.ui.enableRotationCheckBox.toggled.connect(self.onEnableRotationCheckBoxToggled)
 
-      self.ui.sampleDataCheckBox.hide()
+      self.ui.sampleDataButton.hide()
       self.ui.enableROICheckBox.hide()
       self.ui.displayROICheckBox.hide()
       self.ui.enableScalingCheckBox.hide()
@@ -242,7 +242,9 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       #self.ui.enableScalingCheckBox.setChecked(True)
       self.ROIdisplay = None
 
-      self.storedVolumeID = None # To store the volume while displaying sample data
+      self.storedVolumeID = -1 # To store the volume while displaying sample data
+
+      self.sampleDatasNodeID = {}
 
     def updateBaseGUIFromParameterNode(self, caller=None, event=None):
         """Function to update GUI from parameter node values
@@ -276,10 +278,6 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       if not node:
         return
 
-      self.ui.sampleDataCheckBox.toggled.disconnect(self.onSampleDataCheckBoxToggled)
-      self.ui.sampleDataCheckBox.setChecked(False)
-      self.ui.sampleDataCheckBox.toggled.connect(self.onSampleDataCheckBoxToggled)
-
       try: # if the old shader has points
         self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
       except:
@@ -309,19 +307,29 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       # else:
       self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
     
-    def onSampleDataCheckBoxToggled(self, caller=None, event=None):
+    def onsampleDataButtonClicked(self, caller=None, event=None):
       
-      if self.ui.sampleDataCheckBox.isChecked():
-        self.storedVolumeID = self.ui.imageSelector.currentNodeID
-        currentShaderIndex = self.ui.customShaderCombo.currentIndex
-        self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].downloadSampleData(self.ui.imageSelector)
-        if self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].sampleDataDownloaded:
+      shaderName = self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].GetDisplayName()
+      self.storedVolumeID = self.ui.imageSelector.currentNodeID
+      currentShaderIndex = self.ui.customShaderCombo.currentIndex
+
+      if self.sampleDatasNodeID.get(shaderName) is not None:
+
+        if self.sampleDatasNodeID[shaderName] != -1 :
+          self.ui.imageSelector.setCurrentNodeID(self.sampleDatasNodeID[shaderName])
           self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
-        self.ui.customShaderCombo.setCurrentIndex(currentShaderIndex)
+
+        else:
+          print("This shader does not have a sample data.")
+
       else:
-        if self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].sampleDataDownloaded:
-          self.ui.imageSelector.setCurrentNodeID(self.storedVolumeID)
+        self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].downloadSampleData(self.ui.imageSelector, self.sampleDatasNodeID)
+        
+        if self.sampleDatasNodeID[shaderName] != -1 :
           self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
+        
+        else:
+          print("This shader does not have a sample data.")
 
     def onResetParametersButtonClicked(self, caller=None, event=None):
 
@@ -427,7 +435,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
           #self.ROI.SetAndObserveTransformNodeID(self.transformNode.GetID())
           self.ROI.SetDisplayVisibility(0)
           self.renameROI()
-          self.ui.sampleDataCheckBox.show()
+          self.ui.sampleDataButton.show()
           self.ui.enableROICheckBox.show()
           self.UpdateShaderParametersUI()
           self.ui.customShaderCollapsibleButton.show()
@@ -448,8 +456,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
           pass
         self.ui.enableROICheckBox.setChecked(False)
         self.ui.displayROICheckBox.setChecked(False)
-        self.ui.sampleDataCheckBox.setChecked(False)
-        self.ui.sampleDataCheckBox.hide()
+        self.ui.sampleDataButton.hide()
         self.ui.enableROICheckBox.hide()
         self.ui.displayROICheckBox.hide()
         self.ui.customShaderCollapsibleButton.hide()

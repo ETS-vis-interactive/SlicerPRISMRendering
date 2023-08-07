@@ -17,9 +17,6 @@ Generic Custom Shader
 """ 
 
 class CustomShader():
-   
-    sampleDataDownloaded = False
-    sampleDataNodeID = None
 
     def __init__(self, shaderPropertyNode, volumeNode = None, logic = None):
         
@@ -40,20 +37,15 @@ class CustomShader():
         self.logic = logic
         # For sample data logic
 
-    def downloadSampleData(self, imageSelector):
-       if not self.sampleDataDownloaded:
-        try:
-          volumeNode = SampleData.downloadSample(self.GetDisplayName().replace(" ", "") + "SampleData")
-        except:
-           print("This shader does not have a sample data. Please load your own data.")
-           return
-        CustomShader.sampleDataDownloaded = True
-        imageSelector.setCurrentNode(volumeNode)
-        CustomShader.sampleDataNodeID = imageSelector.currentNodeID
-       else:
-        imageSelector.setCurrentNodeID(self.sampleDataNodeID)
+    def downloadSampleData(self, imageSelector, sampleDatasNodeID):
+      try:
+        volumeNode = SampleData.downloadSample(self.GetDisplayName().replace(" ", "") + "SampleData")
+      except:
+         sampleDatasNodeID[self.GetDisplayName()] = -1
+         return
+      imageSelector.setCurrentNode(volumeNode)
+      sampleDatasNodeID[self.GetDisplayName()] = imageSelector.currentNodeID
           
-
     def setAllUniforms(self):
       for p in self.param_list:       
         p.setUniform(self)
