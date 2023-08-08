@@ -147,8 +147,10 @@ class CustomShader():
              break
           
     def resetVolumeProperty(self):
+       #This function is usefull for example when you switch back from the Echo Shader to set back the volume property to the default one
        return
     
     def onParamUpdater(self):
+      #This function is usefull for example when the Parameters doesn't only affects the shader but also the volume property (see Echo's Example)
       return
        

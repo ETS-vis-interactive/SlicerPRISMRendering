@@ -242,8 +242,6 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       #self.ui.enableScalingCheckBox.setChecked(True)
       self.ROIdisplay = None
 
-      self.storedVolumeID = -1 # To store the volume while displaying sample data
-
       self.sampleDatasNodeID = {} # To store the sample data nodes
       self.sampleDataSwitch = False # To know if the volume switch is when the user downloaded sample data so we setup the right shader
 
@@ -283,6 +281,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
       except:
         pass
+      
       self.logic.setupVolume(self.ui.imageSelector.currentNode(), self.ui.customShaderCombo.currentIndex)
 
       if self.ui.volumeRenderingCheckBox.isChecked():
@@ -319,7 +318,6 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
     def onSampleDataButtonClicked(self, caller=None, event=None):
       
       shaderName = self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].GetDisplayName()
-      self.storedVolumeID = self.ui.imageSelector.currentNodeID
       self.sampleDataSwitch = True
 
       if self.sampleDatasNodeID.get(shaderName) is not None:
@@ -699,7 +697,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       # Check that each volume has only one of each type of transfer functions.
       my_set = {i for i in TFTypes}
       if len(TFTypes) != len(my_set) and len(TFTypes) > self.numberOfTFTypes:
-        logging.error("One transfer function has been assigned multiple times to the same volume2.")
+        logging.error("One transfer function has been assigned multiple times to the same volume.")
 
       if params != []:
         # If a transfer function is specified, add the widget
@@ -725,7 +723,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
           # Keep the original transfert functions
           if self.logic.volumes[self.logic.volumeIndex].colorTransferFunction.GetSize() > 0 :
             colorTransferFunction.DeepCopy(self.logic.volumes[self.logic.volumeIndex].colorTransferFunction)
-            self.updateWidgetParameterNodeFromGUI(colorTransferFunction, colorTransferFunction)
+            self.updateWidgetParameterNodeFromGUI(colorTransferFunction, colorTransferFunction.name)
           else :
             values = self.logic.parameterNode.GetParameter(colorTransferFunction.name+str(0))
             i = 0
@@ -741,7 +739,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
           if self.logic.volumes[self.logic.volumeIndex].opacityTransferFunction.GetSize() > 0 :
             opacityTransferFunction.DeepCopy(self.logic.volumes[self.logic.volumeIndex].opacityTransferFunction)
-            self.updateWidgetParameterNodeFromGUI(opacityTransferFunction, opacityTransferFunction)
+            self.updateWidgetParameterNodeFromGUI(opacityTransferFunction, opacityTransferFunction.name)
           else :
             values = self.logic.parameterNode.GetParameter(opacityTransferFunction.name+str(0))
             i = 0
