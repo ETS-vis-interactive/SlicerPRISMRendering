@@ -244,7 +244,8 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
       self.storedVolumeID = -1 # To store the volume while displaying sample data
 
-      self.sampleDatasNodeID = {}
+      self.sampleDatasNodeID = {} # To store the sample data nodes
+      self.sampleDataSwitch = False # To know if the volume switch is when the user downloaded sample data so we setup the right shader
 
     def updateBaseGUIFromParameterNode(self, caller=None, event=None):
         """Function to update GUI from parameter node values
@@ -286,11 +287,19 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
       if self.ui.volumeRenderingCheckBox.isChecked():
         self.logic.volumes[self.logic.volumeIndex].renderVolume()
-        if self.ui.customShaderCombo.currentIndex == self.logic.volumes[self.logic.volumeIndex].comboBoxIndex :
+        if self.sampleDataSwitch:
+          self.logic.volumes[self.logic.volumeIndex].setCustomShaderType(self.ui.customShaderCombo.currentText)
           self.UpdateShaderParametersUI()
+          self.updateWidgetParameterNodeFromGUI(self.ui.customShaderCombo.currentText, self.ui.customShaderCombo)
           self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].setupShader()
+          self.sampleDataSwitch = False
         else:
-          self.ui.customShaderCombo.setCurrentIndex(self.logic.volumes[self.logic.volumeIndex].comboBoxIndex)
+          if self.ui.customShaderCombo.currentIndex == self.logic.volumes[self.logic.volumeIndex].comboBoxIndex :
+            self.UpdateShaderParametersUI()
+            self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].setupShader()
+          else:
+            self.ui.customShaderCombo.setCurrentIndex(self.logic.volumes[self.logic.volumeIndex].comboBoxIndex)
+            self.updateWidgetParameterNodeFromGUI(self.ui.customShaderCombo.currentText, self.ui.customShaderCombo)
       # If the selector is a parameter of a shader
       # if widget != self.ui.imageSelector :
       #   self.logic.volumes[self.logic.volumeIndex].renderVolume()
@@ -311,15 +320,17 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       
       shaderName = self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].GetDisplayName()
       self.storedVolumeID = self.ui.imageSelector.currentNodeID
-      currentShaderIndex = self.ui.customShaderCombo.currentIndex
+      self.sampleDataSwitch = True
 
       if self.sampleDatasNodeID.get(shaderName) is not None:
 
         if self.sampleDatasNodeID[shaderName] != -1 :
+          
           self.ui.imageSelector.setCurrentNodeID(self.sampleDatasNodeID[shaderName])
           self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
 
         else:
+          self.sampleDataSwitch = False
           print("This shader does not have a sample data.")
 
       else:
@@ -329,6 +340,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
           self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
         
         else:
+          self.sampleDataSwitch = False
           print("This shader does not have a sample data.")
 
     def onResetParametersButtonClicked(self, caller=None, event=None):
@@ -492,7 +504,9 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
       if self.ui.customShaderCombo.currentText == "None":
         self.ui.resetParametersButton.hide()
+        self.ui.sampleDataButton.hide()
       else:
+        self.ui.sampleDataButton.show()
         self.ui.resetParametersButton.show()
 
       try: # if the old shader has points
