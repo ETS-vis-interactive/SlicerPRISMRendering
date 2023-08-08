@@ -28,7 +28,7 @@ class CustomShaderPoints():
     def createEndPoints(self):
       """Create endpoints."""
       # retrieve end points in the scene or create the node
-      name = "EndPoints" + self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode.GetVolumePropertyNode().GetName() + self.customShader.GetDisplayName()
+      name = "EndPoints" + self.logic.volumes[self.logic.volumeIndex].volumeNode.GetName() + self.customShader.GetDisplayName()
       name = name.replace(" ", "")
       allEndPoints = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLMarkupsFiducialNode', name)
       slicer.mrmlScene.RemoveNode(allEndPoints.GetItemAsObject(0))
