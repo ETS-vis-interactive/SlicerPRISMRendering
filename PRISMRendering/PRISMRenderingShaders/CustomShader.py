@@ -17,7 +17,7 @@ Generic Custom Shader
 """ 
 
 class CustomShader():
-   
+
     def __init__(self, shaderPropertyNode, volumeNode = None, logic = None):
         
         assert shaderPropertyNode != None, 'CustomShader: a valid shader property node must provided to the constructor'
@@ -36,23 +36,16 @@ class CustomShader():
 
         self.logic = logic
         # For sample data logic
-        self.sampleDataDownloaded = False
-        self.sampleDataNodeID = None
 
-    def downloadSampleData(self, imageSelector):
-       if not self.sampleDataDownloaded:
-        try:
-          volumeNode = SampleData.downloadSample(self.GetDisplayName().replace(" ", "") + "SampleData")
-        except:
-           print("This shader does not have a sample data. Please load your own data.")
-           return
-        self.sampleDataDownloaded = True
-        imageSelector.setCurrentNode(volumeNode)
-        self.sampleDataNodeID = imageSelector.currentNodeID
-       else:
-        imageSelector.setCurrentNodeID(self.sampleDataNodeID)
+    def downloadSampleData(self, imageSelector, sampleDatasNodeID):
+      try:
+        volumeNode = SampleData.downloadSample(self.GetDisplayName().replace(" ", "") + "SampleData")
+      except:
+         sampleDatasNodeID[self.GetDisplayName()] = -1
+         return
+      imageSelector.setCurrentNode(volumeNode)
+      sampleDatasNodeID[self.GetDisplayName()] = imageSelector.currentNodeID
           
-
     def setAllUniforms(self):
       for p in self.param_list:       
         p.setUniform(self)
@@ -109,8 +102,8 @@ class CustomShader():
                         if inspect.isclass(obj) and issubclass(obj, cls) and obj != cls:
                             cls.allClasses.append(obj)
                             allNames.append(obj.GetDisplayName())   
-        allNames.append(cls.GetDisplayName())
-        cls.allClasses.append(None)
+        allNames.insert(0, cls.GetDisplayName())
+        cls.allClasses.insert(0, CustomShader)
         return allNames
 
     def clear(self):
@@ -154,8 +147,10 @@ class CustomShader():
              break
           
     def resetVolumeProperty(self):
+       #This function is usefull for example when you switch back from the Echo Shader to set back the volume property to the default one
        return
     
     def onParamUpdater(self):
+      #This function is usefull for example when the Parameters doesn't only affects the shader but also the volume property (see Echo's Example)
       return
        

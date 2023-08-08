@@ -22,6 +22,7 @@ import hashlib
 from PRISMRenderingShaders.CustomShader import *
 from PRISMRenderingParams import *
 from PRISMRenderingLogic import *
+
 class PRISMRendering(slicer.ScriptedLoadableModule.ScriptedLoadableModule):
     """Uses ScriptedLoadableModule base class, available at:
     https://github.com/Slicer/Slicer/blob/main/Base/Python/slicer/ScriptedLoadableModule.py
@@ -43,8 +44,6 @@ class PRISMRendering(slicer.ScriptedLoadableModule.ScriptedLoadableModule):
 
     # Additional initialization step after application startup is complete
         slicer.app.connect("startupCompleted()", registerSampleData)
-
-
 
 def registerSampleData():
   """
@@ -167,13 +166,13 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       self.ui.displayROICheckBox.setSizePolicy(sp)
 
       self.ui.volumeRenderingCheckBox.toggled.connect(self.onVolumeRenderingCheckBoxToggled)
-      self.ui.sampleDataCheckBox.toggled.connect(self.onSampleDataCheckBoxToggled)
+      self.ui.sampleDataButton.clicked.connect(self.onSampleDataButtonClicked)
       self.ui.enableROICheckBox.toggled.connect(self.onEnableROICheckBoxToggled)
       self.ui.displayROICheckBox.toggled.connect(self.onDisplayROICheckBoxToggled)
       self.ui.enableScalingCheckBox.toggled.connect(self.onEnableScalingCheckBoxToggled)
       self.ui.enableRotationCheckBox.toggled.connect(self.onEnableRotationCheckBoxToggled)
 
-      self.ui.sampleDataCheckBox.hide()
+      self.ui.sampleDataButton.hide()
       self.ui.enableROICheckBox.hide()
       self.ui.displayROICheckBox.hide()
       self.ui.enableScalingCheckBox.hide()
@@ -200,7 +199,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
       for shaderType in allShaderTypes:
         self.ui.customShaderCombo.addItem(shaderType)
-      self.ui.customShaderCombo.setCurrentIndex(len(allShaderTypes)-1)
+      self.ui.customShaderCombo.setCurrentIndex(0)
       self.ui.customShaderCombo.currentIndexChanged.connect(self.onCustomShaderComboIndexChanged)
 
       ## Error message (the created shader has the name of an existing shader)
@@ -225,7 +224,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
       self.setAndObserveParameterNode()
     
-      slicer.mrmlScene.AddNode(self.logic.parameterNode)
+      #slicer.mrmlScene.AddNode(self.logic.parameterNode)
       if self.logic.parameterNode.GetParameterCount() != 0:
         volumePath = self.logic.parameterNode.GetParameter("volumePath")
         # Set volume node
@@ -237,14 +236,15 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       self.addAllGUIObservers()
       if self.ui.imageSelector.currentNode() != None :
         self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
+        self.logic.setupVolume(self.ui.imageSelector.currentNode(), self.ui.customShaderCombo.currentIndex)
       self.updateBaseGUIFromParameterNode()
 
       #self.ui.enableScalingCheckBox.setChecked(True)
       self.ROIdisplay = None
 
-      self.storedParamsValues = [] # To store the parameters' values of the shader while displaying sample data
-      self.storedVolumeID = None # To store the volume while displaying sample data
-    
+      self.sampleDatasNodeID = {} # To store the sample data nodes
+      self.sampleDataSwitch = False # To know if the volume switch is when the user downloaded sample data so we setup the right shader
+
     def updateBaseGUIFromParameterNode(self, caller=None, event=None):
         """Function to update GUI from parameter node values
 
@@ -277,51 +277,78 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       if not node:
         return
 
-      # If the selector is a parameter of a shader
-      if widget != self.ui.imageSelector :
-        self.logic.currentVolume = index
-        self.logic.renderVolume(widget.currentNode(), True)
-        volumePropertyNode = self.logic.secondaryVolumeRenderingDisplayNodes[self.logic.currentVolume].GetVolumePropertyNode()
-
-        volumeID = index
-        TFID = volumeID * self.numberOfTFTypes
-
-        for i, tf in enumerate(self.transferFunctionParams[TFID:TFID+self.numberOfTFTypes]):
-          j = TFID + i
-          tf.createTransferFunctionWidget(self, volumePropertyNode, True, volumeID  )
-        self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
-
-      else:
-        self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
-    
-    def onSampleDataCheckBoxToggled(self, caller=None, event=None):
+      try: # if the old shader has points
+        self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
+      except:
+        pass
       
-      if self.ui.sampleDataCheckBox.isChecked():
-        self.storedParamsValues = []
-        self.storedVolumeID = self.ui.imageSelector.currentNodeID
-        self.logic.customShader[self.logic.shaderIndex].downloadSampleData(self.ui.imageSelector)
-        if self.logic.customShader[self.logic.shaderIndex].sampleDataDownloaded:
-          for p in self.logic.customShader[self.logic.shaderIndex].param_list:
-              self.storedParamsValues.append(p.getValue())
-              # add code to setValue of the parameters to the sample data values, for the moment it will be the default values
-              p.setValue(p.defaultValue, True)
+      self.logic.setupVolume(self.ui.imageSelector.currentNode(), self.ui.customShaderCombo.currentIndex)
+
+      if self.ui.volumeRenderingCheckBox.isChecked():
+        self.logic.volumes[self.logic.volumeIndex].renderVolume()
+        if self.sampleDataSwitch:
+          currentIndex = self.ui.customShaderCombo.currentIndex
+          self.ui.customShaderCombo.setCurrentIndex(0)
+          self.ui.customShaderCombo.setCurrentIndex(currentIndex)
+          self.sampleDataSwitch = False
+        else:
+          if self.ui.customShaderCombo.currentIndex == self.logic.volumes[self.logic.volumeIndex].comboBoxIndex :
+            self.ui.customShaderCombo.setCurrentIndex(0)
+            self.ui.customShaderCombo.setCurrentIndex(self.logic.volumes[self.logic.volumeIndex].comboBoxIndex)
+          else:
+            self.ui.customShaderCombo.setCurrentIndex(0)
+            self.ui.customShaderCombo.setCurrentIndex(self.logic.volumes[self.logic.volumeIndex].comboBoxIndex)
+            self.updateWidgetParameterNodeFromGUI(self.ui.customShaderCombo.currentText, self.ui.customShaderCombo)
+      # If the selector is a parameter of a shader
+      # if widget != self.ui.imageSelector :
+      #   self.logic.volumes[self.logic.volumeIndex].renderVolume()
+      #   volumePropertyNode = self.logic.secondaryVolumeRenderingDisplayNodes[self.logic.currentVolume].GetVolumePropertyNode()
+
+      #   volumeID = index
+      #   TFID = volumeID * self.numberOfTFTypes
+
+      #   for i, tf in enumerate(self.transferFunctionParams[TFID:TFID+self.numberOfTFTypes]):
+      #     j = TFID + i
+      #     tf.createTransferFunctionWidget(self, volumePropertyNode, True, volumeID  )
+      #   self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
+
+      # else:
+      self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
+    
+    def onSampleDataButtonClicked(self, caller=None, event=None):
+      
+      shaderName = self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].GetDisplayName()
+      self.sampleDataSwitch = True
+
+      if self.sampleDatasNodeID.get(shaderName) is not None:
+
+        if self.sampleDatasNodeID[shaderName] != -1 :
+          
+          self.ui.imageSelector.setCurrentNodeID(self.sampleDatasNodeID[shaderName])
           self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
-          self.logic.renderVolume(self.ui.imageSelector.currentNode())
-          self.logic.customShader[self.logic.shaderIndex].setupShader()
+
+        else:
+          self.sampleDataSwitch = False
+          print("This shader does not have a sample data.")
+
       else:
-        if self.logic.customShader[self.logic.shaderIndex].sampleDataDownloaded:
-          for i, p in enumerate(self.logic.customShader[self.logic.shaderIndex].param_list):
-            p.setValue(self.storedParamsValues[i], True)
-          self.storedParamsValues = []
-          self.ui.imageSelector.setCurrentNodeID(self.storedVolumeID)
+        self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].downloadSampleData(self.ui.imageSelector, self.sampleDatasNodeID)
+        
+        if self.sampleDatasNodeID[shaderName] != -1 :
           self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
-          self.logic.renderVolume(self.ui.imageSelector.currentNode())
-          self.logic.customShader[self.logic.shaderIndex].setupShader()
+        
+        else:
+          self.sampleDataSwitch = False
+          print("This shader does not have a sample data.")
 
     def onResetParametersButtonClicked(self, caller=None, event=None):
 
-      for p in self.logic.customShader[self.logic.shaderIndex].param_list:
+      for p in self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].param_list:
         p.setValue(p.defaultValue, True)
+      try :
+        self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.UpdateGUIFromValues(self.logic)
+      except:
+        pass
 
     def onEnableRotationCheckBoxToggled(self, caller=None, event=None) :
       """Function to enable rotating ROI box.
@@ -354,10 +381,10 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
 
       if self.ui.enableROICheckBox.isChecked():
-        self.logic.volumeRenderingDisplayNode.SetCroppingEnabled(True)
+        self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode.SetCroppingEnabled(True)
         self.ui.displayROICheckBox.show()
       else:
-        self.logic.volumeRenderingDisplayNode.SetCroppingEnabled(False)
+        self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode.SetCroppingEnabled(False)
         self.ui.displayROICheckBox.hide()
         self.ui.displayROICheckBox.setChecked(False)
 
@@ -392,7 +419,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
       if self.ui.volumeRenderingCheckBox.isChecked():
         if self.ui.imageSelector.currentNode():
-          self.logic.renderVolume(self.ui.imageSelector.currentNode())
+          self.logic.volumes[self.logic.volumeIndex].renderVolume()
           # Init ROI
           # allTransformDisplayNodes = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLTransformDisplayNode','TransformDisplayNode')
           # if allTransformDisplayNodes.GetNumberOfItems() > 0:
@@ -413,12 +440,12 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
           #   self.transformNode.SetAndObserveDisplayNodeID(self.transformDisplayNode.GetID())
 
           ## ROI of the current volume
-          self.ROI = self.logic.volumeRenderingDisplayNode.GetMarkupsROINode()
+          self.ROI = self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode.GetMarkupsROINode()
           #self.ROI.SetAndObserveDisplayNodeID(self.transformDisplayNode.GetID())
           #self.ROI.SetAndObserveTransformNodeID(self.transformNode.GetID())
           self.ROI.SetDisplayVisibility(0)
           self.renameROI()
-          self.ui.sampleDataCheckBox.show()
+          self.ui.sampleDataButton.show()
           self.ui.enableROICheckBox.show()
           self.UpdateShaderParametersUI()
           self.ui.customShaderCollapsibleButton.show()
@@ -430,18 +457,18 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
               self.ROIdisplayObserver = self.ROIdisplay.AddObserver(vtk.vtkCommand.ModifiedEvent, self.onROIdisplayChanged)
 
       else:
-        if self.logic.volumeRenderingDisplayNode:
-          self.logic.volumeRenderingDisplayNode.SetVisibility(False)
-          if self.logic.secondaryVolumeRenderingDisplayNodes :
-            for i in range(self.logic.numberOfVolumes):
-              if self.logic.secondaryVolumeRenderingDisplayNodes[i] != None:
-                self.logic.secondaryVolumeRenderingDisplayNodes[i].SetVisibility(False)
-          self.ui.enableROICheckBox.setChecked(False)
-          self.ui.displayROICheckBox.setChecked(False)
-          self.ui.sampleDataCheckBox.setChecked(False)
-          self.ui.sampleDataCheckBox.hide()
-          self.ui.enableROICheckBox.hide()
-          self.ui.displayROICheckBox.hide()
+        for volume in self.logic.volumes:
+          if volume.volumeRenderingDisplayNode:
+            volume.volumeRenderingDisplayNode.SetVisibility(False)
+        try: # if the new shader has points
+          self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
+        except:
+          pass
+        self.ui.enableROICheckBox.setChecked(False)
+        self.ui.displayROICheckBox.setChecked(False)
+        self.ui.sampleDataButton.hide()
+        self.ui.enableROICheckBox.hide()
+        self.ui.displayROICheckBox.hide()
         self.ui.customShaderCollapsibleButton.hide()
 
     def onEnableRotationCheckBoxToggled(self, caller=None, event=None) :
@@ -475,22 +502,19 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
       if self.ui.customShaderCombo.currentText == "None":
         self.ui.resetParametersButton.hide()
+        self.ui.sampleDataButton.hide()
       else:
+        self.ui.sampleDataButton.show()
         self.ui.resetParametersButton.show()
 
-      self.ui.sampleDataCheckBox.setChecked(False)
       try: # if the old shader has points
-        self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
+        self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
       except:
         pass
-      self.logic.setCustomShaderType(self.ui.customShaderCombo.currentText, self.ui.imageSelector.currentNode())
+      self.logic.volumes[self.logic.volumeIndex].setCustomShaderType(self.ui.customShaderCombo.currentText)
       self.UpdateShaderParametersUI()
       self.updateWidgetParameterNodeFromGUI(self.ui.customShaderCombo.currentText, self.ui.customShaderCombo)
-      self.logic.customShader[self.logic.shaderIndex].setupShader()
-      try: # if the new shader has points
-        self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(1)
-      except:
-        pass
+      self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].setupShader()
       # If there is no selected shader, disables the buttons.
       if (self.ui.customShaderCombo.currentText == "None"):
         self.ui.openCustomShaderButton.setEnabled(False)
@@ -499,7 +523,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         self.ui.openCustomShaderButton.setEnabled(True)
         self.ui.reloadCurrentCustomShaderButton.setEnabled(True)
 
-      self.ui.customShaderCollapsibleButton.setToolTip(self.logic.customShader[self.logic.shaderIndex].GetBasicDescription())
+      self.ui.customShaderCollapsibleButton.setToolTip(self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].GetBasicDescription())
 
     def updateParameterNodeFromGUI(self, value, w):
       """Function to update the parameter node from gui values.
@@ -549,7 +573,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         # Set node used before reload in the current instance
         ROINode = ROINodes.GetItemAsObject(0)
         #ROINodes.ResetAnnotations()
-        #slicer.modules.volumerendering.logic().FitROIToVolume(self.logic.volumeRenderingDisplayNode)
+        #slicer.modules.volumerendering.logic().FitROIToVolume(self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode)
         ROINode.SetName("ROI")
 
     def onROIdisplayChanged(self, caller, event):
@@ -570,9 +594,9 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
       """
       # Remove observer to old parameter node
-      if self.logic.parameterNode and self.logic.parameterNodeObserver:
-        self.logic.parameterNode.RemoveObserver(self.logic.parameterNodeObserver)
-        self.logic.parameterNodeObserver = None
+      # if self.logic.parameterNode and self.logic.parameterNodeObserver:
+      #   self.logic.parameterNode.RemoveObserver(self.logic.parameterNodeObserver)
+      #   self.logic.parameterNodeObserver = None
 
       # Set and observe new parameter node
       self.logic.parameterNode = self.logic.getParameterNode()
@@ -607,10 +631,13 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       """Updates the shader parameters on the UI.
 
       """
-
-      if self.logic.customShader[self.logic.shaderIndex] == None:
+      if self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex] == None:
         return
-
+      
+      try: # if the new shader has points
+        self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(1)
+      except:
+        pass
       # Clear all the widgets except the combobox selector
       while self.ui.customShaderParametersLayout.count() != 1:
         ## Item of the combobox
@@ -620,18 +647,18 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
           if widget != None:
             widget.setParent(None)
 
-      # if self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.GetNumberOfControlPoints() > 0 : 
-        # self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints.RemoveAllControlPoints()
+      # if self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.GetNumberOfControlPoints() > 0 : 
+        # self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.RemoveAllControlPoints()
 
       ## Name of the current shader, without spaces
-      volumeName = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode().GetName()
+      volumeName = self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode.GetVolumePropertyNode().GetName()
       self.CSName = self.ui.customShaderCombo.currentText.replace(" ", "") + volumeName
-      param_list = self.logic.customShader[self.logic.shaderIndex].param_list
+      param_list = self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].param_list
       for p in param_list:
           if not isinstance(p, TransferFunctionParam):
             hideWidget = False
             Optional = False
-            for i in self.logic.customShader[self.logic.shaderIndex].param_list:
+            for i in self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].param_list:
               if isinstance(i,  BoolParam):
                 if p.name in i.optionalWidgets:
                   Optional  = True
@@ -661,7 +688,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
                   p.widget.hide()
 
         ## Transfer function of the first volume
-      params = [p for p in self.logic.customShader[self.logic.shaderIndex].param_list if isinstance(p, TransferFunctionParam)]
+      params = [p for p in self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].param_list if isinstance(p, TransferFunctionParam)]
       if len(params) > self.numberOfTFTypes:
         logging.error("Too many transfer function have been defined.")
 
@@ -670,11 +697,11 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       # Check that each volume has only one of each type of transfer functions.
       my_set = {i for i in TFTypes}
       if len(TFTypes) != len(my_set) and len(TFTypes) > self.numberOfTFTypes:
-        logging.error("One transfer function has been assigned multiple times to the same volume2.")
+        logging.error("One transfer function has been assigned multiple times to the same volume.")
 
       if params != []:
         # If a transfer function is specified, add the widget
-        if self.logic.volumeRenderingDisplayNode is None :
+        if self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode is None :
           return
 
         for i, p in enumerate(params):
@@ -682,8 +709,8 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
       else :
 
-        if self.logic.volumeRenderingDisplayNode != None:
-          volumePropertyNode = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
+        if self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode != None:
+          volumePropertyNode = self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode.GetVolumePropertyNode()
           colorTransferFunction = vtk.vtkColorTransferFunction()
           opacityTransferFunction = vtk.vtkPiecewiseFunction()
           colorTransferFunction.RemoveAllObservers()
@@ -694,9 +721,9 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
           self.appendList(colorTransferFunction, colorTransferFunction.name)
 
           # Keep the original transfert functions
-          if self.logic.colorTransferFunction.GetSize() > 0 :
-            colorTransferFunction.DeepCopy(self.logic.colorTransferFunction)
-            self.updateWidgetParameterNodeFromGUI(colorTransferFunction, colorTransferFunction)
+          if self.logic.volumes[self.logic.volumeIndex].colorTransferFunction.GetSize() > 0 :
+            colorTransferFunction.DeepCopy(self.logic.volumes[self.logic.volumeIndex].colorTransferFunction)
+            self.updateWidgetParameterNodeFromGUI(colorTransferFunction, colorTransferFunction.name)
           else :
             values = self.logic.parameterNode.GetParameter(colorTransferFunction.name+str(0))
             i = 0
@@ -710,9 +737,9 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
             colorTransferFunction.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = colorTransferFunction : self.updateWidgetParameterNodeFromGUI([o,e], w))
           volumePropertyNode.SetColor(colorTransferFunction)
 
-          if self.logic.opacityTransferFunction.GetSize() > 0 :
-            opacityTransferFunction.DeepCopy(self.logic.opacityTransferFunction)
-            self.updateWidgetParameterNodeFromGUI(opacityTransferFunction, opacityTransferFunction)
+          if self.logic.volumes[self.logic.volumeIndex].opacityTransferFunction.GetSize() > 0 :
+            opacityTransferFunction.DeepCopy(self.logic.volumes[self.logic.volumeIndex].opacityTransferFunction)
+            self.updateWidgetParameterNodeFromGUI(opacityTransferFunction, opacityTransferFunction.name)
           else :
             values = self.logic.parameterNode.GetParameter(opacityTransferFunction.name+str(0))
             i = 0
@@ -768,7 +795,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
     @vtk.calldata_type(vtk.VTK_INT)
     def pointModified(self, caller, event, index):
-      self.updateWidgetParameterNodeFromGUI([caller, "PointModifiedEvent", index], self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints)
+      self.updateWidgetParameterNodeFromGUI([caller, "PointModifiedEvent", index], self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints)
 
     def addAllGUIObservers(self):
       for w in self.widgets:
@@ -805,8 +832,8 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       elif widgetClassName == "qMRMLNodeComboBox":
         w.currentNodeChanged.connect(lambda value, w = w : self.updateWidgetParameterNodeFromGUI(value, w))
       elif widgetClassName == 'vtkMRMLMarkupsFiducialNode':
-        self.logic.customShader[self.logic.shaderIndex].customShaderPoints.pointModifiedEventTag = w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.logic.customShader[self.logic.shaderIndex].customShaderPoints.onEndPointsChanged)
-        w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, self.logic.customShader[self.logic.shaderIndex].customShaderPoints.onEndPointAdded)
+        self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.pointModifiedEventTag = w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.onEndPointsChanged)
+        w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.onEndPointAdded)
         w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.pointModified)
         w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, lambda c, e, name = w.name, w = w : self.updateWidgetParameterNodeFromGUI([c, "PointPositionDefinedEvent", name], w))
 
@@ -873,9 +900,9 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
             for p in params:
               if w.name in p :
                 markups.append(p)
-            endPoints = self.logic.customShader[self.logic.shaderIndex].customShaderPoints.endPoints
+            endPoints = self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints
             # endPoints.RemoveAllControlPoints()
-            volumeName = self.logic.volumeRenderingDisplayNode.GetVolumePropertyNode().GetName()
+            volumeName = self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode.GetVolumePropertyNode().GetName()
             for m in markups :
               values = parameterNode.GetParameter(m)
               #If point was defined
@@ -887,10 +914,10 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
                 endPoints.SetNthControlPointAssociatedNodeID(index, m)
                 CSName = w.name.replace(volumeName+'markup'+type_, '')
                 visible = self.CSName+"markup" == CSName 
-                self.logic.customShader[self.logic.shaderIndex].customShaderPoints.pointIndexes[m] = index
+                self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.pointIndexes[m] = index
                 world = [0,0,0]
                 endPoints.GetNthControlPointPositionWorld(index, world)  
-                self.logic.customShader[self.logic.shaderIndex].customShaderPoints.onCustomShaderParamChangedMarkup(world, type_)
+                self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.onCustomShaderParamChangedMarkup(world, type_)
                 endPoints.SetNthFiducialVisibility(index, visible)
         elif widgetClassName == "qMRMLNodeComboBox":
           w.setCurrentNodeID(parameterNode.GetNodeReferenceID(w.name))
@@ -940,7 +967,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         caller = value[0]
         event = value[1]
         index = value[2]
-        name = w.name + self.logic.customShader[self.logic.shaderIndex].customShaderPoints.pointType
+        name = w.name + self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.pointType
         world = [0, 0, 0]
         if event == "PointPositionDefinedEvent" :
           index = caller.GetDisplayNode().GetActiveControlPoint()
@@ -951,14 +978,14 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
             caller.GetNthControlPointPositionWorld(index, world)
             parameterNode.SetParameter(name, ",".join("{0}".format(n) for n in world))
             parameterNode.SetParameter(w.name, str(index))
-            self.logic.customShader[self.logic.shaderIndex].customShaderPoints.pointIndexes[name] = index
+            self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.pointIndexes[name] = index
           # Reset point
-          elif self.logic.customShader[self.logic.shaderIndex].customShaderPoints.pointName != '' :
-            name = self.logic.customShader[self.logic.shaderIndex].customShaderPoints.pointName
-            index = self.logic.customShader[self.logic.shaderIndex].customShaderPoints.pointIndexes[name] 
+          elif self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.pointName != '' :
+            name = self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.pointName
+            index = self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.pointIndexes[name] 
             caller.GetNthControlPointPositionWorld(index, world)
             parameterNode.SetParameter(name, ",".join("{0}".format(n) for n in world))
-            self.logic.customShader[self.logic.shaderIndex].customShaderPoints.pointName = ''
+            self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.pointName = ''
         if event == "PointModifiedEvent" :
           if parameterNode.GetParameter(w.name) != "" and index <= int(parameterNode.GetParameter(w.name)):
             pointName = caller.GetNthControlPointAssociatedNodeID(index)

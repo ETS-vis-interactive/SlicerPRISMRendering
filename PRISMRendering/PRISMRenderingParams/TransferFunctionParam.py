@@ -1,5 +1,5 @@
 from PRISMRenderingParams.Param import Param
-import vtk, qt, ctk, slicer
+import vtk, qt, ctk, slicer, inspect
 
 #Class for shaders' transfer function parameters
 
@@ -16,6 +16,7 @@ class TransferFunctionParam(Param):
 
   def setValue(self, value, updateGUI = False):
     self.value = value
+    #print("Caller : ", inspect.stack()[1][3], " Value : ", self.value)
     if updateGUI:
       self.updateGUIFromValue()
 
@@ -34,18 +35,18 @@ class TransferFunctionParam(Param):
        else :
          volumePrincipal = False
          #minus one because the array of TF starts at 0
-         volumeID -=1
+         #volumeID -=1
 
        # IF this is the principal volume
        if volumePrincipal :
-         volumePropertyNode = widgetClass.logic.volumeRenderingDisplayNode.GetVolumePropertyNode()
+         volumePropertyNode = widgetClass.logic.volumes[widgetClass.logic.volumeIndex].volumeRenderingDisplayNode.GetVolumePropertyNode()
          self.createTransferFunctionWidget(widgetClass, volumePropertyNode, False, volumeID)
        else : 
          # If this is a secondary volume
          transferFunctionID = volumeID * widgetClass.numberOfTFTypes
          # If the volume of the transfer function is already rendered create the widget
-         if widgetClass.logic.secondaryVolumeRenderingDisplayNodes[volumeID] is not None: 
-           volumePropertyNode = widgetClass.logic.secondaryVolumeRenderingDisplayNodes[volumeID].GetVolumePropertyNode()
+         if widgetClass.logic.volumes[widgetClass.logic.volumeIndex].secondaryVolumeRenderingDisplayNodes[volumeID] is not None: 
+           volumePropertyNode = widgetClass.logic.volumes[widgetClass.logic.volumeIndex].secondaryVolumeRenderingDisplayNodes[volumeID].GetVolumePropertyNode()
            self.createTransferFunctionWidget(widgetClass, volumePropertyNode, True, volumeID)
          else :
            # Add the transfer functions to a list, so when the volume is rendered the widgets can be created
@@ -95,7 +96,6 @@ class TransferFunctionParam(Param):
       self.widget = ctk.ctkVTKScalarsToColorsWidget()
       self.widget.setObjectName(widgetClass.CSName + self.transferFunction.GetClassName() + self.name + "Widget")
       self.transferFunction.name = widgetClass.CSName + self.transferFunction.GetClassName() + self.name
-      self.transferFunction.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e : self.updateParameterNodeFromGUI(widgetClass))
 
       # Change the points to the ones specified in the shader
       if self.value != [] :
@@ -106,7 +106,8 @@ class TransferFunctionParam(Param):
           if TFType == 'color':
             self.transferFunction.AddRGBPoint(colors[i][0], colors[i][1], colors[i][2], colors[i][3], colors[i][4], colors[i][5])  
           elif TFType == 'scalarOpacity':
-           self.transferFunction.AddPoint(colors[i][0], colors[i][1], colors[i][2], colors[i][3])  
+           self.transferFunction.AddPoint(colors[i][0], colors[i][1], colors[i][2], colors[i][3])
+        self.updateGUIFromValue()
       else:
         newValues = []
         nbPoints = self.transferFunction.GetSize()
@@ -133,9 +134,9 @@ class TransferFunctionParam(Param):
 
       if secondTf :
         widgetClass.secondColorTransferFunctionWidget[volumeID][TFType] = self.widget
-
-      self.updateGUIFromParameterNode(widgetClass)
-
+     # self.updateGUIFromParameterNode(widgetClass)
+      self.transferFunction.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e : self.updateParameterNodeFromGUI(widgetClass))
+        
   def updateParameterNodeFromGUI(self, widgetClass):
     newValues = []
     parameterNode = widgetClass.logic.parameterNode

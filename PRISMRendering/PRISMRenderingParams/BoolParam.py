@@ -15,7 +15,7 @@ class BoolParam(Param):
   def SetupGUI(self, widgetClass):
       addOptionCheckBox = qt.QCheckBox(self.display_name)
       addOptionCheckBox.setObjectName(widgetClass.CSName + self.name)
-      addOptionCheckBox.toggled.connect(lambda value : widgetClass.logic.onCustomShaderParamChanged(value, self) )
+      addOptionCheckBox.toggled.connect(lambda value : widgetClass.logic.volumes[widgetClass.logic.volumeIndex].onCustomShaderParamChanged(value, self) )
       addOptionCheckBox.toggled.connect(lambda _,cbx = addOptionCheckBox, CSName = widgetClass.CSName : widgetClass.logic.enableOption(self, checkBox = cbx, CSName = CSName))     
       addOptionCheckBox.toggled.connect(lambda : self.updateParameterNodeFromGUI(widgetClass))
       addOptionCheckBox.setParent(widgetClass.ui.customShaderParametersLayout)
@@ -47,7 +47,7 @@ class BoolParam(Param):
     if value != '' :
       checked = (int(value) != 0)
       self.setValue(checked)
-      self.setUniform(widgetClass.logic.customShader[widgetClass.logic.shaderIndex])
+      self.setUniform(widgetClass.logic.volumes[widgetClass.logic.volumeIndex].customShader[widgetClass.logic.volumes[widgetClass.logic.volumeIndex].shaderIndex])
     
   def removeGUIObservers(self):
     self.widget.toggled.disconnect(self.updateParameterNodeFromGUI)
