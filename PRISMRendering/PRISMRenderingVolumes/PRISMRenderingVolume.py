@@ -44,9 +44,7 @@ class PRISMRenderingVolume():
         # Check if node selected has a renderer
         displayNode = logic.GetFirstVolumeRenderingDisplayNode(self.volumeNode)
         if displayNode:
-          displayNode.SetVisibility(True)
           displayNode.SetNodeReferenceID("shaderProperty", self.shaderPropertyNode.GetID())
-
           roi = displayNode.GetMarkupsROINode()
           if roi is None:
             logic.CreateROINode(displayNode)
@@ -54,13 +52,13 @@ class PRISMRenderingVolume():
 
 
           self.volumeRenderingDisplayNode = displayNode
-        # if not, create a renderer
         # Slicer default command to create renderer and add node to scene
         else:
           displayNode = logic.CreateDefaultVolumeRenderingNodes(self.volumeNode)
           slicer.mrmlScene.AddNode(displayNode)
-          displayNode.UnRegister(logic)
-          logic.UpdateDisplayNodeFromVolumeNode(displayNode, self.volumeNode)
+          logic.CreateROINode(displayNode)
+          logic.FitROIToVolume(displayNode)
+          
           self.volumeNode.AddAndObserveDisplayNodeID(displayNode.GetID())
 
           displayNode.SetNodeReferenceID("shaderProperty", self.customShader[self.shaderIndex].shaderPropertyNode.GetID())

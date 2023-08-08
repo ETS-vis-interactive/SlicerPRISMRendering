@@ -62,8 +62,8 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
         node = slicer.util.getNodesByClass("vtkMRMLScalarVolumeNode")
         slicer.mrmlScene.RemoveNode(node[0])
         slicer.mrmlScene.RemoveNode(self.shaderPropertyNode)
-        for i in range(len(self.customShader)) :
-          slicer.mrmlScene.RemoveNode(self.customShader[i].customShaderPoints.endPoints)
+        for i in range(len(self.volumes[self.volumeIndex].customShader)) :
+          slicer.mrmlScene.RemoveNode(self.volumes[self.volumeIndex].customShader[i].customShaderPoints.endPoints)
         CustomShader.clear()
       except:
         pass
@@ -82,7 +82,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
       """
       paramName = param.name
       if checkBox.isChecked() :
-        self.customShader[self.shaderIndex].setShaderParameter(param, 1)
+        self.volumes[self.volumeIndex].customShader[self.volumes[self.volumeIndex].shaderIndex].setShaderParameter(param, 1)
         if str(CSName + paramName) in self.optionalWidgets :
           for p in self.optionalWidgets[CSName + paramName] :
             p.widget.show()
@@ -91,13 +91,13 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
             except :
               pass
             try : # if there are Optional Points
-              for t in self.customShader[self.shaderIndex].customShaderPoints.pointTypes :
+              for t in self.volumes[self.volumeIndex].customShader[self.volumes[self.volumeIndex].shaderIndex].customShaderPoints.pointTypes :
                 if t in p.name:
-                  self.customShader[self.shaderIndex].customShaderPoints.endPoints.SetNthControlPointVisibility(self.customShader[self.shaderIndex].customShaderPoints.pointIndexes["markup" + t], 1)
+                  self.volumes[self.volumeIndex].customShader[self.volumes[self.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetNthControlPointVisibility(self.volumes[self.volumeIndex].customShader[self.volumes[self.volumeIndex].shaderIndex].customShaderPoints.pointIndexes["markup" + t], 1)
             except :
               pass
       else: 
-        self.customShader[self.shaderIndex].setShaderParameter(param, 0)
+        self.volumes[self.volumeIndex].customShader[self.volumes[self.volumeIndex].shaderIndex].setShaderParameter(param, 0)
         if str(CSName + paramName) in self.optionalWidgets :
           for p in self.optionalWidgets[CSName + paramName] :
             p.widget.hide()
@@ -106,9 +106,9 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
             except :
               pass
             try : # if there are Optional Points
-              for t in self.customShader[self.shaderIndex].customShaderPoints.pointTypes :
+              for t in self.volumes[self.volumeIndex].customShader[self.volumes[self.volumeIndex].shaderIndex].customShaderPoints.pointTypes :
                 if t in p.name:
-                  self.customShader[self.shaderIndex].customShaderPoints.endPoints.SetNthControlPointVisibility(self.customShader[self.shaderIndex].customShaderPoints.pointIndexes["markup" + t], 0)
+                  self.volumes[self.volumeIndex].customShader[self.volumes[self.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetNthControlPointVisibility(self.volumes[self.volumeIndex].customShader[self.volumes[self.volumeIndex].shaderIndex].customShaderPoints.pointIndexes["markup" + t], 0)
             except :
               pass
 

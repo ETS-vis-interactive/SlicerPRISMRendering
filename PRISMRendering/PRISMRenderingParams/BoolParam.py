@@ -16,7 +16,7 @@ class BoolParam(Param):
       addOptionCheckBox = qt.QCheckBox(self.display_name)
       addOptionCheckBox.setObjectName(widgetClass.CSName + self.name)
       addOptionCheckBox.toggled.connect(lambda value : widgetClass.logic.volumes[widgetClass.logic.volumeIndex].onCustomShaderParamChanged(value, self) )
-      addOptionCheckBox.toggled.connect(lambda _,cbx = addOptionCheckBox, CSName = widgetClass.CSName : widgetClass.logic.volumes[widgetClass.logic.volumeIndex].enableOption(self, checkBox = cbx, CSName = CSName))     
+      addOptionCheckBox.toggled.connect(lambda _,cbx = addOptionCheckBox, CSName = widgetClass.CSName : widgetClass.logic.enableOption(self, checkBox = cbx, CSName = CSName))     
       addOptionCheckBox.toggled.connect(lambda : self.updateParameterNodeFromGUI(widgetClass))
       addOptionCheckBox.setParent(widgetClass.ui.customShaderParametersLayout)
       if self.value == 1:
