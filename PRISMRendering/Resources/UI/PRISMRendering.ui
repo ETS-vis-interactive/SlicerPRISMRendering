@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>436</width>
+    <width>447</width>
     <height>355</height>
    </rect>
   </property>
@@ -367,7 +367,7 @@
       <item>
        <widget class="QPushButton" name="sampleDataButton">
         <property name="text">
-         <string>Download Shader's Sample Data</string>
+         <string>Switch to Shader's Sample Data</string>
         </property>
        </widget>
       </item>
