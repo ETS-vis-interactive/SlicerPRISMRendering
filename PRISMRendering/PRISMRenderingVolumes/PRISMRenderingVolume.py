@@ -52,18 +52,20 @@ class PRISMRenderingVolume():
             logic.CreateROINode(displayNode)
             logic.FitROIToVolume(displayNode)
 
-        self.volumeRenderingDisplayNode = displayNode
+
+          self.volumeRenderingDisplayNode = displayNode
         # if not, create a renderer
         # Slicer default command to create renderer and add node to scene
-        displayNode = logic.CreateDefaultVolumeRenderingNodes(self.volumeNode)
-        slicer.mrmlScene.AddNode(displayNode)
-        displayNode.UnRegister(logic)
-        logic.UpdateDisplayNodeFromVolumeNode(displayNode, self.volumeNode)
-        self.volumeNode.AddAndObserveDisplayNodeID(displayNode.GetID())
+        else:
+          displayNode = logic.CreateDefaultVolumeRenderingNodes(self.volumeNode)
+          slicer.mrmlScene.AddNode(displayNode)
+          displayNode.UnRegister(logic)
+          logic.UpdateDisplayNodeFromVolumeNode(displayNode, self.volumeNode)
+          self.volumeNode.AddAndObserveDisplayNodeID(displayNode.GetID())
 
-        displayNode.SetNodeReferenceID("shaderProperty", self.customShader[self.shaderIndex].shaderPropertyNode.GetID())
+          displayNode.SetNodeReferenceID("shaderProperty", self.customShader[self.shaderIndex].shaderPropertyNode.GetID())
 
-        logic.FitROIToVolume(displayNode)
+          logic.FitROIToVolume(displayNode)
 
         # Add a color preset based on volume range
         self.updateVolumeColorMapping(displayNode)
