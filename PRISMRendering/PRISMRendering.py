@@ -287,16 +287,16 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       if self.ui.volumeRenderingCheckBox.isChecked():
         self.logic.volumes[self.logic.volumeIndex].renderVolume()
         if self.sampleDataSwitch:
-          self.logic.volumes[self.logic.volumeIndex].setCustomShaderType(self.ui.customShaderCombo.currentText)
-          self.UpdateShaderParametersUI()
-          self.updateWidgetParameterNodeFromGUI(self.ui.customShaderCombo.currentText, self.ui.customShaderCombo)
-          self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].setupShader()
+          currentIndex = self.ui.customShaderCombo.currentIndex
+          self.ui.customShaderCombo.setCurrentIndex(0)
+          self.ui.customShaderCombo.setCurrentIndex(currentIndex)
           self.sampleDataSwitch = False
         else:
           if self.ui.customShaderCombo.currentIndex == self.logic.volumes[self.logic.volumeIndex].comboBoxIndex :
-            self.UpdateShaderParametersUI()
-            self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].setupShader()
+            self.ui.customShaderCombo.setCurrentIndex(0)
+            self.ui.customShaderCombo.setCurrentIndex(self.logic.volumes[self.logic.volumeIndex].comboBoxIndex)
           else:
+            self.ui.customShaderCombo.setCurrentIndex(0)
             self.ui.customShaderCombo.setCurrentIndex(self.logic.volumes[self.logic.volumeIndex].comboBoxIndex)
             self.updateWidgetParameterNodeFromGUI(self.ui.customShaderCombo.currentText, self.ui.customShaderCombo)
       # If the selector is a parameter of a shader
