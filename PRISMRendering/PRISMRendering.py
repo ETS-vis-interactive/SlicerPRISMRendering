@@ -654,104 +654,93 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       volumeName = self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode.GetVolumePropertyNode().GetName()
       self.CSName = self.ui.customShaderCombo.currentText.replace(" ", "") + volumeName
       param_list = self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].param_list
+      TFIndex =  0
+      TFTypes = []
       for p in param_list:
+          hideWidget = False
+          Optional = False
+          for i in self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].param_list:
+            if isinstance(i,  BoolParam):
+              if p.name in i.optionalWidgets:
+                Optional  = True
+                bool_param = i
+                if self.logic.optionalWidgets.get(self.CSName + bool_param.name) == None:
+                  self.logic.optionalWidgets[self.CSName + bool_param.name] = []
+                elif len(self.logic.optionalWidgets[self.CSName + bool_param.name]) == len(bool_param.optionalWidgets) : #To avoid duplicates & reset after next GUI Setup
+                  self.logic.optionalWidgets[self.CSName + bool_param.name] = []
+                if i.value == True:
+                  hideWidget = False
+                else:
+                  hideWidget = True
+                break
           if not isinstance(p, TransferFunctionParam):
-            hideWidget = False
-            Optional = False
-            for i in self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].param_list:
-              if isinstance(i,  BoolParam):
-                if p.name in i.optionalWidgets:
-                  Optional  = True
-                  bool_param = i
-                  if self.logic.optionalWidgets.get(self.CSName + bool_param.name) == None:
-                    self.logic.optionalWidgets[self.CSName + bool_param.name] = []
-                  elif len(self.logic.optionalWidgets[self.CSName + bool_param.name]) == len(bool_param.optionalWidgets) : #To avoid duplicates & reset after next GUI Setup
-                    self.logic.optionalWidgets[self.CSName + bool_param.name] = []
-                  if i.value == True:
-                    hideWidget = False
-                  else:
-                    hideWidget = True
-                  break
             p.SetupGUI(self)
-            try :
-              self.ui.customShaderParametersLayout.addRow(p.label, p.widget)
-              if Optional :
-                self.logic.optionalWidgets[self.CSName + bool_param.name] += [p]
-                if hideWidget :
-                  p.widget.hide()
-                  p.label.hide()
-            except :
-              self.ui.customShaderParametersLayout.addRow(p.widget)
-              if Optional :
-                self.logic.optionalWidgets[self.CSName + bool_param.name] += [p]
-                if hideWidget :
-                  p.widget.hide()
+          else:
+            TFIndex += 1
+            TFTypes += [p.type]
+            if TFIndex > self.numberOfTFTypes:
+              logging.error("Too many transfer function have been defined.")
+            if len(TFTypes) > self.numberOfTFTypes:
+              logging.error("One transfer function has been assigned multiple times to the same volume.")
+            p.addTransferFunction(self, 0, TFIndex)
+          try :
+            self.ui.customShaderParametersLayout.addRow(p.label, p.widget)
+            if Optional :
+              self.logic.optionalWidgets[self.CSName + bool_param.name] += [p]
+              if hideWidget :
+                p.widget.hide()
+                p.label.hide()
+          except :
+            self.ui.customShaderParametersLayout.addRow(p.widget)
+            if Optional :
+              self.logic.optionalWidgets[self.CSName + bool_param.name] += [p]
+              if hideWidget :
+                p.widget.hide()
 
-        ## Transfer function of the first volume
-      params = [p for p in self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].param_list if isinstance(p, TransferFunctionParam)]
-      if len(params) > self.numberOfTFTypes:
-        logging.error("Too many transfer function have been defined.")
+      if TFTypes == []:
+        self.setupDefaultTransferFunctions()
 
-
-      TFTypes = [p.type for p in params]
-      # Check that each volume has only one of each type of transfer functions.
-      my_set = {i for i in TFTypes}
-      if len(TFTypes) != len(my_set) and len(TFTypes) > self.numberOfTFTypes:
-        logging.error("One transfer function has been assigned multiple times to the same volume.")
-
-      if params != []:
-        # If a transfer function is specified, add the widget
-        if self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode is None :
-          return
-
-        for i, p in enumerate(params):
-          p.addTransferFunction(self, 0, i)
-
-      else :
-
-        if self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode != None:
-          volumePropertyNode = self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode.GetVolumePropertyNode()
-          colorTransferFunction = vtk.vtkColorTransferFunction()
-          opacityTransferFunction = vtk.vtkPiecewiseFunction()
-          colorTransferFunction.RemoveAllObservers()
-          opacityTransferFunction.RemoveAllObservers()
-          colorTransferFunction.name = volumeName + "Original" + colorTransferFunction.GetClassName() 
-          opacityTransferFunction.name = volumeName + "Original" + opacityTransferFunction.GetClassName()
-          self.appendList(opacityTransferFunction, opacityTransferFunction.name)
-          self.appendList(colorTransferFunction, colorTransferFunction.name)
-
-          # Keep the original transfert functions
-          if self.logic.volumes[self.logic.volumeIndex].colorTransferFunction.GetSize() > 0 :
-            colorTransferFunction.DeepCopy(self.logic.volumes[self.logic.volumeIndex].colorTransferFunction)
-            self.updateWidgetParameterNodeFromGUI(colorTransferFunction, colorTransferFunction.name)
-          else :
-            values = self.logic.parameterNode.GetParameter(colorTransferFunction.name+str(0))
-            i = 0
-            while values != "":
-              v = [float(k) for k in values.split(",")]
-              colorTransferFunction.AddRGBPoint(v[0], v[1], v[2], v[3], v[4], v[5])
-              i += 1
-              values = self.logic.parameterNode.GetParameter(colorTransferFunction.name+str(i))
-
-          if not colorTransferFunction.HasObserver(vtk.vtkCommand.ModifiedEvent):
-            colorTransferFunction.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = colorTransferFunction : self.updateWidgetParameterNodeFromGUI([o,e], w))
-          volumePropertyNode.SetColor(colorTransferFunction)
-
-          if self.logic.volumes[self.logic.volumeIndex].opacityTransferFunction.GetSize() > 0 :
-            opacityTransferFunction.DeepCopy(self.logic.volumes[self.logic.volumeIndex].opacityTransferFunction)
-            self.updateWidgetParameterNodeFromGUI(opacityTransferFunction, opacityTransferFunction.name)
-          else :
-            values = self.logic.parameterNode.GetParameter(opacityTransferFunction.name+str(0))
-            i = 0
-            while values != "":
-              v = [float(k) for k in values.split(",")]
-              opacityTransferFunction.AddPoint(v[0], v[1], v[2], v[3])
-              i += 1
-              values = self.logic.parameterNode.GetParameter(opacityTransferFunction.name+str(i))
-
-          if not opacityTransferFunction.HasObserver(vtk.vtkCommand.ModifiedEvent):
-            opacityTransferFunction.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = opacityTransferFunction : self.updateWidgetParameterNodeFromGUI([o,e], w))
-          volumePropertyNode.SetScalarOpacity(opacityTransferFunction)
+    def setupDefaultTransferFunctions(self):
+      volumeName = self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode.GetVolumePropertyNode().GetName()
+      if self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode != None:
+        volumePropertyNode = self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode.GetVolumePropertyNode()
+        colorTransferFunction = vtk.vtkColorTransferFunction()
+        opacityTransferFunction = vtk.vtkPiecewiseFunction()
+        colorTransferFunction.RemoveAllObservers()
+        opacityTransferFunction.RemoveAllObservers()
+        colorTransferFunction.name = volumeName + "Original" + colorTransferFunction.GetClassName() 
+        opacityTransferFunction.name = volumeName + "Original" + opacityTransferFunction.GetClassName()
+        self.appendList(opacityTransferFunction, opacityTransferFunction.name)
+        self.appendList(colorTransferFunction, colorTransferFunction.name)
+        # Keep the original transfert functions
+        if self.logic.volumes[self.logic.volumeIndex].colorTransferFunction.GetSize() > 0 :
+          colorTransferFunction.DeepCopy(self.logic.volumes[self.logic.volumeIndex].colorTransferFunction)
+          self.updateWidgetParameterNodeFromGUI(colorTransferFunction, colorTransferFunction.name)
+        else :
+          values = self.logic.parameterNode.GetParameter(colorTransferFunction.name+str(0))
+          i = 0
+          while values != "":
+            v = [float(k) for k in values.split(",")]
+            colorTransferFunction.AddRGBPoint(v[0], v[1], v[2], v[3], v[4], v[5])
+            i += 1
+            values = self.logic.parameterNode.GetParameter(colorTransferFunction.name+str(i))
+        if not colorTransferFunction.HasObserver(vtk.vtkCommand.ModifiedEvent):
+          colorTransferFunction.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = colorTransferFunction : self.updateWidgetParameterNodeFromGUI([o,e], w))
+        volumePropertyNode.SetColor(colorTransferFunction)
+        if self.logic.volumes[self.logic.volumeIndex].opacityTransferFunction.GetSize() > 0 :
+          opacityTransferFunction.DeepCopy(self.logic.volumes[self.logic.volumeIndex].opacityTransferFunction)
+          self.updateWidgetParameterNodeFromGUI(opacityTransferFunction, opacityTransferFunction.name)
+        else :
+          values = self.logic.parameterNode.GetParameter(opacityTransferFunction.name+str(0))
+          i = 0
+          while values != "":
+            v = [float(k) for k in values.split(",")]
+            opacityTransferFunction.AddPoint(v[0], v[1], v[2], v[3])
+            i += 1
+            values = self.logic.parameterNode.GetParameter(opacityTransferFunction.name+str(i))
+        if not opacityTransferFunction.HasObserver(vtk.vtkCommand.ModifiedEvent):
+          opacityTransferFunction.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = opacityTransferFunction : self.updateWidgetParameterNodeFromGUI([o,e], w))
+        volumePropertyNode.SetScalarOpacity(opacityTransferFunction)
 
     def getClassName(self, widget): 
       """Function to get the class name of a widget.
