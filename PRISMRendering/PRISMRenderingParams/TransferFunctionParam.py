@@ -130,8 +130,6 @@ class TransferFunctionParam(Param):
       self.widget.view().setAxesToChartBounds()
       self.widget.setFixedHeight(100)
 
-      widgetClass.ui.customShaderParametersLayout.addRow(self.label, self.widget)
-
       if secondTf :
         widgetClass.secondColorTransferFunctionWidget[volumeID][TFType] = self.widget
      # self.updateGUIFromParameterNode(widgetClass)
