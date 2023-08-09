@@ -20,7 +20,7 @@ class TransferFunctionParam(Param):
     if updateGUI:
       self.updateGUIFromValue()
 
-  def addTransferFunction(self, widgetClass, volumeID, TFIndex):
+  def SetupGUI(self, widgetClass, volumeID, TFIndex):
        """Function to add transfer function widgets to the ui.
 
        :param parameters: Dictionnary of transfert functions. 

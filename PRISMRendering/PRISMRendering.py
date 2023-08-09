@@ -682,7 +682,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
               logging.error("Too many transfer function have been defined.")
             if len(TFTypes) > self.numberOfTFTypes:
               logging.error("One transfer function has been assigned multiple times to the same volume.")
-            p.addTransferFunction(self, 0, TFIndex)
+            p.SetupGUI(self, 0, TFIndex)
           try :
             self.ui.customShaderParametersLayout.addRow(p.label, p.widget)
             if Optional :
