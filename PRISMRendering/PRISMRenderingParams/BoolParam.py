@@ -65,4 +65,10 @@ class BoolParam(Param):
 
   def updateGUIFromValue(self):
     self.widget.setChecked(self.value)
+
+  def show(self):
+    self.widget.show()
+
+  def hide(self):
+    self.widget.hide()
     

@@ -13,6 +13,7 @@ class TransferFunctionParam(Param):
     self.widget = None
     self.label = None
     self.transferFunction = None
+    self.storedValue = self.value #in case it is a boolean TF, we need to update with the default value if it isn't checked anymore or the stored value if it is checked again
 
   def setValue(self, value, updateGUI = False):
     self.value = value
@@ -185,4 +186,14 @@ class TransferFunctionParam(Param):
 
   def getValue(self):
     return self.value
-                         
+
+  def show(self):
+    self.widget.show()
+    self.label.show()
+    self.setValue(self.storedValue, True)
+
+  def hide(self):
+    self.widget.hide()
+    self.label.hide()
+    self.storedValue = self.value
+    self.setValue(self.defaultValue, True)

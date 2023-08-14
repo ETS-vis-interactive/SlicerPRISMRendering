@@ -77,3 +77,11 @@ class FloatParam(Param):
 
   def updateGUIFromValue(self):
     self.widget.setValue(self.value)
+
+  def show(self):
+    self.widget.show()
+    self.label.show()
+
+  def hide(self):
+    self.widget.hide()
+    self.label.hide()

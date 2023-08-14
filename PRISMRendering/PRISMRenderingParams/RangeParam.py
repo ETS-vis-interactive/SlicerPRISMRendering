@@ -98,3 +98,11 @@ class RangeParam(Param):
 
     # because of the way the connection works, we need to save the max while the slider changes the min value so when it communicates back the old max we kept the new max value.
     self.widget.maximumValue = max
+
+  def hide(self):
+    self.widget.hide()
+    self.label.hide()
+
+  def show(self):
+    self.widget.show()
+    self.label.show()

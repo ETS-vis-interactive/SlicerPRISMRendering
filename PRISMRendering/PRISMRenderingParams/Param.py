@@ -24,3 +24,9 @@ class Param:
 
   def getValue(self):
     return None
+  
+  def show(self):
+    return
+  
+  def hide(self):
+    return

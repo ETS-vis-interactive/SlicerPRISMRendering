@@ -85,11 +85,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
         self.volumes[self.volumeIndex].customShader[self.volumes[self.volumeIndex].shaderIndex].setShaderParameter(param, 1)
         if str(CSName + paramName) in self.optionalWidgets :
           for p in self.optionalWidgets[CSName + paramName] :
-            p.widget.show()
-            try :
-              p.label.show()
-            except :
-              pass
+            p.show()
             try : # if there are Optional Points
               for t in self.volumes[self.volumeIndex].customShader[self.volumes[self.volumeIndex].shaderIndex].customShaderPoints.pointTypes :
                 if t in p.name:
@@ -100,11 +96,7 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
         self.volumes[self.volumeIndex].customShader[self.volumes[self.volumeIndex].shaderIndex].setShaderParameter(param, 0)
         if str(CSName + paramName) in self.optionalWidgets :
           for p in self.optionalWidgets[CSName + paramName] :
-            p.widget.hide()
-            try :
-              p.label.hide()
-            except :
-              pass
+            p.hide()
             try : # if there are Optional Points
               for t in self.volumes[self.volumeIndex].customShader[self.volumes[self.volumeIndex].shaderIndex].customShaderPoints.pointTypes :
                 if t in p.name:

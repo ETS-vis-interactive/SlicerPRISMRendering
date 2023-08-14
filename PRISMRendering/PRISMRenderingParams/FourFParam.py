@@ -79,3 +79,9 @@ class FourFParam(Param):
       
   def addGUIObservers(self, widgetClass):
     self.widget.clicked.connect(lambda : self.updateParameterNodeFromGUI(widgetClass))
+
+  def show(self):
+    self.widget.show()
+
+  def hide(self):
+    self.widget.hide()
