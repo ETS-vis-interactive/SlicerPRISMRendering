@@ -205,8 +205,6 @@ vec4 computeColor(vec4 scalar, float opacity)
     volPropNode.GetVolumeProperty().SetDiffuse(self.diffuse)
     volPropNode.GetVolumeProperty().SetSpecular(self.specular)
     volPropNode.GetVolumeProperty().SetSpecularPower(self.specularPower)
-    # volPropNode.GetVolumeProperty().GetScalarOpacity().DeepCopy(vtk.vtkPiecewiseFunction())
-    # volPropNode.GetVolumeProperty().GetRGBTransferFunction().DeepCopy(vtk.vtkColorTransferFunction()) 
 
     volPropNode.EndModify(disableModify)
     volPropNode.Modified()

@@ -656,6 +656,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       param_list = self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].param_list
       TFIndex =  0
       TFTypes = []
+      self.setupDefaultTransferFunctions()
       for p in param_list:
           hideWidget = False
           Optional = False
@@ -696,9 +697,6 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
               self.logic.optionalWidgets[self.CSName + bool_param.name] += [p]
               if hideWidget :
                 p.widget.hide()
-
-      if TFTypes == []:
-        self.setupDefaultTransferFunctions()
 
     def setupDefaultTransferFunctions(self):
       volumeName = self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode.GetVolumePropertyNode().GetName()
