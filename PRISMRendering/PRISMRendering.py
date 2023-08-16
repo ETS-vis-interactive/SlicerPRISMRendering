@@ -65,7 +65,7 @@ def registerSampleData():
     # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
     thumbnailFileName=os.path.join(iconsPath, 'SphereCarving.png'),
     # Download URL and target file name
-    uris="https://cmll2.github.io/PRISMDatabase/1-carving-sphere/0.mnc",
+    uris="https://ets-vis-interactive.github.io/SlicerPRISMRenderingDatabase/Volumes/MRI_Head.mnc",
     fileNames='SphereCarvingSampleData.mnc',
     # Checksum to ensure file integrity. Can be computed by this command:
     #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
@@ -82,7 +82,7 @@ def registerSampleData():
     # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
     thumbnailFileName=os.path.join(iconsPath, 'Outline.png'),
     # Download URL and target file name
-    uris="https://cmll2.github.io/PRISMDatabase/5-edges/0.mnc",
+    uris="https://ets-vis-interactive.github.io/SlicerPRISMRenderingDatabase/Volumes/CTA_Brain.mnc",
     fileNames='OutlineSampleData.mnc',
     # Checksum to ensure file integrity. Can be computed by this command:
     #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
@@ -99,7 +99,7 @@ def registerSampleData():
     # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
     thumbnailFileName=os.path.join(iconsPath, 'OpacityPeeling.png'),
     # Download URL and target file name
-    uris="https://cmll2.github.io/PRISMDatabase/2-opacity-peeling/0.mnc",
+    uris="https://ets-vis-interactive.github.io/SlicerPRISMRenderingDatabase/Volumes/MRI_Head.mnc",
     fileNames='OpacityPeelingSampleData.mnc',
     # Checksum to ensure file integrity. Can be computed by this command:
     #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
@@ -116,7 +116,7 @@ def registerSampleData():
     # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
     thumbnailFileName=os.path.join(iconsPath, 'ChromaDepthPerception.png'),
     # Download URL and target file name
-    uris="https://cmll2.github.io/PRISMDatabase/4-chroma-depth/1.mnc",
+    uris="https://ets-vis-interactive.github.io/SlicerPRISMRenderingDatabase/Volumes/CTA_Brain.mnc",
     fileNames='ChromaDepthPerceptionSampleData.mnc',
     # Checksum to ensure file integrity. Can be computed by this command:
     #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
