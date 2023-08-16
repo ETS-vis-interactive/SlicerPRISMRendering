@@ -347,7 +347,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         p.setValue(p.defaultValue, True)
       try :
         self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.UpdateGUIFromValues(self.logic)
-      except:
+      except Exception as e:
         pass
 
     def onEnableRotationCheckBoxToggled(self, caller=None, event=None) :
