@@ -1,21 +1,30 @@
 from PRISMRenderingShaders.CustomShader import CustomShader
+from PRISMRenderingParams import *
+
 import math  
 
 """!@class ChromaDepthShader
 @brief Class containing the code for the Chroma Depth shader.
 @param CustomShader class : Parent class containing the function to access the parameters of the shader.
 """ 
+
 class ChromaDepthShader(CustomShader):
-  shaderrParams = { 'depthRange' : { 'displayName' : 'Depth Range', 'defaultValue' : [0.0, 1.0]}}
-  shadertfParams = { 'scalarColorMapping' : { 'displayName' : 'Scalar Color Mapping', 'defaultColors' : [[0, 1, 0, 0, 0.5, 0], [300, 0, 0, 1, 0.5, 0]], 'type' : 'color'}, 
-  'scalarOpacityMapping' : { 'displayName' : 'Scalar Opacity Mapping', 'defaultColors' : [], 'type' : 'scalarOpacity'}}
+
+  depthRangeParam = RangeParam("depthRange", "Depth Range", [0.0, 1.0])
   
-  def __init__(self, shaderPropertyNode, volumeNode = None):
+  sCOParam = TransferFunctionParam("scalarColorMapping", "Scalar Color Mapping",'color', [[0, 1, 0, 0, 0.5, 0], [300, 0, 0, 1, 0.5, 0]])
+  sOPParam = TransferFunctionParam("scalarOpacityMapping", "Scalar Opacity Mapping",'scalarOpacity', [])
+  
+  param_list = [depthRangeParam, sCOParam, sOPParam]
+
+  def __init__(self, shaderPropertyNode, volumeNode = None, logic = None, paramlist = param_list):
+
     CustomShader.__init__(self, shaderPropertyNode, volumeNode)
+    self.param_list = paramlist
     volumeRange = self.getVolumeRange(volumeNode)
     if volumeRange :
-      self.shaderrParams['depthRange']['defaultValue'][0] = -1* volumeRange
-      self.shaderrParams['depthRange']['defaultValue'][1] = volumeRange
+      self.param_list[0].setRange([(-1 * volumeRange), (volumeRange)])
+    self.createMarkupsNodeIfNecessary(logic)
 
   @classmethod
   def GetDisplayName(cls):

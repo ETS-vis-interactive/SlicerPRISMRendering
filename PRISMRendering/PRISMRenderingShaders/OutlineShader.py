@@ -1,16 +1,25 @@
 from PRISMRenderingShaders.CustomShader import CustomShader
+from PRISMRenderingParams import *
 
 """OutlineShader Class containing the code for the Outline shader.
 
 :param CustomShader:  Parent class containing the function to access the parameters of the shader. 
 :type CustomShader: class.
 """ 
-class OutlineShader(CustomShader):
-  shaderfParams = { 'gradStep' : { 'displayName' : 'Gradient Step', 'min' : 0.001, 'max' : 0.02, 'defaultValue' : 0.001 }, 'threshold' : { 'displayName' : 'Threshold','min' : 0.01, 'max' : 0.25 ,'defaultValue' : 0.05}, 'VAT' : { 'displayName' : 'Virtual Alpha lower than ','min' : 0.5, 'max' : 0.99 ,'defaultValue' : 0.85}}
-  shaderrParams = { 'step' : { 'displayName' : 'Step', 'defaultValue' : [0.0, 1]}}
 
-  def __init__(self, shaderPropertyNode, volumeNode = None):
-    CustomShader.__init__(self,shaderPropertyNode)
+class OutlineShader(CustomShader):
+  
+  gradStepParam = FloatParam("gradStep","Gradient Step", 0.001, 0.001, 0.02)
+  VATParam = FloatParam("VAT", "Virtual Alpha Lower Than", 0.85, 0.0, 1.0)
+  thresholdParam = FloatParam("threshold","Threshold", 0.05, 0.0, 0.5)
+  stepParam = RangeParam("step", "Step", [0.0, 1])
+
+  param_list = [gradStepParam, VATParam, thresholdParam, stepParam]
+
+  def __init__(self, shaderPropertyNode, volumeNode = None, logic = None, paramlist = param_list):
+    CustomShader.__init__(self,shaderPropertyNode, volumeNode)
+    self.param_list = paramlist
+    self.createMarkupsNodeIfNecessary(logic)
 
   @classmethod
   def GetDisplayName(cls):
@@ -31,6 +40,7 @@ class OutlineShader(CustomShader):
     self.shaderProperty.ClearAllFragmentShaderReplacements()
 
     croppingDecCode = """
+
     vec4 ComputeGradient(in sampler3D volume, vec3 pos, float gradStep)
     {
       vec3 g1;
@@ -81,6 +91,5 @@ class OutlineShader(CustomShader):
       g_srcColor.rgb *= g_srcColor.a;
       g_fragColor = (1.0f - g_fragColor.a) * g_srcColor + g_fragColor;
     }"""
-    self.shaderProperty.AddFragmentShaderReplacement("//VTK::Shading::Impl", True, shadingImplCode, False)
 
-    #shaderreplacement
+    self.shaderProperty.AddFragmentShaderReplacement("//VTK::Shading::Impl", True, shadingImplCode, False)

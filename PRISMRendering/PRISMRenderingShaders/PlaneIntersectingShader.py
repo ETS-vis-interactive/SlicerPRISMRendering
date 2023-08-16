@@ -1,20 +1,28 @@
 from PRISMRenderingShaders.CustomShader import CustomShader
+from PRISMRenderingParams import *
 
 """PlaneIntersectingShader Class containing the code for the Plane intersecting shader.
 
 :param CustomShader:  Parent class containing the function to access the parameters of the shader. 
 :type CustomShader: class.
 """ 
+
 class PlaneIntersectingShader(CustomShader):
 
-  shaderfParams = { 'relativePosition' : { 'displayName' : 'Relative Position', 'min' : 0.0, 'max' : 1.0, 'defaultValue' : 1.0 }}
-  shader4fParams = {'entry': {'displayName': 'Entry', 'defaultValue': {'x': 0.0, 'y': 0.0, 'z': 0.0, 'w': 0.0}}, \
-                    'target': {'displayName': 'Target', 'defaultValue': {'x': 0.0, 'y': 0.0, 'z': 0.0, 'w': 0.0}}}
-  
-  shaderbParams = { 'plane' : { 'displayName' : 'Third Plane', 'defaultValue' : 0, 'optionalWidgets' : []}}
+  relativePositionParam = FloatParam("relativePosition", "Relative Position", 1.0, 0.0, 1.0)
 
-  def __init__(self, shaderPropertyNode, volumeNode = None):
-    CustomShader.__init__(self,shaderPropertyNode)
+  entryParam = FourFParam("entry", "Entry", {'x': 0.0, 'y': 0.0, 'z': 0.0, 'w': 0.0})
+
+  targetParam = FourFParam("target", "Target", {'x': 0.0, 'y': 0.0, 'z': 0.0, 'w': 0.0})
+
+  planeParam = BoolParam("plane", "Third Plane", 0, [])
+
+  param_list = [relativePositionParam, entryParam, targetParam, planeParam]
+
+  def __init__(self, shaderPropertyNode, volumeNode = None, logic = None, paramlist = param_list):
+    CustomShader.__init__(self,shaderPropertyNode, volumeNode)
+    self.param_list = paramlist
+    self.createMarkupsNodeIfNecessary(logic)
   
   @classmethod
   def GetBasicDescription(cls):

@@ -6,7 +6,7 @@ project(SlicerPRISMRendering)
 # Extension meta-information
 set(EXTENSION_HOMEPAGE "https://githubcomets-vis-interactiveslicerprismrendering.readthedocs.io/")
 set(EXTENSION_CATEGORY "Rendering")
-set(EXTENSION_CONTRIBUTORS "Tiphaine Richard (ETS), Simon Drouin (ETS)")
+set(EXTENSION_CONTRIBUTORS "Tiphaine Richard (ETS), Simon Drouin (ETS), Camille Hascoët (ETS)")
 set(EXTENSION_DESCRIPTION "This module is an implementation of the PRISM customizable volume rendering framework in 3D Slicer.")
 set(EXTENSION_ICONURL "https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/PRISMRendering/Resources/Icons/PRISMRendering.png")
 set(EXTENSION_SCREENSHOTURLS "https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/images/screenshotSlicerPRISMRendering.png")
