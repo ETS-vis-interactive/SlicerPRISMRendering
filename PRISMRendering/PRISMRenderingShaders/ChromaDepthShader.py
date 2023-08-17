@@ -16,7 +16,9 @@ class ChromaDepthShader(CustomShader):
   sOPParam = TransferFunctionParam("scalarOpacityMapping", "Scalar Opacity Mapping",'scalarOpacity', [])
   
   param_list = [depthRangeParam, sCOParam, sOPParam]
-
+  sampleValues = {"scalarColorMapping" : [[0.0, 1.0, 0.88, 0.0, 0.5, 0.0], [67, 0.75, 0.0, 0.2, 0.5, 0.0], [150, 0.56, 0.0, 0.75, 0.5, 0.0], [300.0, 0.0, 0.0, 1.0, 0.5, 0.0]]
+, "scalarOpacityMapping" : [[0.0, 0.0, 0.5, 0.0], [114, 0.0, 0.5, 0.0], [1024.0, 0.5, 0.5, 0.0]],
+"depthRange" : [-68.45, 180.9]}
   def __init__(self, shaderPropertyNode, volumeNode = None, logic = None, paramlist = param_list):
 
     CustomShader.__init__(self, shaderPropertyNode, volumeNode)

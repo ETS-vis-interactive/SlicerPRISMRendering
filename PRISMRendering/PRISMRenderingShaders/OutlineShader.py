@@ -15,7 +15,8 @@ class OutlineShader(CustomShader):
   stepParam = RangeParam("step", "Step", [0.0, 1])
 
   param_list = [gradStepParam, VATParam, thresholdParam, stepParam]
-
+  sampleValues = {"gradStep" : 0.001, "VAT" : 0.6, "threshold" : 0.11, "step" : [0.0, 0.46]}
+  
   def __init__(self, shaderPropertyNode, volumeNode = None, logic = None, paramlist = param_list):
     CustomShader.__init__(self,shaderPropertyNode, volumeNode)
     self.param_list = paramlist
