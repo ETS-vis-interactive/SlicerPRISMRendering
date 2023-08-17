@@ -290,6 +290,11 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
           currentIndex = self.ui.customShaderCombo.currentIndex
           self.ui.customShaderCombo.setCurrentIndex(0)
           self.ui.customShaderCombo.setCurrentIndex(currentIndex)
+          # for specified sample data values if defined
+          if self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].sampleValues != {}:
+            for p in self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].param_list:
+              if self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].sampleValues.get(p.name) is not None:
+                p.setValue(self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].sampleValues[p.name], True)
           self.sampleDataSwitch = False
         else:
           if self.ui.customShaderCombo.currentIndex == self.logic.volumes[self.logic.volumeIndex].comboBoxIndex :

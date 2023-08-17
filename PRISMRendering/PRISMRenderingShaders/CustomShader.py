@@ -17,7 +17,7 @@ Generic Custom Shader
 """ 
 
 class CustomShader():
-
+    sampleValues = {} #edit for specific shaders if you want to specify specific values for the sample datas
     def __init__(self, shaderPropertyNode, volumeNode = None, logic = None):
         
         assert shaderPropertyNode != None, 'CustomShader: a valid shader property node must provided to the constructor'
