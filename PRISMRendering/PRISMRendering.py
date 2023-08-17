@@ -244,6 +244,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
       self.sampleDatasNodeID = {} # To store the sample data nodes
       self.sampleDataSwitch = False # To know if the volume switch is when the user downloaded sample data so we setup the right shader
+      self.firstSampleDataSwitch = False # To know if it is the first time you load the sample data to set the right default values
 
     def updateBaseGUIFromParameterNode(self, caller=None, event=None):
         """Function to update GUI from parameter node values
@@ -291,10 +292,13 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
           self.ui.customShaderCombo.setCurrentIndex(0)
           self.ui.customShaderCombo.setCurrentIndex(currentIndex)
           # for specified sample data values if defined
-          if self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].sampleValues != {}:
-            for p in self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].param_list:
-              if self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].sampleValues.get(p.name) is not None:
-                p.setValue(self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].sampleValues[p.name], True)
+          if self.firstSampleDataSwitch:
+            if self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].sampleValues != {}:
+              for p in self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].param_list:
+                if self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].sampleValues.get(p.name) is not None:
+                  sampleValue = self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].sampleValues[p.name]
+                  p.setValue(sampleValue, True)
+                  p.defaultValue = sampleValue
           self.sampleDataSwitch = False
         else:
           if self.ui.customShaderCombo.currentIndex == self.logic.volumes[self.logic.volumeIndex].comboBoxIndex :
@@ -324,11 +328,12 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       
       shaderName = self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].GetDisplayName()
       self.sampleDataSwitch = True
-
+      self.firstSampleDataSwitch = True
       if self.sampleDatasNodeID.get(shaderName) is not None:
 
         if self.sampleDatasNodeID[shaderName] != -1 :
           
+          self.firstSampleDataSwitch = False
           self.ui.imageSelector.setCurrentNodeID(self.sampleDatasNodeID[shaderName])
           self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
 
@@ -343,6 +348,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
           self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
         
         else:
+          self.firstSampleDataSwitch = False
           self.sampleDataSwitch = False
           print("This shader does not have a sample data.")
 
