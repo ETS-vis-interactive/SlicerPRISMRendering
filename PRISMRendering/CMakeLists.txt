@@ -21,6 +21,8 @@ set(MODULE_PYTHON_SCRIPTS
   PRISMRenderingParams/TransferFunctionParam.py
   PRISMRenderingParams/RangeParam.py
   PRISMRenderingParams/FourFParam.py
+  PRISMRenderingPoints/__init__.py
+  PRISMRenderingPoints/CustomShaderPoints.py
   PRISMRenderingVolumes/__init__.py
   PRISMRenderingVolumes/PRISMRenderingVolume.py
   )
