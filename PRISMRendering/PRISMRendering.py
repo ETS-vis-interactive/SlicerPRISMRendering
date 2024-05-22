@@ -172,6 +172,10 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       self.ui.enableScalingCheckBox.toggled.connect(self.onEnableScalingCheckBoxToggled)
       self.ui.enableRotationCheckBox.toggled.connect(self.onEnableRotationCheckBoxToggled)
 
+      #Hiding parameters if no volume is selected
+      if not self.logic.volumes:
+          self.ui.viewSetupCollapsibleButton.hide()
+          self.ui.volumeRenderingCheckBox.hide()
       self.ui.sampleDataButton.hide()
       self.ui.enableROICheckBox.hide()
       self.ui.displayROICheckBox.hide()
@@ -185,7 +189,8 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
       self.ui.reloadCurrentCustomShaderButton.setIcon(qt.QIcon(qt.QPixmap(reloadIconPath)))
 
-      self.ui.customShaderCollapsibleButton.hide()
+      #Showing the Shader part at the start in order to view sample data
+      #self.ui.customShaderCollapsibleButton.hide()
 
       # Custom shader combobox to select a type of custom shader
       self.ui.reloadCurrentCustomShaderButton.hide()
@@ -197,8 +202,11 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       self.ui.resetParametersButton.clicked.connect(self.onResetParametersButtonClicked)
       # Populate combobox with every types of shader available
 
+      #Help text for the user if there is something he need to do //TODO modif ici
+      self.ui.InformationOutput.setStyleSheet("color: red")  #//TODO modif ici
+
       for shaderType in allShaderTypes:
-        self.ui.customShaderCombo.addItem(shaderType)
+          self.ui.customShaderCombo.addItem(shaderType)
       self.ui.customShaderCombo.setCurrentIndex(0)
       self.ui.customShaderCombo.currentIndexChanged.connect(self.onCustomShaderComboIndexChanged)
 
@@ -278,12 +286,15 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       if not node:
         return
 
-      try: # if the old shader has points
-        self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
+      try:  # if the old shader has points
+          self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[
+              self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
       except:
-        pass
-      
+          pass
+
       self.logic.setupVolume(self.ui.imageSelector.currentNode(), self.ui.customShaderCombo.currentIndex)
+      self.ui.viewSetupCollapsibleButton.show()
+      self.ui.volumeRenderingCheckBox.show()
 
       if self.ui.volumeRenderingCheckBox.isChecked():
         self.logic.volumes[self.logic.volumeIndex].renderVolume()
@@ -323,34 +334,67 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
       # else:
       self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
-    
+
+    def createTestVolume(self):
+        nodeName = "Volume"
+        imageSize = [512, 512, 512]
+        voxelType = vtk.VTK_UNSIGNED_CHAR
+        imageOrigin = [0.0, 0.0, 0.0]
+        imageSpacing = [1.0, 1.0, 1.0]
+        imageDirections = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+        fillVoxelValue = 0
+
+        # Create an empty image volume, filled with fillVoxelValue
+        imageData = vtk.vtkImageData()
+        imageData.SetDimensions(imageSize)
+        imageData.AllocateScalars(voxelType, 1)
+        imageData.GetPointData().GetScalars().Fill(fillVoxelValue)
+        # Create volume node
+        volumeNode = slicer.mrmlScene.AddNewNodeByClass("vtkMRMLScalarVolumeNode", nodeName)
+        volumeNode.SetOrigin(imageOrigin)
+        volumeNode.SetSpacing(imageSpacing)
+        volumeNode.SetIJKToRASDirections(imageDirections)
+        volumeNode.SetAndObserveImageData(imageData)
+        volumeNode.CreateDefaultDisplayNodes()
+        volumeNode.CreateDefaultStorageNode()
+        return volumeNode
+
     def onSampleDataButtonClicked(self, caller=None, event=None):
-      
-      shaderName = self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].GetDisplayName()
-      self.sampleDataSwitch = True
-      self.firstSampleDataSwitch = True
-      if self.sampleDatasNodeID.get(shaderName) is not None:
+        if self.logic.volumeIndex is None:
+            self.ui.imageSelector.setCurrentNode(self.createTestVolume())
+        #shaderName = self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].GetDisplayName()
+        shaderName = self.ui.customShaderCombo.currentText
+        self.sampleDataSwitch = True
+        self.firstSampleDataSwitch = True
 
-        if self.sampleDatasNodeID[shaderName] != -1 :
-          
-          self.firstSampleDataSwitch = False
-          self.ui.imageSelector.setCurrentNodeID(self.sampleDatasNodeID[shaderName])
-          self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
+        if self.sampleDatasNodeID.get(shaderName) is not None:
+            if self.sampleDatasNodeID[shaderName] != -1:
+
+                self.firstSampleDataSwitch = False
+                self.ui.imageSelector.setCurrentNodeID(self.sampleDatasNodeID[shaderName])
+                self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
+
+                self.ui.viewSetupCollapsibleButton.show()
+                self.ui.volumeRenderingCheckBox.show()
+
+            else:
+                self.sampleDataSwitch = False
+                print("This shader does not have a sample data.")
 
         else:
-          self.sampleDataSwitch = False
-          print("This shader does not have a sample data.")
+            self.logic.volumes[self.logic.volumeIndex].customShader[
+                self.logic.volumes[self.logic.volumeIndex].shaderIndex].downloadSampleData(self.ui.imageSelector,
+                                                                                           self.sampleDatasNodeID,
+                                                                                           self.ui.customShaderCombo.currentText)
+            if self.sampleDatasNodeID[shaderName] != -1:
+                self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
 
-      else:
-        self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].downloadSampleData(self.ui.imageSelector, self.sampleDatasNodeID)
-        
-        if self.sampleDatasNodeID[shaderName] != -1 :
-          self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
-        
-        else:
-          self.firstSampleDataSwitch = False
-          self.sampleDataSwitch = False
-          print("This shader does not have a sample data.")
+                self.ui.viewSetupCollapsibleButton.show()
+                self.ui.volumeRenderingCheckBox.show()
+            else:
+                self.firstSampleDataSwitch = False
+                self.sampleDataSwitch = False
+                print("This shader does not have a sample data.")
 
     def onResetParametersButtonClicked(self, caller=None, event=None):
 
@@ -389,7 +433,6 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       :param caller: Caller of the function.
       :param event: Event that triggered the function.
       """   
-
 
       if self.ui.enableROICheckBox.isChecked():
         self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode.SetCroppingEnabled(True)
@@ -456,7 +499,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
           #self.ROI.SetAndObserveTransformNodeID(self.transformNode.GetID())
           self.ROI.SetDisplayVisibility(0)
           self.renameROI()
-          self.ui.sampleDataButton.show()
+          #self.ui.sampleDataButton.show() TODO ici
           self.ui.enableROICheckBox.show()
           self.UpdateShaderParametersUI()
           self.ui.customShaderCollapsibleButton.show()
@@ -468,19 +511,21 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
               self.ROIdisplayObserver = self.ROIdisplay.AddObserver(vtk.vtkCommand.ModifiedEvent, self.onROIdisplayChanged)
 
       else:
-        for volume in self.logic.volumes:
-          if volume.volumeRenderingDisplayNode:
-            volume.volumeRenderingDisplayNode.SetVisibility(False)
-        try: # if the new shader has points
-          self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
-        except:
-          pass
-        self.ui.enableROICheckBox.setChecked(False)
-        self.ui.displayROICheckBox.setChecked(False)
-        self.ui.sampleDataButton.hide()
-        self.ui.enableROICheckBox.hide()
-        self.ui.displayROICheckBox.hide()
-        self.ui.customShaderCollapsibleButton.hide()
+          for volume in self.logic.volumes:
+              if volume.volumeRenderingDisplayNode:
+                  volume.volumeRenderingDisplayNode.SetVisibility(False)
+          try:  # if the new shader has points
+              self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[
+                  self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
+          except:
+              pass
+          self.ui.enableROICheckBox.setChecked(False)
+          self.ui.displayROICheckBox.setChecked(False)
+          #self.ui.sampleDataButton.hide()
+          self.ui.enableROICheckBox.hide()
+          self.ui.displayROICheckBox.hide()
+          #self.ui.customShaderCollapsibleButton.hide()
+      self.onCustomShaderComboIndexChanged(self.ui.customShaderCombo.currentIndex)
 
     def onEnableRotationCheckBoxToggled(self, caller=None, event=None) :
       """Function to enable rotating ROI box.
@@ -512,11 +557,17 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       # Show the reset button if the shader has parameters
 
       if self.ui.customShaderCombo.currentText == "None":
-        self.ui.resetParametersButton.hide()
-        self.ui.sampleDataButton.hide()
+          self.ui.resetParametersButton.hide()
+          self.ui.sampleDataButton.hide()
+          if not self.logic.volumes:
+              self.ui.viewSetupCollapsibleButton.hide()
+          self.ui.dataCollapsibleButton.hide()
       else:
-        self.ui.sampleDataButton.show()
-        self.ui.resetParametersButton.show()
+          self.ui.sampleDataButton.show()
+          self.ui.dataCollapsibleButton.show()
+          self.ui.resetParametersButton.show()
+          self.ui.InformationOutput.setText(
+              "select a Volume to display a Shader or click Switch to sample data to visualise Sample Data")
 
       try: # if the old shader has points
         self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)

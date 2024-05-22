@@ -60,7 +60,7 @@ class ChromaDepthShader(CustomShader):
     self.shaderProperty.ClearAllFragmentShaderReplacements()
 
     ComputeColorReplacement = """
-  uniform sampler2D in_colorTransferFunc_0[1];
+  //uniform sampler2D in_colorTransferFunc_0[1];
   vec4 computeColor(vec4 scalar, float opacity)
   {
       // Determine the ratio (dist) that serves to interpolate between the near
