@@ -171,6 +171,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       self.ui.displayROICheckBox.toggled.connect(self.onDisplayROICheckBoxToggled)
       self.ui.enableScalingCheckBox.toggled.connect(self.onEnableScalingCheckBoxToggled)
       self.ui.enableRotationCheckBox.toggled.connect(self.onEnableRotationCheckBoxToggled)
+      self.ui.virtualRealityButton.toggled.connect(self.onVirtualRealityButtonClicked)
 
       #Hiding parameters if no volume is selected
       if not self.logic.volumes:
@@ -253,6 +254,11 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       self.sampleDatasNodeID = {} # To store the sample data nodes
       self.sampleDataSwitch = False # To know if the volume switch is when the user downloaded sample data so we setup the right shader
       self.firstSampleDataSwitch = False # To know if it is the first time you load the sample data to set the right default values
+
+      #Virtual Reality section
+      if "SlicerVirtualReality" not in slicer.app.extensionsManagerModel().enabledExtensions:
+          self.ui.virtualRealityButton.setEnabled(False)
+          self.ui.virtualRealityStatusLabel.setText("Virtual Reality module not installed, go to extension manager to download it")
 
     def updateBaseGUIFromParameterNode(self, caller=None, event=None):
         """Function to update GUI from parameter node values
@@ -1044,7 +1050,8 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
       parameterNode.EndModify(oldModifiedState)
 
-
+    def onVirtualRealityButtonClicked(self):
+        return
 
 
 
