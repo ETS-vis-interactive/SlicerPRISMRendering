@@ -13,7 +13,7 @@ import importlib.util
 import inspect
 from pathlib import Path
 from distutils.util import strtobool
-from inspect import signature 
+from inspect import signature
 import inspect
 import traceback
 import SampleData
@@ -22,6 +22,7 @@ import hashlib
 from PRISMRenderingShaders.CustomShader import *
 from PRISMRenderingParams import *
 from PRISMRenderingLogic import *
+
 
 class PRISMRendering(slicer.ScriptedLoadableModule.ScriptedLoadableModule):
     """Uses ScriptedLoadableModule base class, available at:
@@ -133,152 +134,160 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
     def setup(self):
       """Function to setup the class.
 
-      """   
-      slicer.ScriptedLoadableModule.ScriptedLoadableModuleWidget.setup(self)
+      """
+        slicer.ScriptedLoadableModule.ScriptedLoadableModuleWidget.setup(self)
 
-      ## Logic of module
-      self.logic = PRISMRenderingLogic()
-      ## All class names of shaders
-      allShaderTypes = CustomShader.GetAllShaderClassNames()
-      ## All classes of shaders
+        ## Logic of module
+        self.logic = PRISMRenderingLogic()
+        ## All class names of shaders
+        allShaderTypes = CustomShader.GetAllShaderClassNames()
+        ## All classes of shaders
 
-      # Instantiate and connect widgets ..
-      # Load widget from .ui file (created by Qt Designer)
-      uiWidget = slicer.util.loadUI(self.resourcePath('UI/PRISMRendering.ui'))
-      self.layout.addWidget(uiWidget)
-      ## Module's UI
-      self.ui = slicer.util.childWidgetVariables(uiWidget)
+        # Instantiate and connect widgets ..
+        # Load widget from .ui file (created by Qt Designer)
+        uiWidget = slicer.util.loadUI(self.resourcePath('UI/PRISMRendering.ui'))
+        self.layout.addWidget(uiWidget)
+        ## Module's UI
+        self.ui = slicer.util.childWidgetVariables(uiWidget)
 
-      #
-      # Data Area
-      #
-      self.ui.imageSelector.setMRMLScene( slicer.mrmlScene )
-      self.ui.imageSelector.currentNodeChanged.connect(lambda value, w = self.ui.imageSelector : self.onImageSelectorChanged(value, w))
-      
-      self.ROIdisplay = None
-      #
-      # View Setup Area
-      #
-      # Keep the widgets in position even when hiding
-      sp = self.ui.volumeRenderingCheckBox.sizePolicy
-      sp.setRetainSizeWhenHidden(True)
-      self.ui.enableROICheckBox.setSizePolicy(sp)
-      self.ui.displayROICheckBox.setSizePolicy(sp)
+        #
+        # Data Area
+        #
+        self.ui.imageSelector.setMRMLScene(slicer.mrmlScene)
+        self.ui.imageSelector.currentNodeChanged.connect(
+            lambda value, w=self.ui.imageSelector: self.onImageSelectorChanged(value, w))
 
-      self.ui.volumeRenderingCheckBox.toggled.connect(self.onVolumeRenderingCheckBoxToggled)
-      self.ui.sampleDataButton.clicked.connect(self.onSampleDataButtonClicked)
-      self.ui.enableROICheckBox.toggled.connect(self.onEnableROICheckBoxToggled)
-      self.ui.displayROICheckBox.toggled.connect(self.onDisplayROICheckBoxToggled)
-      self.ui.enableScalingCheckBox.toggled.connect(self.onEnableScalingCheckBoxToggled)
-      self.ui.enableRotationCheckBox.toggled.connect(self.onEnableRotationCheckBoxToggled)
-      self.ui.virtualRealityButton.toggled.connect(self.onVirtualRealityButtonClicked)
+        self.ROIdisplay = None
+        #
+        # View Setup Area
+        #
+        # Keep the widgets in position even when hiding
+        sp = self.ui.volumeRenderingCheckBox.sizePolicy
+        sp.setRetainSizeWhenHidden(True)
+        self.ui.enableROICheckBox.setSizePolicy(sp)
+        self.ui.displayROICheckBox.setSizePolicy(sp)
 
-      #Hiding parameters if no volume is selected
-      if not self.logic.volumes:
-          self.ui.viewSetupCollapsibleButton.hide()
-          self.ui.volumeRenderingCheckBox.hide()
-      self.ui.sampleDataButton.hide()
-      self.ui.enableROICheckBox.hide()
-      self.ui.displayROICheckBox.hide()
-      self.ui.enableScalingCheckBox.hide()
-      self.ui.enableRotationCheckBox.hide()
+        self.ui.volumeRenderingCheckBox.toggled.connect(self.onVolumeRenderingCheckBoxToggled)
+        self.ui.sampleDataButton.clicked.connect(self.onSampleDataButtonClicked)
+        self.ui.enableROICheckBox.toggled.connect(self.onEnableROICheckBoxToggled)
+        self.ui.displayROICheckBox.toggled.connect(self.onDisplayROICheckBoxToggled)
+        self.ui.enableScalingCheckBox.toggled.connect(self.onEnableScalingCheckBoxToggled)
+        self.ui.enableRotationCheckBox.toggled.connect(self.onEnableRotationCheckBoxToggled)
+        self.ui.virtualRealityEnableButton.clicked.connect(self.onVirtualRealityButtonClicked)
 
-      #
-      # Custom Shader Area
-      #
-      reloadIconPath = 'Resources/UI/reload.png'
+        #On cache aussi la selection du volume aui sera dispo au moment où le shader sera choisi
+        #On cache aussi la partie des parametres
+        if not self.logic.volumes:
+            self.ui.viewSetupCollapsibleButton.hide()
+            self.ui.volumeRenderingCheckBox.hide()
+        self.ui.sampleDataButton.hide()
+        self.ui.enableROICheckBox.hide()
+        self.ui.displayROICheckBox.hide()
+        self.ui.enableScalingCheckBox.hide()
+        self.ui.enableRotationCheckBox.hide()
 
-      self.ui.reloadCurrentCustomShaderButton.setIcon(qt.QIcon(qt.QPixmap(reloadIconPath)))
+        #
+        # Custom Shader Area
+        #
+        reloadIconPath = 'Resources/UI/reload.png'
 
-      #Showing the Shader part at the start in order to view sample data
-      #self.ui.customShaderCollapsibleButton.hide()
+        self.ui.reloadCurrentCustomShaderButton.setIcon(qt.QIcon(qt.QPixmap(reloadIconPath)))
 
-      # Custom shader combobox to select a type of custom shader
-      self.ui.reloadCurrentCustomShaderButton.hide()
-      self.ui.openCustomShaderButton.hide()
-      self.ui.toolCustomShaderButton.clicked.connect(self.onToolCustomShaderButton)
+        #Show the shader part on the GUI
+        #self.ui.customShaderCollapsibleButton.hide()
 
-      #hide the reset button because no params at the beginning
-      self.ui.resetParametersButton.hide()
-      self.ui.resetParametersButton.clicked.connect(self.onResetParametersButtonClicked)
-      # Populate combobox with every types of shader available
+        # Custom shader combobox to select a type of custom shader
+        self.ui.reloadCurrentCustomShaderButton.hide()
+        self.ui.openCustomShaderButton.hide()
+        self.ui.toolCustomShaderButton.clicked.connect(self.onToolCustomShaderButton)
 
-      #Help text for the user if there is something he need to do //TODO modif ici
-      self.ui.InformationOutput.setStyleSheet("color: red")  #//TODO modif ici
+        # hide the reset button because no params at the beginning TODO
+        self.ui.resetParametersButton.hide()
+        self.ui.resetParametersButton.clicked.connect(self.onResetParametersButtonClicked)
+        # Populate combobox with every types of shader available
 
-      for shaderType in allShaderTypes:
-          self.ui.customShaderCombo.addItem(shaderType)
-      self.ui.customShaderCombo.setCurrentIndex(0)
-      self.ui.customShaderCombo.currentIndexChanged.connect(self.onCustomShaderComboIndexChanged)
+        #Help text for the user if there is something he need to do
+        self.ui.InformationOutput.setStyleSheet("color: red")
 
-      ## Error message (the created shader has the name of an existing shader)
-      self.duplicateErrorMsg = qt.QLabel()
-      self.duplicateErrorMsg.hide()
-      self.duplicateErrorMsg.setStyleSheet("color: red")
+        for shaderType in allShaderTypes:
+            self.ui.customShaderCombo.addItem(shaderType)
+        self.ui.customShaderCombo.setCurrentIndex(0)
+        self.ui.customShaderCombo.currentIndexChanged.connect(self.onCustomShaderComboIndexChanged)
 
-      ## All widgets of the UI that will be saved
-      self.widgets = list(self.ui.centralWidget.findChildren(qt.QCheckBox())  \
-      + self.ui.centralWidget.findChildren(qt.QPushButton()) \
-      + self.ui.centralWidget.findChildren(qt.QComboBox()) \
-      + self.ui.centralWidget.findChildren(slicer.qMRMLNodeComboBox()))
+        ## Error message (the created shader has the name of an existing shader)
+        self.duplicateErrorMsg = qt.QLabel()
+        self.duplicateErrorMsg.hide()
+        self.duplicateErrorMsg.setStyleSheet("color: red")
 
-       ## Transfer function with its parameters
-      self.transferFunctionParams = []
+        ## All widgets of the UI that will be saved
+        self.widgets = list(self.ui.centralWidget.findChildren(qt.QCheckBox()) \
+                            + self.ui.centralWidget.findChildren(qt.QPushButton()) \
+                            + self.ui.centralWidget.findChildren(qt.QComboBox()) \
+                            + self.ui.centralWidget.findChildren(slicer.qMRMLNodeComboBox()))
 
-      ## Number of transfer function types
-      self.numberOfTFTypes = 2
+        ## Transfer function with its parameters
+        self.transferFunctionParams = []
 
-      ## Transfer function name
-      self.transferFunctionParamsName = []
+        ## Number of transfer function types
+        self.numberOfTFTypes = 2
 
-      self.setAndObserveParameterNode()
-    
-      #slicer.mrmlScene.AddNode(self.logic.parameterNode)
-      if self.logic.parameterNode.GetParameterCount() != 0:
-        volumePath = self.logic.parameterNode.GetParameter("volumePath")
-        # Set volume node
-        if len(volumePath) != 0 :
-          volumeNode = slicer.util.loadVolume(volumePath)
-          self.ui.imageSelector.setCurrentNode(volumeNode)
-    
-        # Update GUI 
-      self.addAllGUIObservers()
-      if self.ui.imageSelector.currentNode() != None :
-        self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
-        self.logic.setupVolume(self.ui.imageSelector.currentNode(), self.ui.customShaderCombo.currentIndex)
-      self.updateBaseGUIFromParameterNode()
+        ## Transfer function name
+        self.transferFunctionParamsName = []
 
-      #self.ui.enableScalingCheckBox.setChecked(True)
-      self.ROIdisplay = None
+        self.setAndObserveParameterNode()
 
-      self.sampleDatasNodeID = {} # To store the sample data nodes
-      self.sampleDataSwitch = False # To know if the volume switch is when the user downloaded sample data so we setup the right shader
-      self.firstSampleDataSwitch = False # To know if it is the first time you load the sample data to set the right default values
+        #slicer.mrmlScene.AddNode(self.logic.parameterNode)
+        if self.logic.parameterNode.GetParameterCount() != 0:
+            volumePath = self.logic.parameterNode.GetParameter("volumePath")
+            # Set volume node
+            if len(volumePath) != 0:
+                volumeNode = slicer.util.loadVolume(volumePath)
+                self.ui.imageSelector.setCurrentNode(volumeNode)
 
-      #Virtual Reality section
-      if "SlicerVirtualReality" not in slicer.app.extensionsManagerModel().enabledExtensions:
-          self.ui.virtualRealityButton.setEnabled(False)
-          self.ui.virtualRealityStatusLabel.setText("Virtual Reality module not installed, go to extension manager to download it")
+            # Update GUI
+        self.addAllGUIObservers()
+        if self.ui.imageSelector.currentNode() != None:
+            self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
+            self.logic.setupVolume(self.ui.imageSelector.currentNode(), self.ui.customShaderCombo.currentIndex)
+        self.updateBaseGUIFromParameterNode()
+
+        #self.ui.enableScalingCheckBox.setChecked(True)
+        self.ROIdisplay = None
+
+        self.sampleDatasNodeID = {}  # To store the sample data nodes
+        self.sampleDataSwitch = False  # To know if the volume switch is when the user downloaded sample data so we setup the right shader
+        self.firstSampleDataSwitch = False  # To know if it is the first time you load the sample data to set the right default values
+
+        # Virtual Reality section
+        if "SlicerVirtualReality" not in slicer.app.extensionsManagerModel().enabledExtensions:
+            self.ui.virtualRealityEnableButton.setEnabled(False)
+            self.ui.virtualRealityStatusLabel.setText(
+                "Virtual Reality module not installed, go to extension manager to download it")
+        else:
+            self.checkVirtualReality()
+            self.ui.virtualRealityStatusLabel.setText("Function not implemented")
+
+        #print("setup finished")
 
     def updateBaseGUIFromParameterNode(self, caller=None, event=None):
         """Function to update GUI from parameter node values
 
         :param caller: Caller of the function.
         :param event: Event that triggered the function.
-        """   
+        """
         parameterNode = self.logic.parameterNode
         if not parameterNode or parameterNode.GetParameterCount() == 0:
-          return
+            return
 
         # Disables updateParameterNodeFromGUI signal 
         self.removeAllGUIObservers()
         for w in self.widgets:
-         if not isinstance(w, Param):
-           self.updateWidgetGUIFromParameterNode(w, caller, event)
+            if not isinstance(w, Param):
+                self.updateWidgetGUIFromParameterNode(w, caller, event)
         self.addAllGUIObservers()
-    
+
     def onImageSelectorChanged(self, node, widget, index=0):
-      """Callback function when the volume node has been changed in the dedicated combobox.
+        """Callback function when the volume node has been changed in the dedicated combobox.
       Setup slice nodes to display selected node and render it in the 3d view.
 
       :param node: Volume node selected in the scene. 
@@ -288,58 +297,88 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       :param index: Index of the widget being modified. 
       :type index: int
       """
+        if not node:
+            return
 
-      if not node:
-        return
+        try:  # if the old shader has points
+            self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[
+                self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
+        except:
+            pass
 
-      try:  # if the old shader has points
-          self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[
-              self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
-      except:
-          pass
+        self.logic.setupVolume(self.ui.imageSelector.currentNode(), self.ui.customShaderCombo.currentIndex)
+        self.ui.viewSetupCollapsibleButton.show()
+        self.ui.volumeRenderingCheckBox.show()
 
-      self.logic.setupVolume(self.ui.imageSelector.currentNode(), self.ui.customShaderCombo.currentIndex)
-      self.ui.viewSetupCollapsibleButton.show()
-      self.ui.volumeRenderingCheckBox.show()
+        if self.ui.volumeRenderingCheckBox.isChecked():
+            self.logic.volumes[self.logic.volumeIndex].renderVolume()
+            if self.sampleDataSwitch:
+                currentIndex = self.ui.customShaderCombo.currentIndex
+                self.ui.customShaderCombo.setCurrentIndex(0)
+                self.ui.customShaderCombo.setCurrentIndex(currentIndex)
+                # for specified sample data values if defined
+                if self.firstSampleDataSwitch:
+                    if self.logic.volumes[self.logic.volumeIndex].customShader[
+                        self.logic.volumes[self.logic.volumeIndex].shaderIndex].sampleValues != {}:
+                        for p in self.logic.volumes[self.logic.volumeIndex].customShader[
+                            self.logic.volumes[self.logic.volumeIndex].shaderIndex].param_list:
+                            if self.logic.volumes[self.logic.volumeIndex].customShader[
+                                self.logic.volumes[self.logic.volumeIndex].shaderIndex].sampleValues.get(
+                                p.name) is not None:
+                                sampleValue = self.logic.volumes[self.logic.volumeIndex].customShader[
+                                    self.logic.volumes[self.logic.volumeIndex].shaderIndex].sampleValues[p.name]
+                                p.setValue(sampleValue, True)
+                                p.defaultValue = sampleValue
+                self.sampleDataSwitch = False
+            else:
+                if self.ui.customShaderCombo.currentIndex == self.logic.volumes[self.logic.volumeIndex].comboBoxIndex:
+                    self.ui.customShaderCombo.setCurrentIndex(0)
+                    self.ui.customShaderCombo.setCurrentIndex(self.logic.volumes[self.logic.volumeIndex].comboBoxIndex)
+                else:
+                    self.ui.customShaderCombo.setCurrentIndex(0)
+                    self.ui.customShaderCombo.setCurrentIndex(self.logic.volumes[self.logic.volumeIndex].comboBoxIndex)
+                    self.updateWidgetParameterNodeFromGUI(self.ui.customShaderCombo.currentText,
+                                                          self.ui.customShaderCombo)
+        # If the selector is a parameter of a shader
+        # if widget != self.ui.imageSelector :
+        #   self.logic.volumes[self.logic.volumeIndex].renderVolume()
+        #   volumePropertyNode = self.logic.secondaryVolumeRenderingDisplayNodes[self.logic.currentVolume].GetVolumePropertyNode()
 
-      if self.ui.volumeRenderingCheckBox.isChecked():
-        self.logic.volumes[self.logic.volumeIndex].renderVolume()
-        if self.sampleDataSwitch:
-          currentIndex = self.ui.customShaderCombo.currentIndex
-          self.ui.customShaderCombo.setCurrentIndex(0)
-          self.ui.customShaderCombo.setCurrentIndex(currentIndex)
-          # for specified sample data values if defined
-          if self.firstSampleDataSwitch:
-            if self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].sampleValues != {}:
-              for p in self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].param_list:
-                if self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].sampleValues.get(p.name) is not None:
-                  sampleValue = self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].sampleValues[p.name]
-                  p.setValue(sampleValue, True)
-                  p.defaultValue = sampleValue
-          self.sampleDataSwitch = False
+        #   volumeID = index
+        #   TFID = volumeID * self.numberOfTFTypes
+
+        #   for i, tf in enumerate(self.transferFunctionParams[TFID:TFID+self.numberOfTFTypes]):
+        #     j = TFID + i
+        #     tf.createTransferFunctionWidget(self, volumePropertyNode, True, volumeID  )
+        #   self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
+
+        # else:
+        self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
+
+    def checkVirtualReality(self):
+        # Assurez-vous que le module Virtual Reality est chargé
+
+        # Obtenir le noeud logique du module VR
+        vrLogic = slicer.modules.virtualreality.logic()
+
+        # Vérifier si un casque VR est connecté
+        if vrLogic is not None and vrLogic.GetVirtualRealityActive():
+            self.ui.virtualRealityEnableButton.setEnabled(True)
+            self.ui.virtualRealityStatusLabel.setText("ready to use")
         else:
-          if self.ui.customShaderCombo.currentIndex == self.logic.volumes[self.logic.volumeIndex].comboBoxIndex :
-            self.ui.customShaderCombo.setCurrentIndex(0)
-            self.ui.customShaderCombo.setCurrentIndex(self.logic.volumes[self.logic.volumeIndex].comboBoxIndex)
-          else:
-            self.ui.customShaderCombo.setCurrentIndex(0)
-            self.ui.customShaderCombo.setCurrentIndex(self.logic.volumes[self.logic.volumeIndex].comboBoxIndex)
-            self.updateWidgetParameterNodeFromGUI(self.ui.customShaderCombo.currentText, self.ui.customShaderCombo)
-      # If the selector is a parameter of a shader
-      # if widget != self.ui.imageSelector :
-      #   self.logic.volumes[self.logic.volumeIndex].renderVolume()
-      #   volumePropertyNode = self.logic.secondaryVolumeRenderingDisplayNodes[self.logic.currentVolume].GetVolumePropertyNode()
+            self.ui.virtualRealityEnableButton.setEnabled(False)
+            self.ui.virtualRealityStatusLabel.setText("no VR headset connected")
 
-      #   volumeID = index
-      #   TFID = volumeID * self.numberOfTFTypes
+    def onVirtualRealityReloadClicked(self):
+        self.checkVirtualReality()
 
-      #   for i, tf in enumerate(self.transferFunctionParams[TFID:TFID+self.numberOfTFTypes]):
-      #     j = TFID + i
-      #     tf.createTransferFunctionWidget(self, volumePropertyNode, True, volumeID  )
-      #   self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
 
-      # else:
-      self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
+    def onVirtualRealityButtonClicked(self):
+        #vRScene = slicer.modules.virtualreality.logic().InitializeActiveViewNode()
+        #print(vRScene)
+        #slicer.modules.virtualreality.logic().SetGestureButtonToNone(vRScene) // Est supposé unbind les touches, directement codé dans l'ext VR
+        #print("ok")
+        self.ui.virtualRealityStatusLabel.setText("Function not implemented")
 
     def createTestVolume(self):
         nodeName = "Volume"
@@ -404,221 +443,224 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
     def onResetParametersButtonClicked(self, caller=None, event=None):
 
-      for p in self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].param_list:
-        p.setValue(p.defaultValue, True)
-      try :
-        self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.UpdateGUIFromValues(self.logic)
-      except Exception as e:
-        pass
+        for p in self.logic.volumes[self.logic.volumeIndex].customShader[
+            self.logic.volumes[self.logic.volumeIndex].shaderIndex].param_list:
+            p.setValue(p.defaultValue, True)
+        try:
+            self.logic.volumes[self.logic.volumeIndex].customShader[
+                self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.UpdateGUIFromValues(
+                self.logic)
+        except Exception as e:
+            pass
 
-    def onEnableRotationCheckBoxToggled(self, caller=None, event=None) :
-      """Function to enable rotating ROI box.
+    def onEnableRotationCheckBoxToggled(self, caller=None, event=None):
+        """Function to enable rotating ROI box.
       :param caller: Caller of the function.
       :param event: Event that triggered the function.
       """
-      if self.ui.enableRotationCheckBox.isChecked():
-        self.ROIdisplay.RotationHandleVisibilityOn()
-      else:
-        self.ROIdisplay.RotationHandleVisibilityOff()
+        if self.ui.enableRotationCheckBox.isChecked():
+            self.ROIdisplay.RotationHandleVisibilityOn()
+        else:
+            self.ROIdisplay.RotationHandleVisibilityOff()
 
-    def onEnableScalingCheckBoxToggled(self, caller=None, event=None) :
-      """Function to enable scaling ROI box.
+    def onEnableScalingCheckBoxToggled(self, caller=None, event=None):
+        """Function to enable scaling ROI box.
 
       :param caller: Caller of the function.
       :param event: Event that triggered the function.
       """
 
-      if self.ui.enableScalingCheckBox.isChecked():
-        self.ROIdisplay.ScaleHandleVisibilityOn()
-      else:
-        self.ROIdisplay.ScaleHandleVisibilityOff()
+        if self.ui.enableScalingCheckBox.isChecked():
+            self.ROIdisplay.ScaleHandleVisibilityOn()
+        else:
+            self.ROIdisplay.ScaleHandleVisibilityOff()
 
     def onEnableROICheckBoxToggled(self, caller=None, event=None):
-      """Function to enable ROI cropping and show/hide ROI Display properties.
+        """Function to enable ROI cropping and show/hide ROI Display properties.
 
       :param caller: Caller of the function.
       :param event: Event that triggered the function.
-      """   
+      """
 
-      if self.ui.enableROICheckBox.isChecked():
-        self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode.SetCroppingEnabled(True)
-        self.ui.displayROICheckBox.show()
-      else:
-        self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode.SetCroppingEnabled(False)
-        self.ui.displayROICheckBox.hide()
-        self.ui.displayROICheckBox.setChecked(False)
+        if self.ui.enableROICheckBox.isChecked():
+            self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode.SetCroppingEnabled(True)
+            self.ui.displayROICheckBox.show()
+        else:
+            self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode.SetCroppingEnabled(False)
+            self.ui.displayROICheckBox.hide()
+            self.ui.displayROICheckBox.setChecked(False)
 
     def onDisplayROICheckBoxToggled(self, caller=None, event=None):
-      """Function to display ROI box and show/hide scaling and rotation parameters.
+        """Function to display ROI box and show/hide scaling and rotation parameters.
 
       :param caller: Caller of the function.
       :param event: Event that triggered the function.
-      """   
+      """
 
-      if self.ui.displayROICheckBox.isChecked():
-        # self.transformDisplayNode.EditorVisibilityOn()
-        self.ROI.SetDisplayVisibility(1)
-        self.ui.enableScalingCheckBox.show()
-        self.ui.enableRotationCheckBox.show()
-      else :
-        # self.transformDisplayNode.EditorVisibilityOff()
-        self.ROI.SetDisplayVisibility(0)
-        self.ui.enableScalingCheckBox.hide()
-        self.ui.enableScalingCheckBox.setChecked(False)
-        self.ui.enableRotationCheckBox.hide()
-        self.ui.enableRotationCheckBox.setChecked(False)
-    
+        if self.ui.displayROICheckBox.isChecked():
+            # self.transformDisplayNode.EditorVisibilityOn()
+            self.ROI.SetDisplayVisibility(1)
+            self.ui.enableScalingCheckBox.show()
+            self.ui.enableRotationCheckBox.show()
+        else:
+            # self.transformDisplayNode.EditorVisibilityOff()
+            self.ROI.SetDisplayVisibility(0)
+            self.ui.enableScalingCheckBox.hide()
+            self.ui.enableScalingCheckBox.setChecked(False)
+            self.ui.enableRotationCheckBox.hide()
+            self.ui.enableRotationCheckBox.setChecked(False)
+
     def onVolumeRenderingCheckBoxToggled(self, caller=None, event=None):
-      """Callback function when the volume rendering check box is toggled. Activate or deactivate 
+        """Callback function when the volume rendering check box is toggled. Activate or deactivate
       the rendering of the selected volume.
 
       :param caller: Caller of the function.
       :param event: Event that triggered the function.
       """
 
+        if self.ui.volumeRenderingCheckBox.isChecked():
+            if self.ui.imageSelector.currentNode():
+                self.logic.volumes[self.logic.volumeIndex].renderVolume()
+                # Init ROI
+                # allTransformDisplayNodes = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLTransformDisplayNode','TransformDisplayNode')
+                # if allTransformDisplayNodes.GetNumberOfItems() > 0:
+                #   ## Transforme Display node to apply transformations to the ROI
+                #   self.transformDisplayNode = allTransformDisplayNodes.GetItemAsObject(0)
+                # else:
+                #   self.transformDisplayNode = slicer.mrmlScene.AddNewNodeByClass('vtkMRMLTransformDisplayNode')
+                #   self.transformDisplayNode.SetName('TransformDisplayNode')
+                #   self.transformDisplayNode.SetEditorRotationEnabled(False)
 
-      if self.ui.volumeRenderingCheckBox.isChecked():
-        if self.ui.imageSelector.currentNode():
-          self.logic.volumes[self.logic.volumeIndex].renderVolume()
-          # Init ROI
-          # allTransformDisplayNodes = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLTransformDisplayNode','TransformDisplayNode')
-          # if allTransformDisplayNodes.GetNumberOfItems() > 0:
-          #   ## Transforme Display node to apply transformations to the ROI
-          #   self.transformDisplayNode = allTransformDisplayNodes.GetItemAsObject(0)
-          # else:
-          #   self.transformDisplayNode = slicer.mrmlScene.AddNewNodeByClass('vtkMRMLTransformDisplayNode')
-          #   self.transformDisplayNode.SetName('TransformDisplayNode')
-          #   self.transformDisplayNode.SetEditorRotationEnabled(False)
+                # allTransformNodes = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLTransformNode','TransformNode')
+                # if allTransformNodes.GetNumberOfItems() > 0:
+                #   ## Transform node to apply transformations to the ROI
+                #   self.transformNode = allTransformNodes.GetItemAsObject(0)
+                # else:
+                #   self.transformNode = slicer.mrmlScene.AddNewNodeByClass('vtkMRMLTransformNode')
+                #   self.transformNode.SetName('TransformNode')
+                #   self.transformNode.SetAndObserveDisplayNodeID(self.transformDisplayNode.GetID())
 
-          # allTransformNodes = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLTransformNode','TransformNode')
-          # if allTransformNodes.GetNumberOfItems() > 0:
-          #   ## Transform node to apply transformations to the ROI
-          #   self.transformNode = allTransformNodes.GetItemAsObject(0)
-          # else:
-          #   self.transformNode = slicer.mrmlScene.AddNewNodeByClass('vtkMRMLTransformNode')
-          #   self.transformNode.SetName('TransformNode')
-          #   self.transformNode.SetAndObserveDisplayNodeID(self.transformDisplayNode.GetID())
+                ## ROI of the current volume
+                self.ROI = self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode.GetMarkupsROINode()
+                #self.ROI.SetAndObserveDisplayNodeID(self.transformDisplayNode.GetID())
+                #self.ROI.SetAndObserveTransformNodeID(self.transformNode.GetID())
+                self.ROI.SetDisplayVisibility(0)
+                self.renameROI()
+                self.ui.enableROICheckBox.show()
+                self.UpdateShaderParametersUI()
+                self.ui.customShaderCollapsibleButton.show()
 
-          ## ROI of the current volume
-          self.ROI = self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode.GetMarkupsROINode()
-          #self.ROI.SetAndObserveDisplayNodeID(self.transformDisplayNode.GetID())
-          #self.ROI.SetAndObserveTransformNodeID(self.transformNode.GetID())
-          self.ROI.SetDisplayVisibility(0)
-          self.renameROI()
-          #self.ui.sampleDataButton.show() TODO ici
-          self.ui.enableROICheckBox.show()
-          self.UpdateShaderParametersUI()
-          self.ui.customShaderCollapsibleButton.show()
+                if self.ROIdisplay is None:
+                    allRoiDisplayNodes = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLMarkupsROIDisplayNode',
+                                                                                'MarkupsROIDisplay')
+                    if allRoiDisplayNodes.GetNumberOfItems() > 0:
+                        self.ROIdisplay = allRoiDisplayNodes.GetItemAsObject(0)
+                        self.ROIdisplayObserver = self.ROIdisplay.AddObserver(vtk.vtkCommand.ModifiedEvent,
+                                                                              self.onROIdisplayChanged)
 
-          if self.ROIdisplay is None:
-            allRoiDisplayNodes = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLMarkupsROIDisplayNode', 'MarkupsROIDisplay')
-            if allRoiDisplayNodes.GetNumberOfItems() > 0:
-              self.ROIdisplay = allRoiDisplayNodes.GetItemAsObject(0)
-              self.ROIdisplayObserver = self.ROIdisplay.AddObserver(vtk.vtkCommand.ModifiedEvent, self.onROIdisplayChanged)
+        else:
+            for volume in self.logic.volumes:
+                if volume.volumeRenderingDisplayNode:
+                    volume.volumeRenderingDisplayNode.SetVisibility(False)
+            try:  # if the new shader has points
+                self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[
+                    self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
+            except:
+                pass
+            self.ui.enableROICheckBox.setChecked(False)
+            self.ui.displayROICheckBox.setChecked(False)
+            #self.ui.sampleDataButton.hide()
+            self.ui.enableROICheckBox.hide()
+            self.ui.displayROICheckBox.hide()
+            #self.ui.customShaderCollapsibleButton.hide()
+        self.onCustomShaderComboIndexChanged(self.ui.customShaderCombo.currentIndex)
 
-      else:
-          for volume in self.logic.volumes:
-              if volume.volumeRenderingDisplayNode:
-                  volume.volumeRenderingDisplayNode.SetVisibility(False)
-          try:  # if the new shader has points
-              self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[
-                  self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
-          except:
-              pass
-          self.ui.enableROICheckBox.setChecked(False)
-          self.ui.displayROICheckBox.setChecked(False)
-          #self.ui.sampleDataButton.hide()
-          self.ui.enableROICheckBox.hide()
-          self.ui.displayROICheckBox.hide()
-          #self.ui.customShaderCollapsibleButton.hide()
-      self.onCustomShaderComboIndexChanged(self.ui.customShaderCombo.currentIndex)
+    def onEnableRotationCheckBoxToggled(self, caller=None, event=None):
+        """Function to enable rotating ROI box.
 
-    def onEnableRotationCheckBoxToggled(self, caller=None, event=None) :
-      """Function to enable rotating ROI box.
+          :param caller: Caller of the function.
+          :param event: Event that triggered the function.
+          """
 
-      :param caller: Caller of the function.
-      :param event: Event that triggered the function.
-      """
+        if self.ui.enableRotationCheckBox.isChecked():
+            self.ROIdisplay.RotationHandleVisibilityOn()
+        else:
+            self.ROIdisplay.RotationHandleVisibilityOff()
 
-      if self.ui.enableRotationCheckBox.isChecked():
-        self.ROIdisplay.RotationHandleVisibilityOn()
-      else:
-        self.ROIdisplay.RotationHandleVisibilityOff()
-
-    def onToolCustomShaderButton(self) :
+    def onToolCustomShaderButton(self):
         if self.ui.reloadCurrentCustomShaderButton.visible == True:
-          self.ui.reloadCurrentCustomShaderButton.hide()
-          self.ui.openCustomShaderButton.hide()
-        else :
-          self.ui.reloadCurrentCustomShaderButton.show()
-          self.ui.openCustomShaderButton.show()
-  
+            self.ui.reloadCurrentCustomShaderButton.hide()
+            self.ui.openCustomShaderButton.hide()
+        else:
+            self.ui.reloadCurrentCustomShaderButton.show()
+            self.ui.openCustomShaderButton.show()
+
     def onCustomShaderComboIndexChanged(self, i):
-      """Callback function when the custom shader combo box is changed.
+        """Callback function when the custom shader combo box is changed.
 
       :param i: Index of the element. 
       :type i: int
       """
 
-      # Show the reset button if the shader has parameters
+        # Show the reset button if the shader has parameters
 
-      if self.ui.customShaderCombo.currentText == "None":
-          self.ui.resetParametersButton.hide()
-          self.ui.sampleDataButton.hide()
-          if not self.logic.volumes:
-              self.ui.viewSetupCollapsibleButton.hide()
-          self.ui.dataCollapsibleButton.hide()
-      else:
-          self.ui.sampleDataButton.show()
-          self.ui.dataCollapsibleButton.show()
-          self.ui.resetParametersButton.show()
-          self.ui.InformationOutput.setText(
-              "select a Volume to display a Shader or click Switch to sample data to visualise Sample Data")
+        if self.ui.customShaderCombo.currentText == "None":
+            self.ui.resetParametersButton.hide()
+            self.ui.sampleDataButton.hide()
+            if not self.logic.volumes:
+                self.ui.viewSetupCollapsibleButton.hide()
+            self.ui.dataCollapsibleButton.hide()
+        else:
+            self.ui.sampleDataButton.show()
+            self.ui.dataCollapsibleButton.show()
+            self.ui.resetParametersButton.show()
+            self.ui.InformationOutput.setText(
+                "select a Volume to display a Shader or click Switch to sample data to visualise Sample Data")
 
-      try: # if the old shader has points
-        self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
-      except:
-        pass
-      self.logic.volumes[self.logic.volumeIndex].setCustomShaderType(self.ui.customShaderCombo.currentText)
-      self.UpdateShaderParametersUI()
-      self.updateWidgetParameterNodeFromGUI(self.ui.customShaderCombo.currentText, self.ui.customShaderCombo)
-      self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].setupShader()
-      # If there is no selected shader, disables the buttons.
-      if (self.ui.customShaderCombo.currentText == "None"):
-        self.ui.openCustomShaderButton.setEnabled(False)
-        self.ui.reloadCurrentCustomShaderButton.setEnabled(False)
-      else :
-        self.ui.openCustomShaderButton.setEnabled(True)
-        self.ui.reloadCurrentCustomShaderButton.setEnabled(True)
+        try:  # if the old shader has points
+            self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[
+                self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
+        except:
+            pass
+        self.logic.volumes[self.logic.volumeIndex].setCustomShaderType(self.ui.customShaderCombo.currentText)
+        self.UpdateShaderParametersUI()
+        self.updateWidgetParameterNodeFromGUI(self.ui.customShaderCombo.currentText, self.ui.customShaderCombo)
+        self.logic.volumes[self.logic.volumeIndex].customShader[
+            self.logic.volumes[self.logic.volumeIndex].shaderIndex].setupShader()
+        # If there is no selected shader, disables the buttons.
+        if self.ui.customShaderCombo.currentText == "None":
+            self.ui.openCustomShaderButton.setEnabled(False)
+            self.ui.reloadCurrentCustomShaderButton.setEnabled(False)
+        else:
+            self.ui.openCustomShaderButton.setEnabled(True)
+            self.ui.reloadCurrentCustomShaderButton.setEnabled(True)
 
-      self.ui.customShaderCollapsibleButton.setToolTip(self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].GetBasicDescription())
+        self.ui.customShaderCollapsibleButton.setToolTip(self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].GetBasicDescription())
 
     def updateParameterNodeFromGUI(self, value, w):
-      """Function to update the parameter node from gui values.
+        """Function to update the parameter node from gui values.
 
       :param value: Value of the widget.  
       :type value: float
       :param w: Widget being modified.  
       :type w: QObject
-      """   
-      if self.ui.imageSelector.currentNode() is None:
-        return 
+      """
+        if self.ui.imageSelector.currentNode() is None:
+            return
 
-      if w not in self.widgets :
-        return
-      
-      if isinstance(w, Param):
-        w.updateParameterNodeFromGUI(self)
-      else :
-        self.updateWidgetParameterNodeFromGUI(value, w)
+        if w not in self.widgets:
+            return
 
+        if isinstance(w, Param):
+            w.updateParameterNodeFromGUI(self)
+        else:
+            self.updateWidgetParameterNodeFromGUI(value, w)
 
     def onApplyButton(self):
         """
         Run processing when user clicks "Apply" button.
         """
         with slicer.util.tryWithErrorDisplay("Failed to compute results.", waitCursor=True):
-
             # Compute output
             self.logic.process(self.ui.inputSelector.currentNode(), self.ui.outputSelector.currentNode(),
                                self.ui.imageThresholdSliderWidget.value, self.ui.invertOutputCheckBox.checked)
@@ -630,49 +672,48 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
                                    self.ui.imageThresholdSliderWidget.value, not self.ui.invertOutputCheckBox.checked, showResult=False)
 
     def renameROI(self):
-      """Function to reset the ROI in the scene.
+        """Function to reset the ROI in the scene.
 
       """
 
-
-      ## Node of the roi
-      ROINodes = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLMarkupsROINode','Volume rendering ROI')
-      if ROINodes.GetNumberOfItems() > 0:
-        # Set node used before reload in the current instance
-        ROINode = ROINodes.GetItemAsObject(0)
-        #ROINodes.ResetAnnotations()
-        #slicer.modules.volumerendering.logic().FitROIToVolume(self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode)
-        ROINode.SetName("ROI")
+        ## Node of the roi
+        ROINodes = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLMarkupsROINode', 'Volume rendering ROI')
+        if ROINodes.GetNumberOfItems() > 0:
+            # Set node used before reload in the current instance
+            ROINode = ROINodes.GetItemAsObject(0)
+            #ROINodes.ResetAnnotations()
+            #slicer.modules.volumerendering.logic().FitROIToVolume(self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode)
+            ROINode.SetName("ROI")
 
     def onROIdisplayChanged(self, caller, event):
-      """Function to update the parameter node.
+        """Function to update the parameter node.
 
       :param caller: Caller of the function.
       :param event: Event that triggered the function.
       """
 
-      if self.ui.enableScalingCheckBox.isChecked() != caller.GetScaleHandleVisibility():
-        self.ui.enableScalingCheckBox.setChecked(caller.GetScaleHandleVisibility())
-        # logging.info("lol")
-      if self.ui.enableRotationCheckBox.isChecked() != caller.GetRotationHandleVisibility():
-        self.ui.enableRotationCheckBox.setChecked(caller.GetRotationHandleVisibility())
+        if self.ui.enableScalingCheckBox.isChecked() != caller.GetScaleHandleVisibility():
+            self.ui.enableScalingCheckBox.setChecked(caller.GetScaleHandleVisibility())
+            # logging.info("lol")
+        if self.ui.enableRotationCheckBox.isChecked() != caller.GetRotationHandleVisibility():
+            self.ui.enableRotationCheckBox.setChecked(caller.GetRotationHandleVisibility())
 
     def setAndObserveParameterNode(self, caller=None, event=None):
-      """Function to set the parameter node.
+        """Function to set the parameter node.
 
       """
-      # Remove observer to old parameter node
-      # if self.logic.parameterNode and self.logic.parameterNodeObserver:
-      #   self.logic.parameterNode.RemoveObserver(self.logic.parameterNodeObserver)
-      #   self.logic.parameterNodeObserver = None
+        # Remove observer to old parameter node
+        # if self.logic.parameterNode and self.logic.parameterNodeObserver:
+        #   self.logic.parameterNode.RemoveObserver(self.logic.parameterNodeObserver)
+        #   self.logic.parameterNodeObserver = None
 
-      # Set and observe new parameter node
-      self.logic.parameterNode = self.logic.getParameterNode()
-      # if self.logic.parameterNode:
-      #   self.logic.parameterNodeObserver = self.logic.parameterNode.AddObserver(vtk.vtkCommand.ModifiedEvent, self.onParameterNodeModified)
+        # Set and observe new parameter node
+        self.logic.parameterNode = self.logic.getParameterNode()
+        # if self.logic.parameterNode:
+        #   self.logic.parameterNodeObserver = self.logic.parameterNode.AddObserver(vtk.vtkCommand.ModifiedEvent, self.onParameterNodeModified)
 
     def appendList(self, widget, name):
-      """Function to add a widget to self.widgets without duplicate.
+        """Function to add a widget to self.widgets without duplicate.
 
       :param widget: Widget to be added to the list. 
       :type widget: QObject
@@ -680,157 +721,167 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       :type name: str
       """
 
-    
-      ## Widget is in the list or not
-      found = False
-      # Check if the widget is in the list
-      for i, w in enumerate(self.widgets):
-        if w.name == name and name !="":
-          found = True
-          index = i
-          break
-        
-      if found :
-        self.widgets[index] = widget
-      else:
-        self.widgets.append(widget)
+        ## Widget is in the list or not
+        found = False
+        # Check if the widget is in the list
+        for i, w in enumerate(self.widgets):
+            if w.name == name and name != "":
+                found = True
+                index = i
+                break
+
+        if found:
+            self.widgets[index] = widget
+        else:
+            self.widgets.append(widget)
 
     def UpdateShaderParametersUI(self):
-      """Updates the shader parameters on the UI.
+        """Updates the shader parameters on the UI.
 
       """
-      if self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex] == None:
-        return
-      
-      try: # if the new shader has points
-        self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(1)
-      except:
-        pass
-      # Clear all the widgets except the combobox selector
-      while self.ui.customShaderParametersLayout.count() != 1:
-        ## Item of the combobox
-        item = self.ui.customShaderParametersLayout.takeAt(self.ui.customShaderParametersLayout.count() - 1)
-        if item != None:
-          widget = item.widget()
-          if widget != None:
-            widget.setParent(None)
+        if self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex] is None:
+            return
 
-      # if self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.GetNumberOfControlPoints() > 0 : 
+        try:  # if the new shader has points
+            self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[
+                self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(1)
+        except:
+            pass
+        # Clear all the widgets except the combobox selector
+        while self.ui.customShaderParametersLayout.count() != 1:
+            ## Item of the combobox
+            item = self.ui.customShaderParametersLayout.takeAt(self.ui.customShaderParametersLayout.count() - 1)
+            if item != None:
+                widget = item.widget()
+                if widget != None:
+                    widget.setParent(None)
+
+        # if self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.GetNumberOfControlPoints() > 0 :
         # self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.RemoveAllControlPoints()
 
-      ## Name of the current shader, without spaces
-      volumeName = self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode.GetVolumePropertyNode().GetName()
-      self.CSName = self.ui.customShaderCombo.currentText.replace(" ", "") + volumeName
-      param_list = self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].param_list
-      TFIndex =  0
-      TFTypes = []
-      self.setupDefaultTransferFunctions()
-      for p in param_list:
-          hideWidget = False
-          Optional = False
-          for i in self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].param_list:
-            if isinstance(i,  BoolParam):
-              if p.name in i.optionalWidgets:
-                Optional  = True
-                bool_param = i
-                if self.logic.optionalWidgets.get(self.CSName + bool_param.name) == None:
-                  self.logic.optionalWidgets[self.CSName + bool_param.name] = []
-                elif len(self.logic.optionalWidgets[self.CSName + bool_param.name]) == len(bool_param.optionalWidgets) : #To avoid duplicates & reset after next GUI Setup
-                  self.logic.optionalWidgets[self.CSName + bool_param.name] = []
-                if i.value == True:
-                  hideWidget = False
-                else:
-                  hideWidget = True
-                break
-          if not isinstance(p, TransferFunctionParam):
-            p.SetupGUI(self)
-          else:
-            TFIndex += 1
-            TFTypes += [p.type]
-            if TFIndex > self.numberOfTFTypes:
-              logging.error("Too many transfer function have been defined.")
-            if len(TFTypes) > self.numberOfTFTypes:
-              logging.error("One transfer function has been assigned multiple times to the same volume.")
-            p.SetupGUI(self, 0, TFIndex)
-          try :
-            self.ui.customShaderParametersLayout.addRow(p.label, p.widget)
-            if Optional :
-              self.logic.optionalWidgets[self.CSName + bool_param.name] += [p]
-              if hideWidget :
-                p.widget.hide()
-                p.label.hide()
-          except :
-            self.ui.customShaderParametersLayout.addRow(p.widget)
-            if Optional :
-              self.logic.optionalWidgets[self.CSName + bool_param.name] += [p]
-              if hideWidget :
-                p.widget.hide()
+        ## Name of the current shader, without spaces
+        volumeName = self.logic.volumes[
+            self.logic.volumeIndex].volumeRenderingDisplayNode.GetVolumePropertyNode().GetName()
+        self.CSName = self.ui.customShaderCombo.currentText.replace(" ", "") + volumeName
+        param_list = self.logic.volumes[self.logic.volumeIndex].customShader[
+            self.logic.volumes[self.logic.volumeIndex].shaderIndex].param_list
+        TFIndex = 0
+        TFTypes = []
+        self.setupDefaultTransferFunctions()
+        for p in param_list:
+            hideWidget = False
+            Optional = False
+            for i in self.logic.volumes[self.logic.volumeIndex].customShader[
+                self.logic.volumes[self.logic.volumeIndex].shaderIndex].param_list:
+                if isinstance(i, BoolParam):
+                    if p.name in i.optionalWidgets:
+                        Optional = True
+                        bool_param = i
+                        if self.logic.optionalWidgets.get(self.CSName + bool_param.name) == None:
+                            self.logic.optionalWidgets[self.CSName + bool_param.name] = []
+                        elif len(self.logic.optionalWidgets[self.CSName + bool_param.name]) == len(
+                                bool_param.optionalWidgets):  #To avoid duplicates & reset after next GUI Setup
+                            self.logic.optionalWidgets[self.CSName + bool_param.name] = []
+                        if i.value == True:
+                            hideWidget = False
+                        else:
+                            hideWidget = True
+                        break
+            if not isinstance(p, TransferFunctionParam):
+                p.SetupGUI(self)
+            else:
+                TFIndex += 1
+                TFTypes += [p.type]
+                if TFIndex > self.numberOfTFTypes:
+                    logging.error("Too many transfer function have been defined.")
+                if len(TFTypes) > self.numberOfTFTypes:
+                    logging.error("One transfer function has been assigned multiple times to the same volume.")
+                p.SetupGUI(self, 0, TFIndex)
+            try:
+                self.ui.customShaderParametersLayout.addRow(p.label, p.widget)
+                if Optional:
+                    self.logic.optionalWidgets[self.CSName + bool_param.name] += [p]
+                    if hideWidget:
+                        p.widget.hide()
+                        p.label.hide()
+            except:
+                self.ui.customShaderParametersLayout.addRow(p.widget)
+                if Optional:
+                    self.logic.optionalWidgets[self.CSName + bool_param.name] += [p]
+                    if hideWidget:
+                        p.widget.hide()
 
     def setupDefaultTransferFunctions(self):
-      volumeName = self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode.GetVolumePropertyNode().GetName()
-      if self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode != None:
-        volumePropertyNode = self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode.GetVolumePropertyNode()
-        colorTransferFunction = vtk.vtkColorTransferFunction()
-        opacityTransferFunction = vtk.vtkPiecewiseFunction()
-        colorTransferFunction.RemoveAllObservers()
-        opacityTransferFunction.RemoveAllObservers()
-        colorTransferFunction.name = volumeName + "Original" + colorTransferFunction.GetClassName() 
-        opacityTransferFunction.name = volumeName + "Original" + opacityTransferFunction.GetClassName()
-        self.appendList(opacityTransferFunction, opacityTransferFunction.name)
-        self.appendList(colorTransferFunction, colorTransferFunction.name)
-        # Keep the original transfert functions
-        if self.logic.volumes[self.logic.volumeIndex].colorTransferFunction.GetSize() > 0 :
-          colorTransferFunction.DeepCopy(self.logic.volumes[self.logic.volumeIndex].colorTransferFunction)
-          self.updateWidgetParameterNodeFromGUI(colorTransferFunction, colorTransferFunction.name)
-        else :
-          values = self.logic.parameterNode.GetParameter(colorTransferFunction.name+str(0))
-          i = 0
-          while values != "":
-            v = [float(k) for k in values.split(",")]
-            colorTransferFunction.AddRGBPoint(v[0], v[1], v[2], v[3], v[4], v[5])
-            i += 1
-            values = self.logic.parameterNode.GetParameter(colorTransferFunction.name+str(i))
-        if not colorTransferFunction.HasObserver(vtk.vtkCommand.ModifiedEvent):
-          colorTransferFunction.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = colorTransferFunction : self.updateWidgetParameterNodeFromGUI([o,e], w))
-        volumePropertyNode.SetColor(colorTransferFunction)
-        if self.logic.volumes[self.logic.volumeIndex].opacityTransferFunction.GetSize() > 0 :
-          opacityTransferFunction.DeepCopy(self.logic.volumes[self.logic.volumeIndex].opacityTransferFunction)
-          self.updateWidgetParameterNodeFromGUI(opacityTransferFunction, opacityTransferFunction.name)
-        else :
-          values = self.logic.parameterNode.GetParameter(opacityTransferFunction.name+str(0))
-          i = 0
-          while values != "":
-            v = [float(k) for k in values.split(",")]
-            opacityTransferFunction.AddPoint(v[0], v[1], v[2], v[3])
-            i += 1
-            values = self.logic.parameterNode.GetParameter(opacityTransferFunction.name+str(i))
-        if not opacityTransferFunction.HasObserver(vtk.vtkCommand.ModifiedEvent):
-          opacityTransferFunction.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = opacityTransferFunction : self.updateWidgetParameterNodeFromGUI([o,e], w))
-        volumePropertyNode.SetScalarOpacity(opacityTransferFunction)
+        volumeName = self.logic.volumes[
+            self.logic.volumeIndex].volumeRenderingDisplayNode.GetVolumePropertyNode().GetName()
+        if self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode != None:
+            volumePropertyNode = self.logic.volumes[
+                self.logic.volumeIndex].volumeRenderingDisplayNode.GetVolumePropertyNode()
+            colorTransferFunction = vtk.vtkColorTransferFunction()
+            opacityTransferFunction = vtk.vtkPiecewiseFunction()
+            colorTransferFunction.RemoveAllObservers()
+            opacityTransferFunction.RemoveAllObservers()
+            colorTransferFunction.name = volumeName + "Original" + colorTransferFunction.GetClassName()
+            opacityTransferFunction.name = volumeName + "Original" + opacityTransferFunction.GetClassName()
+            self.appendList(opacityTransferFunction, opacityTransferFunction.name)
+            self.appendList(colorTransferFunction, colorTransferFunction.name)
+            # Keep the original transfert functions
+            if self.logic.volumes[self.logic.volumeIndex].colorTransferFunction.GetSize() > 0:
+                colorTransferFunction.DeepCopy(self.logic.volumes[self.logic.volumeIndex].colorTransferFunction)
+                self.updateWidgetParameterNodeFromGUI(colorTransferFunction, colorTransferFunction.name)
+            else:
+                values = self.logic.parameterNode.GetParameter(colorTransferFunction.name + str(0))
+                i = 0
+                while values != "":
+                    v = [float(k) for k in values.split(",")]
+                    colorTransferFunction.AddRGBPoint(v[0], v[1], v[2], v[3], v[4], v[5])
+                    i += 1
+                    values = self.logic.parameterNode.GetParameter(colorTransferFunction.name + str(i))
+            if not colorTransferFunction.HasObserver(vtk.vtkCommand.ModifiedEvent):
+                colorTransferFunction.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e,
+                                                                                       w=colorTransferFunction: self.updateWidgetParameterNodeFromGUI(
+                    [o, e], w))
+            volumePropertyNode.SetColor(colorTransferFunction)
+            if self.logic.volumes[self.logic.volumeIndex].opacityTransferFunction.GetSize() > 0:
+                opacityTransferFunction.DeepCopy(self.logic.volumes[self.logic.volumeIndex].opacityTransferFunction)
+                self.updateWidgetParameterNodeFromGUI(opacityTransferFunction, opacityTransferFunction.name)
+            else:
+                values = self.logic.parameterNode.GetParameter(opacityTransferFunction.name + str(0))
+                i = 0
+                while values != "":
+                    v = [float(k) for k in values.split(",")]
+                    opacityTransferFunction.AddPoint(v[0], v[1], v[2], v[3])
+                    i += 1
+                    values = self.logic.parameterNode.GetParameter(opacityTransferFunction.name + str(i))
+            if not opacityTransferFunction.HasObserver(vtk.vtkCommand.ModifiedEvent):
+                opacityTransferFunction.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e,
+                                                                                         w=opacityTransferFunction: self.updateWidgetParameterNodeFromGUI(
+                    [o, e], w))
+            volumePropertyNode.SetScalarOpacity(opacityTransferFunction)
 
-    def getClassName(self, widget): 
-      """Function to get the class name of a widget.
+    def getClassName(self, widget):
+        """Function to get the class name of a widget.
 
       :param widget: Wanted widget. 
       :type widget: QObject
       :return: widget's class name. 
       :rtype: str
       """
-      try :
-        return widget.metaObject().getClassName()
-      except :
-        pass
-      try :
-        return widget.view().metaObject().getClassName()
-      except :
-        pass
-      try :
-        return widget.GetClassName()
-      except :
-        pass  
+        try:
+            return widget.metaObject().getClassName()
+        except:
+            pass
+        try:
+            return widget.view().metaObject().getClassName()
+        except:
+            pass
+        try:
+            return widget.GetClassName()
+        except:
+            pass
 
     def getWidgetPosition(self, layout, widgetName):
-      """Function to get the widget's position in a layout.
+        """Function to get the widget's position in a layout.
 
       :param layout: Layout in which the widget is containted. 
       :type layout: QObject
@@ -840,222 +891,236 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       :return: Position of the widget. 
       :rtype: int.
       """
-      for i in range(layout.count()):
-        item = layout.itemAt(i)
-        if item != None :
-          widget = item.widget()
-          if widget!= None :
-            if (widget.name == widgetName):
-              return i
+        for i in range(layout.count()):
+            item = layout.itemAt(i)
+            if item != None:
+                widget = item.widget()
+                if widget != None:
+                    if (widget.name == widgetName):
+                        return i
 
     @vtk.calldata_type(vtk.VTK_INT)
     def pointModified(self, caller, event, index):
       self.updateWidgetParameterNodeFromGUI([caller, "PointModifiedEvent", index], self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints)
 
     def addAllGUIObservers(self):
-      for w in self.widgets:
-        if isinstance(w, Param):
-          w.addGUIObservers(self)
-        else:
-          self.addGUIObservers(w)
+        for w in self.widgets:
+            if isinstance(w, Param):
+                w.addGUIObservers(self)
+            else:
+                self.addGUIObservers(w)
 
     def removeAllGUIObservers(self):
-      for w in self.widgets:
-          if isinstance(w, Param):
-            w.removeGUIObservers()
-          else:
-            self.removeGUIObservers(w)
+        for w in self.widgets:
+            if isinstance(w, Param):
+                w.removeGUIObservers()
+            else:
+                self.removeGUIObservers(w)
 
     def addGUIObservers(self, w):
-      """Function to add observers to the GUI's widget.
+        """Function to add observers to the GUI's widget.
 
-      """   
-      widgetClassName = self.getClassName(w)
-      if widgetClassName=="QPushButton" :
-        w.clicked.connect(lambda value, w = w : self.updateWidgetParameterNodeFromGUI(value, w))
-      elif widgetClassName == "QCheckBox":
-        w.toggled.connect(lambda value, w = w : self.updateWidgetParameterNodeFromGUI(value, w))
-      elif widgetClassName == "QComboBox":
-        w.currentIndexChanged.connect(lambda value, w = w : self.updateWidgetParameterNodeFromGUI(value, w))
-      elif widgetClassName == "ctkSliderWidget":
-        w.valueChanged.connect(lambda value, w = w : self.updateWidgetParameterNodeFromGUI(value, w))
-      elif widgetClassName == "ctkRangeWidget":
-        w.valuesChanged.connect(lambda value1, value2, w = w : self.updateWidgetParameterNodeFromGUI([value2, value2], w))
-      elif widgetClassName == "vtkColorTransferFunction" or widgetClassName == "vtkPiecewiseFunction":
-        if not w.HasObserver(vtk.vtkCommand.ModifiedEvent):
-          w.AddObserver(vtk.vtkCommand.ModifiedEvent, lambda o, e, w = w : self.updateWidgetParameterNodeFromGUI([o,"add observers"], w))
-      elif widgetClassName == "qMRMLNodeComboBox":
-        w.currentNodeChanged.connect(lambda value, w = w : self.updateWidgetParameterNodeFromGUI(value, w))
-      elif widgetClassName == 'vtkMRMLMarkupsFiducialNode':
-        self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.pointModifiedEventTag = w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.onEndPointsChanged)
-        w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.onEndPointAdded)
-        w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.pointModified)
-        w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent, lambda c, e, name = w.name, w = w : self.updateWidgetParameterNodeFromGUI([c, "PointPositionDefinedEvent", name], w))
+      """
+        widgetClassName = self.getClassName(w)
+        if widgetClassName == "QPushButton":
+            w.clicked.connect(lambda value, w=w: self.updateWidgetParameterNodeFromGUI(value, w))
+        elif widgetClassName == "QCheckBox":
+            w.toggled.connect(lambda value, w=w: self.updateWidgetParameterNodeFromGUI(value, w))
+        elif widgetClassName == "QComboBox":
+            w.currentIndexChanged.connect(lambda value, w=w: self.updateWidgetParameterNodeFromGUI(value, w))
+        elif widgetClassName == "ctkSliderWidget":
+            w.valueChanged.connect(lambda value, w=w: self.updateWidgetParameterNodeFromGUI(value, w))
+        elif widgetClassName == "ctkRangeWidget":
+            w.valuesChanged.connect(
+                lambda value1, value2, w=w: self.updateWidgetParameterNodeFromGUI([value2, value2], w))
+        elif widgetClassName == "vtkColorTransferFunction" or widgetClassName == "vtkPiecewiseFunction":
+            if not w.HasObserver(vtk.vtkCommand.ModifiedEvent):
+                w.AddObserver(vtk.vtkCommand.ModifiedEvent,
+                              lambda o, e, w=w: self.updateWidgetParameterNodeFromGUI([o, "add observers"], w))
+        elif widgetClassName == "qMRMLNodeComboBox":
+            w.currentNodeChanged.connect(lambda value, w=w: self.updateWidgetParameterNodeFromGUI(value, w))
+        elif widgetClassName == 'vtkMRMLMarkupsFiducialNode':
+            self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[
+                self.logic.volumeIndex].shaderIndex].customShaderPoints.pointModifiedEventTag = w.AddObserver(
+                slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent,
+                self.logic.volumes[self.logic.volumeIndex].customShader[
+                    self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.onEndPointsChanged)
+            w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent,
+                          self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[
+                              self.logic.volumeIndex].shaderIndex].customShaderPoints.onEndPointAdded)
+            w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent, self.pointModified)
+            w.AddObserver(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent,
+                          lambda c, e, name=w.name, w=w: self.updateWidgetParameterNodeFromGUI(
+                              [c, "PointPositionDefinedEvent", name], w))
 
     def removeGUIObservers(self, w):
-      """Function to remove observers from the GUI's widget.
+        """Function to remove observers from the GUI's widget.
 
-      """  
-      
-      widgetClassName = self.getClassName(w)
-      if widgetClassName=="QPushButton" :
-        w.clicked.disconnect(self.updateWidgetParameterNodeFromGUI) 
-      elif widgetClassName == "QCheckBox":
-        w.toggled.disconnect(self.updateWidgetParameterNodeFromGUI) 
-      elif widgetClassName == "QComboBox":
-        w.currentIndexChanged.disconnect(self.updateWidgetParameterNodeFromGUI)
-      elif widgetClassName == "ctkSliderWidget":
-        w.valueChanged.disconnect(self.updateWidgetParameterNodeFromGUI)
-      elif widgetClassName == "ctkRangeWidget":
-        w.valuesChanged.disconnect(self.updateWidgetParameterNodeFromGUI)
-      elif widgetClassName == "vtkColorTransferFunction" or widgetClassName == "vtkPiecewiseFunction":
-        w.RemoveAllObservers()
-      elif widgetClassName == "qMRMLNodeComboBox":
-        w.currentNodeChanged.disconnect(self.updateWidgetParameterNodeFromGUI)
-      elif widgetClassName == 'vtkMRMLMarkupsFiducialNode':
-        w.RemoveObservers(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent)
-        w.RemoveObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent)
+      """
+
+        widgetClassName = self.getClassName(w)
+        if widgetClassName == "QPushButton":
+            w.clicked.disconnect(self.updateWidgetParameterNodeFromGUI)
+        elif widgetClassName == "QCheckBox":
+            w.toggled.disconnect(self.updateWidgetParameterNodeFromGUI)
+        elif widgetClassName == "QComboBox":
+            w.currentIndexChanged.disconnect(self.updateWidgetParameterNodeFromGUI)
+        elif widgetClassName == "ctkSliderWidget":
+            w.valueChanged.disconnect(self.updateWidgetParameterNodeFromGUI)
+        elif widgetClassName == "ctkRangeWidget":
+            w.valuesChanged.disconnect(self.updateWidgetParameterNodeFromGUI)
+        elif widgetClassName == "vtkColorTransferFunction" or widgetClassName == "vtkPiecewiseFunction":
+            w.RemoveAllObservers()
+        elif widgetClassName == "qMRMLNodeComboBox":
+            w.currentNodeChanged.disconnect(self.updateWidgetParameterNodeFromGUI)
+        elif widgetClassName == 'vtkMRMLMarkupsFiducialNode':
+            w.RemoveObservers(slicer.vtkMRMLMarkupsFiducialNode.PointPositionDefinedEvent)
+            w.RemoveObserver(slicer.vtkMRMLMarkupsFiducialNode.PointModifiedEvent)
 
     def updateWidgetGUIFromParameterNode(self, w, caller=None, event=None):
         """Function to update GUI from parameter node values
 
         :param caller: Caller of the function.
         :param event: Event that triggered the function.
-        """   
+        """
         parameterNode = self.logic.parameterNode
 
         # Disables updateParameterNodeFromGUI signal 
         widgetClassName = self.getClassName(w)
         value = parameterNode.GetParameter(w.name)
-        if value != '' :
-          if widgetClassName=="QPushButton":
-            enabled = (int(value) != 0)
-            w.setEnabled(enabled)
-          elif widgetClassName=="QCheckBox":
-            checked = (int(value) != 0)
-            w.setChecked(checked)
-          elif widgetClassName=="QComboBox":
-            index = int(value)
-            w.setCurrentIndex(index)
-          elif widgetClassName=="ctkSliderWidget":
-            value = float(value)
-            w.setValue(value)
-          elif widgetClassName=="ctkRangeWidget":
-            values = value.split(',')     
-            w.minimumValue = float(values[0])
-            w.maximumValue = float(values[1])
-          elif widgetClassName == "vtkColorTransferFunction" or widgetClassName == "vtkPiecewiseFunction":
-            for i in range(w.GetSize()):
-              values = self.logic.parameterNode.GetParameter(w.name+str(i))
-              if values != "" :
-                w.SetNodeValue(i, [float(k) for k in values.split(",")])
-          elif widgetClassName == 'vtkMRMLMarkupsFiducialNode':     
-            params = parameterNode.GetParameterNames()
-            markups = []
-            for p in params:
-              if w.name in p :
-                markups.append(p)
-            endPoints = self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints
-            # endPoints.RemoveAllControlPoints()
-            volumeName = self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode.GetVolumePropertyNode().GetName()
-            for m in markups :
-              values = parameterNode.GetParameter(m)
-              #If point was defined
-              values = [float(k) for k in values.split(",")]
-              if len(values) > 1 :
-                type_ = m.replace(w.name, '')
-                values.pop()
-                index = endPoints.AddFiducialFromArray(values, type_)
-                endPoints.SetNthControlPointAssociatedNodeID(index, m)
-                CSName = w.name.replace(volumeName+'markup'+type_, '')
-                visible = self.CSName+"markup" == CSName 
-                self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.pointIndexes[m] = index
-                world = [0,0,0]
-                endPoints.GetNthControlPointPositionWorld(index, world)  
-                self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.onCustomShaderParamChangedMarkup(world, type_)
-                endPoints.SetNthFiducialVisibility(index, visible)
+        if value != '':
+            if widgetClassName == "QPushButton":
+                enabled = (int(value) != 0)
+                w.setEnabled(enabled)
+            elif widgetClassName == "QCheckBox":
+                checked = (int(value) != 0)
+                w.setChecked(checked)
+            elif widgetClassName == "QComboBox":
+                index = int(value)
+                w.setCurrentIndex(index)
+            elif widgetClassName == "ctkSliderWidget":
+                value = float(value)
+                w.setValue(value)
+            elif widgetClassName == "ctkRangeWidget":
+                values = value.split(',')
+                w.minimumValue = float(values[0])
+                w.maximumValue = float(values[1])
+            elif widgetClassName == "vtkColorTransferFunction" or widgetClassName == "vtkPiecewiseFunction":
+                for i in range(w.GetSize()):
+                    values = self.logic.parameterNode.GetParameter(w.name + str(i))
+                    if values != "":
+                        w.SetNodeValue(i, [float(k) for k in values.split(",")])
+            elif widgetClassName == 'vtkMRMLMarkupsFiducialNode':
+                params = parameterNode.GetParameterNames()
+                markups = []
+                for p in params:
+                    if w.name in p:
+                        markups.append(p)
+                endPoints = self.logic.volumes[self.logic.volumeIndex].customShader[
+                    self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints
+                # endPoints.RemoveAllControlPoints()
+                volumeName = self.logic.volumes[
+                    self.logic.volumeIndex].volumeRenderingDisplayNode.GetVolumePropertyNode().GetName()
+                for m in markups:
+                    values = parameterNode.GetParameter(m)
+                    #If point was defined
+                    values = [float(k) for k in values.split(",")]
+                    if len(values) > 1:
+                        type_ = m.replace(w.name, '')
+                        values.pop()
+                        index = endPoints.AddFiducialFromArray(values, type_)
+                        endPoints.SetNthControlPointAssociatedNodeID(index, m)
+                        CSName = w.name.replace(volumeName + 'markup' + type_, '')
+                        visible = self.CSName + "markup" == CSName
+                        self.logic.volumes[self.logic.volumeIndex].customShader[
+                            self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.pointIndexes[
+                            m] = index
+                        world = [0, 0, 0]
+                        endPoints.GetNthControlPointPositionWorld(index, world)
+                        self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[
+                            self.logic.volumeIndex].shaderIndex].customShaderPoints.onCustomShaderParamChangedMarkup(
+                            world, type_)
+                        endPoints.SetNthFiducialVisibility(index, visible)
         elif widgetClassName == "qMRMLNodeComboBox":
-          w.setCurrentNodeID(parameterNode.GetNodeReferenceID(w.name))
+            w.setCurrentNodeID(parameterNode.GetNodeReferenceID(w.name))
 
     def updateWidgetParameterNodeFromGUI(self, value, w):
-      """Function to update the parameter node from gui values.
+
+        """Function to update the parameter node from gui values.
 
       :param value: Value of the widget.  
       :type value: float
       :param w: Widget being modified.  
       :type w: QObject
       """
-      parameterNode = self.logic.parameterNode
-      oldModifiedState = parameterNode.StartModify()
-      widgetClassName = self.getClassName(w)
-      if widgetClassName=="QPushButton" :
-        parameterNode.SetParameter(w.name, "1") if w.enabled else parameterNode.SetParameter(w.name, "0")
-      elif widgetClassName == "QCheckBox":
-        parameterNode.SetParameter(w.name, "1") if w.checked else parameterNode.SetParameter(w.name, "0")
-      elif widgetClassName == "QComboBox":
-        parameterNode.SetParameter(w.name, str(w.currentIndex))
-      elif widgetClassName == "ctkSliderWidget":
-        parameterNode.SetParameter(w.name, str(w.value))
-      elif widgetClassName == "ctkRangeWidget":
-        parameterNode.SetParameter(w.name, str(w.minimumValue) + ',' + str(w.maximumValue))
-      elif widgetClassName == "vtkColorTransferFunction" or widgetClassName == "vtkPiecewiseFunction":
-        parameterNode.SetParameter(w.name, "transferFunction")
-        nbPoints = w.GetSize()
-        if widgetClassName == "vtkColorTransferFunction" :
-          values = [0,0,0,0,0,0]
-        else :
-          values = [0,0,0,0]
-        if nbPoints > 0:
-          for i in range(nbPoints):
-            w.GetNodeValue(i, values)
-            parameterNode.SetParameter(w.name+str(i), ",".join("{0}".format(n) for n in values))
-          # If points are deleted, remove them from the parameter node
-          i+=1
-          val = parameterNode.GetParameter(w.name+str(i))
-          while val != '':
-            parameterNode.UnsetParameter(w.name+str(i))
-            i+=1
-            val = parameterNode.GetParameter(w.name+str(i))
-      elif widgetClassName == "qMRMLNodeComboBox":
-        parameterNode.SetNodeReferenceID(w.name, w.currentNodeID)
-      elif widgetClassName == 'vtkMRMLMarkupsFiducialNode':
-        caller = value[0]
-        event = value[1]
-        index = value[2]
-        name = w.name + self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.pointType
-        world = [0, 0, 0]
-        if event == "PointPositionDefinedEvent" :
-          index = caller.GetDisplayNode().GetActiveControlPoint()
-          # Initialise point
-          if parameterNode.GetParameter(name) == "":
-            index = caller.GetDisplayNode().GetActiveControlPoint()
-            caller.SetNthControlPointAssociatedNodeID(index, name)
-            caller.GetNthControlPointPositionWorld(index, world)
-            parameterNode.SetParameter(name, ",".join("{0}".format(n) for n in world))
-            parameterNode.SetParameter(w.name, str(index))
-            self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.pointIndexes[name] = index
-          # Reset point
-          elif self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.pointName != '' :
-            name = self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.pointName
-            index = self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.pointIndexes[name] 
-            caller.GetNthControlPointPositionWorld(index, world)
-            parameterNode.SetParameter(name, ",".join("{0}".format(n) for n in world))
-            self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.pointName = ''
-        if event == "PointModifiedEvent" :
-          if parameterNode.GetParameter(w.name) != "" and index <= int(parameterNode.GetParameter(w.name)):
-            pointName = caller.GetNthControlPointAssociatedNodeID(index)
-            if parameterNode.GetParameter(pointName) != "":
-              caller.GetNthControlPointPositionWorld(index, world)
-              parameterNode.SetParameter(pointName, ",".join("{0}".format(n) for n in world))
+        parameterNode = self.logic.parameterNode
+        oldModifiedState = parameterNode.StartModify()
+        widgetClassName = self.getClassName(w)
+        if widgetClassName == "QPushButton":
+            parameterNode.SetParameter(w.name, "1") if w.enabled else parameterNode.SetParameter(w.name, "0")
+        elif widgetClassName == "QCheckBox":
+            parameterNode.SetParameter(w.name, "1") if w.checked else parameterNode.SetParameter(w.name, "0")
+        elif widgetClassName == "QComboBox":
+            parameterNode.SetParameter(w.name, str(w.currentIndex))
+        elif widgetClassName == "ctkSliderWidget":
+            parameterNode.SetParameter(w.name, str(w.value))
+        elif widgetClassName == "ctkRangeWidget":
+            parameterNode.SetParameter(w.name, str(w.minimumValue) + ',' + str(w.maximumValue))
+        elif widgetClassName == "vtkColorTransferFunction" or widgetClassName == "vtkPiecewiseFunction":
+            parameterNode.SetParameter(w.name, "transferFunction")
+            nbPoints = w.GetSize()
+            if widgetClassName == "vtkColorTransferFunction":
+                values = [0, 0, 0, 0, 0, 0]
+            else:
+                values = [0, 0, 0, 0]
+            if nbPoints > 0:
+                for i in range(nbPoints):
+                    w.GetNodeValue(i, values)
+                    parameterNode.SetParameter(w.name + str(i), ",".join("{0}".format(n) for n in values))
+                # If points are deleted, remove them from the parameter node
+                i += 1
+                val = parameterNode.GetParameter(w.name + str(i))
+                while val != '':
+                    parameterNode.UnsetParameter(w.name + str(i))
+                    i += 1
+                    val = parameterNode.GetParameter(w.name + str(i))
+        elif widgetClassName == "qMRMLNodeComboBox":
+            parameterNode.SetNodeReferenceID(w.name, w.currentNodeID)
+        elif widgetClassName == 'vtkMRMLMarkupsFiducialNode':
+            caller = value[0]
+            event = value[1]
+            index = value[2]
+            name = w.name + self.logic.volumes[self.logic.volumeIndex].customShader[
+                self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.pointType
+            world = [0, 0, 0]
+            if event == "PointPositionDefinedEvent":
+                index = caller.GetDisplayNode().GetActiveControlPoint()
+                # Initialise point
+                if parameterNode.GetParameter(name) == "":
+                    index = caller.GetDisplayNode().GetActiveControlPoint()
+                    caller.SetNthControlPointAssociatedNodeID(index, name)
+                    caller.GetNthControlPointPositionWorld(index, world)
+                    parameterNode.SetParameter(name, ",".join("{0}".format(n) for n in world))
+                    parameterNode.SetParameter(w.name, str(index))
+                    self.logic.volumes[self.logic.volumeIndex].customShader[
+                        self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.pointIndexes[
+                        name] = index
+                # Reset point
+                elif self.logic.volumes[self.logic.volumeIndex].customShader[
+                    self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.pointName != '':
+                    name = self.logic.volumes[self.logic.volumeIndex].customShader[
+                        self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.pointName
+                    index = self.logic.volumes[self.logic.volumeIndex].customShader[
+                        self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.pointIndexes[name]
+                    caller.GetNthControlPointPositionWorld(index, world)
+                    parameterNode.SetParameter(name, ",".join("{0}".format(n) for n in world))
+                    self.logic.volumes[self.logic.volumeIndex].customShader[
+                        self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.pointName = ''
+            if event == "PointModifiedEvent":
+                if parameterNode.GetParameter(w.name) != "" and index <= int(parameterNode.GetParameter(w.name)):
+                    pointName = caller.GetNthControlPointAssociatedNodeID(index)
+                    if parameterNode.GetParameter(pointName) != "":
+                        caller.GetNthControlPointPositionWorld(index, world)
+                        parameterNode.SetParameter(pointName, ",".join("{0}".format(n) for n in world))
 
-      parameterNode.EndModify(oldModifiedState)
-
-    def onVirtualRealityButtonClicked(self):
-        return
-
-
-
-
-
-
-
+        parameterNode.EndModify(oldModifiedState)
