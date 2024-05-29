@@ -32,11 +32,9 @@ class PRISMRendering(slicer.ScriptedLoadableModule.ScriptedLoadableModule):
     def __init__(self, parent):
         slicer.ScriptedLoadableModule.ScriptedLoadableModule.__init__(self, parent)
         self.parent.title = "PRISMRendering"  # TODO: make this more human readable by adding spaces
-        self.parent.categories = [
-            "Rendering"]  # TODO: set categories (folders where the module shows up in the module selector)
+        self.parent.categories = ["Rendering"]  # TODO: set categories (folders where the module shows up in the module selector)
         self.parent.dependencies = []  # TODO: add here list of module names that this module requires
-        self.parent.contributors = [
-            "Tiphaine RICHARD (ETS), Simon Drouin (ETS), Camille Hascoët (ETS)"]  # TODO: replace with "Firstname Lastname (Organization)"
+        self.parent.contributors = ["Tiphaine RICHARD (ETS), Simon Drouin (ETS), Camille Hascoët (ETS)"]  # TODO: replace with "Firstname Lastname (Organization)"
         # TODO: update with short description of the module and a link to online module documentation
         self.parent.helpText = """This module is an implementation of the PRISM customizable volume rendering framework in 3D Slicer."""
         self.parent.helpText += "<p>For more information see the <a href=\"https://ets-vis-interactive.github.io/SlicerPRISM/\">online documentation</a>.</p>"
@@ -48,87 +46,85 @@ class PRISMRendering(slicer.ScriptedLoadableModule.ScriptedLoadableModule):
         # Additional initialization step after application startup is complete
         slicer.app.connect("startupCompleted()", registerSampleData)
 
-
 def registerSampleData():
-    """
+  """
   Add data sets to Sample Data module.
   """
-    # It is always recommended to provide sample data for users to make it easy to try the module,
-    # but if no sample data is available then this method (and associated startupCompeted signal connection) can be removed.
-    iconsPath = os.path.join(os.path.dirname(__file__), 'Resources/Icons')
+  # It is always recommended to provide sample data for users to make it easy to try the module,
+  # but if no sample data is available then this method (and associated startupCompeted signal connection) can be removed.
+  iconsPath = os.path.join(os.path.dirname(__file__), 'Resources/Icons')
 
-    # To ensure that the source code repository remains small (can be downloaded and installed quickly)
-    # it is recommended to store data sets that are larger than a few MB in a Github release.
+  # To ensure that the source code repository remains small (can be downloaded and installed quickly)
+  # it is recommended to store data sets that are larger than a few MB in a Github release.
 
-    # TemplateKey1
-    SampleData.SampleDataLogic.registerCustomSampleDataSource(
-        # Category and sample name displayed in Sample Data module
-        category='PRISMSampleData',
-        sampleName='SphereCarvingSampleData',
-        # Thumbnail should have size of approximately 260x280 pixels and stored in Resources/Icons folder.
-        # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
-        thumbnailFileName=os.path.join(iconsPath, 'SphereCarving.png'),
-        # Download URL and target file name
-        uris="https://ets-vis-interactive.github.io/SlicerPRISMRenderingDatabase/Volumes/MRI_Head.mnc",
-        fileNames='SphereCarvingSampleData.mnc',
-        # Checksum to ensure file integrity. Can be computed by this command:
-        #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
-        checksums='SHA256:4802487c31c1dcd24434cb370906e1002d515c3abed1ce00385b2307f1370c13',
-        # This node name will be used when the data set is loaded
-        nodeNames='SphereCarvingSampleData'
-    )
+  # TemplateKey1
+  SampleData.SampleDataLogic.registerCustomSampleDataSource(
+    # Category and sample name displayed in Sample Data module
+    category='PRISMSampleData',
+    sampleName='SphereCarvingSampleData',
+    # Thumbnail should have size of approximately 260x280 pixels and stored in Resources/Icons folder.
+    # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
+    thumbnailFileName=os.path.join(iconsPath, 'SphereCarving.png'),
+    # Download URL and target file name
+    uris="https://ets-vis-interactive.github.io/SlicerPRISMRenderingDatabase/Volumes/MRI_Head.mnc",
+    fileNames='SphereCarvingSampleData.mnc',
+    # Checksum to ensure file integrity. Can be computed by this command:
+    #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
+    checksums = 'SHA256:4802487c31c1dcd24434cb370906e1002d515c3abed1ce00385b2307f1370c13',
+    # This node name will be used when the data set is loaded
+    nodeNames='SphereCarvingSampleData'
+  )
 
-    SampleData.SampleDataLogic.registerCustomSampleDataSource(
-        # Category and sample name displayed in Sample Data module
-        category='PRISMSampleData',
-        sampleName='OutlineSampleData',
-        # Thumbnail should have size of approximately 260x280 pixels and stored in Resources/Icons folder.
-        # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
-        thumbnailFileName=os.path.join(iconsPath, 'Outline.png'),
-        # Download URL and target file name
-        uris="https://ets-vis-interactive.github.io/SlicerPRISMRenderingDatabase/Volumes/CTA_Brain.mnc",
-        fileNames='OutlineSampleData.mnc',
-        # Checksum to ensure file integrity. Can be computed by this command:
-        #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
-        checksums='SHA256:4278daf18bd75542d68305d56630e78379ca8cbe295e9cf4fa52bb318445858b',
-        # This node name will be used when the data set is loaded
-        nodeNames='OutlineSampleData'
-    )
+  SampleData.SampleDataLogic.registerCustomSampleDataSource(
+    # Category and sample name displayed in Sample Data module
+    category='PRISMSampleData',
+    sampleName='OutlineSampleData',
+    # Thumbnail should have size of approximately 260x280 pixels and stored in Resources/Icons folder.
+    # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
+    thumbnailFileName=os.path.join(iconsPath, 'Outline.png'),
+    # Download URL and target file name
+    uris="https://ets-vis-interactive.github.io/SlicerPRISMRenderingDatabase/Volumes/CTA_Brain.mnc",
+    fileNames='OutlineSampleData.mnc',
+    # Checksum to ensure file integrity. Can be computed by this command:
+    #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
+    checksums = 'SHA256:4278daf18bd75542d68305d56630e78379ca8cbe295e9cf4fa52bb318445858b',
+    # This node name will be used when the data set is loaded
+    nodeNames='OutlineSampleData'
+  )
 
-    SampleData.SampleDataLogic.registerCustomSampleDataSource(
-        # Category and sample name displayed in Sample Data module
-        category='PRISMSampleData',
-        sampleName='OpacityPeelingSampleData',
-        # Thumbnail should have size of approximately 260x280 pixels and stored in Resources/Icons folder.
-        # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
-        thumbnailFileName=os.path.join(iconsPath, 'OpacityPeeling.png'),
-        # Download URL and target file name
-        uris="https://ets-vis-interactive.github.io/SlicerPRISMRenderingDatabase/Volumes/MRI_Head.mnc",
-        fileNames='OpacityPeelingSampleData.mnc',
-        # Checksum to ensure file integrity. Can be computed by this command:
-        #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
-        checksums='SHA256:4802487c31c1dcd24434cb370906e1002d515c3abed1ce00385b2307f1370c13',
-        # This node name will be used when the data set is loaded
-        nodeNames='OpacityPeelingSampleData'
-    )
+  SampleData.SampleDataLogic.registerCustomSampleDataSource(
+    # Category and sample name displayed in Sample Data module
+    category='PRISMSampleData',
+    sampleName='OpacityPeelingSampleData',
+    # Thumbnail should have size of approximately 260x280 pixels and stored in Resources/Icons folder.
+    # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
+    thumbnailFileName=os.path.join(iconsPath, 'OpacityPeeling.png'),
+    # Download URL and target file name
+    uris="https://ets-vis-interactive.github.io/SlicerPRISMRenderingDatabase/Volumes/MRI_Head.mnc",
+    fileNames='OpacityPeelingSampleData.mnc',
+    # Checksum to ensure file integrity. Can be computed by this command:
+    #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
+    checksums = 'SHA256:4802487c31c1dcd24434cb370906e1002d515c3abed1ce00385b2307f1370c13',
+    # This node name will be used when the data set is loaded
+    nodeNames='OpacityPeelingSampleData'
+  )
 
-    SampleData.SampleDataLogic.registerCustomSampleDataSource(
-        # Category and sample name displayed in Sample Data module
-        category='PRISMSampleData',
-        sampleName='ChromaDepthPerceptionSampleData',
-        # Thumbnail should have size of approximately 260x280 pixels and stored in Resources/Icons folder.
-        # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
-        thumbnailFileName=os.path.join(iconsPath, 'ChromaDepthPerception.png'),
-        # Download URL and target file name
-        uris="https://ets-vis-interactive.github.io/SlicerPRISMRenderingDatabase/Volumes/CTA_Brain.mnc",
-        fileNames='ChromaDepthPerceptionSampleData.mnc',
-        # Checksum to ensure file integrity. Can be computed by this command:
-        #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
-        checksums='SHA256:4278daf18bd75542d68305d56630e78379ca8cbe295e9cf4fa52bb318445858b',
-        # This node name will be used when the data set is loaded
-        nodeNames='ChromaDepthPerceptionSampleData'
-    )
-
+  SampleData.SampleDataLogic.registerCustomSampleDataSource(
+    # Category and sample name displayed in Sample Data module
+    category='PRISMSampleData',
+    sampleName='ChromaDepthPerceptionSampleData',
+    # Thumbnail should have size of approximately 260x280 pixels and stored in Resources/Icons folder.
+    # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
+    thumbnailFileName=os.path.join(iconsPath, 'ChromaDepthPerception.png'),
+    # Download URL and target file name
+    uris="https://ets-vis-interactive.github.io/SlicerPRISMRenderingDatabase/Volumes/CTA_Brain.mnc",
+    fileNames='ChromaDepthPerceptionSampleData.mnc',
+    # Checksum to ensure file integrity. Can be computed by this command:
+    #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
+    checksums = 'SHA256:4278daf18bd75542d68305d56630e78379ca8cbe295e9cf4fa52bb318445858b',
+    # This node name will be used when the data set is loaded
+    nodeNames='ChromaDepthPerceptionSampleData'
+  )
 
 class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleWidget):
     """Uses ScriptedLoadableModuleWidget base class, available at:
@@ -137,6 +133,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
     def setup(self):
         """Function to setup the class.
+
         """
         slicer.ScriptedLoadableModule.ScriptedLoadableModuleWidget.setup(self)
 
@@ -177,6 +174,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         self.ui.enableScalingCheckBox.toggled.connect(self.onEnableScalingCheckBoxToggled)
         self.ui.enableRotationCheckBox.toggled.connect(self.onEnableRotationCheckBoxToggled)
         self.ui.virtualRealityEnableButton.clicked.connect(self.onVirtualRealityButtonClicked)
+        self.ui.virtualRealityReloadButton.clicked.connect(self.onVirtualRealityReloadClicked)
 
         #On cache aussi la selection du volume aui sera dispo au moment où le shader sera choisi
         #On cache aussi la partie des parametres
@@ -270,7 +268,12 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
             self.checkVirtualReality()
             self.ui.virtualRealityStatusLabel.setText("Function not implemented")
 
-        #print("setup finished")
+        self.ui.virtualRealityCollapsibleButton.hide()
+        self.ui.virtualRealityEnableButton.hide()
+        self.ui.virtualRealityStatusLabel.hide()
+        self.ui.virtualRealityReloadButton.hide()
+
+        print("setup finished")
 
     def updateBaseGUIFromParameterNode(self, caller=None, event=None):
         """Function to update GUI from parameter node values
@@ -353,8 +356,6 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
 
     def checkVirtualReality(self):
-        # Assurez-vous que le module Virtual Reality est chargé
-
         # Obtenir le noeud logique du module VR
         vrLogic = slicer.modules.virtualreality.logic()
 
@@ -370,10 +371,10 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         self.checkVirtualReality()
 
     def onVirtualRealityButtonClicked(self):
-        #vRScene = slicer.modules.virtualreality.logic().InitializeActiveViewNode()
-        #print(vRScene)
-        #slicer.modules.virtualreality.logic().SetGestureButtonToNone(vRScene) // Est supposé unbind les touches, directement codé dans l'ext VR
-        #print("ok")
+        # slicer.modules.virtualreality.setVirtualRealityConnected(True)   # Verif si un casque est branché
+        # slicer.modules.virtualreality.enableVirtualReality(True)     # Active la vue VR
+        # slicer.modules.virtualreality.logic().SetGestureButtonToNone() // Est supposé unbind les touches, directement codé dans l'ext VR
+        # print("ok")
         self.ui.virtualRealityStatusLabel.setText("Function not implemented")
 
     def createTestVolume(self):
@@ -631,9 +632,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
             self.ui.openCustomShaderButton.setEnabled(True)
             self.ui.reloadCurrentCustomShaderButton.setEnabled(True)
 
-        self.ui.customShaderCollapsibleButton.setToolTip(self.logic.volumes[self.logic.volumeIndex].customShader[
-                                                             self.logic.volumes[
-                                                                 self.logic.volumeIndex].shaderIndex].GetBasicDescription())
+        self.ui.customShaderCollapsibleButton.setToolTip(self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].GetBasicDescription())
 
     def updateParameterNodeFromGUI(self, value, w):
         """Function to update the parameter node from gui values.
@@ -667,8 +666,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
             if self.ui.invertedOutputSelector.currentNode():
                 # If additional output volume is selected then result with inverted threshold is written there
                 self.logic.process(self.ui.inputSelector.currentNode(), self.ui.invertedOutputSelector.currentNode(),
-                                   self.ui.imageThresholdSliderWidget.value, not self.ui.invertOutputCheckBox.checked,
-                                   showResult=False)
+                                   self.ui.imageThresholdSliderWidget.value, not self.ui.invertOutputCheckBox.checked, showResult=False)
 
     def renameROI(self):
         """Function to reset the ROI in the scene.
@@ -738,8 +736,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         """Updates the shader parameters on the UI.
 
       """
-        if self.logic.volumes[self.logic.volumeIndex].customShader[
-            self.logic.volumes[self.logic.volumeIndex].shaderIndex] is None:
+        if self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex] is None:
             return
 
         try:  # if the new shader has points
@@ -901,10 +898,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
     @vtk.calldata_type(vtk.VTK_INT)
     def pointModified(self, caller, event, index):
-        self.updateWidgetParameterNodeFromGUI([caller, "PointModifiedEvent", index],
-                                              self.logic.volumes[self.logic.volumeIndex].customShader[
-                                                  self.logic.volumes[
-                                                      self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints)
+      self.updateWidgetParameterNodeFromGUI([caller, "PointModifiedEvent", index], self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints)
 
     def addAllGUIObservers(self):
         for w in self.widgets:
