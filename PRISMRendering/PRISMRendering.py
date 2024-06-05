@@ -178,6 +178,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
         #On cache aussi la selection du volume aui sera dispo au moment où le shader sera choisi
         #On cache aussi la partie des parametres
+        print(self.logic.volumeIndex)
         if not self.logic.volumes:
             self.ui.viewSetupCollapsibleButton.hide()
             self.ui.volumeRenderingCheckBox.hide()
@@ -208,7 +209,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         # Populate combobox with every types of shader available
 
         #Help text for the user if there is something he need to do
-        self.ui.InformationOutput.setStyleSheet("color: red")
+        self.ui.informationOutput.setStyleSheet("color: red")
 
         for shaderType in allShaderTypes:
             self.ui.customShaderCombo.addItem(shaderType)
@@ -273,7 +274,6 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         self.ui.virtualRealityStatusLabel.hide()
         self.ui.virtualRealityReloadButton.hide()
 
-        print("setup finished")
 
     def updateBaseGUIFromParameterNode(self, caller=None, event=None):
         """Function to update GUI from parameter node values
@@ -402,6 +402,8 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         return volumeNode
 
     def onSampleDataButtonClicked(self, caller=None, event=None):
+        if slicer.mrmlScene.GetFirstNodeByName('Volume'):
+            slicer.mrmlScene.RemoveNode(slicer.mrmlScene.GetFirstNodeByName('Volume'))
         if self.logic.volumeIndex is None:
             self.ui.imageSelector.setCurrentNode(self.createTestVolume())
         #shaderName = self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].GetDisplayName()
@@ -413,6 +415,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
             if self.sampleDatasNodeID[shaderName] != -1:
 
                 self.firstSampleDataSwitch = False
+                slicer.mrmlScene.RemoveNode(slicer.mrmlScene.GetFirstNodeByName('Volume'))
                 self.ui.imageSelector.setCurrentNodeID(self.sampleDatasNodeID[shaderName])
                 self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
 
@@ -421,22 +424,25 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
 
             else:
                 self.sampleDataSwitch = False
+                self.ui.informationOutput.setText("This shader does not have a sample data")
                 print("This shader does not have a sample data.")
 
         else:
+            #slicer.mrmlScene.RemoveNode(slicer.mrmlScene.GetFirstNodeByName('Volume'))
             self.logic.volumes[self.logic.volumeIndex].customShader[
-                self.logic.volumes[self.logic.volumeIndex].shaderIndex].downloadSampleData(self.ui.imageSelector,
-                                                                                           self.sampleDatasNodeID,
-                                                                                           self.ui.customShaderCombo.currentText)
+                self.logic.volumes[self.logic.volumeIndex].shaderIndex].downloadSampleData(self.ui.imageSelector, self.sampleDatasNodeID, self.ui.customShaderCombo.currentText)
             if self.sampleDatasNodeID[shaderName] != -1:
                 self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
-
                 self.ui.viewSetupCollapsibleButton.show()
                 self.ui.volumeRenderingCheckBox.show()
             else:
                 self.firstSampleDataSwitch = False
                 self.sampleDataSwitch = False
+                self.ui.informationOutput.setText("This shader does not have a sample data")
+
                 print("This shader does not have a sample data.")
+
+
 
     def onResetParametersButtonClicked(self, caller=None, event=None):
 
@@ -514,7 +520,9 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       :param caller: Caller of the function.
       :param event: Event that triggered the function.
       """
-
+        # Permet de supprimer le volume crée pour les modèles de test, il faut le supprimer pour avoir le rendu de base.
+        if slicer.mrmlScene.GetFirstNodeByName('Volume'):
+            slicer.mrmlScene.RemoveNode(slicer.mrmlScene.GetFirstNodeByName('Volume'))
         if self.ui.volumeRenderingCheckBox.isChecked():
             if self.ui.imageSelector.currentNode():
                 self.logic.volumes[self.logic.volumeIndex].renderVolume()
@@ -604,15 +612,13 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         if self.ui.customShaderCombo.currentText == "None":
             self.ui.resetParametersButton.hide()
             self.ui.sampleDataButton.hide()
-            if not self.logic.volumes:
-                self.ui.viewSetupCollapsibleButton.hide()
-            self.ui.dataCollapsibleButton.hide()
+            self.ui.informationOutput.setText('Select a Volume to render or a Shader to view sample data')
         else:
             self.ui.sampleDataButton.show()
             self.ui.dataCollapsibleButton.show()
             self.ui.resetParametersButton.show()
-            self.ui.InformationOutput.setText(
-                "select a Volume to display a Shader or click Switch to sample data to visualise Sample Data")
+            self.ui.informationOutput.setText('Select a Volume to display the Shader or click "Switch to '
+                                              'Shader\'s sample data"')
 
         try:  # if the old shader has points
             self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[
@@ -631,8 +637,14 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         else:
             self.ui.openCustomShaderButton.setEnabled(True)
             self.ui.reloadCurrentCustomShaderButton.setEnabled(True)
+            print(self.ui.imageSelector.currentNode)
+            if self.ui.imageSelector.currentNode is not None:
+                self.ui.viewSetupCollapsibleButton.show()
+                self.ui.volumeRenderingCheckBox.show()
 
         self.ui.customShaderCollapsibleButton.setToolTip(self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].GetBasicDescription())
+
+
 
     def updateParameterNodeFromGUI(self, value, w):
         """Function to update the parameter node from gui values.
