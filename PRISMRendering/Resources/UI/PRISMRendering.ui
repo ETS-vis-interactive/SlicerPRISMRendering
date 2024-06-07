@@ -169,7 +169,7 @@
       </item>
       <item>
        <widget class="QGroupBox" name="InformationGrid">
-        <layout class="QHBoxLayout" name="horizontalLayout">
+        <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1">
          <property name="spacing">
           <number>1</number>
          </property>
@@ -180,8 +180,8 @@
            </property>
           </widget>
          </item>
-         <item alignment="Qt::AlignHCenter">
-          <widget class="QLabel" name="InformationOutput">
+         <item>
+          <widget class="QLabel" name="informationOutput">
            <property name="maximumSize">
             <size>
              <width>493</width>
@@ -189,7 +189,7 @@
             </size>
            </property>
            <property name="text">
-            <string>select a Shader</string>
+            <string>Select a Volume to render or a Shader to view sample data</string>
            </property>
           </widget>
          </item>
