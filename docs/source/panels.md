@@ -28,15 +28,19 @@
 <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/images/ViewSetup.png" alt="ViewSetup" width ="100%" title="ViewSetup"/>
 </td>
 </tr>
+
+
 <tr>
 <td style="width:50%">
 <ul> 
 <li><b>Custom Shader</b> : Controls of the shader.</li>
 <ul>
 <li><b>Custom Shader</b> : Name of the shader to be applied during the rendering.</li>
+<!--
 <li><b>Reload</b> : Reload the current shader.</li>
 <li><b>Open</b> : Open the current shader source code.</li>
 <li><b>Duplicate</b> : Duplicate the current shader source code.</li>
+-->
 </ul>
 </ul>
 </td>
@@ -44,6 +48,7 @@
 <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/images/CustomShader.png" alt="CustomShader" width ="100%" title="CustomShader"/>
 </td>
 </tr>
+<!--
 <tr>
 <td rowspan=3 style="width:50%">
 <ul> 
@@ -85,4 +90,5 @@
 <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/images/MCCustomShaderParam.png" alt="MCCustomShaderParam" width ="100%" title="MCCustomShaderParam"/>
 </td>
 </tr>
+-->
 </table>

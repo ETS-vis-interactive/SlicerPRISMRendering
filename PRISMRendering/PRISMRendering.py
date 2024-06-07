@@ -339,6 +339,8 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
                     self.ui.customShaderCombo.setCurrentIndex(0)
                     self.ui.customShaderCombo.setCurrentIndex(self.logic.volumes[self.logic.volumeIndex].comboBoxIndex)
                     self.updateWidgetParameterNodeFromGUI(self.ui.customShaderCombo.currentText,self.ui.customShaderCombo)
+
+            self.ui.informationOutput.setText("Select \"Volume Rendering\" to display the volume or select a Shader")
         # If the selector is a parameter of a shader
         # if widget != self.ui.imageSelector :
         #   self.logic.volumes[self.logic.volumeIndex].renderVolume()
@@ -520,6 +522,7 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
       :param caller: Caller of the function.
       :param event: Event that triggered the function.
       """
+        self.ui.informationOutput.setText("")
         # Permet de supprimer le volume crée pour les modèles de test, il faut le supprimer pour avoir le rendu de base.
         if slicer.mrmlScene.GetFirstNodeByName('Volume'):
             slicer.mrmlScene.RemoveNode(slicer.mrmlScene.GetFirstNodeByName('Volume'))
