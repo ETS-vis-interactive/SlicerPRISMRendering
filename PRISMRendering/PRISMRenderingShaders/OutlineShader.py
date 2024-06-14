@@ -83,9 +83,28 @@ class OutlineShader(CustomShader):
         vec4 n = ComputeGradient(in_volume[0], g_dataPos, gradStep);
         if(n.a > 0.0)
         {
+          // Phong shading parameters
+          vec3 lightPos = vec3(1.0,1.0,1.0); //(ip_inverseTextureDataAdjusted * vec4(g_eyePosObj.xyz,1.0) ).xyz; // position de la lumière 
+          vec3 viewPos = vec3(0.0, 0.0, 1.0); //g_eyePosObj.xyz; // position de la vue
+          vec3 lightColor = vec3(1.0, 1.0, 1.0);
+          vec3 objectColor = vec3(1.0, 1.0, 1.0);
+
+          vec3 norm = n.rgb;
+          vec3 lightDir = normalize(lightPos - g_dataPos); // direction de la lumière
+          float diff = max(dot(norm, lightDir), 0.0); //calcul de la lumière diffuse 
+          vec3 diffuse = diff * lightColor; //Couleur diffuse
+
+          vec3 viewDir = normalize(viewPos - g_dataPos); //Direction de la vue
+          vec3 reflectDir = reflect(-lightDir, norm); //Direction du reflet
+          float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0); //Calcul de la lumière spéculaire
+          vec3 specular = 0.5 * spec * lightColor; // Couleur spéculaire
+              
+          vec3 result = (diffuse + specular) * objectColor; // couleur finale
+                
           float factor = computeOpacity(n) * (1.0 - abs(dot(normalize(g_dirStep), n.rgb)));
           float alpha = smoothstep(step.x, step.y, factor);
-          g_srcColor = vec4(1.0, 1.0, 1.0, alpha); // important alpha
+          g_srcColor = vec4(result, alpha); // important alpha
+          //g_srcColor = vec4(1.0, 1.0, 1.0, alpha); // important alpha
         }
       }
       virtualAlpha += (1-virtualAlpha) * inAlpha;
