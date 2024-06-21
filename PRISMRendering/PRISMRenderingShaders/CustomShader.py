@@ -37,14 +37,15 @@ class CustomShader():
         self.logic = logic
         # For sample data logic
 
-    def downloadSampleData(self, imageSelector, sampleDatasNodeID):
-      try:
-        volumeNode = SampleData.downloadSample(self.GetDisplayName().replace(" ", "") + "SampleData")
-      except:
-         sampleDatasNodeID[self.GetDisplayName()] = -1
-         return
-      imageSelector.setCurrentNode(volumeNode)
-      sampleDatasNodeID[self.GetDisplayName()] = imageSelector.currentNodeID
+    def downloadSampleData(self, imageSelector, sampleDatasNodeID, shaderName):
+        try:
+            volumeNode = SampleData.downloadSample(shaderName.replace(" ", "") + "SampleData")
+        except:
+            if shaderName != 'None':
+                sampleDatasNodeID[shaderName] = -1
+            return
+        imageSelector.setCurrentNode(volumeNode)
+        sampleDatasNodeID[shaderName] = imageSelector.currentNodeID
           
     def setAllUniforms(self):
       for p in self.param_list:       

@@ -28,7 +28,7 @@
 3. Select the shader of your choice in the comboBox.
 
 4. Adjust the different parameters. A detailed description on how to use each shader is located [here](#allshaders).
-
+<!---
 5. If you are currently developping the shader you can click on the "..." button in order to reload, duplicate or open the shader :
     
     <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/images/tutorials/applyCS/345.png" width ="60%" style="margin-left: auto; margin-right: auto; display: block;"/>
@@ -38,8 +38,12 @@
     * Open the shader by clicking on the "Open" button. This will open the class containing the shader in your favorite editor.
     
     <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/images/tutorials/applyCS/6.png" width ="60%" style="margin-left: auto; margin-right: auto; display: block;"/>
+-->
 
+## View the sample data of a shader
+1. Select the shader of your choice in the comboBox.
 
+2. Click the button "Switch to Shader's Sample data".
 <a name="allshaders"></a>
 
 ## Implemented shaders
@@ -49,9 +53,9 @@ This section contains a detailed description on how to use each of the technique
 ### Chroma Depth Perception
 
 This technique brings out the depth of a volume with a smooth transition between all hues.
-
+<!---
 You can download the sample volume by clicking <a href="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRenderingDatabase/master/volumes/1.mnc" download>here</a>.
-
+-->
 It is possible to :
 
 * Adjust the range of the volume.
@@ -96,9 +100,9 @@ It is possible to :
 ### Outline
 
 This shader highlights the borders of the volume and is particularly useful for visualizing complex structures such as the blood vessels of the brain. Indeed, the accentuation of the edges of the vessels makes it possible to improve the perception of the depths by ordering the order of depth of overlapping vessels.
-
+<!---
 You can download the sample volume by clicking <a href="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRenderingDatabase/master/volumes/1.mnc" download>here</a>.
-
+-->
 It is possible to :
 
 * Adjust the step for the calculation of the gradient.
@@ -112,9 +116,9 @@ It is possible to :
 ### Plane Intersecting
 
 This technique allows to visualize the anatomy along the approach plane for surgery.
-
+<!---
 You can download the sample volume by clicking <a href="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRenderingDatabase/master/docs//MR-head.nrrd" download>here</a>.
-
+-->
 It is possible to :
 
 * Initialize the two points.
@@ -136,9 +140,9 @@ It is possible to :
 ### Sphere carving
 
 This shader makes it possible to cut out spherical parts of the volume interactively, which can obstruct structures of interest with similar intensities.
-
+<!--
 You can download the sample volume by clicking <a href="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRenderingDatabase/master/volumes/MR-head.nrrd" download>here</a>.
-
+-->
 It is possible to :
 
 * Modify the position of the center of the sphere.
@@ -172,7 +176,7 @@ It is possible to :
         2. Select one of the side of the ROI and move it in any direction to rotate the ROI.
 
         <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/images/tutorials/modifyROI/rotate.gif" width ="60%" style="margin-left: auto; margin-right: auto; display: block;"/>
-
+<!---
 ## Creating a new shader
 
 1. Open the "Modify or Create Custom Shader" section.
@@ -246,5 +250,5 @@ or by clicking on the "Open" button in the "Custom Shader" section :
     * Enter the code in the text area and click on the "Modify" button.
     * Click on the "Open File" button to enter the code directly in the python file.
 4. Repeat steps 1-3 for each wanted code replacement.
-
+-->
 <a name="panels"></a>

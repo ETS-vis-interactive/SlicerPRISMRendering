@@ -83,9 +83,27 @@ class OutlineShader(CustomShader):
         vec4 n = ComputeGradient(in_volume[0], g_dataPos, gradStep);
         if(n.a > 0.0)
         {
+          // Phong shading parameters
+          vec3 lightPos = g_eyePosObj.xyz;//(ip_inverseTextureDataAdjusted * vec4(g_eyePosObj.xyz,1.0) ).xyz;
+          vec3 viewPos = -g_eyePosObj.xyz - vec3(0.1, 0.0, 0.0);// vec3(1.0, 1.0, 1.0); // Position de la caméra - vous pouvez la rendre dynamique
+          vec3 lightColor = vec3(1.0, 1.0, 1.0); // Lumière blanche
+          vec3 objectColor = vec3(1.0, 1.0, 1.0); // Couleur de l'objet, blanc pour l'effet "glass-like"
+
+          vec3 norm = n.rgb;
+          vec3 lightDir = normalize(lightPos - g_dataPos);
+          //float diff = max(dot(norm, lightDir), 0.0);
+          vec3 diffuse = vec3(1.0, 1.0, 1.0)*1.2;
+
+          vec3 viewDir = normalize(viewPos - g_dataPos);
+          vec3 reflectDir = reflect(-lightDir, norm);
+          float spec = pow(max(dot(viewDir, reflectDir), 0.0), 64.0); // Augmentation de l'exposant pour un effet plus brillant
+          vec3 specular = 10.0 * spec * lightColor ; // Augmenter la contribution spéculaire
+              
+          vec3 result = (diffuse + specular) * objectColor;
+                
           float factor = computeOpacity(n) * (1.0 - abs(dot(normalize(g_dirStep), n.rgb)));
-          float alpha = smoothstep(step.x, step.y, factor);
-          g_srcColor = vec4(1.0, 1.0, 1.0, alpha); // important alpha
+          float alpha = smoothstep(step.x, step.y, factor) * 0.3; // Ajuster la transparence pour l'effet "glass-like"
+          g_srcColor = vec4(result, alpha);
         }
       }
       virtualAlpha += (1-virtualAlpha) * inAlpha;
