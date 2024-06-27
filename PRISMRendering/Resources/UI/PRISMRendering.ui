@@ -56,7 +56,7 @@
          <enum>QFormLayout::DontWrapRows</enum>
         </property>
         <item row="0" column="0" colspan="2">
-         <layout class="QGridLayout" name="customShaderLayout" columnstretch="2,0,0,0,0">
+         <layout class="QGridLayout" name="customShaderLayout" columnstretch="2,0,0,0,0,0">
           <item row="0" column="0">
            <widget class="QLabel" name="customShaderLabel">
             <property name="sizePolicy">
@@ -92,28 +92,6 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="2">
-           <widget class="QPushButton" name="reloadCurrentCustomShaderButton">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Reload</string>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="3">
            <widget class="QPushButton" name="openCustomShaderButton">
             <property name="enabled">
@@ -131,70 +109,62 @@
               <height>16777215</height>
              </size>
             </property>
+            <property name="toolTip">
+             <string>Edit custom shader python code</string>
+            </property>
             <property name="text">
-             <string>Open</string>
+             <string>Edit...</string>
             </property>
            </widget>
           </item>
           <item row="0" column="4">
-           <widget class="QToolButton" name="toolCustomShaderButton">
+           <widget class="QPushButton" name="resetParametersButton">
+            <property name="toolTip">
+             <string>Reset shader parameters to default values</string>
+            </property>
+            <property name="text">
+             <string>Reset</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QPushButton" name="reloadCurrentCustomShaderButton">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>Reload custom shader python code</string>
+            </property>
             <property name="text">
-             <string>...</string>
+             <string>Reload</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="5">
+           <widget class="QPushButton" name="sampleDataButton">
+            <property name="toolTip">
+             <string>Load this shader's sample dataset</string>
+            </property>
+            <property name="text">
+             <string>Sample</string>
             </property>
            </widget>
           </item>
          </layout>
         </item>
        </layout>
-      </item>
-      <item>
-       <widget class="QPushButton" name="resetParametersButton">
-        <property name="text">
-         <string>Reset parameters to default values</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="sampleDataButton">
-        <property name="text">
-         <string>Switch to Shader's Sample Data</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QGroupBox" name="InformationGrid">
-        <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1">
-         <property name="spacing">
-          <number>1</number>
-         </property>
-         <item>
-          <widget class="QLabel" name="informationLabel">
-           <property name="text">
-            <string>Information :</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="informationOutput">
-           <property name="maximumSize">
-            <size>
-             <width>493</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Select a Volume to render or a Shader to view sample data</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
       </item>
      </layout>
     </widget>
