@@ -2,7 +2,7 @@ import os, sys
 import unittest
 from PythonQt.QtCore import *
 import vtk, qt, ctk, slicer
-from slicer.ScriptedLoadableModule import *
+
 import logging
 import numpy as np, math, time
 import json
@@ -19,12 +19,16 @@ import traceback
 import SampleData
 import hashlib
 
+import slicer
+from slicer.ScriptedLoadableModule import *
+from slicer.util import VTKObservationMixin
+
 from PRISMRenderingShaders.CustomShader import *
 from PRISMRenderingParams import *
 from PRISMRenderingLogic import *
 
 
-class PRISMRendering(slicer.ScriptedLoadableModule.ScriptedLoadableModule):
+class PRISMRendering(ScriptedLoadableModule):
     """Uses ScriptedLoadableModule base class, available at:
     https://github.com/Slicer/Slicer/blob/main/Base/Python/slicer/ScriptedLoadableModule.py
     """
@@ -124,15 +128,21 @@ def registerSampleData():
     nodeNames='ChromaDepthPerceptionSampleData'
   )
 
-class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleWidget):
+class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
     """Uses ScriptedLoadableModuleWidget base class, available at:
     https://github.com/Slicer/Slicer/blob/main/Base/Python/slicer/ScriptedLoadableModule.py
     """
 
-    def setup(self):
-        """Function to setup the class.
+    def __init__(self, parent=None) -> None:
+        """Called when the user opens the module the first time and the widget is initialized."""
+        ScriptedLoadableModuleWidget.__init__(self, parent)
+        VTKObservationMixin.__init__(self)  # needed for parameter node observation
+        self.logic = None
+        self.parameterNode = None
 
-        """
+    def setup(self) -> None:
+        """Called when the user opens the module the first time and the widget is initialized."""
+
         slicer.ScriptedLoadableModule.ScriptedLoadableModuleWidget.setup(self)
 
         ## Create module logic
@@ -146,12 +156,15 @@ class PRISMRenderingWidget(slicer.ScriptedLoadableModule.ScriptedLoadableModuleW
         self.layout.addWidget(uiWidget)
         self.ui = slicer.util.childWidgetVariables(uiWidget)
 
+        # Set scene in MRML widgets. Make sure that in Qt designer the top-level qMRMLWidget's
+        # "mrmlSceneChanged(vtkMRMLScene*)" signal in is connected to each MRML widget's.
+        # "setMRMLScene(vtkMRMLScene*)" slot.
+        uiWidget.setMRMLScene(slicer.mrmlScene)
+
         #
         # Data Area
         #
-        self.ui.imageSelector.setMRMLScene(slicer.mrmlScene)
-        self.ui.imageSelector.currentNodeChanged.connect(
-            lambda value, w=self.ui.imageSelector: self.onImageSelectorChanged(value, w))
+        self.ui.imageSelector.currentNodeChanged.connect(lambda value, w=self.ui.imageSelector: self.onImageSelectorChanged(value, w))
 
         self.ROIdisplay = None
         #
