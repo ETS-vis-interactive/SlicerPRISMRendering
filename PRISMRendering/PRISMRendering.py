@@ -1,7 +1,7 @@
 import os, sys
 import unittest
 from PythonQt.QtCore import *
-import vtk, qt, ctk, slicer
+import vtk, qt, ctk
 
 import logging
 import numpy as np, math, time
@@ -143,7 +143,7 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
     def setup(self) -> None:
         """Called when the user opens the module the first time and the widget is initialized."""
 
-        slicer.ScriptedLoadableModule.ScriptedLoadableModuleWidget.setup(self)
+        ScriptedLoadableModuleWidget.setup(self)
 
         ## Create module logic
         self.logic = PRISMRenderingLogic()
@@ -160,6 +160,10 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         # "mrmlSceneChanged(vtkMRMLScene*)" signal in is connected to each MRML widget's.
         # "setMRMLScene(vtkMRMLScene*)" slot.
         uiWidget.setMRMLScene(slicer.mrmlScene)
+
+        # These connections ensure that we update parameter node when scene is closed
+        self.addObserver(slicer.mrmlScene, slicer.mrmlScene.StartCloseEvent, self.onSceneStartClose)
+        self.addObserver(slicer.mrmlScene, slicer.mrmlScene.EndCloseEvent, self.onSceneEndClose)
 
         #
         # Data Area
@@ -187,11 +191,10 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
 
         #On cache aussi la selection du volume aui sera dispo au moment où le shader sera choisi
         #On cache aussi la partie des parametres
-        print(self.logic.volumeIndex)
         if not self.logic.volumes:
             self.ui.viewSetupCollapsibleButton.hide()
             self.ui.volumeRenderingCheckBox.hide()
-        self.ui.sampleDataButton.hide()
+        self.ui.sampleDataButton.setEnabled(False)
         self.ui.enableROICheckBox.hide()
         self.ui.displayROICheckBox.hide()
         self.ui.enableScalingCheckBox.hide()
@@ -264,6 +267,16 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         self.ui.virtualRealityStatusLabel.hide()
         self.ui.virtualRealityReloadButton.hide()
 
+    def onSceneStartClose(self, caller, event) -> None:
+        """Called just before the scene is closed."""
+        # Parameter node will be reset, do not use it anymore
+        self.setParameterNode(None)
+
+    def onSceneEndClose(self, caller, event) -> None:
+        """Called just after the scene is closed."""
+        # If this module is shown while the scene is closed then recreate a new parameter node immediately
+        if self.parent.isEntered:
+            self.initializeParameterNode()
 
     def updateBaseGUIFromParameterNode(self, caller=None, event=None):
         """Function to update GUI from parameter node values
@@ -573,11 +586,16 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
                 self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
         except:
             pass
-        self.logic.volumes[self.logic.volumeIndex].setCustomShaderType(self.ui.customShaderCombo.currentText)
+
+        # Assign the shader to the volume if the volume
+        # TODO: this seems very complicated, ma
+        if(self.logic.volumeIndex is not None):
+            self.logic.volumes[self.logic.volumeIndex].setCustomShaderType(self.ui.customShaderCombo.currentText)
+            self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].setupShader()
+
         self.UpdateShaderParametersUI()
         self.updateWidgetParameterNodeFromGUI(self.ui.customShaderCombo.currentText, self.ui.customShaderCombo)
-        self.logic.volumes[self.logic.volumeIndex].customShader[
-            self.logic.volumes[self.logic.volumeIndex].shaderIndex].setupShader()
+        
         # If there is no selected shader, disables the buttons.
         if self.ui.customShaderCombo.currentText == "None":
             self.ui.openCustomShaderButton.setEnabled(False)
@@ -590,8 +608,8 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
                 self.ui.viewSetupCollapsibleButton.show()
                 self.ui.volumeRenderingCheckBox.show()
 
-        self.ui.customShaderCollapsibleButton.setToolTip(self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].GetBasicDescription())
-
+        # TODO: fix this. The tooltip should only be related to shader and shouldn't have anything to do with volume index
+        #self.ui.customShaderCollapsibleButton.setToolTip(self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].GetBasicDescription())
 
 
     def updateParameterNodeFromGUI(self, value, w):
