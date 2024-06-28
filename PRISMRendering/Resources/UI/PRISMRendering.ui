@@ -113,7 +113,7 @@
              <string>Edit custom shader python code</string>
             </property>
             <property name="text">
-             <string>Edit...</string>
+             <string/>
             </property>
            </widget>
           </item>
@@ -123,7 +123,7 @@
              <string>Reset shader parameters to default values</string>
             </property>
             <property name="text">
-             <string>Reset</string>
+             <string/>
             </property>
            </widget>
           </item>
@@ -148,7 +148,7 @@
              <string>Reload custom shader python code</string>
             </property>
             <property name="text">
-             <string>Reload</string>
+             <string/>
             </property>
            </widget>
           </item>
@@ -412,6 +412,12 @@
    <class>qMRMLNodeComboBox</class>
    <extends>QWidget</extends>
    <header>qMRMLNodeComboBox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>qMRMLWidget</class>
+   <extends>QWidget</extends>
+   <header>qMRMLWidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>
