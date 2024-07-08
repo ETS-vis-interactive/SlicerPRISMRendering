@@ -396,7 +396,6 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
             slicer.mrmlScene.RemoveNode(slicer.mrmlScene.GetFirstNodeByName('Volume'))
         if self.logic.volumeIndex is None:
             self.ui.imageSelector.setCurrentNode(self.createTestVolume())
-        #shaderName = self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].GetDisplayName()
         shaderName = self.ui.customShaderCombo.currentText
         self.sampleDataSwitch = True
         self.firstSampleDataSwitch = True
@@ -508,24 +507,6 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         if self.ui.volumeRenderingCheckBox.isChecked():
             if self.ui.imageSelector.currentNode():
                 self.logic.volumes[self.logic.volumeIndex].renderVolume()
-                # Init ROI
-                # allTransformDisplayNodes = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLTransformDisplayNode','TransformDisplayNode')
-                # if allTransformDisplayNodes.GetNumberOfItems() > 0:
-                #   ## Transforme Display node to apply transformations to the ROI
-                #   self.transformDisplayNode = allTransformDisplayNodes.GetItemAsObject(0)
-                # else:
-                #   self.transformDisplayNode = slicer.mrmlScene.AddNewNodeByClass('vtkMRMLTransformDisplayNode')
-                #   self.transformDisplayNode.SetName('TransformDisplayNode')
-                #   self.transformDisplayNode.SetEditorRotationEnabled(False)
-
-                # allTransformNodes = slicer.mrmlScene.GetNodesByClassByName('vtkMRMLTransformNode','TransformNode')
-                # if allTransformNodes.GetNumberOfItems() > 0:
-                #   ## Transform node to apply transformations to the ROI
-                #   self.transformNode = allTransformNodes.GetItemAsObject(0)
-                # else:
-                #   self.transformNode = slicer.mrmlScene.AddNewNodeByClass('vtkMRMLTransformNode')
-                #   self.transformNode.SetName('TransformNode')
-                #   self.transformNode.SetAndObserveDisplayNodeID(self.transformDisplayNode.GetID())
 
                 ## ROI of the current volume
                 self.ROI = self.logic.volumes[self.logic.volumeIndex].volumeRenderingDisplayNode.GetMarkupsROINode()
@@ -580,37 +561,53 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
       :param i: Index of the element. 
       :type i: int
       """
+        if self.ui.customShaderCombo.currentText != "None":
+            #If there is no volume
+            if self.ui.imageSelector.currentNode() is not None:
+                self.logic.volumes[self.logic.volumeIndex].setCustomShaderType(self.ui.customShaderCombo.currentText)
+                self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].setupShader()
 
-        try:  # if the old shader has points
-            self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[
-                self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
-        except:
-            pass
+                self.UpdateShaderParametersUI()
+                self.updateWidgetParameterNodeFromGUI(self.ui.customShaderCombo.currentText, self.ui.customShaderCombo)
+                if self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints is not None:
+                    self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[
+                        self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
+            #If a volume is existing
+            """else:
+                shaderNameList = []
+                for i in self.logic.customShaderWithoutVolume:
+                    shaderNameList.append(i[0])
+                if self.ui.customShaderCombo.currentText not in shaderNameList:
+                    self.logic.currentShader = CustomShader.InstanciateCustomShader(
+                        self.ui.customShaderCombo.currentText, slicer.vtkMRMLShaderPropertyNode(), None, None)
+                    self.logic.customShaderWithoutVolume.append(
+                        [self.ui.customShaderCombo.currentText, self.logic.currentShader])
+                else:
+                    for shader in self.logic.customShaderWithoutVolume:
+                        if shader[0] == self.ui.customShaderCombo.currentText:
+                            self.logic.currentShader = shader[1]
+                            break"""
 
-        # Assign the shader to the volume if the volume
-        # TODO: this seems very complicated, ma
-        if(self.logic.volumeIndex is not None):
-            self.logic.volumes[self.logic.volumeIndex].setCustomShaderType(self.ui.customShaderCombo.currentText)
-            self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].setupShader()
 
-        self.UpdateShaderParametersUI()
-        self.updateWidgetParameterNodeFromGUI(self.ui.customShaderCombo.currentText, self.ui.customShaderCombo)
-        
         # If there is no selected shader, disables the buttons.
         if self.ui.customShaderCombo.currentText == "None":
             self.ui.openCustomShaderButton.setEnabled(False)
             self.ui.reloadCurrentCustomShaderButton.setEnabled(False)
         else:
+            print(self.ui.customShaderCombo.currentText in self.logic.samplesAvailable)
+            if self.ui.customShaderCombo.currentText in self.logic.samplesAvailable :
+                self.ui.sampleDataButton.setEnabled(True)
+            else:
+                self.ui.sampleDataButton.setEnabled(False)
+
             self.ui.openCustomShaderButton.setEnabled(True)
             self.ui.reloadCurrentCustomShaderButton.setEnabled(True)
-            print(self.ui.imageSelector.currentNode)
             if self.ui.imageSelector.currentNode is not None:
                 self.ui.viewSetupCollapsibleButton.show()
                 self.ui.volumeRenderingCheckBox.show()
 
         # TODO: fix this. The tooltip should only be related to shader and shouldn't have anything to do with volume index
         #self.ui.customShaderCollapsibleButton.setToolTip(self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].GetBasicDescription())
-
 
     def updateParameterNodeFromGUI(self, value, w):
         """Function to update the parameter node from gui values.
@@ -714,7 +711,7 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         """Updates the shader parameters on the UI.
 
       """
-        if self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex] is None:
+        if self.ui.customShaderCombo.currentText is None:
             return
 
         try:  # if the new shader has points
@@ -738,6 +735,7 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         volumeName = self.logic.volumes[
             self.logic.volumeIndex].volumeRenderingDisplayNode.GetVolumePropertyNode().GetName()
         self.CSName = self.ui.customShaderCombo.currentText.replace(" ", "") + volumeName
+        print(self.CSName)
         param_list = self.logic.volumes[self.logic.volumeIndex].customShader[
             self.logic.volumes[self.logic.volumeIndex].shaderIndex].param_list
         TFIndex = 0
