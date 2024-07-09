@@ -157,6 +157,9 @@ class PRISMRenderingVolume():
       self.customShaderType = shaderTypeName
       self.setupCustomShader()
 
+    def getCustomShaderType(self):
+        return self.customShader
+
     def onCustomShaderParamChanged(self, value, Param ):
       """Change the custom parameters in the shader.
 

@@ -45,9 +45,15 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
 
         self.volumeIndex = None
 
+        self.currentShader = None
+
+        self.customShaderWithoutVolume = []
+
         self.volumes = []
 
-        self.addObservers() 
+        self.samplesAvailable = ["Sphere Carving", "Outline", "Opacity Peeling", "Chroma Depth Perception"]
+
+        self.addObservers()
 
     def addObservers(self):
       slicer.mrmlScene.AddObserver(slicer.mrmlScene.EndCloseEvent, self.onCloseScene)  

@@ -68,7 +68,7 @@ vec3 hsv2rgb(vec3 c)
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 }
 
-uniform sampler2D in_colorTransferFunc_0[1];
+//uniform sampler2D in_colorTransferFunc_0[1];
 
 vec4 computeColor(vec4 scalar, float opacity)
 {
