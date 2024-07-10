@@ -204,12 +204,19 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         # Custom Shader Area
         #
         
-        # TODO: this is not working, find out why
-        reloadIconPath = 'Resources/UI/reload.png'
-        self.ui.reloadCurrentCustomShaderButton.setIcon(qt.QIcon(qt.QPixmap(reloadIconPath)))
+        # Icons
 
+        # Load all necessary icons for the Custom Shader Area
+        self.loadIcons({
+            'reloadCurrentCustomShaderButton': ('reload.png', 15, 24),
+            'resetParametersButton': ('reset.png', 13, 24),
+            'openCustomShaderButton': ('edit.png', 15, 24),
+        })
+
+        
         # Reset the parameters of the current custom shader
         self.ui.resetParametersButton.clicked.connect(self.onResetParametersButtonClicked)
+
 
         # Populate combobox with every types of shader available
         for shaderType in allShaderTypes:
@@ -277,6 +284,31 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         # If this module is shown while the scene is closed then recreate a new parameter node immediately
         if self.parent.isEntered:
             self.initializeParameterNode()
+
+    def loadIcons(self, button_icon_dict):
+        """
+        Loads icons for specified buttons given in a dictionary, with an optional size specification.
+
+        :param button_icon_dict: A dictionary where keys are the attribute names of self.ui for each button,
+                                 and values are tuples containing the filenames of the icons and optionally their sizes
+                                 in the resources directory (filename, width, height).
+        """
+        script_dir = os.path.dirname(__file__)
+        resources_dir = os.path.join(script_dir, "../PRISMRendering/Resources/Icons")
+
+        for button_name, icon_details in button_icon_dict.items():
+            icon_name, width, height = icon_details  # Unpack details
+            icon_path = os.path.join(resources_dir, icon_name)
+            if not os.path.exists(icon_path):
+                print(f"Icon file does not exist: {icon_path}")
+            else:
+                pixmap = qt.QPixmap(icon_path)
+                if pixmap.isNull():
+                    print(f"Failed to load QPixmap for {icon_name}")
+                else:
+                    if width and height:  # Resize if width and height are provided
+                        pixmap = pixmap.scaled(width, height, qt.Qt.KeepAspectRatio, qt.Qt.SmoothTransformation)
+                    getattr(self.ui, button_name).setIcon(qt.QIcon(pixmap))
 
     def updateBaseGUIFromParameterNode(self, caller=None, event=None):
         """Function to update GUI from parameter node values
