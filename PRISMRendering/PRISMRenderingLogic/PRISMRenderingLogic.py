@@ -64,51 +64,52 @@ class PRISMRenderingLogic(slicer.ScriptedLoadableModule.ScriptedLoadableModuleLo
 
     def deleteNodes(self):
       """Deletes the nodes in the scene."""
-      try :
-        node = slicer.util.getNodesByClass("vtkMRMLScalarVolumeNode")
+      node = slicer.util.getNodesByClass("vtkMRMLScalarVolumeNode")
+      if node:
         slicer.mrmlScene.RemoveNode(node[0])
         slicer.mrmlScene.RemoveNode(self.shaderPropertyNode)
-        for i in range(len(self.volumes[self.volumeIndex].customShader)) :
+        for i in range(len(self.volumes[self.volumeIndex].customShader)):
           slicer.mrmlScene.RemoveNode(self.volumes[self.volumeIndex].customShader[i].customShaderPoints.endPoints)
         CustomShader.clear()
-      except:
-        pass
     
-    def enableOption(self, param, checkBox, CSName) :
-      """Function to add or remove parameters according to the value of the boolean.
+    def enableOption(self, param, checkBox, CSName):
+        """Function to add or remove parameters according to the value of the boolean.
 
-      :param paramName: Name of the parameter. 
-      :type paramName: str
-      :param type_: Type of the parameter.
-      :type type_: str.
-      :param checkBox: Checkbox to enable or disable the option. 
-      :type checkBox: QCheckbox
-      :param CSName: Name of the current custom shader. 
-      :type CSName: str
-      """
-      paramName = param.name
-      if checkBox.isChecked() :
-        self.volumes[self.volumeIndex].customShader[self.volumes[self.volumeIndex].shaderIndex].setShaderParameter(param, 1)
-        if str(CSName + paramName) in self.optionalWidgets :
-          for p in self.optionalWidgets[CSName + paramName] :
-            p.show()
-            try : # if there are Optional Points
-              for t in self.volumes[self.volumeIndex].customShader[self.volumes[self.volumeIndex].shaderIndex].customShaderPoints.pointTypes :
-                if t in p.name:
-                  self.volumes[self.volumeIndex].customShader[self.volumes[self.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetNthControlPointVisibility(self.volumes[self.volumeIndex].customShader[self.volumes[self.volumeIndex].shaderIndex].customShaderPoints.pointIndexes["markup" + t], 1)
-            except :
-              pass
-      else: 
-        self.volumes[self.volumeIndex].customShader[self.volumes[self.volumeIndex].shaderIndex].setShaderParameter(param, 0)
-        if str(CSName + paramName) in self.optionalWidgets :
-          for p in self.optionalWidgets[CSName + paramName] :
-            p.hide()
-            try : # if there are Optional Points
-              for t in self.volumes[self.volumeIndex].customShader[self.volumes[self.volumeIndex].shaderIndex].customShaderPoints.pointTypes :
-                if t in p.name:
-                  self.volumes[self.volumeIndex].customShader[self.volumes[self.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetNthControlPointVisibility(self.volumes[self.volumeIndex].customShader[self.volumes[self.volumeIndex].shaderIndex].customShaderPoints.pointIndexes["markup" + t], 0)
-            except :
-              pass
+        :param param: Parameter object to enable or disable.
+        :type param: PRISMRenderingParams object
+        :param checkBox: Checkbox to enable or disable the option.
+        :type checkBox: QCheckBox
+        :param CSName: Name of the current custom shader.
+        :type CSName: str
+        """
+        paramName = param.name
+        shader = self.volumes[self.volumeIndex].customShader[self.volumes[self.volumeIndex].shaderIndex]
+
+        if checkBox.isChecked():
+            shader.setShaderParameter(param, 1)
+            if str(CSName + paramName) in self.optionalWidgets:
+                for p in self.optionalWidgets[CSName + paramName]:
+                    p.show()
+                    # Check if there are optional points before trying to access them
+                    if shader.customShaderPoints.pointTypes:
+                        for t in shader.customShaderPoints.pointTypes:
+                            if t in p.name and "markup" + t in shader.customShaderPoints.pointIndexes:
+                                shader.customShaderPoints.endPoints.SetNthControlPointVisibility(
+                                    shader.customShaderPoints.pointIndexes["markup" + t], 1
+                                )
+        else:
+            shader.setShaderParameter(param, 0)
+            if str(CSName + paramName) in self.optionalWidgets:
+                for p in self.optionalWidgets[CSName + paramName]:
+                    p.hide()
+                    # Check if there are optional points before trying to access them
+                    if shader.customShaderPoints.pointTypes:
+                        for t in shader.customShaderPoints.pointTypes:
+                            if t in p.name and "markup" + t in shader.customShaderPoints.pointIndexes:
+                                shader.customShaderPoints.endPoints.SetNthControlPointVisibility(
+                                    shader.customShaderPoints.pointIndexes["markup" + t], 0
+                                )
+
 
     def setupVolume(self, volumeNode, comboBoxIndex):
       
