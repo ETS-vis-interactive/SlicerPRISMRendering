@@ -36,9 +36,11 @@ class PRISMRendering(ScriptedLoadableModule):
     def __init__(self, parent):
         slicer.ScriptedLoadableModule.ScriptedLoadableModule.__init__(self, parent)
         self.parent.title = "PRISMRendering"  # TODO: make this more human readable by adding spaces
-        self.parent.categories = ["Rendering"]  # TODO: set categories (folders where the module shows up in the module selector)
+        self.parent.categories = [
+            "Rendering"]  # TODO: set categories (folders where the module shows up in the module selector)
         self.parent.dependencies = []  # TODO: add here list of module names that this module requires
-        self.parent.contributors = ["Tiphaine RICHARD (ETS), Simon Drouin (ETS), Camille Hascoët (ETS)"]  # TODO: replace with "Firstname Lastname (Organization)"
+        self.parent.contributors = [
+            "Tiphaine RICHARD (ETS), Simon Drouin (ETS), Camille Hascoët (ETS)"]  # TODO: replace with "Firstname Lastname (Organization)"
         # TODO: update with short description of the module and a link to online module documentation
         self.parent.helpText = """This module is an implementation of the PRISM customizable volume rendering framework in 3D Slicer."""
         self.parent.helpText += "<p>For more information see the <a href=\"https://ets-vis-interactive.github.io/SlicerPRISM/\">online documentation</a>.</p>"
@@ -48,85 +50,87 @@ class PRISMRendering(ScriptedLoadableModule):
         # Additional initialization step after application startup is complete
         slicer.app.connect("startupCompleted()", registerSampleData)
 
+
 def registerSampleData():
-  """
+    """
   Add data sets to Sample Data module.
   """
-  # It is always recommended to provide sample data for users to make it easy to try the module,
-  # but if no sample data is available then this method (and associated startupCompeted signal connection) can be removed.
-  iconsPath = os.path.join(os.path.dirname(__file__), 'Resources/Icons')
+    # It is always recommended to provide sample data for users to make it easy to try the module,
+    # but if no sample data is available then this method (and associated startupCompeted signal connection) can be removed.
+    iconsPath = os.path.join(os.path.dirname(__file__), 'Resources/Icons')
 
-  # To ensure that the source code repository remains small (can be downloaded and installed quickly)
-  # it is recommended to store data sets that are larger than a few MB in a Github release.
+    # To ensure that the source code repository remains small (can be downloaded and installed quickly)
+    # it is recommended to store data sets that are larger than a few MB in a Github release.
 
-  # TemplateKey1
-  SampleData.SampleDataLogic.registerCustomSampleDataSource(
-    # Category and sample name displayed in Sample Data module
-    category='PRISMSampleData',
-    sampleName='SphereCarvingSampleData',
-    # Thumbnail should have size of approximately 260x280 pixels and stored in Resources/Icons folder.
-    # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
-    thumbnailFileName=os.path.join(iconsPath, 'SphereCarving.png'),
-    # Download URL and target file name
-    uris="https://ets-vis-interactive.github.io/SlicerPRISMRenderingDatabase/Volumes/MRI_Head.mnc",
-    fileNames='SphereCarvingSampleData.mnc',
-    # Checksum to ensure file integrity. Can be computed by this command:
-    #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
-    checksums = 'SHA256:4802487c31c1dcd24434cb370906e1002d515c3abed1ce00385b2307f1370c13',
-    # This node name will be used when the data set is loaded
-    nodeNames='SphereCarvingSampleData'
-  )
+    # TemplateKey1
+    SampleData.SampleDataLogic.registerCustomSampleDataSource(
+        # Category and sample name displayed in Sample Data module
+        category='PRISMSampleData',
+        sampleName='SphereCarvingSampleData',
+        # Thumbnail should have size of approximately 260x280 pixels and stored in Resources/Icons folder.
+        # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
+        thumbnailFileName=os.path.join(iconsPath, 'SphereCarving.png'),
+        # Download URL and target file name
+        uris="https://ets-vis-interactive.github.io/SlicerPRISMRenderingDatabase/Volumes/MRI_Head.mnc",
+        fileNames='SphereCarvingSampleData.mnc',
+        # Checksum to ensure file integrity. Can be computed by this command:
+        #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
+        checksums='SHA256:4802487c31c1dcd24434cb370906e1002d515c3abed1ce00385b2307f1370c13',
+        # This node name will be used when the data set is loaded
+        nodeNames='SphereCarvingSampleData'
+    )
 
-  SampleData.SampleDataLogic.registerCustomSampleDataSource(
-    # Category and sample name displayed in Sample Data module
-    category='PRISMSampleData',
-    sampleName='OutlineSampleData',
-    # Thumbnail should have size of approximately 260x280 pixels and stored in Resources/Icons folder.
-    # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
-    thumbnailFileName=os.path.join(iconsPath, 'Outline.png'),
-    # Download URL and target file name
-    uris="https://ets-vis-interactive.github.io/SlicerPRISMRenderingDatabase/Volumes/CTA_Brain.mnc",
-    fileNames='OutlineSampleData.mnc',
-    # Checksum to ensure file integrity. Can be computed by this command:
-    #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
-    checksums = 'SHA256:4278daf18bd75542d68305d56630e78379ca8cbe295e9cf4fa52bb318445858b',
-    # This node name will be used when the data set is loaded
-    nodeNames='OutlineSampleData'
-  )
+    SampleData.SampleDataLogic.registerCustomSampleDataSource(
+        # Category and sample name displayed in Sample Data module
+        category='PRISMSampleData',
+        sampleName='OutlineSampleData',
+        # Thumbnail should have size of approximately 260x280 pixels and stored in Resources/Icons folder.
+        # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
+        thumbnailFileName=os.path.join(iconsPath, 'Outline.png'),
+        # Download URL and target file name
+        uris="https://ets-vis-interactive.github.io/SlicerPRISMRenderingDatabase/Volumes/CTA_Brain.mnc",
+        fileNames='OutlineSampleData.mnc',
+        # Checksum to ensure file integrity. Can be computed by this command:
+        #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
+        checksums='SHA256:4278daf18bd75542d68305d56630e78379ca8cbe295e9cf4fa52bb318445858b',
+        # This node name will be used when the data set is loaded
+        nodeNames='OutlineSampleData'
+    )
 
-  SampleData.SampleDataLogic.registerCustomSampleDataSource(
-    # Category and sample name displayed in Sample Data module
-    category='PRISMSampleData',
-    sampleName='OpacityPeelingSampleData',
-    # Thumbnail should have size of approximately 260x280 pixels and stored in Resources/Icons folder.
-    # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
-    thumbnailFileName=os.path.join(iconsPath, 'OpacityPeeling.png'),
-    # Download URL and target file name
-    uris="https://ets-vis-interactive.github.io/SlicerPRISMRenderingDatabase/Volumes/MRI_Head.mnc",
-    fileNames='OpacityPeelingSampleData.mnc',
-    # Checksum to ensure file integrity. Can be computed by this command:
-    #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
-    checksums = 'SHA256:4802487c31c1dcd24434cb370906e1002d515c3abed1ce00385b2307f1370c13',
-    # This node name will be used when the data set is loaded
-    nodeNames='OpacityPeelingSampleData'
-  )
+    SampleData.SampleDataLogic.registerCustomSampleDataSource(
+        # Category and sample name displayed in Sample Data module
+        category='PRISMSampleData',
+        sampleName='OpacityPeelingSampleData',
+        # Thumbnail should have size of approximately 260x280 pixels and stored in Resources/Icons folder.
+        # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
+        thumbnailFileName=os.path.join(iconsPath, 'OpacityPeeling.png'),
+        # Download URL and target file name
+        uris="https://ets-vis-interactive.github.io/SlicerPRISMRenderingDatabase/Volumes/MRI_Head.mnc",
+        fileNames='OpacityPeelingSampleData.mnc',
+        # Checksum to ensure file integrity. Can be computed by this command:
+        #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
+        checksums='SHA256:4802487c31c1dcd24434cb370906e1002d515c3abed1ce00385b2307f1370c13',
+        # This node name will be used when the data set is loaded
+        nodeNames='OpacityPeelingSampleData'
+    )
 
-  SampleData.SampleDataLogic.registerCustomSampleDataSource(
-    # Category and sample name displayed in Sample Data module
-    category='PRISMSampleData',
-    sampleName='ChromaDepthPerceptionSampleData',
-    # Thumbnail should have size of approximately 260x280 pixels and stored in Resources/Icons folder.
-    # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
-    thumbnailFileName=os.path.join(iconsPath, 'ChromaDepthPerception.png'),
-    # Download URL and target file name
-    uris="https://ets-vis-interactive.github.io/SlicerPRISMRenderingDatabase/Volumes/CTA_Brain.mnc",
-    fileNames='ChromaDepthPerceptionSampleData.mnc',
-    # Checksum to ensure file integrity. Can be computed by this command:
-    #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
-    checksums = 'SHA256:4278daf18bd75542d68305d56630e78379ca8cbe295e9cf4fa52bb318445858b',
-    # This node name will be used when the data set is loaded
-    nodeNames='ChromaDepthPerceptionSampleData'
-  )
+    SampleData.SampleDataLogic.registerCustomSampleDataSource(
+        # Category and sample name displayed in Sample Data module
+        category='PRISMSampleData',
+        sampleName='ChromaDepthPerceptionSampleData',
+        # Thumbnail should have size of approximately 260x280 pixels and stored in Resources/Icons folder.
+        # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
+        thumbnailFileName=os.path.join(iconsPath, 'ChromaDepthPerception.png'),
+        # Download URL and target file name
+        uris="https://ets-vis-interactive.github.io/SlicerPRISMRenderingDatabase/Volumes/CTA_Brain.mnc",
+        fileNames='ChromaDepthPerceptionSampleData.mnc',
+        # Checksum to ensure file integrity. Can be computed by this command:
+        #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
+        checksums='SHA256:4278daf18bd75542d68305d56630e78379ca8cbe295e9cf4fa52bb318445858b',
+        # This node name will be used when the data set is loaded
+        nodeNames='ChromaDepthPerceptionSampleData'
+    )
+
 
 class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
     """Uses ScriptedLoadableModuleWidget base class, available at:
@@ -147,7 +151,7 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
 
         ## Create module logic
         self.logic = PRISMRenderingLogic()
-        
+
         ## Find all custom shader classes available
         allShaderTypes = CustomShader.GetAllShaderClassNames()
 
@@ -168,7 +172,8 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         #
         # Data Area
         #
-        self.ui.imageSelector.currentNodeChanged.connect(lambda value, w=self.ui.imageSelector: self.onImageSelectorChanged(value, w))
+        self.ui.imageSelector.currentNodeChanged.connect(
+            lambda value, w=self.ui.imageSelector: self.onImageSelectorChanged(value, w))
 
         self.ROIdisplay = None
         #
@@ -203,7 +208,7 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         #
         # Custom Shader Area
         #
-        
+
         # TODO: this is not working, find out why
         reloadIconPath = 'Resources/UI/reload.png'
         self.ui.reloadCurrentCustomShaderButton.setIcon(qt.QIcon(qt.QPixmap(reloadIconPath)))
@@ -309,11 +314,9 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         if not node:
             return
 
-        try:  # if the old shader has points
-            self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[
-                self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
-        except:
-            pass
+        if hasattr(self.logic.volumes[self.logic.volumesIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex], 'customShaderPoints'):  # if the new shader has points
+            self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
+
 
         self.logic.setupVolume(self.ui.imageSelector.currentNode(), self.ui.customShaderCombo.currentIndex)
         self.ui.viewSetupCollapsibleButton.show()
@@ -327,10 +330,15 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
                 self.ui.customShaderCombo.setCurrentIndex(currentIndex)
                 # for specified sample data values if defined
                 if self.firstSampleDataSwitch:
-                    if self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].sampleValues != {}:
-                        for p in self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].param_list:
-                            if self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].sampleValues.get(p.name) is not None:
-                                sampleValue = self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].sampleValues[p.name]
+                    if self.logic.volumes[self.logic.volumeIndex].customShader[
+                        self.logic.volumes[self.logic.volumeIndex].shaderIndex].sampleValues != {}:
+                        for p in self.logic.volumes[self.logic.volumeIndex].customShader[
+                            self.logic.volumes[self.logic.volumeIndex].shaderIndex].param_list:
+                            if self.logic.volumes[self.logic.volumeIndex].customShader[
+                                self.logic.volumes[self.logic.volumeIndex].shaderIndex].sampleValues.get(
+                                    p.name) is not None:
+                                sampleValue = self.logic.volumes[self.logic.volumeIndex].customShader[
+                                    self.logic.volumes[self.logic.volumeIndex].shaderIndex].sampleValues[p.name]
                                 p.setValue(sampleValue, True)
                                 p.defaultValue = sampleValue
                 self.sampleDataSwitch = False
@@ -341,7 +349,8 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
                 else:
                     self.ui.customShaderCombo.setCurrentIndex(0)
                     self.ui.customShaderCombo.setCurrentIndex(self.logic.volumes[self.logic.volumeIndex].comboBoxIndex)
-                    self.updateWidgetParameterNodeFromGUI(self.ui.customShaderCombo.currentText,self.ui.customShaderCombo)
+                    self.updateWidgetParameterNodeFromGUI(self.ui.customShaderCombo.currentText,
+                                                          self.ui.customShaderCombo)
 
         self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
 
@@ -417,7 +426,9 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         else:
             #slicer.mrmlScene.RemoveNode(slicer.mrmlScene.GetFirstNodeByName('Volume'))
             self.logic.volumes[self.logic.volumeIndex].customShader[
-                self.logic.volumes[self.logic.volumeIndex].shaderIndex].downloadSampleData(self.ui.imageSelector, self.sampleDatasNodeID, self.ui.customShaderCombo.currentText)
+                self.logic.volumes[self.logic.volumeIndex].shaderIndex].downloadSampleData(self.ui.imageSelector,
+                                                                                           self.sampleDatasNodeID,
+                                                                                           self.ui.customShaderCombo.currentText)
             if self.sampleDatasNodeID[shaderName] != -1:
                 self.updateWidgetParameterNodeFromGUI(self.ui.imageSelector.currentNode, self.ui.imageSelector)
                 self.ui.viewSetupCollapsibleButton.show()
@@ -504,7 +515,7 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
       :param caller: Caller of the function.
       :param event: Event that triggered the function.
       """
-        
+
         # Permet de supprimer le volume crée pour les modèles de test, il faut le supprimer pour avoir le rendu de base.
         if slicer.mrmlScene.GetFirstNodeByName('Volume'):
             slicer.mrmlScene.RemoveNode(slicer.mrmlScene.GetFirstNodeByName('Volume'))
@@ -534,11 +545,10 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
             for volume in self.logic.volumes:
                 if volume.volumeRenderingDisplayNode:
                     volume.volumeRenderingDisplayNode.SetVisibility(False)
-            try:  # if the new shader has points
+            if hasattr(self.logic.volumes[self.logic.volumesIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex],'customShaderPoints'):  # if the new shader has points
                 self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[
                     self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
-            except:
-                pass
+
             self.ui.enableROICheckBox.setChecked(False)
             self.ui.displayROICheckBox.setChecked(False)
             #self.ui.sampleDataButton.hide()
@@ -569,11 +579,13 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
             #If there is no volume
             if self.ui.imageSelector.currentNode() is not None:
                 self.logic.volumes[self.logic.volumeIndex].setCustomShaderType(self.ui.customShaderCombo.currentText)
-                self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].setupShader()
+                self.logic.volumes[self.logic.volumeIndex].customShader[
+                    self.logic.volumes[self.logic.volumeIndex].shaderIndex].setupShader()
 
                 self.UpdateShaderParametersUI()
                 self.updateWidgetParameterNodeFromGUI(self.ui.customShaderCombo.currentText, self.ui.customShaderCombo)
-                if self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints is not None:
+                if hasattr(self.logic.volumes[self.logic.volumeIndex].customShader[
+                               self.logic.volumes[self.logic.volumeIndex].shaderIndex], 'customShaderPoints'):
                     self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[
                         self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
             #If a volume is existing
@@ -592,14 +604,12 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
                             self.logic.currentShader = shader[1]
                             break"""
 
-
         # If there is no selected shader, disables the buttons.
         if self.ui.customShaderCombo.currentText == "None":
             self.ui.openCustomShaderButton.setEnabled(False)
             self.ui.reloadCurrentCustomShaderButton.setEnabled(False)
         else:
-            print(self.ui.customShaderCombo.currentText in self.logic.samplesAvailable)
-            if self.ui.customShaderCombo.currentText in self.logic.samplesAvailable :
+            if self.ui.customShaderCombo.currentText in self.logic.samplesAvailable:
                 self.ui.sampleDataButton.setEnabled(True)
             else:
                 self.ui.sampleDataButton.setEnabled(False)
@@ -645,7 +655,8 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
             if self.ui.invertedOutputSelector.currentNode():
                 # If additional output volume is selected then result with inverted threshold is written there
                 self.logic.process(self.ui.inputSelector.currentNode(), self.ui.invertedOutputSelector.currentNode(),
-                                   self.ui.imageThresholdSliderWidget.value, not self.ui.invertOutputCheckBox.checked, showResult=False)
+                                   self.ui.imageThresholdSliderWidget.value, not self.ui.invertOutputCheckBox.checked,
+                                   showResult=False)
 
     def renameROI(self):
         """Function to reset the ROI in the scene.
@@ -718,18 +729,17 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         if self.ui.customShaderCombo.currentText is None:
             return
 
-        try:  # if the new shader has points
+        if hasattr(self.logic.volumes[self.logic.volumesIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex],'customShaderPoints'):  # if the new shader has points
             self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[
                 self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(1)
-        except:
-            pass
+
         # Clear all the widgets except the combobox selector
         while self.ui.customShaderParametersLayout.count() != 1:
             ## Item of the combobox
             item = self.ui.customShaderParametersLayout.takeAt(self.ui.customShaderParametersLayout.count() - 1)
-            if item != None:
+            if item is not None:
                 widget = item.widget()
-                if widget != None:
+                if widget is not None:
                     widget.setParent(None)
 
         # if self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.GetNumberOfControlPoints() > 0 :
@@ -739,7 +749,6 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         volumeName = self.logic.volumes[
             self.logic.volumeIndex].volumeRenderingDisplayNode.GetVolumePropertyNode().GetName()
         self.CSName = self.ui.customShaderCombo.currentText.replace(" ", "") + volumeName
-        print(self.CSName)
         param_list = self.logic.volumes[self.logic.volumeIndex].customShader[
             self.logic.volumes[self.logic.volumeIndex].shaderIndex].param_list
         TFIndex = 0
@@ -878,7 +887,10 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
 
     @vtk.calldata_type(vtk.VTK_INT)
     def pointModified(self, caller, event, index):
-      self.updateWidgetParameterNodeFromGUI([caller, "PointModifiedEvent", index], self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints)
+        self.updateWidgetParameterNodeFromGUI([caller, "PointModifiedEvent", index],
+                                              self.logic.volumes[self.logic.volumeIndex].customShader[
+                                                  self.logic.volumes[
+                                                      self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints)
 
     def addAllGUIObservers(self):
         for w in self.widgets:
