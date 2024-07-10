@@ -427,16 +427,20 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
                 self.sampleDataSwitch = False
 
     def onResetParametersButtonClicked(self, caller=None, event=None):
+        """
+        Reset the parameters of the custom shader to their default values.
 
+        :param caller: Caller of the function.
+        :param event: Event that triggered the function.
+        """
         for p in self.logic.volumes[self.logic.volumeIndex].customShader[
             self.logic.volumes[self.logic.volumeIndex].shaderIndex].param_list:
             p.setValue(p.defaultValue, True)
-        try:
+        if self.logic.volumes[self.logic.volumeIndex].customShader[
+            self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints is not None:
             self.logic.volumes[self.logic.volumeIndex].customShader[
                 self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.UpdateGUIFromValues(
                 self.logic)
-        except Exception as e:
-            pass
 
     def onEnableRotationCheckBoxToggled(self, caller=None, event=None):
         """Function to enable rotating ROI box.
