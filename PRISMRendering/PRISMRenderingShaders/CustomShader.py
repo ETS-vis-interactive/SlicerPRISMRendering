@@ -143,11 +143,8 @@ class CustomShader():
                 break
 
     def createMarkupsNodeIfNecessary(self, logic):
-        print(self.param_list)
         for p in self.param_list:
-            print("entered")
             if isinstance(p, FourFParam):
-                print("passed")
                 self.customShaderPoints = CustomShaderPoints(self, logic)
                 break
 

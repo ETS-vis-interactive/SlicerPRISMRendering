@@ -313,9 +313,9 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
       """
         if not node:
             return
-
-        if hasattr(self.logic.volumes[self.logic.volumesIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex], 'customShaderPoints'):  # if the new shader has points
-            self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
+        if self.logic.volumes:
+            if hasattr(self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex], 'customShaderPoints'):  # if the new shader has points
+                self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
 
 
         self.logic.setupVolume(self.ui.imageSelector.currentNode(), self.ui.customShaderCombo.currentIndex)
@@ -541,10 +541,8 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
             for volume in self.logic.volumes:
                 if volume.volumeRenderingDisplayNode:
                     volume.volumeRenderingDisplayNode.SetVisibility(False)
-            if hasattr(self.logic.volumes[self.logic.volumesIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex],'customShaderPoints'):  # if the new shader has points
-                self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[
-                    self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
-
+            if hasattr(self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex],'customShaderPoints'):  # if the new shader has points
+                self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
             self.ui.enableROICheckBox.setChecked(False)
             self.ui.displayROICheckBox.setChecked(False)
             #self.ui.sampleDataButton.hide()
@@ -567,10 +565,13 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
 
     def onCustomShaderComboIndexChanged(self, i):
         """Callback function when the custom shader combo box is changed.
+          :param i: Index of the element.
+          :type i: int
+          """
 
-      :param i: Index of the element. 
-      :type i: int
-      """
+        if hasattr(self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex], 'customShaderPoints'):
+            self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
+
         if self.ui.customShaderCombo.currentText != "None":
             #If there is no volume
             if self.ui.imageSelector.currentNode() is not None:
@@ -580,10 +581,7 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
 
                 self.UpdateShaderParametersUI()
                 self.updateWidgetParameterNodeFromGUI(self.ui.customShaderCombo.currentText, self.ui.customShaderCombo)
-                if hasattr(self.logic.volumes[self.logic.volumeIndex].customShader[
-                               self.logic.volumes[self.logic.volumeIndex].shaderIndex], 'customShaderPoints'):
-                    self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[
-                        self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
+
             #If a volume is existing
             """else:
                 shaderNameList = []
@@ -725,7 +723,7 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         if self.ui.customShaderCombo.currentText is None:
             return
 
-        if hasattr(self.logic.volumes[self.logic.volumesIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex],'customShaderPoints'):  # if the new shader has points
+        if hasattr(self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex],'customShaderPoints'):  # if the new shader has points
             self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[
                 self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(1)
 
