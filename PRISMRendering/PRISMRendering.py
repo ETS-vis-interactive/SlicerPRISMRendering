@@ -572,9 +572,9 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
           :param i: Index of the element.
           :type i: int
           """
-
-        if hasattr(self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex], 'customShaderPoints'):
-            self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
+        if self.logic.volumes :
+            if hasattr(self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex], 'customShaderPoints'):
+                self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
 
         if self.ui.customShaderCombo.currentText != "None":
             #If there is no volume
