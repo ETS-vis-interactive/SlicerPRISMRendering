@@ -603,6 +603,8 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         else:
             self.ROIdisplay.RotationHandleVisibilityOff()
 
+            
+
     def onCustomShaderComboIndexChanged(self, i):
         """Callback function when the custom shader combo box is changed.
           :param i: Index of the element.
@@ -643,7 +645,7 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
             self.ui.openCustomShaderButton.setEnabled(False)
             self.ui.reloadCurrentCustomShaderButton.setEnabled(False)
         else:
-            if self.ui.customShaderCombo.currentText in self.logic.samplesAvailable:
+            if self.logic.checkIfSampleDataExists(self.ui.customShaderCombo.currentText):
                 self.ui.sampleDataButton.setEnabled(True)
             else:
                 self.ui.sampleDataButton.setEnabled(False)
