@@ -11,15 +11,16 @@ import SampleData
 from PRISMRenderingParams import *
 from PRISMRenderingPoints import *
 
-
 """CustomShader Class containing the function to access the parameters of the shader.
 Generic Custom Shader
-""" 
+"""
+
 
 class CustomShader():
-    sampleValues = {} #edit for specific shaders if you want to specify specific values for the sample datas
-    def __init__(self, shaderPropertyNode, volumeNode = None, logic = None):
-        
+    sampleValues = {}  #edit for specific shaders if you want to specify specific values for the sample datas
+
+    def __init__(self, shaderPropertyNode, volumeNode=None, logic=None):
+
         assert shaderPropertyNode != None, 'CustomShader: a valid shader property node must provided to the constructor'
         ## Property node of the shader
         self.shaderPropertyNode = shaderPropertyNode
@@ -46,34 +47,34 @@ class CustomShader():
             return
         imageSelector.setCurrentNode(volumeNode)
         sampleDatasNodeID[shaderName] = imageSelector.currentNodeID
-          
+
     def setAllUniforms(self):
-      for p in self.param_list:       
-        p.setUniform(self)
+        for p in self.param_list:
+            p.setUniform(self)
 
     def setupShader(self):
-      
-      self.clear()
-      self.setAllUniforms()
+
+        self.clear()
+        self.setAllUniforms()
 
     @classmethod
     def InstanciateCustomShader(cls, shaderDisplayName, shaderPropertyNode, volumeNode, logic):
         if shaderDisplayName == cls.GetDisplayName():
-          return CustomShader(shaderPropertyNode, volumeNode, logic)
+            return CustomShader(shaderPropertyNode, volumeNode, logic)
 
         for c in cls.allClasses:
-          if c.GetDisplayName() == shaderDisplayName:
-            return c(shaderPropertyNode, volumeNode, logic)
+            if c.GetDisplayName() == shaderDisplayName:
+                return c(shaderPropertyNode, volumeNode, logic)
         return None
 
     @classmethod
     def GetDisplayName(cls):
-      """Function to get the name of the current class.
+        """Function to get the name of the current class.
 
       :return: Name of the current class.
       :rtype: str
       """
-      return 'None'          
+        return 'None'
 
     @classmethod
     def GetAllShaderClassNames(cls):
@@ -102,17 +103,17 @@ class CustomShader():
                     for name, obj in inspect.getmembers(mod):
                         if inspect.isclass(obj) and issubclass(obj, cls) and obj != cls:
                             cls.allClasses.append(obj)
-                            allNames.append(obj.GetDisplayName())   
+                            allNames.append(obj.GetDisplayName())
         allNames.insert(0, cls.GetDisplayName())
         cls.allClasses.insert(0, CustomShader)
         return allNames
 
     def clear(self):
-      """Function to clear the shader.
+        """Function to clear the shader.
 
       """
-      self.shaderUniforms.RemoveAllUniforms()
-      self.shaderProperty.ClearAllFragmentShaderReplacements()    
+        self.shaderUniforms.RemoveAllUniforms()
+        self.shaderProperty.ClearAllFragmentShaderReplacements()
 
     @classmethod
     def GetBasicDescription(cls):
@@ -122,36 +123,35 @@ class CustomShader():
         :rtype: str
         """
         return 'Basic volume rendering shader.'
-    
+
     def setShaderParameter(self, Param, paramValue):
-      """Set the shader parameter.
+        """Set the shader parameter.
 
       :param Param: Parameter to be changed 
       :type Param: str
       :param paramValue: Value to be changed 
       :type paramValue: str
       """
-      Param.setValue(paramValue)
-      Param.setUniform(self)
+        Param.setValue(paramValue)
+        Param.setUniform(self)
 
     def setShaderParameterMarkup(self, paramName, value):
-      for i in self.param_list:
-        if i.name == paramName:
-          i.setValue(value)
-          i.setUniform(self)
-          break
+        for i in self.param_list:
+            if i.name == paramName:
+                i.setValue(value)
+                i.setUniform(self)
+                break
 
     def createMarkupsNodeIfNecessary(self, logic):
-       for p in self.param_list:
-          if isinstance(p, FourFParam):
-             self.customShaderPoints = CustomShaderPoints(self, logic)
-             break
-          
+        for p in self.param_list:
+            if isinstance(p, FourFParam):
+                self.customShaderPoints = CustomShaderPoints(self, logic)
+                break
+
     def resetVolumeProperty(self):
-       #This function is usefull for example when you switch back from the Echo Shader to set back the volume property to the default one
-       return
-    
+        #This function is usefull for example when you switch back from the Echo Shader to set back the volume property to the default one
+        return
+
     def onParamUpdater(self):
-      #This function is usefull for example when the Parameters doesn't only affects the shader but also the volume property (see Echo's Example)
-      return
-       
+        #This function is usefull for example when the Parameters doesn't only affects the shader but also the volume property (see Echo's Example)
+        return
