@@ -642,7 +642,9 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         if self.ui.customShaderCombo.currentText == "None":
             self.ui.openCustomShaderButton.setEnabled(False)
             self.ui.reloadCurrentCustomShaderButton.setEnabled(False)
+            self.UpdateShaderParametersUI()
         else:
+            #print(dir(self.ui.customShaderParametersLayout))
             if self.ui.customShaderCombo.currentText in self.logic.samplesAvailable:
                 self.ui.sampleDataButton.setEnabled(True)
             else:
@@ -760,7 +762,15 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         """Updates the shader parameters on the UI.
 
       """
-        if self.ui.customShaderCombo.currentText is None:
+        if self.ui.customShaderCombo.currentText == "None":
+            # Clear all the widgets except the combobox selector
+            while self.ui.customShaderParametersLayout.count() != 1:
+                ## Item of the combobox
+                item = self.ui.customShaderParametersLayout.takeAt(self.ui.customShaderParametersLayout.count() - 1)
+                if item is not None:
+                    widget = item.widget()
+                    if widget is not None:
+                        widget.setParent(None)
             return
 
         if hasattr(self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex],'customShaderPoints'):  # if the new shader has points
