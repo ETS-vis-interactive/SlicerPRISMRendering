@@ -644,8 +644,7 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
             self.ui.reloadCurrentCustomShaderButton.setEnabled(False)
             self.UpdateShaderParametersUI()
         else:
-            #print(dir(self.ui.customShaderParametersLayout))
-            if self.ui.customShaderCombo.currentText in self.logic.samplesAvailable:
+            if self.logic.checkIfSampleDataExists(self.ui.customShaderCombo.currentText):
                 self.ui.sampleDataButton.setEnabled(True)
             else:
                 self.ui.sampleDataButton.setEnabled(False)
