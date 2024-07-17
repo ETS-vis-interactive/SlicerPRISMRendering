@@ -366,8 +366,7 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
                 self.ui.customShaderCombo.setCurrentIndex(currentIndex)
                 # for specified sample data values if defined
                 if self.firstSampleDataSwitch:
-                    if self.logic.volumes[self.logic.volumeIndex].customShader[
-                        self.logic.volumes[self.logic.volumeIndex].shaderIndex].sampleValues != {}:
+                    if self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].sampleValues != {}:
                         for p in self.logic.volumes[self.logic.volumeIndex].customShader[
                             self.logic.volumes[self.logic.volumeIndex].shaderIndex].param_list:
                             if self.logic.volumes[self.logic.volumeIndex].customShader[
@@ -480,13 +479,10 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         :param caller: Caller of the function.
         :param event: Event that triggered the function.
         """
-        for p in self.logic.volumes[self.logic.volumeIndex].customShader[
-            self.logic.volumes[self.logic.volumeIndex].shaderIndex].param_list:
+        for p in self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].param_list:
             p.setValue(p.defaultValue, True)
-        if self.logic.volumes[self.logic.volumeIndex].customShader[
-            self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints is not None:
-            self.logic.volumes[self.logic.volumeIndex].customShader[
-                self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.UpdateGUIFromValues(
+        if hasattr(self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex],'customShaderPoints'):
+            self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.UpdateGUIFromValues(
                 self.logic)
 
     def onEnableRotationCheckBoxToggled(self, caller=None, event=None):
@@ -613,37 +609,16 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
                 self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].customShaderPoints.endPoints.SetDisplayVisibility(0)
 
         if self.ui.customShaderCombo.currentText != "None":
-            #If there is no volume
+            #If there is a volume
             if self.ui.imageSelector.currentNode() is not None:
+                if not self.logic.volumes :
+                    self.logic.setupVolume(self.ui.imageSelector.currentNode(), self.ui.customShaderCombo.currentIndex)
                 self.logic.volumes[self.logic.volumeIndex].setCustomShaderType(self.ui.customShaderCombo.currentText)
-                self.logic.volumes[self.logic.volumeIndex].customShader[
-                    self.logic.volumes[self.logic.volumeIndex].shaderIndex].setupShader()
+                self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].setupShader()
 
                 self.UpdateShaderParametersUI()
                 self.updateWidgetParameterNodeFromGUI(self.ui.customShaderCombo.currentText, self.ui.customShaderCombo)
 
-            #If a volume is existing
-            """else:
-                shaderNameList = []
-                for i in self.logic.customShaderWithoutVolume:
-                    shaderNameList.append(i[0])
-                if self.ui.customShaderCombo.currentText not in shaderNameList:
-                    self.logic.currentShader = CustomShader.InstanciateCustomShader(
-                        self.ui.customShaderCombo.currentText, slicer.vtkMRMLShaderPropertyNode(), None, None)
-                    self.logic.customShaderWithoutVolume.append(
-                        [self.ui.customShaderCombo.currentText, self.logic.currentShader])
-                else:
-                    for shader in self.logic.customShaderWithoutVolume:
-                        if shader[0] == self.ui.customShaderCombo.currentText:
-                            self.logic.currentShader = shader[1]
-                            break"""
-
-        # If there is no selected shader, disables the buttons.
-        if self.ui.customShaderCombo.currentText == "None":
-            self.ui.openCustomShaderButton.setEnabled(False)
-            self.ui.reloadCurrentCustomShaderButton.setEnabled(False)
-            self.UpdateShaderParametersUI()
-        else:
             if self.logic.checkIfSampleDataExists(self.ui.customShaderCombo.currentText):
                 self.ui.sampleDataButton.setEnabled(True)
             else:
@@ -654,6 +629,14 @@ class PRISMRenderingWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
             if self.ui.imageSelector.currentNode is not None:
                 self.ui.viewSetupCollapsibleButton.show()
                 self.ui.volumeRenderingCheckBox.show()
+
+        # If there is no selected shader, disables the buttons.
+        else:
+            self.ui.openCustomShaderButton.setEnabled(False)
+            self.ui.reloadCurrentCustomShaderButton.setEnabled(False)
+            self.UpdateShaderParametersUI()
+
+
 
         # TODO: fix this. The tooltip should only be related to shader and shouldn't have anything to do with volume index
         #self.ui.customShaderCollapsibleButton.setToolTip(self.logic.volumes[self.logic.volumeIndex].customShader[self.logic.volumes[self.logic.volumeIndex].shaderIndex].GetBasicDescription())

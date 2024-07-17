@@ -24,6 +24,7 @@ class ChromaDepthShader(CustomShader):
     CustomShader.__init__(self, shaderPropertyNode, volumeNode)
     self.param_list = paramlist
     volumeRange = self.getVolumeRange(volumeNode)
+
     if volumeRange :
       self.param_list[0].setRange([(-1 * volumeRange), (volumeRange)])
     self.createMarkupsNodeIfNecessary(logic)
@@ -43,7 +44,7 @@ class ChromaDepthShader(CustomShader):
 
   def getVolumeRange(self, volumeNode):
     """Function to get the range of the current volume.
-    
+
     :param volumeNode: Current volume.
     :type volumeNode: vtkMRMLScalarVolumeNode
     
