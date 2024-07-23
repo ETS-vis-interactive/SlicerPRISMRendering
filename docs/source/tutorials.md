@@ -53,9 +53,7 @@ This section contains a detailed description on how to use each of the technique
 ### Chroma Depth Perception
 
 This technique brings out the depth of a volume with a smooth transition between all hues.
-<!---
-You can download the sample volume by clicking <a href="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRenderingDatabase/master/volumes/1.mnc" download>here</a>.
--->
+
 It is possible to :
 
 * Adjust the range of the volume.
@@ -72,8 +70,6 @@ It is possible to :
 ### Opacity Peeling
 
 This technique respond to the problem of occlusion of certain structures in the volume. It consists in removing the first n layers of tissue during the integration of the ray.
-
-You can download the sample volume by clicking <a href="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRenderingDatabase/master/volumes/MR-head.nrrd" download>here</a>.
 
 It is possible to :
 
@@ -100,9 +96,7 @@ It is possible to :
 ### Outline
 
 This shader highlights the borders of the volume and is particularly useful for visualizing complex structures such as the blood vessels of the brain. Indeed, the accentuation of the edges of the vessels makes it possible to improve the perception of the depths by ordering the order of depth of overlapping vessels.
-<!---
-You can download the sample volume by clicking <a href="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRenderingDatabase/master/volumes/1.mnc" download>here</a>.
--->
+
 It is possible to :
 
 * Adjust the step for the calculation of the gradient.
@@ -113,12 +107,16 @@ It is possible to :
 
     <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/images/tutorials/allShaders/outline/step.gif" width ="100%" style="margin-left: auto; margin-right: auto; display: block;"/>
 
+### Echo Volume 
+
+This shader allow the user to see the depth of the volume with a lightning effect.
+
+    <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/images/tutorials/allShaders/EchoVolume/echoVolume.gif" width ="100%" style="margin-left: auto; margin-right: auto; display: block;"/>
+
 ### Plane Intersecting
 
 This technique allows to visualize the anatomy along the approach plane for surgery.
-<!---
-You can download the sample volume by clicking <a href="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRenderingDatabase/master/docs//MR-head.nrrd" download>here</a>.
--->
+
 It is possible to :
 
 * Initialize the two points.

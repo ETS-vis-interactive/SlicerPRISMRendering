@@ -2,6 +2,18 @@
 
 See [this page](https://githubcomets-vis-interactiveSlicerPRISMRenderingrendering.readthedocs.io/en/latest/code.html) for the full code documentation.
 
+## Schemes
+
+### Class diagram
+
+<img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/images/tutorials/developers/PRISM-Diagramme_de_classe.drawio.png" width ="100%" style="margin-left: auto; margin-right: auto; display: block;"/>
+
+### Sequence diagram - Visualize a Volume / a Sample data
+
+<img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/images/tutorials/developers/PRISM-Volume_rendering-View_Sample.drawio.png" width ="100%" style="margin-left: auto; margin-right: auto; display: block;"/>
+
+   <img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/images/tutorials/developers/PRISM-Volume_rendering-View_Volume.drawio.png" width ="100%" style="margin-left: auto; margin-right: auto; display: block;"/>
+
 <a name="howto"></a>
 
 ## How Tos
