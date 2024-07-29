@@ -34,6 +34,12 @@ class PRISMRendering(ScriptedLoadableModule):
     """
 
     def __init__(self, parent):
+        """
+        Initializes the PRISMRendering class.
+
+        Args:
+            parent (slicer.ScriptedLoadableModule): The parent module.
+        """
         slicer.ScriptedLoadableModule.ScriptedLoadableModule.__init__(self, parent)
         self.parent.title = "PRISMRendering"  # TODO: make this more human readable by adding spaces
         self.parent.categories = [

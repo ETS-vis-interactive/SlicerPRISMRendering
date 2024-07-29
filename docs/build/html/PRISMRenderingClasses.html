@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PRISMRendering Classes &mdash; SlicerPRISMRendering  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=fd3f3429" />
+
+  
+    <link rel="shortcut icon" href="_static/logoPRISMRenderingHTMLfavicon.png"/>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Code Structure Diagrams" href="diagrams.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SlicerPRISMRendering
+              <img src="_static/logoPRISMRenderingHTML.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">General Informations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="panels.html">Panels and their use</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="code.html">Code documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="diagrams.html">Code Structure Diagrams</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">PRISMRendering Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prismrendering">PRISMRendering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prismrenderingwidget">PRISMRenderingWidget</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prismrenderinglogic">PRISMRenderingLogic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prismrenderingparams">PRISMRenderingParams</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#param"><code class="docutils literal notranslate"><span class="pre">Param</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#boolparam"><code class="docutils literal notranslate"><span class="pre">BoolParam</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#floatparam"><code class="docutils literal notranslate"><span class="pre">FloatParam</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#intparam"><code class="docutils literal notranslate"><span class="pre">IntParam</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fourfparam"><code class="docutils literal notranslate"><span class="pre">FourFParam</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rangeparam"><code class="docutils literal notranslate"><span class="pre">RangeParam</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#transferfunctionparam"><code class="docutils literal notranslate"><span class="pre">TransferFunctionParam</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#prismrenderingpoints-customshaderpoints-class">PRISMRenderingPoints / CustomShaderPoints Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prismrenderingshaders">PRISMRenderingShaders</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SlicerPRISMRendering</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="code.html">Code documentation</a></li>
+      <li class="breadcrumb-item active">PRISMRendering Classes</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/PRISMRenderingClasses.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="prismrendering-classes">
+<h1>PRISMRendering Classes<a class="headerlink" href="#prismrendering-classes" title="Link to this heading"></a></h1>
+<section id="prismrendering">
+<h2>PRISMRendering<a class="headerlink" href="#prismrendering" title="Link to this heading"></a></h2>
+<p><strong>Description</strong>: The PRISMRendering class extends the ScriptedLoadableModule class from 3D Slicer. This class represents the PRISM Rendering module.
+The class is responsible for initializing the module, setting its properties (such as title, categories, dependencies, contributors), and registering sample data. It also contains metadata about the module, including help text and acknowledgment text.</p>
+</section>
+<section id="prismrenderingwidget">
+<h2>PRISMRenderingWidget<a class="headerlink" href="#prismrenderingwidget" title="Link to this heading"></a></h2>
+<p><strong>Description</strong>: The PRISMRenderingWidget class extends both ScriptedLoadableModuleWidget and VTKObservationMixin. This class handles the graphical user interface (GUI) for the PRISM Rendering module. It sets up the interface elements, connects user actions (like button clicks) to functions, and updates the interface based on the state of the module. The class ensures that the user can interact with the module effectively, providing a way to control and configure the rendering process.</p>
+</section>
+<section id="prismrenderinglogic">
+<h2>PRISMRenderingLogic<a class="headerlink" href="#prismrenderinglogic" title="Link to this heading"></a></h2>
+<p><strong>Description</strong>: This class extends ScriptedLoadableModuleLogic and encapsulates the core computational logic for the PRISM Rendering module in 3D Slicer. It is designed to be used by other Python code without requiring an instance of the user interface (Widget). The class is responsible for managing and processing volume data, applying custom shaders, and handling various rendering tasks. It also manages scene events and volume nodes to ensure that the rendering environment is properly set up and maintained.</p>
+</section>
+<section id="prismrenderingparams">
+<h2>PRISMRenderingParams<a class="headerlink" href="#prismrenderingparams" title="Link to this heading"></a></h2>
+<p><strong>Description</strong>: Shader parameter classes are specialized classes that represent different types of parameters used in PRISMRendering shaders. These classes manage the interaction between the user interface and the underlying shader logic, allowing users to customize the appearance and behavior of volume renderings.</p>
+<section id="param">
+<h3><code class="docutils literal notranslate"><span class="pre">Param</span></code><a class="headerlink" href="#param" title="Link to this heading"></a></h3>
+<p><strong>Description</strong>: The abstract base class for all shader parameters. Provides a common interface and basic functionality for shader parameters, ensuring consistency and enabling extensibility. It defines the basic methods and properties that all parameter classes must implement, such as setting and getting values, updating the GUI, and interfacing with the shader.</p>
+</section>
+<section id="boolparam">
+<h3><code class="docutils literal notranslate"><span class="pre">BoolParam</span></code><a class="headerlink" href="#boolparam" title="Link to this heading"></a></h3>
+<p><strong>Description</strong>: Represents a boolean parameter for shaders. Manages a checkbox in the GUI, allowing users to enable or disable shader features. This class is useful for parameters that are either on or off, such as toggling the visibility of certain shader effects.</p>
+</section>
+<section id="floatparam">
+<h3><code class="docutils literal notranslate"><span class="pre">FloatParam</span></code><a class="headerlink" href="#floatparam" title="Link to this heading"></a></h3>
+<p><strong>Description</strong>: Represents a float parameter for shaders. Manages a slider in the GUI, allowing users to adjust floating-point values within a specified range. This class is useful for fine-tuning shader effects that require a continuous range of values, such as adjusting brightness or intensity.</p>
+</section>
+<section id="intparam">
+<h3><code class="docutils literal notranslate"><span class="pre">IntParam</span></code><a class="headerlink" href="#intparam" title="Link to this heading"></a></h3>
+<p><strong>Description</strong>: Represents an integer parameter for shaders. Manages a slider in the GUI, allowing users to adjust integer values within a specified range. This class is ideal for parameters that require discrete values, such as selecting a number of iterations or levels of detail.</p>
+</section>
+<section id="fourfparam">
+<h3><code class="docutils literal notranslate"><span class="pre">FourFParam</span></code><a class="headerlink" href="#fourfparam" title="Link to this heading"></a></h3>
+<p><strong>Description</strong>: Represents a 4D vector parameter for shaders. Allows users to set four-component vector values, often used for complex shader parameters. This class is useful for parameters that require multiple values, such as position or color vectors.</p>
+</section>
+<section id="rangeparam">
+<h3><code class="docutils literal notranslate"><span class="pre">RangeParam</span></code><a class="headerlink" href="#rangeparam" title="Link to this heading"></a></h3>
+<p><strong>Description</strong>: Represents a range parameter for shaders. Manages a range slider in the GUI, allowing users to set a minimum and maximum value for shader parameters. This class is particularly useful for parameters that define a range of values, such as thresholding or windowing operations.</p>
+</section>
+<section id="transferfunctionparam">
+<h3><code class="docutils literal notranslate"><span class="pre">TransferFunctionParam</span></code><a class="headerlink" href="#transferfunctionparam" title="Link to this heading"></a></h3>
+<p><strong>Description</strong>: Represents a transfer function parameter for shaders. Manages a widget for defining transfer functions (color and opacity) used in volume rendering. This class allows users to customize the mapping of data values to visual properties, essential for visualizing complex volume data. It supports both color and opacity transfer functions, providing a flexible tool for enhancing volume renderings.</p>
+</section>
+</section>
+<section id="prismrenderingpoints-customshaderpoints-class">
+<h2>PRISMRenderingPoints / CustomShaderPoints Class<a class="headerlink" href="#prismrenderingpoints-customshaderpoints-class" title="Link to this heading"></a></h2>
+<p><strong>Description</strong>: Manages the interaction and placement of fiducial points in the 3D Slicer scene for custom shaders. This class is responsible for creating, updating, and managing the endpoints (fiducial points) used in custom shaders.</p>
+</section>
+<section id="prismrenderingshaders">
+<h2>PRISMRenderingShaders<a class="headerlink" href="#prismrenderingshaders" title="Link to this heading"></a></h2>
+<p><strong>Description</strong>: This class manages the shaders created for PRISM rendering. More details of each shader can be found in the Tutorials section.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="diagrams.html" class="btn btn-neutral float-left" title="Code Structure Diagrams" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Tiphaine RICHARD.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

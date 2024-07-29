@@ -35,11 +35,11 @@
 <ul> 
 <li><b>Custom Shader</b> : Controls of the shader.</li>
 <ul>
-<li><b>Custom Shader</b> : Name of the shader to be applied during the rendering.</li>
-
+<li><b>Custom Shader</b> : Name of the shader to be applied during the rendering.</li> 
 <li><b>Reload</b> : Reload the current shader.</li>
 <li><b>Open</b> : Open the current shader source code.</li>
-<li><b>Duplicate</b> : Duplicate the current shader source code.</li>
+<li><b>Reset</b> : Reset the current shader parameters.</li>
+<li><b>Sample</b> : Load the associated SampleData.</li>
 
 </ul>
 </ul>
@@ -50,4 +50,5 @@
 
 </td>
 </tr>
+
 </table>
