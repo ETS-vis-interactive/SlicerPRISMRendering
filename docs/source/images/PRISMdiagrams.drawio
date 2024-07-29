@@ -1,0 +1,362 @@
+<mxfile host="app.diagrams.net" modified="2024-07-10T14:54:35.617Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36" etag="Kx410cd5WqNyq7bvv7gp" version="24.6.4" type="google" pages="3">
+  <diagram name="Diagramme de classe" id="tfr5W_lLEQ3_nhL0BHgh">
+    <mxGraphModel grid="0" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="d95rAUiVsX_miVNXcJtr-6" value="PRISMRenderingVolumes" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-773.5" y="213" width="576" height="382" as="geometry" />
+        </mxCell>
+        <mxCell id="d95rAUiVsX_miVNXcJtr-7" value="&lt;code&gt;- logic: Any&lt;/code&gt;&lt;br/&gt;&lt;code&gt;- volumeNode: Any&lt;/code&gt;&lt;br/&gt;&lt;code&gt;- volumeRenderingDisplayNode: Any&lt;/code&gt;&lt;br/&gt;&lt;code&gt;- colorTransferFunction: vtk.vtkColorTransferFunction&lt;/code&gt;&lt;br/&gt;&lt;code&gt;- opacityTransferFunction: vtk.vtkPiecewiseFunction&lt;/code&gt;&lt;br/&gt;&lt;code&gt;- shaderIndex: int&lt;/code&gt;&lt;br/&gt;&lt;code&gt;- customShaderType: str&lt;/code&gt;&lt;br/&gt;&lt;code&gt;- customShader: list&lt;/code&gt;&lt;br/&gt;&lt;code&gt;- comboBoxIndex: int&lt;/code&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="d95rAUiVsX_miVNXcJtr-6">
+          <mxGeometry y="26" width="576" height="176" as="geometry" />
+        </mxCell>
+        <mxCell id="d95rAUiVsX_miVNXcJtr-8" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="d95rAUiVsX_miVNXcJtr-6">
+          <mxGeometry y="202" width="576" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="d95rAUiVsX_miVNXcJtr-9" value="&lt;code&gt;+ __init__(self, logic, volumeNode)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ renderVolume(self)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ updateVolumeColorMapping(self, displayNode, volumePropertyNode = None)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ setupCustomShader(self)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ setCustomShaderType(self, shaderTypeName)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ onCustomShaderParamChanged(self, value, Param)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ checkIfCSExists(self)&lt;/code&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="d95rAUiVsX_miVNXcJtr-6">
+          <mxGeometry y="210" width="576" height="172" as="geometry" />
+        </mxCell>
+        <mxCell id="d95rAUiVsX_miVNXcJtr-11" value="Param" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="430" y="552" width="311" height="243" as="geometry" />
+        </mxCell>
+        <mxCell id="d95rAUiVsX_miVNXcJtr-12" value="- name: str&lt;br&gt;- display_name: str&lt;br&gt;- customShader: Any&lt;br&gt;- isShaderUpdater: bool" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="d95rAUiVsX_miVNXcJtr-11">
+          <mxGeometry y="26" width="311" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="d95rAUiVsX_miVNXcJtr-13" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="d95rAUiVsX_miVNXcJtr-11">
+          <mxGeometry y="102" width="311" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="d95rAUiVsX_miVNXcJtr-14" value="+ __init__(self, name, display_name)&lt;br&gt;+ setUniform(self, CustomShader)&lt;br&gt;+ addCustomShaderUpdater(self, customShader)&lt;br&gt;+ setValue(self, value, updateGUI=False)&lt;br&gt;+ getValue(self)&lt;br&gt;+ show(self)&lt;br&gt;+ hide(self)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="d95rAUiVsX_miVNXcJtr-11">
+          <mxGeometry y="110" width="311" height="133" as="geometry" />
+        </mxCell>
+        <mxCell id="d95rAUiVsX_miVNXcJtr-18" value="CustomShader" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-90" y="48" width="350" height="534" as="geometry" />
+        </mxCell>
+        <mxCell id="d95rAUiVsX_miVNXcJtr-19" value="&lt;span style=&quot;background-color: initial;&quot;&gt;- sampleValues: dict&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;- shaderPropertyNode: Any&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;- shaderProperty: Any&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;- shaderUniforms: Any&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;- volumeNode: Any&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;- allClasses: list&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;- param_list: list&amp;lt;Param&amp;gt;&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;- logic: Any&lt;/span&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="d95rAUiVsX_miVNXcJtr-18">
+          <mxGeometry y="26" width="350" height="128" as="geometry" />
+        </mxCell>
+        <mxCell id="d95rAUiVsX_miVNXcJtr-20" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="d95rAUiVsX_miVNXcJtr-18">
+          <mxGeometry y="154" width="350" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="d95rAUiVsX_miVNXcJtr-21" value="&lt;span style=&quot;background-color: initial;&quot;&gt;+ __init__(self, shaderPropertyNode, volumeNode = None, logic = None)&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;+ downloadSampleData(self, imageSelector, sampleDatasNodeID, shaderName)&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;+ setAllUniforms(self)&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;+ setupShader(self)&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;+ InstanciateCustomShader(cls, shaderDisplayName, shaderPropertyNode, volumeNode, logic)&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;+ GetDisplayName(cls)&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;+ GetAllShaderClassNames(cls)&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;+ clear(self)&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;+ GetBasicDescription(cls)&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;+ setShaderParameter(self, Param, paramValue)&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;+ setShaderParameterMarkup(self, paramName, value)&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;+ createMarkupsNodeIfNecessary(self, logic)&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;+ resetVolumeProperty(self)&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;+ onParamUpdater(self)&lt;/span&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="d95rAUiVsX_miVNXcJtr-18">
+          <mxGeometry y="162" width="350" height="372" as="geometry" />
+        </mxCell>
+        <mxCell id="d95rAUiVsX_miVNXcJtr-22" value="PRISMRenderingLogic" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-668" y="773" width="350" height="272" as="geometry" />
+        </mxCell>
+        <mxCell id="d95rAUiVsX_miVNXcJtr-23" value="- optionalWidgets: dict&lt;br&gt;- parameterNode: Any&lt;br&gt;- volumeIndex: Any&lt;br&gt;- volumes: list" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="d95rAUiVsX_miVNXcJtr-22">
+          <mxGeometry y="26" width="350" height="114" as="geometry" />
+        </mxCell>
+        <mxCell id="d95rAUiVsX_miVNXcJtr-24" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="d95rAUiVsX_miVNXcJtr-22">
+          <mxGeometry y="140" width="350" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="d95rAUiVsX_miVNXcJtr-25" value="+ __init__(self)&lt;br&gt;+ addObservers(self)&lt;br&gt;+ onCloseScene(self, caller, event)&lt;br&gt;+ deleteNodes(self)&lt;br&gt;+ enableOption(self, param, checkBox, CSName)&lt;br&gt;+ setupVolume(self, volumeNode, comboBoxIndex)&lt;br&gt;+ checkIfVolumeExists(self, volumeNode)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="d95rAUiVsX_miVNXcJtr-22">
+          <mxGeometry y="148" width="350" height="124" as="geometry" />
+        </mxCell>
+        <mxCell id="d95rAUiVsX_miVNXcJtr-26" value="CustomShaderPoints" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-186" y="795" width="506" height="459" as="geometry" />
+        </mxCell>
+        <mxCell id="d95rAUiVsX_miVNXcJtr-27" value="- currentMarkupBtn: Any&lt;br&gt;- pointType: str&lt;br&gt;- pointName: str&lt;br&gt;- pointIndexes: dict&lt;br&gt;- logic: Any&lt;br&gt;- customShader: Any&lt;br&gt;- pointTypes: list&lt;br&gt;- endPoints: Any&lt;br&gt;- node_id: str&lt;br&gt;- pointModifiedEventTag: Any" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="d95rAUiVsX_miVNXcJtr-26">
+          <mxGeometry y="26" width="506" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="d95rAUiVsX_miVNXcJtr-28" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="d95rAUiVsX_miVNXcJtr-26">
+          <mxGeometry y="216" width="506" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="d95rAUiVsX_miVNXcJtr-29" value="+ __init__(self, customShader, logic)&lt;br&gt;+ createPointTypes(self)&lt;br&gt;+ createEndPoints(self)&lt;br&gt;+ onCustomShaderParamChangedMarkup(self, value, paramName)&lt;br&gt;+ setPlacingMarkups(self, paramType, paramName, btn, interaction=1, persistence=0)&lt;br&gt;+ onEndPointAdded(self, caller, event)&lt;br&gt;+ addObservers(self)&lt;br&gt;+ removeObservers(self)&lt;br&gt;+ onEndPointsChanged(self, caller, event, call_data)&lt;br&gt;+ updateParameterNodeFromGUI(self, value)&lt;br&gt;+ pointModified(self, caller, event, index)&lt;br&gt;+ updateGUIFromParameterNode(self, logic)&lt;br&gt;+ UpdateGUIFromValues(self, logic)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="d95rAUiVsX_miVNXcJtr-26">
+          <mxGeometry y="224" width="506" height="235" as="geometry" />
+        </mxCell>
+        <mxCell id="d95rAUiVsX_miVNXcJtr-1" value="PRISMRendering" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="442" y="156" width="160" height="86" as="geometry" />
+        </mxCell>
+        <mxCell id="d95rAUiVsX_miVNXcJtr-2" value="- parent: Any" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="d95rAUiVsX_miVNXcJtr-1">
+          <mxGeometry y="26" width="160" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="d95rAUiVsX_miVNXcJtr-3" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="d95rAUiVsX_miVNXcJtr-1">
+          <mxGeometry y="52" width="160" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="d95rAUiVsX_miVNXcJtr-4" value="+ __init__(self, parent)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="d95rAUiVsX_miVNXcJtr-1">
+          <mxGeometry y="60" width="160" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="meAk6Uuhpxu6GsSFDYC7-5" value="PRISMRenderingWidget" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-737" y="1139" width="503" height="736" as="geometry" />
+        </mxCell>
+        <mxCell id="meAk6Uuhpxu6GsSFDYC7-6" value="&lt;code&gt;- logic: PRISMRenderingLogic&lt;/code&gt;&lt;br/&gt;&lt;code&gt;- ui: Any&lt;/code&gt;&lt;br/&gt;&lt;code&gt;- ROIdisplay: Any&lt;/code&gt;&lt;br/&gt;&lt;code&gt;- widgets: list&lt;/code&gt;&lt;br/&gt;&lt;code&gt;- transferFunctionParams: list&lt;/code&gt;&lt;br/&gt;&lt;code&gt;- numberOfTFTypes: int&lt;/code&gt;&lt;br/&gt;&lt;code&gt;- transferFunctionParamsName: list&lt;/code&gt;&lt;br/&gt;&lt;code&gt;- sampleDatasNodeID: dict&lt;/code&gt;&lt;br/&gt;&lt;code&gt;- sampleDataSwitch: bool&lt;/code&gt;&lt;br/&gt;&lt;code&gt;- firstSampleDataSwitch: bool&lt;/code&gt;&lt;br/&gt;&lt;code&gt;- CSName: str&lt;/code&gt;&lt;br/&gt;&lt;code&gt;- ROI: Any&lt;/code&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="meAk6Uuhpxu6GsSFDYC7-5">
+          <mxGeometry y="26" width="503" height="213" as="geometry" />
+        </mxCell>
+        <mxCell id="meAk6Uuhpxu6GsSFDYC7-7" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="meAk6Uuhpxu6GsSFDYC7-5">
+          <mxGeometry y="239" width="503" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="meAk6Uuhpxu6GsSFDYC7-8" value="&lt;code&gt;+ setup(self)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ updateBaseGUIFromParameterNode(self, caller=None, event=None)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ onImageSelectorChanged(self, node, widget, index=0)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ checkVirtualReality(self)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ onVirtualRealityReloadClicked(self)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ onVirtualRealityButtonClicked(self)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ createTestVolume(self)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ onSampleDataButtonClicked(self, caller=None, event=None)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ onResetParametersButtonClicked(self, caller=None, event=None)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ onEnableRotationCheckBoxToggled(self, caller=None, event=None)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ onEnableScalingCheckBoxToggled(self, caller=None, event=None)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ onEnableROICheckBoxToggled(self, caller=None, event=None)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ onDisplayROICheckBoxToggled(self, caller=None, event=None)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ onVolumeRenderingCheckBoxToggled(self, caller=None, event=None)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ onToolCustomShaderButton(self)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ onCustomShaderComboIndexChanged(self, i)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ updateParameterNodeFromGUI(self, value, w)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ onApplyButton(self)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ renameROI(self)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ onROIdisplayChanged(self, caller, event)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ setAndObserveParameterNode(self, caller=None, event=None)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ appendList(self, widget, name)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ UpdateShaderParametersUI(self)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ setupDefaultTransferFunctions(self)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ getClassName(self, widget)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ getWidgetPosition(self, layout, widgetName)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ pointModified(self, caller, event, index)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ addAllGUIObservers(self)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ removeAllGUIObservers(self)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ addGUIObservers(self, w)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ removeGUIObservers(self, w)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ updateWidgetGUIFromParameterNode(self, w, caller=None, event=None)&lt;/code&gt;&lt;br/&gt;&lt;code&gt;+ updateWidgetParameterNodeFromGUI(self, value, w)&lt;/code&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="meAk6Uuhpxu6GsSFDYC7-5">
+          <mxGeometry y="247" width="503" height="489" as="geometry" />
+        </mxCell>
+        <mxCell id="DAMsoitlWgN6kLuppXSg-1" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.527;entryY=1.021;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="meAk6Uuhpxu6GsSFDYC7-5" target="d95rAUiVsX_miVNXcJtr-25">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="-352" y="1091" as="sourcePoint" />
+            <mxPoint x="-302" y="1041" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DAMsoitlWgN6kLuppXSg-2" value="Crée" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" connectable="0" vertex="1" parent="DAMsoitlWgN6kLuppXSg-1">
+          <mxGeometry x="-0.2597" y="-1" relative="1" as="geometry">
+            <mxPoint x="-1" y="-15" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DAMsoitlWgN6kLuppXSg-3" value="1&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" connectable="0" vertex="1" parent="DAMsoitlWgN6kLuppXSg-1">
+          <mxGeometry x="0.7392" y="-4" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DAMsoitlWgN6kLuppXSg-4" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" connectable="0" vertex="1" parent="DAMsoitlWgN6kLuppXSg-1">
+          <mxGeometry x="-0.5941" y="2" relative="1" as="geometry">
+            <mxPoint x="6" y="9" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DAMsoitlWgN6kLuppXSg-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-494" y="773" as="sourcePoint" />
+            <mxPoint x="-493" y="596" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-494" y="638" />
+              <mxPoint x="-493" y="638" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DAMsoitlWgN6kLuppXSg-6" value="Crée" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" connectable="0" vertex="1" parent="DAMsoitlWgN6kLuppXSg-5">
+          <mxGeometry x="-0.0329" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DAMsoitlWgN6kLuppXSg-8" value="0...*&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" connectable="0" vertex="1" parent="DAMsoitlWgN6kLuppXSg-5">
+          <mxGeometry x="0.849" y="1" relative="1" as="geometry">
+            <mxPoint y="13" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DAMsoitlWgN6kLuppXSg-9" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" connectable="0" vertex="1" parent="DAMsoitlWgN6kLuppXSg-5">
+          <mxGeometry x="-0.9003" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DAMsoitlWgN6kLuppXSg-11" value="Crée" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="d95rAUiVsX_miVNXcJtr-7" target="d95rAUiVsX_miVNXcJtr-21">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="-300" y="407" as="sourcePoint" />
+            <mxPoint x="-250" y="357" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DAMsoitlWgN6kLuppXSg-12" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" connectable="0" vertex="1" parent="DAMsoitlWgN6kLuppXSg-11">
+          <mxGeometry x="-0.8001" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DAMsoitlWgN6kLuppXSg-13" value="0..*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" connectable="0" vertex="1" parent="DAMsoitlWgN6kLuppXSg-11">
+          <mxGeometry x="0.7629" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DAMsoitlWgN6kLuppXSg-14" value="" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.451;entryY=0.011;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="d95rAUiVsX_miVNXcJtr-19" target="d95rAUiVsX_miVNXcJtr-11">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="217" y="391" as="sourcePoint" />
+            <mxPoint x="364" y="472" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zAPqSvNDxHRqj5keZK0O-1" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" connectable="0" vertex="1" parent="DAMsoitlWgN6kLuppXSg-14">
+          <mxGeometry x="-0.8173" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zAPqSvNDxHRqj5keZK0O-2" value="1... *" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" connectable="0" vertex="1" parent="DAMsoitlWgN6kLuppXSg-14">
+          <mxGeometry x="0.8748" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zAPqSvNDxHRqj5keZK0O-5" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.441;exitY=1.012;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="d95rAUiVsX_miVNXcJtr-21" target="d95rAUiVsX_miVNXcJtr-26">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="-138" y="577" as="sourcePoint" />
+            <mxPoint x="-88" y="527" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zAPqSvNDxHRqj5keZK0O-6" value="Créer si possède l&#39;attribut customShaderPoints" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" connectable="0" vertex="1" parent="zAPqSvNDxHRqj5keZK0O-5">
+          <mxGeometry x="-0.3542" relative="1" as="geometry">
+            <mxPoint y="13" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zAPqSvNDxHRqj5keZK0O-7" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" connectable="0" vertex="1" parent="zAPqSvNDxHRqj5keZK0O-5">
+          <mxGeometry x="-0.8336" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zAPqSvNDxHRqj5keZK0O-8" value="1..*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" connectable="0" vertex="1" parent="zAPqSvNDxHRqj5keZK0O-5">
+          <mxGeometry x="0.7623" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zAPqSvNDxHRqj5keZK0O-9" value="BoolParam&lt;div&gt;FloatParam&lt;/div&gt;&lt;div&gt;FourFParam&lt;/div&gt;&lt;div&gt;IntParam&lt;/div&gt;&lt;div&gt;Param&lt;/div&gt;&lt;div&gt;RangeParam&lt;/div&gt;&lt;div&gt;TransferFunctionParam&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="488" y="881" width="199" height="199" as="geometry" />
+        </mxCell>
+        <mxCell id="zAPqSvNDxHRqj5keZK0O-10" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;shape=flexArrow;" edge="1" parent="1" source="zAPqSvNDxHRqj5keZK0O-9" target="d95rAUiVsX_miVNXcJtr-14">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="620" y="874" as="sourcePoint" />
+            <mxPoint x="670" y="824" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zAPqSvNDxHRqj5keZK0O-11" value="ChromaDepthShader&lt;div&gt;CustomShader&lt;/div&gt;&lt;div&gt;EchoVolumeShader&lt;/div&gt;&lt;div&gt;OpacityPeelingShader&lt;/div&gt;&lt;div&gt;OutlineShader&lt;/div&gt;&lt;div&gt;PlaneIntersectionShader&lt;/div&gt;&lt;div&gt;PlaneIntersectionShader&lt;/div&gt;&lt;div&gt;SphereCarving&lt;/div&gt;&lt;div&gt;SquareCarvingVolumes&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="-38" y="1367" width="199" height="199" as="geometry" />
+        </mxCell>
+        <mxCell id="zAPqSvNDxHRqj5keZK0O-12" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;shape=flexArrow;entryX=0.482;entryY=1.024;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="zAPqSvNDxHRqj5keZK0O-11" target="d95rAUiVsX_miVNXcJtr-29">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="7" y="1338" as="sourcePoint" />
+            <mxPoint x="62" y="1265" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="SRKjRJ1JNfgtu0fQx5G7" name="Volume rendering - View Sample">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="WtdOc7KQkI-Uxin2UL7H-1" value="UI" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" vertex="1" parent="1">
+          <mxGeometry x="350" y="220" width="100" height="300" as="geometry" />
+        </mxCell>
+        <mxCell id="PV0ifqQAmuWE2C_zX7GS-1" value="User" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" vertex="1" parent="1">
+          <mxGeometry x="110" y="220" width="100" height="300" as="geometry" />
+        </mxCell>
+        <mxCell id="PV0ifqQAmuWE2C_zX7GS-2" value="Etat" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" vertex="1" parent="1">
+          <mxGeometry x="580" y="220" width="100" height="300" as="geometry" />
+        </mxCell>
+        <mxCell id="i6BAB33o0QsCP26MwSLS-1" value="SelectShader" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1" source="PV0ifqQAmuWE2C_zX7GS-1" target="WtdOc7KQkI-Uxin2UL7H-1">
+          <mxGeometry width="80" relative="1" as="geometry">
+            <mxPoint x="370" y="280" as="sourcePoint" />
+            <mxPoint x="400" y="290" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="270" y="290" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="i6BAB33o0QsCP26MwSLS-2" value="modifyCurrentShader" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1" source="WtdOc7KQkI-Uxin2UL7H-1" target="PV0ifqQAmuWE2C_zX7GS-2">
+          <mxGeometry width="80" relative="1" as="geometry">
+            <mxPoint x="170" y="300" as="sourcePoint" />
+            <mxPoint x="410" y="300" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="520" y="300" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="i6BAB33o0QsCP26MwSLS-4" value="Modify UI (Button Sample, Options Shader) " style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1">
+          <mxGeometry x="0.0391" width="80" relative="1" as="geometry">
+            <mxPoint x="629.5" y="330" as="sourcePoint" />
+            <mxPoint x="399.5" y="330" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="i6BAB33o0QsCP26MwSLS-5" value="Clic SampleData Button" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="80" relative="1" as="geometry">
+            <mxPoint x="159.5" y="360" as="sourcePoint" />
+            <mxPoint x="399.5" y="360" as="targetPoint" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="i6BAB33o0QsCP26MwSLS-7" value="downloadSample, modifyCurrentVolume" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="80" relative="1" as="geometry">
+            <mxPoint x="399.5" y="380" as="sourcePoint" />
+            <mxPoint x="629.5" y="380" as="targetPoint" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="i6BAB33o0QsCP26MwSLS-8" value="Modify UI (VolumeRendering)" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="80" relative="1" as="geometry">
+            <mxPoint x="629.5" y="410" as="sourcePoint" />
+            <mxPoint x="399.5" y="410" as="targetPoint" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="i6BAB33o0QsCP26MwSLS-9" value="&lt;div&gt;Clic Volume Rendering&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1">
+          <mxGeometry x="0.0042" width="80" relative="1" as="geometry">
+            <mxPoint x="159.5" y="450" as="sourcePoint" />
+            <mxPoint x="399.5" y="450" as="targetPoint" />
+            <Array as="points" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="i6BAB33o0QsCP26MwSLS-11" value="VolumeRenderingClicked(True)" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1">
+          <mxGeometry x="0.0042" width="80" relative="1" as="geometry">
+            <mxPoint x="399.5" y="470" as="sourcePoint" />
+            <mxPoint x="629.5" y="470" as="targetPoint" />
+            <Array as="points" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="BldFqw5MnaC5gOdo-IzD" name="Volume rendering - View Volume">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="9YC89YB2We0SMNlgrOPv-1" value="UI" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" vertex="1" parent="1">
+          <mxGeometry x="350" y="220" width="100" height="300" as="geometry" />
+        </mxCell>
+        <mxCell id="9YC89YB2We0SMNlgrOPv-2" value="User" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" vertex="1" parent="1">
+          <mxGeometry x="110" y="220" width="100" height="300" as="geometry" />
+        </mxCell>
+        <mxCell id="9YC89YB2We0SMNlgrOPv-3" value="Etat" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" vertex="1" parent="1">
+          <mxGeometry x="580" y="220" width="100" height="300" as="geometry" />
+        </mxCell>
+        <mxCell id="9YC89YB2We0SMNlgrOPv-4" value="SelectVolume" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1" source="9YC89YB2We0SMNlgrOPv-2" target="9YC89YB2We0SMNlgrOPv-1">
+          <mxGeometry width="80" relative="1" as="geometry">
+            <mxPoint x="370" y="280" as="sourcePoint" />
+            <mxPoint x="400" y="290" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="270" y="290" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9YC89YB2We0SMNlgrOPv-5" value="modifyCurrentVolume" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1" source="9YC89YB2We0SMNlgrOPv-1" target="9YC89YB2We0SMNlgrOPv-3">
+          <mxGeometry width="80" relative="1" as="geometry">
+            <mxPoint x="170" y="300" as="sourcePoint" />
+            <mxPoint x="410" y="300" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="520" y="300" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9YC89YB2We0SMNlgrOPv-7" value="SelectShader" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="80" relative="1" as="geometry">
+            <mxPoint x="159.5" y="340" as="sourcePoint" />
+            <mxPoint x="399.5" y="340" as="targetPoint" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9YC89YB2We0SMNlgrOPv-8" value="ModifyCurrentShader" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="80" relative="1" as="geometry">
+            <mxPoint x="399.5" y="350" as="sourcePoint" />
+            <mxPoint x="629.5" y="350" as="targetPoint" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9YC89YB2We0SMNlgrOPv-9" value="&lt;div&gt;Modify UI (Sample data, Shader Params,&lt;/div&gt;&lt;div&gt;VolumeRendering)&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="80" relative="1" as="geometry">
+            <mxPoint x="629.5" y="390" as="sourcePoint" />
+            <mxPoint x="399.5" y="390" as="targetPoint" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9YC89YB2We0SMNlgrOPv-10" value="&lt;div&gt;Clic Volume Rendering&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1">
+          <mxGeometry x="0.0042" width="80" relative="1" as="geometry">
+            <mxPoint x="159.5" y="420" as="sourcePoint" />
+            <mxPoint x="399.5" y="420" as="targetPoint" />
+            <Array as="points" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9YC89YB2We0SMNlgrOPv-11" value="VolumeRenderingClicked(True)" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1">
+          <mxGeometry x="0.0042" width="80" relative="1" as="geometry">
+            <mxPoint x="399.5" y="430" as="sourcePoint" />
+            <mxPoint x="629.5" y="430" as="targetPoint" />
+            <Array as="points" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

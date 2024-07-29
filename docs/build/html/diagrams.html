@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Panels and their use &mdash; SlicerPRISMRendering  documentation</title>
+  <title>Code Structure Diagrams &mdash; SlicerPRISMRendering  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=fd3f3429" />
@@ -23,8 +23,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="&lt;no title&gt;" href="developers.html" />
-    <link rel="prev" title="Tutorials" href="tutorials.html" /> 
+    <link rel="next" title="PRISMRendering Classes" href="PRISMRenderingClasses.html" />
+    <link rel="prev" title="Code documentation" href="code.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -51,8 +51,17 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="README.html">General Informations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Panels and their use</a></li>
-<li class="toctree-l1"><a class="reference internal" href="code.html">Code documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="panels.html">Panels and their use</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="code.html">Code documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Code Structure Diagrams</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#class-diagram">Class diagram</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sequence-diagram-for-a-volume-loaded-by-the-user">Sequence diagram (for a volume loaded by the user)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sequence-diagram-for-a-sampledata-associated-with-a-given-shader">Sequence diagram (for a SampleData associated with a given shader)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="PRISMRenderingClasses.html">PRISMRendering Classes</a></li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -69,9 +78,10 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Panels and their use</li>
+          <li class="breadcrumb-item"><a href="code.html">Code documentation</a></li>
+      <li class="breadcrumb-item active">Code Structure Diagrams</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/panels.md.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/diagrams.md.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -79,57 +89,28 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="panels-and-their-use">
-<h1>Panels and their use<a class="headerlink" href="#panels-and-their-use" title="Link to this heading"></a></h1>
-<table style="table-layout: fixed; width:100%; border: 1px grey; border-collapse: collapse;">
-<tr>
-<td style=" width:50%">
-<ul><li><b>Data</b> : Contains the volume required for SlicerPRISMRendering. </li>
-<ul><li><b>Image Volume</b> : Select the current volume to render. </li></ul>
-</ul>
-</td>
-<td>
-<img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/images/Data.png" alt="Data" width ="100%" title="Data"/>
-</td>
-</tr>
-<tr>
-<td style="width:50%">
-<ul> 
-<li> <b>View Setup</b> : Contains the controls for rendering the volume as well as controls for the cropping box (ROI) of the volume. </li>
-<ul>
-<li><b>Volume Rendering</b> : Enable/Disable rendering the volume.</li>
-<li><b>Enable Cropping</b> : Enable/Disable cropping the volume.</li>
-<li><b>Display ROI</b> : Enable/Disable displaying the ROI of the volume.</li>
-<li><b>Enable Scaling</b> : Enable/Disable scaling the ROI of the volume.</li>
-<li><b>Enable Rotation</b> : Enable/Disable rotating the ROI of the volume.</li>
-</ul>
-</ul>
-</td>
-<td align="center" style="width:50%">
-<img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/images/ViewSetup.png" alt="ViewSetup" width ="100%" title="ViewSetup"/>
-</td>
-</tr><tr>
-<td style="width:50%">
-<ul> 
-<li><b>Custom Shader</b> : Controls of the shader.</li>
-<ul>
-<li><b>Custom Shader</b> : Name of the shader to be applied during the rendering.</li> 
-<li><b>Reload</b> : Reload the current shader.</li>
-<li><b>Open</b> : Open the current shader source code.</li>
-<li><b>Reset</b> : Reset the current shader parameters.</li>
-<li><b>Sample</b> : Load the associated SampleData.</li></ul>
-</ul>
-</td>
-<td align="center" style="width:50%">
-<img src="https://raw.githubusercontent.com/ETS-vis-interactive/SlicerPRISMRendering/master/docs/source/images/CustomShader.png" alt="CustomShader" width ="100%" title="CustomShader"/></td>
-</tr></table></section>
+  <section id="code-structure-diagrams">
+<h1>Code Structure Diagrams<a class="headerlink" href="#code-structure-diagrams" title="Link to this heading"></a></h1>
+<section id="class-diagram">
+<h2>Class diagram<a class="headerlink" href="#class-diagram" title="Link to this heading"></a></h2>
+<p><img alt="Class Diagram" src="_images/class_diagram.png" /></p>
+</section>
+<section id="sequence-diagram-for-a-volume-loaded-by-the-user">
+<h2>Sequence diagram (for a volume loaded by the user)<a class="headerlink" href="#sequence-diagram-for-a-volume-loaded-by-the-user" title="Link to this heading"></a></h2>
+<p><img alt="Sequence diagram" src="_images/sequence_diagram_sampleData.png" /></p>
+</section>
+<section id="sequence-diagram-for-a-sampledata-associated-with-a-given-shader">
+<h2>Sequence diagram (for a SampleData associated with a given shader)<a class="headerlink" href="#sequence-diagram-for-a-sampledata-associated-with-a-given-shader" title="Link to this heading"></a></h2>
+<p><img alt="Sequence diagram Sample Data" src="_images/sequence_diagram.png" /></p>
+</section>
+</section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="tutorials.html" class="btn btn-neutral float-left" title="Tutorials" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="developers.html" class="btn btn-neutral float-right" title="&lt;no title&gt;" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="code.html" class="btn btn-neutral float-left" title="Code documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="PRISMRenderingClasses.html" class="btn btn-neutral float-right" title="PRISMRendering Classes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

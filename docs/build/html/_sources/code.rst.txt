@@ -5,6 +5,5 @@ Code documentation
    :maxdepth: 4
    :caption: Contents:
    
-   PRISMRendering
-   .. PRISMRenderingLogic
-   .. PRISMRenderingShaders
+   diagrams
+   PRISMRenderingClasses
