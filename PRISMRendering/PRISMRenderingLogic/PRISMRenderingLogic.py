@@ -3,13 +3,11 @@ import unittest
 import vtk, qt, ctk, slicer
 import numpy as np, math, time
 import json
-import imp
 import shutil
 import textwrap
 import importlib.util
 import inspect
 from pathlib import Path
-from distutils.util import strtobool
 from inspect import signature
 import traceback
 import logging
