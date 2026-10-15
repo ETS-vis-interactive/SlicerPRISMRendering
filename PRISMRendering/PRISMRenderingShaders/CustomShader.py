@@ -1,6 +1,5 @@
 #@file CustomShader.py
 
-import imp
 import sys
 import inspect
 import os
